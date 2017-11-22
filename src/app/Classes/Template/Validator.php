@@ -4,8 +4,8 @@ namespace LaravelEnso\VueDatatable\app\Classes\Template;
 
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Buttons;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Columns;
-use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Structure;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Routes;
+use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Structure;
 
 class Validator
 {

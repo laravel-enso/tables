@@ -28,7 +28,7 @@ class Routes
 
     private function checkReadRoute()
     {
-        $readRoute = $this->prefix . '.' . $this->readSuffix;
+        $readRoute = $this->prefix.'.'.$this->readSuffix;
 
         if (!\Route::has($readRoute)) {
             throw new TemplateException(__(sprintf(
@@ -41,7 +41,7 @@ class Routes
     private function checkWriteRoute()
     {
         $writeRoute = !is_null($this->writeSuffix)
-            ? $this->prefix . '.' . $this->writeSuffix
+            ? $this->prefix.'.'.$this->writeSuffix
             : null;
 
         if ($writeRoute && !\Route::has($writeRoute)) {

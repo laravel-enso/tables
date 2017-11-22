@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template;
 
-use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Columns;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Buttons;
+use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Columns;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Structure;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Style;
 

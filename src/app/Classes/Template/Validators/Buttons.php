@@ -157,7 +157,7 @@ class Buttons
             : null;
 
         $route = is_null($route) && property_exists($button, 'routeSuffix') && !is_null($button->routeSuffix)
-            ? $this->routePrefix . '.' . $button->routeSuffix
+            ? $this->routePrefix.'.'.$button->routeSuffix
             : $route;
 
         if (!is_null($route) && !\Route::has($route)) {

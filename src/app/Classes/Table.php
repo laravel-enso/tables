@@ -2,10 +2,10 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
+use Illuminate\Http\Request;
 use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
+use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
 
 class Table
 {
@@ -32,10 +32,10 @@ class Table
         $this->run();
 
         return [
-            'count' => $this->count,
+            'count'    => $this->count,
             'filtered' => $this->filtered,
-            'total' => $this->total,
-            'data' => $this->data,
+            'total'    => $this->total,
+            'data'     => $this->data,
         ];
     }
 
