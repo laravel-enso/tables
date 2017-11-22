@@ -1,0 +1,35 @@
+{
+    "routePrefix": "route.prefix", // mandatory
+    "readSuffix": "read.suffix", // mandatory
+    "writeSuffix": "write.suffix", // optional
+    "name": "Table Name",
+    "icon": "fa fa-list-alt",
+    "crtNo": true, // optional
+    "lengthMenu": [10, 15, 20, 25, 30], //optional, overwrites the value from config
+    "appends": ["customAttribute"], // laravel accesors
+    "buttons": [
+        "show", "create", "edit", "destroy", "download", "exportExcel", // string buttons must match the config
+        {
+            "type": "row", // available options row/global
+            "icon": "fa fa-bell", // optional
+            "class": "has-text-purple", // optional
+            "routeSuffix": "custom", // optional
+            "event": "custom-event", // optional
+            "action": "router", // available options router/href/export/ajax
+            "fullRoute": "optional.full.route", // optional
+            "label": "Button Label", // optional, only for global buttons
+            "confirmation": false, // optional, if you need a modal confirmation before doing the action
+            "message": "Are you sure?", // optional, if you want to customize the modal message
+            "method": "GET/PUT/PATCH/POST/DELETE" // mandatory if you have action => ajax
+        }
+    ],
+    "columns": [
+        {
+            "label": "Name",
+            "data": "table.column", // optional, only for editor
+            "name": "columnAlias", // alias from the query builder
+            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render"],
+            "enum": "EnumClass" // tbd
+        }
+    ]
+}

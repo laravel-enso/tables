@@ -1,0 +1,39 @@
+{
+    "name": "laravel-enso/vue-datatable",
+    "description": "Data Table library with server-side processing and a VueJS component",
+    "keywords": [
+        "laravel-enso",
+        "datatable",
+        "data-table",
+        "data-table-server-side"
+    ],
+    "homepage": "https://github.com/laravel-enso/VueDatatable",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adrian Ocneanu",
+            "email": "aocneanu@gmail.com",
+            "homepage": "https://laravel-enso.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "laravel/framework": "5.5.*",
+        "laravel-enso/helpers": "1.4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaravelEnso\\VueDatatable\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelEnso\\VueDatatable\\AppServiceProvider"
+            ],
+            "aliases": {}
+        }
+    }
+}

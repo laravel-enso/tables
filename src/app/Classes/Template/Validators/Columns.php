@@ -1,0 +1,104 @@
+<?php
+
+namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
+
+use LaravelEnso\VueDatatable\app\Classes\Attributes\Column as Attributes;
+use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
+
+class Columns
+{
+    private $columns;
+
+    public function __construct($template)
+    {
+        $this->columns = $template->columns;
+    }
+
+    public function validate()
+    {
+        $this->checkFormat();
+
+        collect($this->columns)->each(function ($column) {
+            $this->checkMandatoryAttributes($column)
+                ->checkOptionalAttributes($column)
+                ->checkMeta($column)
+                ->checkEnum($column);
+        });
+    }
+
+    private function checkFormat()
+    {
+        if (!is_array($this->columns)
+            || empty($this->columns)
+            || collect($this->columns)->first(function ($column) {
+                return !is_object($column);
+            }) !== null
+        ) {
+            throw new TemplateException(__(sprintf(
+                'The columns attribute must be an array of objects with at least one element: "%s"',
+                $diff->implode('", "')
+            )));
+        }
+    }
+
+    private function checkMandatoryAttributes($column)
+    {
+        $diff = collect(Attributes::Mandatory)
+            ->diff(collect($column)->keys());
+
+        if ($diff->isNotEmpty()) {
+            throw new TemplateException(__(sprintf(
+                'Mandatory column attribute(s) missing: "%s"',
+                $diff->implode('", "')
+            )));
+        }
+
+        return $this;
+    }
+
+    private function checkOptionalAttributes($column)
+    {
+        $attributes = collect(Attributes::Mandatory)
+            ->merge(Attributes::Optional);
+
+        $diff = collect($column)
+            ->keys()
+            ->diff($attributes);
+
+        if ($diff->isNotEmpty()) {
+            throw new TemplateException(__(sprintf(
+                'Unknown Column Attribute(s) Found: "%s"',
+                $diff->implode('", "')
+            )));
+        }
+
+        return $this;
+    }
+
+    private function checkMeta($column)
+    {
+        if (property_exists($column, 'meta')) {
+            Meta::validate($column->meta);
+
+            if (collect($column->meta)->contains('editable') && !property_exists($column, 'data')) {
+                throw new TemplateException(__('Editable columns need data attribute'));
+            }
+        }
+
+        return $this;
+    }
+
+    private function checkEnum($column)
+    {
+        if (property_exists($column, 'enum')) {
+            if (!class_exists($column->enum)) {
+                throw new TemplateException(__(sprintf(
+                    'Provided enum does not exist: %s',
+                    $column->enum
+                )));
+            }
+        }
+
+        return $this;
+    }
+}
