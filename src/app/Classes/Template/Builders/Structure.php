@@ -20,9 +20,9 @@ class Structure
 
     private function computeRoutes()
     {
-        $this->template->readRoute = route($this->template->routePrefix . '.' . $this->template->readSuffix, [], false);
+        $this->template->readRoute = route($this->template->routePrefix.'.'.$this->template->readSuffix, [], false);
         $this->template->writeRoute = !is_null($this->template->writeSuffix)
-            ? route($this->template->routePrefix . '.' . $this->template->writeSuffix, [], false)
+            ? route($this->template->routePrefix.'.'.$this->template->writeSuffix, [], false)
             : null;
     }
 
