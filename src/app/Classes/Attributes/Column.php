@@ -4,7 +4,7 @@ namespace LaravelEnso\VueDatatable\app\Classes\Attributes;
 
 class Column
 {
-    const Mandatory = ['label', 'name'];
+    const Mandatory = ['label', 'name', 'data'];
 
-    const Optional = ['meta', 'enum', 'data'];
+    const Optional = ['meta', 'enum'];
 }

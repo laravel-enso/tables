@@ -26,7 +26,7 @@
     "columns": [
         {
             "label": "Name",
-            "data": "table.column", // optional, only for editor
+            "data": "table.column", // mandatory
             "name": "columnAlias", // alias from the query builder
             "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render"],
             "enum": "EnumClass" // tbd

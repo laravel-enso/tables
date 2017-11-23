@@ -21,7 +21,6 @@ class Table
     public function __construct(Request $request, Builder $query)
     {
         $this->request = $request;
-        $this->filter = new Filters($request, $query);
         $this->meta = json_decode($request->get('meta'));
         $this->query = $query;
         $this->total = collect();
@@ -32,10 +31,10 @@ class Table
         $this->run();
 
         return [
-            'count'    => $this->count,
+            'count' => $this->count,
             'filtered' => $this->filtered,
-            'total'    => $this->total,
-            'data'     => $this->data,
+            'total' => $this->total,
+            'data' => $this->data,
         ];
     }
 
@@ -43,12 +42,8 @@ class Table
     {
         $this->filtered = $this->count = $this->count();
 
-        if ($this->hasFilters()) {
-            $this->filter->set();
-            $this->filtered = $this->count();
-        }
-
-        $this->sort()
+        $this->filter()
+            ->sort()
             ->setTotal()
             ->limit()
             ->setData()
@@ -59,6 +54,16 @@ class Table
     private function count()
     {
         return $this->query->count();
+    }
+
+    private function filter()
+    {
+        if ($this->hasFilters()) {
+            (new Filters($this->request, $this->query))->set();
+            $this->filtered = $this->count();
+        }
+
+        return $this;
     }
 
     private function sort()
@@ -72,7 +77,7 @@ class Table
                 $column = json_decode($column);
 
                 if ($column->meta->sortable && $column->meta->sort) {
-                    $this->query->orderBy($column->name, $column->meta->sort);
+                    $this->query->orderBy($column->data, $column->meta->sort);
                 }
             });
 
@@ -90,7 +95,7 @@ class Table
                 $column = json_decode($column);
 
                 if ($column->meta->total) {
-                    $total[$column->name] = $this->query->sum($column->name);
+                    $total[$column->name] = $this->query->sum($column->data);
                 }
 
                 return $total;

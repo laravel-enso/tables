@@ -17,7 +17,6 @@ trait Datatable
 
     public function data(Request $request)
     {
-        \Log::info('adsf');
         $table = new Table($request, $this->query());
 
         return $table->data();
