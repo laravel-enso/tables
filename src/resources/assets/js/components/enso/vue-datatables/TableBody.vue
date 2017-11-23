@@ -102,22 +102,22 @@ export default {
             this.row = null;
             this.button = null;
         },
-        doAction(button, { dtRowId }) {
+        doAction(button, row) {
             if (this.modal) {
                 this.modal = false;
             }
 
             if (button.event) {
-                this.$emit(button.event);
+                this.$emit(button.event, row);
             }
 
             if (button.action === 'ajax') {
-                this.$emit('ajax', button.method, this.getPath(button, dtRowId));
+                this.$emit('ajax', button.method, this.getPath(button, row.dtRowId));
                 return;
             }
 
             if (button.action === 'router') {
-                this.$router.push({ name: button.route, params: { id: dtRowId } });
+                this.$router.push({ name: button.route, params: { id: row.dtRowId } });
             }
         },
     },

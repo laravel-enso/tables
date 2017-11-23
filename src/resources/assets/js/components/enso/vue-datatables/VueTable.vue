@@ -13,12 +13,13 @@
                 <top-controls :template="template"
                     :i18n="i18n"
                     :length="length"
-                    @update-length="length = $event"
+                    @update-length="length=$event"
                     @export-data="exportData"
                     @reload="getData()">
                 </top-controls>
             </div>
-            <div class="column has-text-right">
+            <div class="column has-text-right"
+                v-if="body.count">
                 <input class="input table-search-input is-pulled-right"
                     type="search"
                     v-model="search"
@@ -33,13 +34,15 @@
                     @sort-update="getData">
                 </table-header>
                 <table-body :template="template"
+                    v-on="$listeners"
                     :body="body"
                     :start="start"
                     :i18n="i18n"
                     :custom-render="customRender"
-                    @ajax="ajax">
+                    @ajax="ajax"
+                    v-if="body.count">
                 </table-body>
-                <table-footer v-if="template.total"
+                <table-footer v-if="template.total && body.count"
                     :template="template"
                     :body="body"
                     :i18n="i18n">
@@ -47,13 +50,14 @@
             </table>
             <overlay size="medium" v-if="loading"></overlay>
         </div>
-        <div class="columns table-bottom-controls">
+        <div class="columns table-bottom-controls"
+            v-if="body.count">
             <div class="column">
-                <entries-info :body="body"
+                <records-info :body="body"
                     :i18n="i18n"
                     :start="start"
                     :length="length">
-                </entries-info>
+                </records-info>
             </div>
             <div class="column is-narrow has-text-right">
                 <pagination :start="start"
@@ -63,6 +67,10 @@
                     @jump-to="start = $event;getData()">
                 </pagination>
             </div>
+        </div>
+        <div v-if="!body.count"
+            class="has-text-centered no-records-found">
+            {{ i18n('No records were found.') }}
         </div>
     </div>
 
@@ -76,7 +84,7 @@ import TopControls from './TopControls.vue';
 import TableHeader from './TableHeader.vue';
 import TableBody from './TableBody.vue';
 import TableFooter from './TableFooter.vue';
-import EntriesInfo from './EntriesInfo.vue';
+import RecordsInfo from './RecordsInfo.vue';
 import Pagination from './Pagination.vue';
 import Overlay from '../bulma/Overlay.vue';
 
@@ -84,10 +92,14 @@ export default {
     name: 'VueTable',
 
     components: {
-        TopControls, TableHeader, TableBody, TableFooter, EntriesInfo, Overlay, Pagination,
+        TopControls, TableHeader, TableBody, TableFooter, RecordsInfo, Overlay, Pagination,
     },
 
     props: {
+        id: {
+            type: String,
+            default: null,
+        },
         path: {
             type: String,
             required: true,
@@ -183,7 +195,7 @@ export default {
         getData() {
             this.loading = true;
 
-            axios.get(this.template.readRoute, { params: this.readRequest() }).then(({ data }) => {
+            axios.get(this.template.readPath, { params: this.readRequest() }).then(({ data }) => {
                 this.body = data;
                 this.loading = false;
             }).catch((error) => {
@@ -272,6 +284,10 @@ export default {
 
     div.table-bottom-controls {
         margin-top: .5rem;
+    }
+
+    div.no-records-found {
+        margin-top: 20px;
     }
 
 </style>
