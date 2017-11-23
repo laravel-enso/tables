@@ -32,16 +32,16 @@ class Table
         $this->run();
 
         return [
-            'count'    => $this->count,
+            'count' => $this->count,
             'filtered' => $this->filtered,
-            'total'    => $this->total,
-            'data'     => $this->data,
+            'total' => $this->total,
+            'data' => $this->data,
         ];
     }
 
     private function run()
     {
-        $this->filterdCount = $this->count = $this->count();
+        $this->filtered = $this->count = $this->count();
 
         if ($this->hasFilters()) {
             $this->filter->set();
@@ -136,7 +136,7 @@ class Table
 
     private function hasFilters()
     {
-        return $this->request->has('query')
+        return $this->request->has('search')
             || $this->request->has('filters')
             || $this->request->has('intervalFilters');
     }
