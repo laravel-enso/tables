@@ -31,10 +31,10 @@ class Table
         $this->run();
 
         return [
-            'count' => $this->count,
+            'count'    => $this->count,
             'filtered' => $this->filtered,
-            'total' => $this->total,
-            'data' => $this->data,
+            'total'    => $this->total,
+            'data'     => $this->data,
         ];
     }
 

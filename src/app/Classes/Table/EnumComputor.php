@@ -20,7 +20,7 @@ class EnumComputor
     {
         $this->data->map(function ($record) {
             $this->withEnum->each(function ($column) use ($record) {
-                $enum = new $column->enum;
+                $enum = new $column->enum();
                 $record->{$column->name} = $enum::get($record->{$column->name});
             });
         });

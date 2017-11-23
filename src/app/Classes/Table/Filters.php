@@ -34,7 +34,7 @@ class Filters
                     $column = json_decode($column);
 
                     if ($column->meta->searchable) {
-                        $query->orWhere($column->data, 'LIKE', '%' . $arg . '%');
+                        $query->orWhere($column->data, 'LIKE', '%'.$arg.'%');
                     }
                 });
             });
@@ -53,7 +53,7 @@ class Filters
             collect(json_decode($this->request->get('filters')))->each(function ($filters, $table) use ($query) {
                 collect($filters)->each(function ($value, $column) use ($table, $query) {
                     if (!is_null($value) && $value !== '') {
-                        $query->where($table . '.' . $column, '=', $value);
+                        $query->where($table.'.'.$column, '=', $value);
                     }
                 });
             });
@@ -91,7 +91,7 @@ class Filters
             ? $this->formatDate($value->min, $value->dbDateFormat)
             : $value->min;
 
-        $this->query->where($table . '.' . $column, '>=', $min);
+        $this->query->where($table.'.'.$column, '>=', $min);
 
         return $this;
     }
@@ -106,7 +106,7 @@ class Filters
             ? $this->formatDate($value->max, $value->dbDateFormat)
             : $value->max;
 
-        $this->query->where($table . '.' . $column, '<=', $max);
+        $this->query->where($table.'.'.$column, '<=', $max);
 
         return $this;
     }
