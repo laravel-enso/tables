@@ -9,7 +9,7 @@ trait Pdf
     public function pdf(Request $request)
     {
         return [
-            'message' => __(config('labels.emailReportRequest')),
+            'message' => __(config('enso.labels.emailReportRequest')),
         ];
     }
 }

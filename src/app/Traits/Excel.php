@@ -9,7 +9,7 @@ trait Excel
     public function excel(Request $request)
     {
         return [
-            'message' => __(config('labels.emailReportRequest')),
+            'message' => __(config('enso.labels.emailReportRequest')),
         ];
     }
 }
