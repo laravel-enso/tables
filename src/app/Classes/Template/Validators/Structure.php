@@ -18,6 +18,7 @@ class Structure
     {
         $this->checkMandatoryAttributes();
         $this->checkOptionalAttributes();
+        $this->checkFormat();
     }
 
     private function checkMandatoryAttributes()
@@ -47,6 +48,17 @@ class Structure
                 'Unknown Attribute(s) Found: "%s"',
                 $diff->implode('", "')
             )));
+        }
+    }
+
+    private function checkFormat()
+    {
+        if (property_exists($this->template, 'lengthMenu') && !is_array($this->template->lengthMenu)) {
+            throw new TemplateException(__('"lengthMenu" attribute must be an array'));
+        }
+
+        if (property_exists($this->template, 'appends') && !is_array($this->template->appends)) {
+            throw new TemplateException(__('"appends" attribute must be an array'));
         }
     }
 }

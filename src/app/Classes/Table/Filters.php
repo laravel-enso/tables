@@ -68,10 +68,10 @@ class Filters
             return $this;
         }
 
-        $this->query->where(function ($query) {
+        $this->query->where(function () {
             collect(json_decode($this->request->get('intervals')))
-                ->each(function ($interval, $table) use ($query) {
-                    collect($interval)->each(function ($value, $column) use ($table, $query) {
+                ->each(function ($interval, $table) {
+                    collect($interval)->each(function ($value, $column) use ($table) {
                         $this->setMinLimit($table, $column, $value)
                             ->setMaxLimit($table, $column, $value);
                     });

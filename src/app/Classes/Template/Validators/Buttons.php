@@ -59,7 +59,7 @@ class Buttons
 
     private function checkStructure()
     {
-        $buttons = collect($this->buttons)
+        collect($this->buttons)
             ->each(function ($button) {
                 $button = is_object($button)
                     ? $button

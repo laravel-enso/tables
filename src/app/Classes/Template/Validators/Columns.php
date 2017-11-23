@@ -34,10 +34,9 @@ class Columns
                 return !is_object($column);
             }) !== null
         ) {
-            throw new TemplateException(__(sprintf(
-                'The columns attribute must be an array of objects with at least one element: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'The columns attribute must be an array of objects with at least one element'
+            ));
         }
     }
 
