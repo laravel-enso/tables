@@ -37,7 +37,6 @@ class Columns
             }
 
             $meta[$attribute] = property_exists($column, 'meta') && collect($column->meta)->contains($attribute);
-            $meta['sort'] = null;
 
             return $meta;
         }, []);
