@@ -16,16 +16,16 @@ Supports:
 - custom rendering of data in specified columns
 - autohide based on screen width. Data is still accesibile under an optional child row
 - front-end translations
-- Laravel accessors for the main query model
+- configurable on the fly view modes: compact, striped, boredered, hover, left - center - right data alignemnt
+- preferences save for each table in brower's localStorage
 - server-side excel exporting of the table data, using configured sorting and filtering
 - reloading of data on demand
 - Enso Enum computation
-- configurable on the fly view modes: compact, striped, boredered, hover, left - center - right data alignemnt
+- Laravel accessors for the main query model
 
 ### Coming very soon
 
 - fully independent of the Enso ecosystem
-- state save for each table in brower's localStorage
 
 #### and sooner than later
 

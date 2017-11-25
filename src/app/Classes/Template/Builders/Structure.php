@@ -20,9 +20,9 @@ class Structure
 
     private function computeRoutes()
     {
-        $this->template->readPath = route($this->template->routePrefix.'.'.$this->template->readSuffix, [], false);
+        $this->template->readPath = route($this->template->routePrefix . '.' . $this->template->readSuffix, [], false);
         $this->template->writePath = !is_null($this->template->writeSuffix)
-            ? route($this->template->routePrefix.'.'.$this->template->writeSuffix, [], false)
+            ? route($this->template->routePrefix . '.' . $this->template->writeSuffix, [], false)
             : null;
     }
 
@@ -35,7 +35,6 @@ class Structure
 
     private function setDefaults()
     {
-        $this->template->sort = false;
         $this->template->total = false;
         $this->template->enum = false;
         $this->template->labels = config('enso.datatable.labels');
