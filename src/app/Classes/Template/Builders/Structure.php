@@ -20,16 +20,16 @@ class Structure
 
     private function computeRoutes()
     {
-        $this->template->readPath = route($this->template->routePrefix.'.'.$this->template->readSuffix, [], false);
+        $this->template->readPath = route($this->template->routePrefix . '.' . $this->template->readSuffix, [], false);
         $this->template->writePath = !is_null($this->template->writeSuffix)
-            ? route($this->template->routePrefix.'.'.$this->template->writeSuffix, [], false)
+            ? route($this->template->routePrefix . '.' . $this->template->writeSuffix, [], false)
             : null;
     }
 
     private function setLengthMenu()
     {
         if (!property_exists($this->template, 'lengthMenu')) {
-            $this->template->lengthMenu = config('enso.datatables.lengthMenu');
+            $this->template->lengthMenu = config('enso.datatable.lengthMenu');
         }
     }
 
@@ -38,7 +38,7 @@ class Structure
         $this->template->sort = false;
         $this->template->total = false;
         $this->template->enum = false;
-        $this->template->labels = config('enso.datatables.labels');
-        $this->template->boolean = (object) config('enso.datatables.boolean');
+        $this->template->labels = config('enso.datatable.labels');
+        $this->template->boolean = (object) config('enso.datatable.boolean');
     }
 }

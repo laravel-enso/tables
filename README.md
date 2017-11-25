@@ -2,38 +2,38 @@
 # Vue Data Table
 <!--/h-->
 
-DataTable package with server-side processing and a VueJS component, that allows fast building of a new table based on a json template.
+DataTable package with server-side processing and a VueJS component. Build fast any complex table based on a json template.
 
 ### Details
 Supports:
 - server side data loading, with multi-argument
-- searching in all the columns of the table (you can also choose to exclude columns)
+- multi-column searching
+- multi-column sorting
+- configurable pagination
 - customizable column visibility
-- beautiful tag rendering for boolean flag columns
-- striped rows for a pleasant aspect
-- supports custom rendering of data in columns
-- sorting on any column (you can also choose to exclude some columns within the configuration)
-- user configurable pagination
+- configurable action butons
+- beautiful tag rendering for boolean flags
+- custom rendering of data in specified columns
+- autohide based on screen width. Data is still accesibile under an optional child row
+- front-end translations
+- Laravel accessors for the main query model
+- server-side excel exporting of the table data, using configured sorting and filtering
 - reloading of data on demand
-- automatic display of show/edit/delete buttons based on available permissions, customizable by config
-- header and row cusomizable button
-- translations
-- permits overriding of the appends attribute for the main query model
 - Enso Enum computation
+- configurable on the fly view modes: compact, striped, boredered, hover, left - center - right data alignemnt
 
 ### Coming very soon
 
 - fully independent of the Enso ecosystem
-- state save for each table, for certain options and preferences, with the option to reset everything to default
-- server-side excel exporting of the table data, using current search filtering, up to a configurable limit
+- state save for each table in brower's localStorage
 
 #### and sooner than later
 
-- editable
+- editable with input, datepicker, select, checkbox
 
 #### and later or never
 
-- reordering of columns
+- column reordering
 
 ### Installation
 

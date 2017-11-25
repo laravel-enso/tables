@@ -12,7 +12,7 @@ class Buttons
     public function __construct($template)
     {
         $this->template = $template;
-        $this->defaults = config('enso.datatables.buttons');
+        $this->defaults = config('enso.datatable.buttons');
         $this->template->actions = false;
     }
 
@@ -63,7 +63,7 @@ class Buttons
             return true;
         }
 
-        $button->route = $this->template->routePrefix.'.'.$button->routeSuffix;
+        $button->route = $this->template->routePrefix . '.' . $button->routeSuffix;
 
         return true;
     }
@@ -75,7 +75,7 @@ class Buttons
         }
 
         return property_exists($button, 'routeSuffix') && !is_null($button->routeSuffix)
-            ? $this->template->routePrefix.'.'.$button->routeSuffix
+            ? $this->template->routePrefix . '.' . $button->routeSuffix
             : null;
     }
 

@@ -2,20 +2,22 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
+use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
+use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
+use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
+use LaravelEnso\VueDatatable\app\Classes\Table\ExportComputor;
 
 class Table
 {
     private $request;
-    private $filter;
     private $query;
     private $count;
     private $filtered;
     private $total;
     private $data;
+    private $columns;
     private $meta;
 
     public function __construct(Request $request, Builder $query)
@@ -24,6 +26,8 @@ class Table
         $this->meta = json_decode($request->get('meta'));
         $this->query = $query;
         $this->total = collect();
+
+        $this->setColumns();
     }
 
     public function data()
@@ -31,10 +35,25 @@ class Table
         $this->run();
 
         return [
-            'count'    => $this->count,
+            'count' => $this->count,
             'filtered' => $this->filtered,
-            'total'    => $this->total,
-            'data'     => $this->data,
+            'total' => $this->total,
+            'data' => $this->data,
+        ];
+    }
+
+    public function excel()
+    {
+        $this->checkExportLimit();
+
+        $this->run();
+
+        $export = new ExportComputor($this->data, $this->columns);
+
+        return [
+            'name' => $this->request->get('name'),
+            'header' => $this->columns->pluck('label')->toArray(),
+            'data' => $export->data()->toArray(),
         ];
     }
 
@@ -72,14 +91,11 @@ class Table
             return $this;
         }
 
-        collect($this->request->get('columns'))
-            ->each(function ($column) {
-                $column = json_decode($column);
-
-                if ($column->meta->sortable && $column->meta->sort) {
-                    $this->query->orderBy($column->data, $column->meta->sort);
-                }
-            });
+        $this->columns->each(function ($column) {
+            if ($column->meta->sortable && $column->meta->sort) {
+                $this->query->orderBy($column->data, $column->meta->sort);
+            }
+        });
 
         return $this;
     }
@@ -90,16 +106,13 @@ class Table
             return $this;
         }
 
-        $this->total = collect($this->request->get('columns'))
-            ->reduce(function ($total, $column) {
-                $column = json_decode($column);
+        $this->total = $this->columns->reduce(function ($total, $column) {
+            if ($column->meta->total) {
+                $total[$column->name] = $this->query->sum($column->data);
+            }
 
-                if ($column->meta->total) {
-                    $total[$column->name] = $this->query->sum($column->data);
-                }
-
-                return $total;
-            }, []);
+            return $total;
+        }, []);
 
         return $this;
     }
@@ -139,10 +152,29 @@ class Table
         return $this;
     }
 
+    private function setColumns()
+    {
+        $this->columns = collect($this->request->get('columns'))
+            ->map(function ($column) {
+                return json_decode($column);
+            });
+    }
+
     private function hasFilters()
     {
         return $this->request->has('search')
             || $this->request->has('filters')
             || $this->request->has('intervalFilters');
+    }
+
+    private function checkExportLimit()
+    {
+        if ($this->meta->length > config('enso.datatable.export.limit')) {
+            throw new ExportException(__(sprintf(
+                'The table exceeds the maximum number of records allowed: %d vs %d',
+                $this->meta->length,
+                config('enso.datatable.export.limit')
+            )), 555);
+        }
     }
 }

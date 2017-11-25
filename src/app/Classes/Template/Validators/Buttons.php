@@ -157,7 +157,7 @@ class Buttons
             : null;
 
         $route = is_null($route) && property_exists($button, 'routeSuffix') && !is_null($button->routeSuffix)
-            ? $this->routePrefix.'.'.$button->routeSuffix
+            ? $this->routePrefix . '.' . $button->routeSuffix
             : $route;
 
         if (!is_null($route) && !\Route::has($route)) {
@@ -188,12 +188,12 @@ class Buttons
 
     private function setDefaults()
     {
-        $this->defaults = collect(config('enso.datatables.buttons.global'))
+        $this->defaults = collect(config('enso.datatable.buttons.global'))
             ->map(function ($button) {
                 $button['type'] = 'global';
 
                 return $button;
-            })->merge(collect(config('enso.datatables.buttons.row'))
+            })->merge(collect(config('enso.datatable.buttons.row'))
             ->map(function ($button) {
                 $button['type'] = 'row';
 

@@ -21,7 +21,8 @@
     "require": {
         "php": ">=7.1.0",
         "laravel/framework": "5.5.*",
-        "laravel-enso/helpers": "1.5.*"
+        "laravel-enso/helpers": "1.5.*",
+        "box/spout": "2.7.*"
     },
     "autoload": {
         "psr-4": {

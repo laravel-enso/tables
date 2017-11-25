@@ -13,7 +13,7 @@ class Style
     public function __construct($template)
     {
         $this->template = $template;
-        $this->style = config('enso.datatables.style');
+        $this->style = config('enso.datatable.style');
     }
 
     public function build()
