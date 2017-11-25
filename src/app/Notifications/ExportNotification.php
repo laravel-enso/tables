@@ -3,9 +3,9 @@
 namespace LaravelEnso\VueDatatable\app\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class ExportNotification extends Notification
 {
@@ -42,7 +42,7 @@ class ExportNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'body' => 'Export emailed: ' . $this->name . ' Table',
+            'body' => 'Export emailed: '.$this->name.' Table',
             'link' => '#',
         ];
     }

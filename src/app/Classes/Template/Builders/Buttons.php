@@ -63,7 +63,7 @@ class Buttons
             return true;
         }
 
-        $button->route = $this->template->routePrefix . '.' . $button->routeSuffix;
+        $button->route = $this->template->routePrefix.'.'.$button->routeSuffix;
 
         return true;
     }
@@ -75,7 +75,7 @@ class Buttons
         }
 
         return property_exists($button, 'routeSuffix') && !is_null($button->routeSuffix)
-            ? $this->template->routePrefix . '.' . $button->routeSuffix
+            ? $this->template->routePrefix.'.'.$button->routeSuffix
             : null;
     }
 
