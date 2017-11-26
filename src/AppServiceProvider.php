@@ -9,11 +9,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/config' => config_path('enso'),
+            __DIR__.'/config' => config_path('enso'),
         ], 'vuedatatables-config');
 
         $this->publishes([
-            __DIR__ . '/resources/assets/js' => resource_path('assets/js'),
+            __DIR__.'/resources/assets/js' => resource_path('assets/js'),
         ], 'vuedatatables-assets');
     }
 
