@@ -18,7 +18,7 @@ Supports:
 - front-end translations
 - configurable on the fly view modes: compact, striped, boredered, hover, left - center - right data alignemnt
 - preferences save for each table in brower's localStorage
-- server-side excel exporting of the table data, using configured sorting and filtering
+- server-side excel exporting of the table data, using configured sorting and filtering with email delivery and optional push notifications
 - reloading of data on demand
 - Enso Enum computation
 - Laravel accessors for the main query model
