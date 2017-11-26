@@ -21,7 +21,7 @@ class ExportNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['mail'] + config('enso.datatables.export.notifications');
+        return ['mail'] + config('enso.datatable.export.notifications');
     }
 
     public function toBroadcast($notifiable)

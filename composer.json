@@ -1,5 +1,5 @@
 {
-    "name": "laravel-enso/vue-datatable",
+    "name": "laravel-enso/vuedatatable",
     "description": "Data Table library with server-side processing and a VueJS component",
     "keywords": [
         "laravel-enso",
