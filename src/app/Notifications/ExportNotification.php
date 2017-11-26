@@ -21,7 +21,7 @@ class ExportNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['mail'] + config('enso.datatable.export.notifications');
+        return array_merge(['mail'], config('enso.datatable.export.notifications'));
     }
 
     public function toBroadcast($notifiable)
@@ -42,7 +42,7 @@ class ExportNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'body' => 'Export emailed: '.$this->name.' Table',
+            'body' => 'Export emailed: ' . $this->name . ' Table',
             'link' => '#',
         ];
     }
