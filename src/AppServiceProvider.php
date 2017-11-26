@@ -9,12 +9,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config' => config_path('enso'),
-        ], 'vuedatatables-config');
+            __DIR__ . '/config' => config_path('enso'),
+        ], 'vuedatatable-config');
 
         $this->publishes([
-            __DIR__.'/resources/assets/js' => resource_path('assets/js'),
-        ], 'vuedatatables-assets');
+            __DIR__ . '/resources/assets/js' => resource_path('assets/js'),
+        ], 'vuedatatable-assets');
     }
 
     public function register()
