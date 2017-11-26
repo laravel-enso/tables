@@ -42,7 +42,7 @@ class ExportNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'body' => 'Export emailed: ' . $this->name . ' Table',
+            'body' => 'Export emailed: '.$this->name.' Table',
             'link' => '#',
         ];
     }
