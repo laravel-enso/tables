@@ -336,7 +336,7 @@ public function query()
 
 Keep in mind that the here we're returning a QueryBuilder not a collection of results.
 
-#### Further examples
+#### Further Examples
 You may see the vue data table in action, with the code for the Owners page, right here:
 - [data controller](https://github.com/laravel-enso/Core/blob/master/src/app/Http/Controllers/Owner/OwnerTableController.php)
 - [table template](https://github.com/laravel-enso/Core/blob/master/src/app/Tables/owners.json)
