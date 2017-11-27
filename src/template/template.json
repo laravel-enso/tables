@@ -23,7 +23,7 @@
             "method": "GET/PUT/PATCH/POST/DELETE" // optional, should be given if you have action set as ajax
         }
     ],
-    "columns": [ //required
+    "columns": [ //required, list of column configurations
         {
             "label": "Name", //required, table header column name
             "data": "table.column", // required, the table and column name
