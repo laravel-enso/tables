@@ -4,27 +4,33 @@
 
 Data Table package with server-side processing and VueJS components. Build fast any complex table based on a JSON template.
 
-### Details
-Supports:
-- server side data loading, with multi-argument
+[![Screenshot](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002_thumb.png)](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002.png)
+
+[![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.webm)
+
+<sup>click on the photo to view a short demo in compatible browsers</sup>
+
+
+### Features
+- efficient server side data loading
 - multi-column searching
 - multi-column sorting
 - configurable pagination
-- customizable column visibility
+- user customizable column visibility
 - configurable action buttons
 - beautiful tag rendering for boolean flags
-- custom rendering of data for columns
+- custom data rendering support
 - auto-hide based on screen width. Data is still accessible under an optional child row
-- front-end translations
-- configurable, on-the-fly view modes: compact, striped, bordered, hover, left - center - right data alignment
+- front-end translations for labels and even data
+- configurable, on-the-fly view modes: compact, striped, bordered, hover and left / center / right data alignment
 - preferences/state save for each table in the browser's localStorage
 - server-side Excel exporting of the table data, using your current sorting and filtering choices, with email delivery and optional push notifications
 - reloading of data on demand
 - Enso Enum computation
 - Laravel accessors for the main query model
-- thorough validation of the JSON template, in order to avoid miss-configuration issues
-- the configuration template for each table has been designed to be as light and friendly as possible without losing 
-out on features 
+- the configuration template for each table has been designed to be as light and straightforward as possible without losing 
+out on features
+- thorough validation of the JSON template with developer friendly messages, in order to avoid misconfiguration issues
 
 ### Coming very soon
 
@@ -32,7 +38,8 @@ out on features
 
 #### and sooner than later
 
-- editable with input, date-picker, select, checkbox
+- PDF export alongside the XLSX report 
+- editable table cells, with input, date-picker, select, checkbox support
 
 #### and later or never
 
@@ -53,6 +60,8 @@ additional data, such as when changing to the next page of results, another requ
 This means that the configuration is not re-read as long as the component is not re-drawn.   
 
 For the data editor functionality (WIP), separate requests will be used.
+
+Note: In order to make the above requests, named routes are required.
 
 #### Configuration
 The table comes with with a publishable configuration file which you may update in order to fit your 
@@ -302,7 +311,7 @@ the type for a model/table.
 
 #### The VueJS Component
 The VueTable component takes the following parameters:
-- `id`, required, string, identification for this table
+- `id`, required, string, identification for this table, is used to store the preferences in the browser's local storage
 - `path`, required, string, the URI for the table initialization request
 - `filters`, optional, object, reactive options that, if available, is sent with the getTableData request and 
 is used to filter results
@@ -313,6 +322,28 @@ is be used to filter results
 a render dispatcher for when needing to custom render multiple columns for the same table
 - `i18n`, optional, function, that is used for translating labels, headers, and table data. 
 The default value (function) for this parameter simply returns it's argument as the translated value. 
+
+#### The query
+
+In your controller, the query must look like this:
+
+```php
+public function query()
+{
+    return Owner::select(\DB::raw('id as "dtRowId", name, description, is_active, created_at'));
+}
+```
+
+Keep in mind that the here we're returning a QueryBuilder not a collection of results.
+
+#### Further examples
+You may see the vue data table in action, with the code for the Owners page, right here:
+- [data controller](https://github.com/laravel-enso/Core/blob/master/src/app/Http/Controllers/Owner/OwnerTableController.php)
+- [table template](https://github.com/laravel-enso/Core/blob/master/src/app/Tables/owners.json)
+- [front-end vue page](https://github.com/laravel-enso/Core/blob/master/src/resources/assets/js/pages/enso/administration/owners/Index.vue)
+- [live result](http://enso.dev/administration/owners/) (if you're not already logged in, use `admin@laravel-enso.com` and `password`)
+
+Feel free to look around at the various packages in the [laravel-enso](https://github.com/laravel-enso) repository, to find more examples.
 
 ### Publishes
 - `php artisan vendor:publish --tag=vuedatatable-config` - the component configuration
