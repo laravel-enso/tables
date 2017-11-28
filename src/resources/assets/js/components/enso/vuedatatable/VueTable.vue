@@ -37,7 +37,7 @@
                     :i18n="i18n">
                 </table-footer>
             </table>
-            <overlay size="medium" v-if="loading"></overlay>
+            <overlay v-if="loading"></overlay>
         </div>
         <div class="columns table-bottom-controls"
             v-if="hasContent">
@@ -75,7 +75,7 @@ import TableBody from './TableBody.vue';
 import TableFooter from './TableFooter.vue';
 import RecordsInfo from './RecordsInfo.vue';
 import Pagination from './Pagination.vue';
-import Overlay from '../bulma/Overlay.vue';
+import Overlay from './Overlay.vue';
 import vResponsive from './responsive/vResponsive';
 
 export default {
