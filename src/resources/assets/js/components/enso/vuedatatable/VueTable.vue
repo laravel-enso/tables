@@ -185,6 +185,12 @@ export default {
             },
             deep: true,
         },
+        params: {
+            handler() {
+                this.filterUpdate();
+            },
+            deep: true,
+        },
         intervals: {
             handler() {
                 this.filterUpdate();
