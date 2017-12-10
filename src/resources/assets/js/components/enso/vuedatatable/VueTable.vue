@@ -353,6 +353,7 @@ export default {
                 appends: this.template.appends,
                 filters: this.filters,
                 intervals: this.intervals,
+                params: this.params,
             };
         },
         ajax(method, path) {
