@@ -63,7 +63,7 @@ class Buttons
             return true;
         }
 
-        $button->route = $this->template->routePrefix.'.'.$button->routeSuffix;
+        $button->route = $route;
 
         return true;
     }
