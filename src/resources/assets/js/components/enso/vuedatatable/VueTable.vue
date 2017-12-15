@@ -137,8 +137,6 @@ export default {
                     length: this.length,
                     search: this.search,
                     start: this.start,
-                    filters: this.filters,
-                    intervals: this.intervals,
                 },
                 template: {
                     sort: this.template.sort,

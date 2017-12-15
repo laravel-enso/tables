@@ -33,7 +33,7 @@
             </td>
             <td class="table-actions"
                 :class="template.align"
-                v-if="!isChild(row)">
+                v-if="template.actions && !isChild(row)">
                 <span class="table-action-buttons">
                     <a v-for="(button, index) in template.buttons.row"
                         :key="index"

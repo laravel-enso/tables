@@ -1,35 +1,35 @@
 {
-    "routePrefix": "route.prefix", // mandatory
-    "readSuffix": "read.suffix", // mandatory
-    "writeSuffix": "write.suffix", // optional
-    "name": "Table Name",
-    "icon": "fa fa-list-alt",
-    "crtNo": true, // optional
-    "lengthMenu": [10, 15, 20, 25, 30], //optional, overwrites the value from config
-    "appends": ["customAttribute"], // laravel accesors
+    "routePrefix": "route.prefix", // required, the main segment of a named route
+    "readSuffix": "read.suffix", // required, the data read endpoint suffix that gets appended to the routePrefix param
+    "writeSuffix": "write.suffix", // optional, the data write endpoint suffix that gets appended to the routePrefix param
+    "name": "Table Name", //optional, the title for the table
+    "icon": "fa fa-list-alt", //optional, expects a font awesome icon class
+    "crtNo": true, // optional, shows the line number
+    "lengthMenu": [10, 15, 20, 25, 30], //optional, table pagination options. If given, it overwrites the value from config
+    "appends": ["customAttribute"], // optional, laravel model accessors for custom attributes
     "buttons": [
         "show", "create", "edit", "destroy", "download", "exportExcel", // string buttons must match the config
         {
-            "type": "row", // available options row/global
-            "icon": "fa fa-bell", // optional
-            "class": "has-text-purple", // optional
-            "routeSuffix": "custom", // optional
-            "event": "custom-event", // optional
-            "action": "router", // available options router/href/export/ajax
-            "fullRoute": "optional.full.route", // optional
-            "label": "Button Label", // optional, only for global buttons
+            "type": "row", // required, available options row / global
+            "icon": "fa fa-bell", // required, expects a font awesome icon class
+            "class": "has-text-purple", // required, a CSS styling class
+            "routeSuffix": "custom", // optional, gets appended to the routePrefix param
+            "event": "custom-event", // optional, for custom in-page handling, outside of the table
+            "action": "router", // optional, available options router / href / export / ajax
+            "fullRoute": "optional.full.route", // optional, if given, is used independently from the routePrefix param
+            "label": "Button Label", // optional, should be given only for global buttons
             "confirmation": false, // optional, if you need a modal confirmation before doing the action
             "message": "Are you sure?", // optional, if you want to customize the modal message
-            "method": "GET/PUT/PATCH/POST/DELETE" // mandatory if you have action => ajax
+            "method": "GET/PUT/PATCH/POST/DELETE" // optional, should be given if you have action set as ajax
         }
     ],
-    "columns": [
+    "columns": [ //required, list of column configurations
         {
-            "label": "Name",
-            "data": "table.column", // mandatory
-            "name": "columnAlias", // alias from the query builder
-            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render"],
-            "enum": "EnumClass" // tbd
+            "label": "Name", //required, table header column name
+            "data": "table.column", // required, the table and column name
+            "name": "columnAlias", // required, alias from the query builder
+            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render"], //optional
+            "enum": "EnumClass" // optional
         }
     ]
 }
