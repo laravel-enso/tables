@@ -6,7 +6,7 @@ class Button
 {
     const Mandatory = ['type', 'icon', 'class'];
 
-    const Optional = ['routeSuffix', 'action', 'fullRoute', 'label', 'method', 'confirmation', 'event', 'message'];
+    const Optional = ['routeSuffix', 'action', 'fullRoute', 'label', 'method', 'confirmation', 'event', 'message', 'params'];
 
     const Actions = ['router', 'href', 'ajax', 'export'];
 

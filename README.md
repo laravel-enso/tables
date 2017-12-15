@@ -219,7 +219,11 @@ into account your current sorting and filtering. Available options:
             "label": "Button Label",
             "confirmation": false,
             "message": "Are you sure?",
-            "method": "GET/PUT/PATCH/POST/DELETE"
+            "method": "GET/PUT/PATCH/POST/DELETE",
+            "params": {
+                "first": "foo",
+                "second": "bar"
+            }
         }
     ],
     "columns": [
@@ -285,6 +289,7 @@ Depending on the chosen options other parameters could be required.
 - `message`: optional, string, used in conjunction with `confirmation`, when you want to customize the modal's message
 - `method`: optional, string, should be given if you have `action` set as `ajax`, 
 available options are: `"GET"` / `"PUT`" / `"PATCH`" / `"POST`" / `"DELETE`"
+- `params`: optional, object, used if action = `router`, object is added to route params object
 
 ##### Columns
 The columns configuration attribute is required, and expects an array of configuration objects. 
