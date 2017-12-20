@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
-use LaravelEnso\VueDatatable\app\Classes\Attributes\Meta as Attributes;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
+use LaravelEnso\VueDatatable\app\Classes\Attributes\Meta as Attributes;
 
 class Meta
 {

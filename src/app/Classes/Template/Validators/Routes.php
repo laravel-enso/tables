@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
-use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 use Symfony\Component\Routing\Route;
+use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 
 class Routes
 {

@@ -2,12 +2,12 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
-use LaravelEnso\VueDatatable\app\Classes\Table\ExportComputor;
+use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
+use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
 use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
+use LaravelEnso\VueDatatable\app\Classes\Table\ExportComputor;
 
 class Table
 {
@@ -35,10 +35,10 @@ class Table
         $this->run();
 
         return [
-            'count'    => $this->count,
+            'count' => $this->count,
             'filtered' => $this->filtered,
-            'total'    => $this->total,
-            'data'     => $this->data,
+            'total' => $this->total,
+            'data' => $this->data,
         ];
     }
 
@@ -51,9 +51,9 @@ class Table
         $export = new ExportComputor($this->data, $this->columns);
 
         return [
-            'name'   => $this->request->get('name'),
+            'name' => $this->request->get('name'),
             'header' => $this->columns->pluck('label')->toArray(),
-            'data'   => $export->data()->toArray(),
+            'data' => $export->data()->toArray(),
         ];
     }
 

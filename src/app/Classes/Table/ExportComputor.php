@@ -32,7 +32,7 @@ class ExportComputor
     {
         return $this->columns->reduce(function ($columns, $column) {
             $columns->push((object) [
-                'name'        => $column->name,
+                'name' => $column->name,
                 'translation' => $column->meta->translation,
             ]);
 
