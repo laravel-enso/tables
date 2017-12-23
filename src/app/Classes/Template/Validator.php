@@ -20,6 +20,11 @@ class Validator
     {
         (new Structure($this->template))->validate();
         (new Routes($this->template))->validate();
+
+        if (!property_exists($this->template, 'buttons')) {
+            $this->template->buttons = [];
+        }
+
         (new Buttons($this->template))->validate();
         (new Columns($this->template))->validate();
     }
