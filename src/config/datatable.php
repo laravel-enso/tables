@@ -169,5 +169,5 @@ return [
     |
     */
 
-    'dateFormat' => 'd-m-Y'
+    'dateFormat' => 'd-m-Y',
 ];

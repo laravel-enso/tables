@@ -5,9 +5,9 @@ namespace LaravelEnso\VueDatatable\app\Classes;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
+use LaravelEnso\VueDatatable\app\Classes\Table\DateComputor;
 use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
 use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
-use LaravelEnso\VueDatatable\app\Classes\Table\DateComputor;
 use LaravelEnso\VueDatatable\app\Classes\Table\ExportComputor;
 
 class Table
