@@ -164,8 +164,8 @@ return [
     |--------------------------------------------------------------------------
     | Date format
     |--------------------------------------------------------------------------
-    | Global date format for date columns. Will check if the column value is a
-    | Carbon instance, and if not it will parse it to the desired format.
+    | Global date format for date columns. Will use Carbon to parse the columns
+    | marked as date to the desired format.
     |
     */
 
