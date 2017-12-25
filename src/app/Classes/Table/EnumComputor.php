@@ -4,25 +4,27 @@ namespace LaravelEnso\VueDatatable\app\Classes\Table;
 
 class EnumComputor
 {
-    private $request;
+    private $columns;
     private $data;
     private $withEnum;
 
-    public function __construct($data, $request)
+    public function __construct($data, $columns)
     {
         $this->data = $data;
+        $this->columns = $columns;
 
-        $this->request = $request;
         $this->setWithEnum();
     }
 
-    public function run()
+    public function get()
     {
-        $this->data->map(function ($record) {
-            $this->withEnum->each(function ($column) use ($record) {
+        return collect($this->data)->map(function ($record) {
+            $this->withEnum->each(function ($column) use (&$record) {
                 $enum = new $column->enum();
-                $record->{$column->name} = $enum::get($record->{$column->name});
+                $record[$column->name] = $enum::get($record[$column->name]);
             });
+
+            return $record;
         });
     }
 
@@ -30,13 +32,10 @@ class EnumComputor
     {
         $this->withEnum = collect();
 
-        collect($this->request->get('columns'))
-            ->each(function ($column) {
-                $column = json_decode($column);
-
-                if (property_exists($column, 'enum')) {
-                    $this->withEnum->push($column);
-                }
-            });
+        $this->columns->each(function ($column) {
+            if (property_exists($column, 'enum')) {
+                $this->withEnum->push($column);
+            }
+        });
     }
 }

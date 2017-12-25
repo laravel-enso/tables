@@ -298,6 +298,7 @@ export default {
                     sort: this.template.sort,
                     total: this.template.total,
                     enum: this.template.enum,
+                    date: this.template.date,
                 },
                 search: this.search,
                 appends: this.template.appends,
@@ -316,6 +317,7 @@ export default {
                         sortable: column.meta.sortable,
                         sort: column.meta.sort,
                         total: column.meta.total,
+                        date: column.meta.date,
                     },
                     enum: column.enum,
                 });
@@ -345,6 +347,7 @@ export default {
                     length: this.body.count,
                     sort: this.template.sort,
                     enum: this.template.enum,
+                    date: this.template.date,
                     total: false,
                 },
                 search: this.search,

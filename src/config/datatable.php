@@ -159,4 +159,15 @@ return [
         'maxExecutionTime' => 100,
         'notifications' => ['broadcast', 'database'],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Date format
+    |--------------------------------------------------------------------------
+    | Global date format for date columns. Will check if the column value is a
+    | Carbon instance, and if not it will parse it to the desired format.
+    |
+    */
+
+    'dateFormat' => 'd-m-Y'
 ];

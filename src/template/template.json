@@ -28,7 +28,7 @@
             "label": "Name", //required, table header column name
             "data": "table.column", // required, the table and column name
             "name": "columnAlias", // required, alias from the query builder
-            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render"], //optional
+            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render", "date"], //optional
             "enum": "EnumClass" // optional
         }
     ]

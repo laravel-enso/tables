@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
 use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
 use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
+use LaravelEnso\VueDatatable\app\Classes\Table\DateComputor;
 use LaravelEnso\VueDatatable\app\Classes\Table\ExportComputor;
 
 class Table
@@ -67,7 +68,9 @@ class Table
             ->limit()
             ->setData()
             ->setAppends()
-            ->computeEnum();
+            ->toArray()
+            ->computeEnum()
+            ->computeDate();
     }
 
     private function count()
@@ -78,7 +81,7 @@ class Table
     private function filter()
     {
         if ($this->hasFilters()) {
-            (new Filters($this->request, $this->query))->set();
+            (new Filters($this->request, $this->query, $this->columns))->set();
             $this->filtered = $this->count();
         }
 
@@ -143,13 +146,27 @@ class Table
         return $this;
     }
 
+    private function toArray()
+    {
+        $this->data = $this->data->toArray();
+
+        return $this;
+    }
+
     private function computeEnum()
     {
         if ($this->meta->enum) {
-            (new EnumComputor($this->data, $this->request))->run();
+            $this->data = (new EnumComputor($this->data, $this->columns))->get();
         }
 
         return $this;
+    }
+
+    private function computeDate()
+    {
+        if ($this->meta->date) {
+            $this->data = (new DateComputor($this->data, $this->columns))->get();
+        }
     }
 
     private function setColumns()
