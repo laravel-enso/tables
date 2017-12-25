@@ -2,6 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Table;
 
+use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
+
 class ExportComputor
 {
     private $data;
@@ -19,6 +21,8 @@ class ExportComputor
 
         return $this->data->map(function ($record) use ($columns) {
             return $columns->reduce(function ($collector, $column) use ($record) {
+                $this->checkType($record, $column->name);
+
                 $collector[$column->name] = $column->translation
                     ? __($record->{$column->name})
                     : $record->{$column->name};
@@ -38,5 +42,18 @@ class ExportComputor
 
             return $columns;
         }, collect());
+    }
+
+    private function checkType($record, $columnName)
+    {
+        if (is_scalar($record->{$columnName}) || is_null($record->{$columnName})) {
+            return;
+        }
+
+        throw new ExportException(__(sprintf(
+            'The export only accepts scalar and null values while "%s" is of type "%s"',
+            $columnName,
+            gettype($record->{$columnName})
+        )), 555);
     }
 }
