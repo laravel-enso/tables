@@ -16,9 +16,9 @@ class Structure
 
     public function validate()
     {
-        $this->checkMandatoryAttributes();
-        $this->checkOptionalAttributes();
-        $this->checkFormat();
+        $this->checkMandatoryAttributes()
+            ->checkOptionalAttributes()
+            ->checkFormat();
     }
 
     private function checkMandatoryAttributes()
@@ -32,6 +32,8 @@ class Structure
                 $diff->implode('", "')
             )));
         }
+
+        return $this;
     }
 
     private function checkOptionalAttributes()
@@ -49,6 +51,8 @@ class Structure
                 $diff->implode('", "')
             )));
         }
+
+        return $this;
     }
 
     private function checkFormat()

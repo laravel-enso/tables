@@ -22,8 +22,8 @@ class Routes
 
     public function validate()
     {
-        $this->checkReadRoute();
-        $this->checkWriteRoute();
+        $this->checkReadRoute()
+            ->checkWriteRoute();
     }
 
     private function checkReadRoute()
@@ -36,6 +36,8 @@ class Routes
                 $readRoute
             )));
         }
+
+        return $this;
     }
 
     private function checkWriteRoute()

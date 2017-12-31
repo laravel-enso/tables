@@ -9,24 +9,19 @@ use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 class Template
 {
     private $template;
-    private $validator;
-    private $builder;
 
     public function __construct(string $template)
     {
         $this->set($template);
-
-        $this->validator = new Validator($this->template);
-        $this->builder = new Builder($this->template);
     }
 
     public function get()
     {
         if ($this->needsValidation()) {
-            $this->validator->run();
+            (new Validator($this->template))->run();
         }
 
-        $this->builder->run();
+        (new Builder($this->template))->run();
 
         return ['template' => $this->template];
     }

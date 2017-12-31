@@ -28,8 +28,7 @@ class Columns
 
     private function checkFormat()
     {
-        if (!is_array($this->columns)
-            || empty($this->columns)
+        if (!is_array($this->columns) || empty($this->columns)
             || collect($this->columns)->first(function ($column) {
                 return !is_object($column);
             }) !== null
@@ -78,10 +77,6 @@ class Columns
     {
         if (property_exists($column, 'meta')) {
             Meta::validate($column->meta);
-
-            if (collect($column->meta)->contains('editable') && !property_exists($column, 'data')) {
-                throw new TemplateException(__('Editable columns need data attribute'));
-            }
         }
 
         return $this;
