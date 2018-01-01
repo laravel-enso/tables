@@ -64,7 +64,7 @@ return [
             ],
             'excel' => [
                 'icon' => 'fa fa-file-excel-o',
-                'class' => 'is-info',
+                'class' => null,
                 'routeSuffix' => 'exportExcel',
                 'event' => 'export-excel',
                 'action' => 'export',
