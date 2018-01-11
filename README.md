@@ -345,7 +345,7 @@ Keep in mind that the here we're returning a QueryBuilder not a collection of re
 You may see the vue data table in action, with the code for the Owners page, right here:
 - [data controller](https://github.com/laravel-enso/Core/blob/master/src/app/Http/Controllers/Owner/OwnerTableController.php)
 - [table template](https://github.com/laravel-enso/Core/blob/master/src/app/Tables/owners.json)
-- [front-end vue page](https://github.com/laravel-enso/Core/blob/master/src/resources/assets/js/pages/enso/administration/owners/Index.vue)
+- [front-end vue page](https://github.com/laravel-enso/Core/blob/master/src/resources/assets/js/pages/administration/owners/Index.vue)
 - [live result](http://enso.dev/administration/owners/) (if you're not already logged in, use `admin@laravel-enso.com` and `password`)
 
 Feel free to look around at the various packages in the [laravel-enso](https://github.com/laravel-enso) repository, to find more examples.
