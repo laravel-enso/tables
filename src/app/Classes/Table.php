@@ -187,11 +187,10 @@ class Table
     private function checkExportLimit()
     {
         if ($this->meta->length > config('enso.datatable.export.limit')) {
-            throw new ExportException(__(sprintf(
-                'The table exceeds the maximum number of records allowed: %d vs %d',
-                $this->meta->length,
-                config('enso.datatable.export.limit')
-            )), 555);
+            throw new ExportException(__(
+                'The table exceeds the maximum number of records allowed: :actual vs :limit',
+                ['actual' => $this->meta->length, 'limit' => config('enso.datatable.export.limit')]
+            ));
         }
     }
 }

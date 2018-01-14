@@ -27,10 +27,10 @@ class Structure
             ->diff(collect($this->template)->keys());
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Mandatory Attribute(s) Missing: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Mandatory Attribute(s) Missing: :attr',
+                ['attr' => $diff->implode('", "')]
+            ));
         }
 
         return $this;
@@ -46,10 +46,10 @@ class Structure
             ->diff($attributes);
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Unknown Attribute(s) Found: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Unknown Attribute(s) Found: :attr',
+                ['attr' => $diff->implode('", "')]
+            ));
         }
 
         return $this;

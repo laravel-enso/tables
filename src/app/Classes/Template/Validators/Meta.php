@@ -13,10 +13,10 @@ class Meta
             ->diff(Attributes::List);
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Unknown Meta Parameter(s): "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Unknown Meta Parameter(s): :meta',
+                ['meta' => $diff->implode('", "')]
+            ));
         }
     }
 }

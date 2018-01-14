@@ -45,10 +45,10 @@ class Columns
             ->diff(collect($column)->keys());
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Mandatory column attribute(s) missing: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Mandatory column attribute(s) missing: :attr',
+                ['attr' => $diff->implode('", "')]
+            ));
         }
 
         return $this;
@@ -64,10 +64,10 @@ class Columns
             ->diff($attributes);
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Unknown Column Attribute(s) Found: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Unknown Column Attribute(s) Found: :attr',
+                ['attr' => $diff->implode('", "')]
+            ));
         }
 
         return $this;
@@ -86,10 +86,10 @@ class Columns
     {
         if (property_exists($column, 'enum')) {
             if (!class_exists($column->enum)) {
-                throw new TemplateException(__(sprintf(
-                    'Provided enum does not exist: %s',
-                    $column->enum
-                )));
+                throw new TemplateException(__(
+                    'Provided enum does not exist: :enum',
+                    ['enum' => $column->enum]
+                ));
             }
         }
 
