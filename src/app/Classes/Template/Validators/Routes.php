@@ -31,10 +31,10 @@ class Routes
         $readRoute = $this->prefix.'.'.$this->readSuffix;
 
         if (!\Route::has($readRoute)) {
-            throw new TemplateException(__(sprintf(
-                'Read route does not exist: %s',
-                $readRoute
-            )));
+            throw new TemplateException(__(
+                'Read route does not exist: ":route"',
+                ['route' => $readRoute]
+            ));
         }
 
         return $this;
@@ -47,10 +47,10 @@ class Routes
             : null;
 
         if ($writeRoute && !\Route::has($writeRoute)) {
-            throw new TemplateException(__(sprintf(
-                'Write route does not exist: %s',
-                $writeRoute
-            )));
+            throw new TemplateException(__(
+                'Write route does not exist: ":route"',
+                ['route' => $writeRoute]
+            ));
         }
     }
 }

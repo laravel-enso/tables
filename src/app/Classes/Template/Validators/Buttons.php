@@ -48,10 +48,10 @@ class Buttons
             })->diff(collect($this->defaults)->keys());
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Unknown Button(s) Found: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Unknown Button(s) Found: ":button"',
+                ['button' => $diff->implode('", "')]
+            ));
         }
 
         return $this;
@@ -88,10 +88,10 @@ class Buttons
             ->isNotEmpty();
 
         if ($formattedWrong) {
-            throw new TemplateException(__(sprintf(
-                'The following attributes are mandatory for custom buttons: "%s"',
-                collect(Attributes::Mandatory)->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'The following attributes are mandatory for custom buttons: ":attr"',
+                ['attr' => collect(Attributes::Mandatory)->implode('", "')]
+            ));
         }
 
         return $this;
@@ -105,10 +105,10 @@ class Buttons
             ->isNotEmpty();
 
         if ($formattedWrong) {
-            throw new TemplateException(__(sprintf(
-                'The following optional attributes are allowed for custom buttons: "%s"',
-                collect(Attributes::Optional)->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'The following optional attributes are allowed for custom buttons: ":button"',
+                ['button' => collect(Attributes::Optional)->implode('", "')]
+            ));
         }
 
         return $this;
@@ -118,17 +118,15 @@ class Buttons
     {
         if (property_exists($button, 'action')) {
             if (!property_exists($button, 'fullRoute') && !property_exists($button, 'routeSuffix')) {
-                throw new TemplateException(__(sprintf(
-                    'Whenever you have an action for a button you need to provide the fullRoute or routeSuffix aswell',
-                    collect(Attributes::Optional)->implode('", "')
-                )));
+                throw new TemplateException(__(
+                    'Whenever you set an action for a button you need to provide the fullRoute or routeSuffix aswell'
+                ));
             }
 
             if ($button->action === 'ajax' && !property_exists($button, 'method')) {
-                throw new TemplateException(__(sprintf(
-                    'Whenever you have an ajax action for a button you need to provide the method aswell',
-                    collect(Attributes::Optional)->implode('", "')
-                )));
+                throw new TemplateException(__(
+                    'Whenever you set an ajax action for a button you need to provide the method aswell'
+                ));
             }
         }
 
@@ -141,10 +139,10 @@ class Buttons
             && !collect(Attributes::Actions)->contains($button->action);
 
         if ($formattedWrong) {
-            throw new TemplateException(__(sprintf(
-                'The following actions are allowed for custom buttons: "%s"',
-                collect(Attributes::Actions)->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'The following actions are allowed for custom buttons: ":actions"',
+                ['actions' => collect(Attributes::Actions)->implode('", "')]
+            ));
         }
 
         return $this;
@@ -161,10 +159,10 @@ class Buttons
             : $route;
 
         if (!is_null($route) && !\Route::has($route)) {
-            throw new TemplateException(__(sprintf(
-                'Button route does not exist: %s',
-                $route
-            )));
+            throw new TemplateException(__(
+                'Button route does not exist: ":route"',
+                ['route' => $route]
+            ));
         }
 
         return $this;
@@ -177,10 +175,10 @@ class Buttons
         }
 
         if (!collect(Attributes::Methods)->contains($button->method)) {
-            throw new TemplateException(__(sprintf(
-                'Method is incorrect: %s',
-                $button->method
-            )));
+            throw new TemplateException(__(
+                'Method is incorrect: ":method"',
+                ['method' => $button->method]
+            ));
         }
 
         return $this;
