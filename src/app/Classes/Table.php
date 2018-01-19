@@ -5,6 +5,7 @@ namespace LaravelEnso\VueDatatable\app\Classes;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
+use LaravelEnso\VueDatatable\app\Exceptions\QueryException;
 use LaravelEnso\VueDatatable\app\Classes\Table\DateComputor;
 use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
 use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
@@ -34,6 +35,8 @@ class Table
     public function data()
     {
         $this->run();
+
+        $this->checkActions();
 
         return [
             'count' => $this->count,
@@ -71,6 +74,17 @@ class Table
             ->toArray()
             ->computeEnum()
             ->computeDate();
+    }
+
+    private function checkActions()
+    {
+        if (!$this->filtered) {
+            return;
+        }
+
+        if (!isset($this->data[0]['dtRowId'])) {
+            throw new QueryException(__('You have to add in the main query "id as dtRowId" for the actions to work'));
+        }
     }
 
     private function count()
