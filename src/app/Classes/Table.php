@@ -83,7 +83,7 @@ class Table
         }
 
         if (!isset($this->data[0]['dtRowId'])) {
-            throw new QueryException(__('You have to add in the main query "id as dtRowId" for the actions to work'));
+            throw new QueryException(__('You have to add in the main query \'id as "dtRowId"\' for the actions to work'));
         }
     }
 
