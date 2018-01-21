@@ -81,7 +81,7 @@ return [
     'buttons' => [
         'global' => [
             'create' => [
-                'icon'        => 'fa fa-plus',
+                'icon'        => 'fas fa-plus',
                 'class'       => 'is-success',
                 'routeSuffix' => 'create',
                 'event'       => 'create',
@@ -89,7 +89,7 @@ return [
                 'label'       => 'Create',
             ],
             'excel' => [
-                'icon'        => 'fa fa-file-excel-o',
+                'icon'        => 'fas fa-file-excel',
                 'class'       => 'is-info',
                 'routeSuffix' => 'exportExcel',
                 'event'       => 'export-excel',
@@ -99,21 +99,21 @@ return [
         ],
         'row' => [
             'show' => [
-                'icon'        => 'fa fa-eye',
+                'icon'        => 'fas fa-eye',
                 'class'       => 'is-success',
                 'routeSuffix' => 'show',
                 'event'       => 'show',
                 'action'      => 'router',
             ],
             'edit' => [
-                'icon'        => 'fa fa-pencil',
+                'icon'        => 'fas fa-pencil',
                 'class'       => 'is-warning',
                 'routeSuffix' => 'edit',
                 'event'       => 'edit',
                 'action'      => 'router',
             ],
             'destroy' => [
-                'icon'         => 'fa fa-trash',
+                'icon'         => 'fas fa-trash',
                 'class'        => 'is-danger',
                 'routeSuffix'  => 'destroy',
                 'event'        => 'destroy',
@@ -123,7 +123,7 @@ return [
                 'confirmation' => true,
             ],
             'download' => [
-                'icon'        => 'fa fa-cloud-download',
+                'icon'        => 'fas fa-cloud-download-alt',
                 'class'       => 'is-primary',
                 'routeSuffix' => 'download',
                 'event'       => 'download',
@@ -146,8 +146,8 @@ return [
         ],
     ],
     'boolean' => [
-        false => '<span class="tag is-table-tag is-danger"><span class="icon is-small"><i class="fa fa-times"></i></span></span>',
-        true  => '<span class="tag is-table-tag is-success"><span class="icon is-small"><i class="fa fa-check"></i></span></span>',
+        false => '<span class="tag is-table-tag is-danger"><span class="icon is-small"><i class="fas fa-times"></i></span></span>',
+        true  => '<span class="tag is-table-tag is-success"><span class="icon is-small"><i class="fas fa-check"></i></span></span>',
     ],
     'export' => [
         'path'             => 'exports',
@@ -202,7 +202,7 @@ into account your current sorting and filtering. Available options:
     "readSuffix": "read.suffix",
     "writeSuffix": "write.suffix",
     "name": "Table Name",
-    "icon": "fa fa-list-alt",
+    "icon": "fas fa-list-alt",
     "crtNo": true,
     "lengthMenu": [10, 15, 20, 25, 30],
     "appends": ["customAttribute"],
@@ -210,7 +210,7 @@ into account your current sorting and filtering. Available options:
         "show", "create", "edit", "destroy", "download", "exportExcel",
         {
             "type": "row",
-            "icon": "fa fa-bell",
+            "icon": "fas fa-bell",
             "class": "has-text-purple",
             "routeSuffix": "custom",
             "event": "custom-event",
