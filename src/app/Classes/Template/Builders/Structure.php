@@ -39,6 +39,5 @@ class Structure
         $this->template->enum = false;
         $this->template->date = false;
         $this->template->labels = config('enso.datatable.labels');
-        $this->template->boolean = (object) config('enso.datatable.boolean');
     }
 }

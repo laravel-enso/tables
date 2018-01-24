@@ -81,7 +81,7 @@ return [
     'buttons' => [
         'global' => [
             'create' => [
-                'icon'        => 'fas fa-plus',
+                'icon'        => 'plus',
                 'class'       => 'is-success',
                 'routeSuffix' => 'create',
                 'event'       => 'create',
@@ -89,7 +89,7 @@ return [
                 'label'       => 'Create',
             ],
             'excel' => [
-                'icon'        => 'fas fa-file-excel',
+                'icon'        => 'file-excel',
                 'class'       => 'is-info',
                 'routeSuffix' => 'exportExcel',
                 'event'       => 'export-excel',
@@ -99,21 +99,21 @@ return [
         ],
         'row' => [
             'show' => [
-                'icon'        => 'fas fa-eye',
+                'icon'        => 'eye',
                 'class'       => 'is-success',
                 'routeSuffix' => 'show',
                 'event'       => 'show',
                 'action'      => 'router',
             ],
             'edit' => [
-                'icon'        => 'fas fa-pencil',
+                'icon'        => 'pencil',
                 'class'       => 'is-warning',
                 'routeSuffix' => 'edit',
                 'event'       => 'edit',
                 'action'      => 'router',
             ],
             'destroy' => [
-                'icon'         => 'fas fa-trash',
+                'icon'         => 'trash',
                 'class'        => 'is-danger',
                 'routeSuffix'  => 'destroy',
                 'event'        => 'destroy',
@@ -123,7 +123,7 @@ return [
                 'confirmation' => true,
             ],
             'download' => [
-                'icon'        => 'fas fa-cloud-download-alt',
+                'icon'        => 'cloud-download-alt',
                 'class'       => 'is-primary',
                 'routeSuffix' => 'download',
                 'event'       => 'download',
@@ -145,10 +145,6 @@ return [
             'hover'    => 'is-hoverable',
         ],
     ],
-    'boolean' => [
-        false => '<span class="tag is-table-tag is-danger"><span class="icon is-small"><i class="fas fa-times"></i></span></span>',
-        true  => '<span class="tag is-table-tag is-success"><span class="icon is-small"><i class="fas fa-check"></i></span></span>',
-    ],
     'export' => [
         'path'             => 'exports',
         'limit'            => 20000,
@@ -158,42 +154,26 @@ return [
 ];
 ```
 
-- `validations`, string, values may be `always`/`local`, default `local`. When parsing the template, the given options are validated 
-because we want to avoid misconfiguration leading to unexpected results. It makes sense to run the validator just 
-during development, however, if you want to also run it in production, you may configure that here.
-- `labels`, array of options for the header names of the implicit columns. Note that these labels are also translated 
-if a translation function is given to the VueJS component, through the `i18n` parameter. Options:   
+- `validations`, string, values may be `always`/`local`, default `local`. When parsing the template, the given options are validated because we want to avoid misconfiguration leading to unexpected results. It makes sense to run the validator just during development, however, if you want to also run it in production, you may configure that here.
+- `labels`, array of options for the header names of the implicit columns. Note that these labels are also translated if a translation function is given to the VueJS component, through the `i18n` parameter. Options:   
     - `crtNo` is the current line number, default `#`
     - `actions`, is the last table column that contains the row's buttons, default `Actions`
-- `lengthMenu`, array of numbers, default `[10, 15, 20, 25, 30]` representing the pagination options for the table. 
-For each table's JSON template, the `lengthMenu` parameter is also available, and, if given, it will have higher priority over the 
-global configuration. This allows for some tables to have a different pagination than the default.
+- `lengthMenu`, array of numbers, default `[10, 15, 20, 25, 30]` representing the pagination options for the table. For each table's JSON template, the `lengthMenu` parameter is also available, and, if given, it will have higher priority over the global configuration. This allows for some tables to have a different pagination than the default.
 - `buttons`, array of button configurations, with 2 types:
-    - `global`, these buttons are the buttons that are rendered above the search input, global for the whole table, 
-    which do not depend on the data of a particular row. Defaults:
+    - `global`, these buttons are the buttons that are rendered above the search input, global for the whole table, which do not depend on the data of a particular row. Defaults:
        - `create`, button for creating a new resource
-       - `excel`, button for exporting the contents of the table. Note: The export process takes into account your current 
-       sorting and filtering.
+       - `excel`, button for exporting the contents of the table. Note: The export process takes into account your current sorting and filtering.
     - `row`, these are the buttons rendered in the `action` column, and defaults include: 
     `show`, `edit`, `destroy`, `download`
 - `style`, array of style configurations, with 2 sections:
-    - `default`, array of classes, default is `['striped', 'hover', 'bordered', 'center']`, that are applied by default 
-    for all tables. Note that you should set only one alignment specific class in the default.
-    - `mapping`, array of configurations for the styles. While designed for/with Bulma, you may specify here custom 
-    classes in order to personalize your tables   
-- `boolean`, array of configuration - HTML code mappings, that give you the option of customizing the rendering of 
-boolean type columns
-- `export`, array configuration options for exporting the contents of a file. Note: The export process takes 
-into account your current sorting and filtering. Available options:
-    - `path`, string, folder where the temporary export file is saved, default `exports`. This folder is expected 
-    to reside in `storage/app`
-    - `limit`, number, the maximum limit of results that are exported, default 20000. You may want to tweak this depending on 
-    the time the export takes, the size of the file, etc. 
-    - `maxExecutionTime`, number, max number of seconds for the php script to run, before it times out. You may need
-     to adjust this depending on how big your reports are. 
+    - `default`, array of classes, default is `['striped', 'hover', 'bordered', 'center']`, that are applied by default for all tables. Note that you should set only one alignment specific class in the default.
+    - `mapping`, array of configurations for the styles. While designed for/with Bulma, you may specify here custom classes in order to personalize your tables
+- `export`, array configuration options for exporting the contents of a file. Note: The export process takes into account your current sorting and filtering. Available options:
+    - `path`, string, folder where the temporary export file is saved, default `exports`. This folder is expected to reside in `storage/app`
+    - `limit`, number, the maximum limit of results that are exported, default 20000. You may want to tweak this depending on the time the export takes, the size of the file, etc. 
+    - `maxExecutionTime`, number, max number of seconds for the php script to run, before it times out. You may need to adjust this depending on how big your reports are. 
     - `notifications`, array of notification options, default `['broadcast', 'database']`. Note that 
-    email notifications are always used for sending the actual export file, so you should take into account email attachment size and 
-    mail server timeout / other limitations when choosing values for the export.  
+    email notifications are always used for sending the actual export file, so you should take into account email attachment size and mail server timeout / other limitations when choosing values for the export.  
 
 #### Template
 ```JSON
@@ -202,7 +182,7 @@ into account your current sorting and filtering. Available options:
     "readSuffix": "read.suffix",
     "writeSuffix": "write.suffix",
     "name": "Table Name",
-    "icon": "fas fa-list-alt",
+    "icon": "list-alt",
     "crtNo": true,
     "lengthMenu": [10, 15, 20, 25, 30],
     "appends": ["customAttribute"],
@@ -210,7 +190,7 @@ into account your current sorting and filtering. Available options:
         "show", "create", "edit", "destroy", "download", "exportExcel",
         {
             "type": "row",
-            "icon": "fas fa-bell",
+            "icon": "bell",
             "class": "has-text-purple",
             "routeSuffix": "custom",
             "event": "custom-event",

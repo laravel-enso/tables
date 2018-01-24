@@ -3,7 +3,7 @@
     "readSuffix": "read.suffix", // required, the data read endpoint suffix that gets appended to the routePrefix param
     "writeSuffix": "write.suffix", // optional, the data write endpoint suffix that gets appended to the routePrefix param
     "name": "Table Name", //optional, the title for the table
-    "icon": "fas fa-list-alt", //optional, expects a font awesome icon class
+    "icon": "list-alt", //optional, expects a font awesome icon class
     "crtNo": true, // optional, shows the line number
     "lengthMenu": [10, 15, 20, 25, 30], //optional, table pagination options. If given, it overwrites the value from config
     "appends": ["customAttribute"], // optional, laravel model accessors for custom attributes
@@ -11,7 +11,7 @@
         "show", "create", "edit", "destroy", "download", "exportExcel", // string buttons must match the config
         {
             "type": "row", // required, available options row / global
-            "icon": "fas fa-bell", // required, expects a font awesome icon class
+            "icon": "bell", // required, expects a font awesome icon class
             "class": "has-text-purple", // required, a CSS styling class
             "routeSuffix": "custom", // optional, gets appended to the routePrefix param
             "event": "custom-event", // optional, for custom in-page handling, outside of the table
