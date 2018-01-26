@@ -32,7 +32,8 @@
                     </span>
                 </span>
                 <span v-else-if="column.meta.icon">
-                    <fa :icon="row[column.name]"></fa>
+                    <fa v-if="row[column.name] != ''" 
+                        :icon="row[column.name]"></fa>
                 </span>
                 <span v-else-if="column.meta.render"
                     v-html="customRender(row, column)">
