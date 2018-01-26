@@ -22,21 +22,24 @@
             v-for="(column, index) in template.columns"
             :key="index"
             v-if="column.meta.visible && !column.meta.hidden && !isChild(row)">
-            <span v-if="column.meta.boolean"
-                class="tag is-table-tag"
-                :class="row[column.name] ? 'is-success' : 'is-danger'">
-                <span class="icon is-small">
-                    <fa :icon="row[column.name] ? 'check' : 'times'"></fa>
+            <span :class="{ 'is-clickable': column.meta.clickable }"
+                @click="clicked(column, row)">
+                <span v-if="column.meta.boolean"
+                    class="tag is-table-tag"
+                    :class="row[column.name] ? 'is-success' : 'is-danger'">
+                    <span class="icon is-small">
+                        <fa :icon="row[column.name] ? 'check' : 'times'"></fa>
+                    </span>
                 </span>
+                <span v-else-if="column.meta.icon">
+                    <fa :icon="row[column.name]"></fa>
+                </span>
+                <span v-else-if="column.meta.render"
+                    v-html="customRender(row, column)">
+                </span>
+                <span v-else-if="column.meta.translation">{{ i18n(row[column.name]) }}</span>
+                <span v-else>{{ row[column.name] }}</span>
             </span>
-            <span v-else-if="column.meta.icon">
-                <fa :icon="row[column.name]"></fa>
-            </span>
-            <span v-else-if="column.meta.render"
-                v-html="customRender(row, column)">
-            </span>
-            <span v-else-if="column.meta.translation">{{ i18n(row[column.name]) }}</span>
-            <span v-else>{{ row[column.name] }}</span>
         </td>
         <td class="table-actions"
             :class="template.align"
@@ -167,6 +170,11 @@ export default {
             this.row = null;
             this.button = null;
         },
+        clicked(column, row) {
+            if (column.meta.clickable) {
+                this.$emit('clicked', column, row);
+            }
+        },
         doAction(button, row) {
             if (this.modal) {
                 this.modal = false;
@@ -280,6 +288,11 @@ li.child-row:not(:last-child) {
 
 li.child-row {
     padding: 0.5em 0;
+}
+
+.is-clickable {
+    cursor: pointer;
+    text-decoration: underline dotted;
 }
 
 </style>

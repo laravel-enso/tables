@@ -6,6 +6,6 @@ class Meta
 {
     const List = [
         'searchable', 'sortable', 'translation', 'boolean',
-        'editable', 'total', 'render', 'date', 'icon',
+        'editable', 'total', 'render', 'date', 'icon', 'clickable',
     ];
 }

@@ -211,7 +211,7 @@ return [
             "label": "Name",
             "data": "table.column",
             "name": "columnAlias",
-            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render", "date", "icon"],
+            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render", "date", "icon", "clickable"],
             "enum": "EnumClass"
         }
     ]
