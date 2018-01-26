@@ -15,6 +15,12 @@ class AppServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/resources/assets/js' => resource_path('assets/js'),
         ], 'vuedatatable-assets');
+
+        $this->publishes([
+            __DIR__.'/resources/assets/js' => resource_path('assets/js'),
+        ], 'enso-assets');
+
+        $this->mergeConfigFrom(__DIR__.'/config/datatable.php', 'enso.datatable');
     }
 
     public function register()

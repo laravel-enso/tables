@@ -8,11 +8,13 @@ class Filters
 {
     private $request;
     private $query;
+    private $columns;
 
-    public function __construct($request, $query)
+    public function __construct($request, $query, $columns)
     {
         $this->request = $request;
         $this->query = $query;
+        $this->columns = $columns;
     }
 
     public function set()
@@ -30,9 +32,7 @@ class Filters
 
         collect(explode(' ', $this->request->get('search')))->each(function ($arg) {
             $this->query->where(function ($query) use ($arg) {
-                collect($this->request->get('columns'))->each(function ($column) use ($query, $arg) {
-                    $column = json_decode($column);
-
+                $this->columns->each(function ($column) use ($query, $arg) {
                     if ($column->meta->searchable) {
                         $query->orWhere($column->data, 'LIKE', '%'.$arg.'%');
                     }

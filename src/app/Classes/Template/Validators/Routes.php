@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
-use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 use Symfony\Component\Routing\Route;
+use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 
 class Routes
 {
@@ -22,8 +22,8 @@ class Routes
 
     public function validate()
     {
-        $this->checkReadRoute();
-        $this->checkWriteRoute();
+        $this->checkReadRoute()
+            ->checkWriteRoute();
     }
 
     private function checkReadRoute()
@@ -31,11 +31,13 @@ class Routes
         $readRoute = $this->prefix.'.'.$this->readSuffix;
 
         if (!\Route::has($readRoute)) {
-            throw new TemplateException(__(sprintf(
-                'Read route does not exist: %s',
-                $readRoute
-            )));
+            throw new TemplateException(__(
+                'Read route does not exist: ":route"',
+                ['route' => $readRoute]
+            ));
         }
+
+        return $this;
     }
 
     private function checkWriteRoute()
@@ -45,10 +47,10 @@ class Routes
             : null;
 
         if ($writeRoute && !\Route::has($writeRoute)) {
-            throw new TemplateException(__(sprintf(
-                'Write route does not exist: %s',
-                $writeRoute
-            )));
+            throw new TemplateException(__(
+                'Write route does not exist: ":route"',
+                ['route' => $writeRoute]
+            ));
         }
     }
 }

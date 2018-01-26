@@ -2,12 +2,14 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
-use LaravelEnso\VueDatatable\app\Classes\Table\ExportComputor;
+use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
+use LaravelEnso\VueDatatable\app\Exceptions\QueryException;
+use LaravelEnso\VueDatatable\app\Classes\Table\DateComputor;
+use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
 use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
+use LaravelEnso\VueDatatable\app\Classes\Table\ExportComputor;
 
 class Table
 {
@@ -34,11 +36,13 @@ class Table
     {
         $this->run();
 
+        $this->checkActions();
+
         return [
-            'count'    => $this->count,
+            'count' => $this->count,
             'filtered' => $this->filtered,
-            'total'    => $this->total,
-            'data'     => $this->data,
+            'total' => $this->total,
+            'data' => $this->data,
         ];
     }
 
@@ -51,9 +55,9 @@ class Table
         $export = new ExportComputor($this->data, $this->columns);
 
         return [
-            'name'   => $this->request->get('name'),
+            'name' => $this->request->get('name'),
             'header' => $this->columns->pluck('label')->toArray(),
-            'data'   => $export->data()->toArray(),
+            'data' => $export->data()->toArray(),
         ];
     }
 
@@ -67,7 +71,20 @@ class Table
             ->limit()
             ->setData()
             ->setAppends()
-            ->computeEnum();
+            ->toArray()
+            ->computeEnum()
+            ->computeDate();
+    }
+
+    private function checkActions()
+    {
+        if (!$this->filtered) {
+            return;
+        }
+
+        if (!isset($this->data[0]['dtRowId'])) {
+            throw new QueryException(__('You have to add in the main query \'id as "dtRowId"\' for the actions to work'));
+        }
     }
 
     private function count()
@@ -78,7 +95,7 @@ class Table
     private function filter()
     {
         if ($this->hasFilters()) {
-            (new Filters($this->request, $this->query))->set();
+            (new Filters($this->request, $this->query, $this->columns))->set();
             $this->filtered = $this->count();
         }
 
@@ -143,13 +160,27 @@ class Table
         return $this;
     }
 
+    private function toArray()
+    {
+        $this->data = $this->data->toArray();
+
+        return $this;
+    }
+
     private function computeEnum()
     {
         if ($this->meta->enum) {
-            (new EnumComputor($this->data, $this->request))->run();
+            $this->data = (new EnumComputor($this->data, $this->columns))->get();
         }
 
         return $this;
+    }
+
+    private function computeDate()
+    {
+        if ($this->meta->date) {
+            $this->data = (new DateComputor($this->data, $this->columns))->get();
+        }
     }
 
     private function setColumns()
@@ -170,11 +201,10 @@ class Table
     private function checkExportLimit()
     {
         if ($this->meta->length > config('enso.datatable.export.limit')) {
-            throw new ExportException(__(sprintf(
-                'The table exceeds the maximum number of records allowed: %d vs %d',
-                $this->meta->length,
-                config('enso.datatable.export.limit')
-            )), 555);
+            throw new ExportException(__(
+                'The table exceeds the maximum number of records allowed: :actual vs :limit',
+                ['actual' => $this->meta->length, 'limit' => config('enso.datatable.export.limit')]
+            ));
         }
     }
 }

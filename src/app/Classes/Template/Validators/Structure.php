@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
-use LaravelEnso\VueDatatable\app\Classes\Attributes\Structure as Attributes;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
+use LaravelEnso\VueDatatable\app\Classes\Attributes\Structure as Attributes;
 
 class Structure
 {
@@ -16,9 +16,9 @@ class Structure
 
     public function validate()
     {
-        $this->checkMandatoryAttributes();
-        $this->checkOptionalAttributes();
-        $this->checkFormat();
+        $this->checkMandatoryAttributes()
+            ->checkOptionalAttributes()
+            ->checkFormat();
     }
 
     private function checkMandatoryAttributes()
@@ -27,11 +27,13 @@ class Structure
             ->diff(collect($this->template)->keys());
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Mandatory Attribute(s) Missing: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Mandatory Attribute(s) Missing: ":attr"',
+                ['attr' => $diff->implode('", "')]
+            ));
         }
+
+        return $this;
     }
 
     private function checkOptionalAttributes()
@@ -44,11 +46,13 @@ class Structure
             ->diff($attributes);
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Unknown Attribute(s) Found: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Unknown Attribute(s) Found: ":attr"',
+                ['attr' => $diff->implode('", "')]
+            ));
         }
+
+        return $this;
     }
 
     private function checkFormat()

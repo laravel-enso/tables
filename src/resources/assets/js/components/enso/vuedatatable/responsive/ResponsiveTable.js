@@ -35,14 +35,12 @@ class ResponsiveTable {
         this.hiding = true;
         columns[columns.length - 1].meta.hidden = true;
 
-        this.context.$nextTick(() => {
-            this.updateSize();
-            this.resize();
-        });
+        this.retryFit();
     }
 
     showColumn() {
-        const columns = this.context.template.columns.filter(column => column.meta.hidden);
+        const columns = this.context.template.columns
+            .filter(column => column.meta.hidden);
 
         if (!columns.length) {
             return;
@@ -50,10 +48,7 @@ class ResponsiveTable {
 
         columns[0].meta.hidden = false;
 
-        this.context.$nextTick(() => {
-            this.updateSize();
-            this.resize();
-        });
+        this.retryFit();
     }
 
     resize() {
@@ -61,6 +56,16 @@ class ResponsiveTable {
             return;
         }
 
+        this.fit();
+    }
+
+    retryFit() {
+        this.context.$nextTick(() => {
+            this.fit();
+        });
+    }
+
+    fit() {
         if (this.shouldHide()) {
             this.hideColumns();
             return;

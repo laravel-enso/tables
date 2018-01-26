@@ -1,84 +1,101 @@
 <template>
 
-    <tbody>
-        <tr v-for="(row, index) in body.data"
-            :key="index">
-            <td class="table-crt-no"
-                :class="template.align"
-                v-if="template.crtNo && !isChild(row)">
-                {{ getIndex(row) }}
-                <span class="icon is-small"
+<tbody>
+    <tr v-for="(row, index) in body.data"
+        :key="index">
+        <td :class="template.align"
+            v-if="template.crtNo && !isChild(row)">
+            <div class="table-crt-no">
+                <span class="crt-no-label">
+                    {{ getIndex(row) }}
+                </span>
+                <span class="hidden-controls"
                     v-if="hiddenCount"
                     @click="toggleExpand(row, index)">
-                    <i class="fa fa-minus-square"
-                        v-if="isExpanded(row)">
-                    </i>
-                    <i class="fa fa-plus-square"
-                        v-else>
-                    </i>
+                    <span class="icon is-small">
+                        <fa :icon="isExpanded(row) ? 'minus-square' : 'plus-square'"></fa>
+                    </span>
                 </span>
-            </td>
-            <td :class="template.align"
-                v-for="(column, index) in template.columns"
-                :key="index"
-                v-if="column.meta.visible && !column.meta.hidden && !isChild(row)">
+            </div>
+        </td>
+        <td :class="template.align"
+            v-for="(column, index) in template.columns"
+            :key="index"
+            v-if="column.meta.visible && !column.meta.hidden && !isChild(row)">
+            <span :class="{ 'is-clickable': column.meta.clickable }"
+                @click="clicked(column, row)">
                 <span v-if="column.meta.boolean"
-                    v-html="row[column.name] ? template.boolean[1] : template.boolean[0]">
+                    class="tag is-table-tag"
+                    :class="row[column.name] ? 'is-success' : 'is-danger'">
+                    <span class="icon is-small">
+                        <fa :icon="row[column.name] ? 'check' : 'times'"></fa>
+                    </span>
+                </span>
+                <span v-else-if="column.meta.icon">
+                    <fa :icon="row[column.name]"></fa>
                 </span>
                 <span v-else-if="column.meta.render"
                     v-html="customRender(row, column)">
                 </span>
                 <span v-else-if="column.meta.translation">{{ i18n(row[column.name]) }}</span>
                 <span v-else>{{ row[column.name] }}</span>
-            </td>
-            <td class="table-actions"
-                :class="template.align"
-                v-if="template.actions && !isChild(row)">
-                <span class="table-action-buttons">
-                    <a v-for="(button, index) in template.buttons.row"
-                        :key="index"
-                        class="button is-small is-table-button has-margin-left-small"
-                        :class="button.class"
-                        :href="button.action === 'href' ? getPath(button, row.dtRowId) : null"
-                        @click="button.confirmation ? showModal(button, row) : doAction(button, row)">
-                        <span class="icon is-small">
-                            <i :class="button.icon"></i>
-                        </span>
-                    </a>
-                </span>
-            </td>
-            <td :colspan="hiddenColSpan"
-                :class="template.align"
-                v-if="isChild(row)">
-                <ul>
-                    <li class="child-row"
-                        v-for="column in row"
-                        :key="column.label">
-                        <b>{{ column.label }}</b>: {{ column.value }}
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <modal v-if="modal"
-            :show="modal"
-            :i18n="i18n"
-            :message="button.message"
-            @cancel-action="closeModal()"
-            @commit-action="doAction(button, row)">
-        </modal>
-    </tbody>
+            </span>
+        </td>
+        <td class="table-actions"
+            :class="template.align"
+            v-if="template.actions && !isChild(row)">
+            <span class="table-action-buttons">
+                <a v-for="(button, index) in template.buttons.row"
+                    :key="index"
+                    class="button is-small is-table-button has-margin-left-small"
+                    :class="button.class"
+                    :href="button.action === 'href' ? getPath(button, row.dtRowId) : null"
+                    @click="button.confirmation ? showModal(button, row) : doAction(button, row)">
+                    <span class="icon is-small">
+                        <fa :icon="button.icon"></fa>
+                    </span>
+                </a>
+            </span>
+        </td>
+        <td :colspan="hiddenColSpan"
+            :class="template.align"
+            v-if="isChild(row)">
+            <ul>
+                <li class="child-row"
+                    v-for="column in row"
+                    :key="column.label">
+                    <b>{{ column.label }}</b>: {{ column.value }}
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <modal v-if="modal"
+        :show="modal"
+        :i18n="i18n"
+        :message="button.message"
+        @cancel="closeModal()"
+        @commit="doAction(button, row)">
+    </modal>
+</tbody>
 
 </template>
 
 <script>
 
-import TableBody from './TableBody.vue';
+import fontawesome from '@fortawesome/fontawesome';
+import {
+    faMinusSquare, faPlusSquare, faEye, faPencilAlt, faTrashAlt, faCloudDownloadAlt,
+} from '@fortawesome/fontawesome-free-solid/shakable.es';
 import Modal from './Modal.vue';
+
+fontawesome.library.add([
+    faMinusSquare, faPlusSquare, faEye, faPencilAlt, faTrashAlt, faCloudDownloadAlt,
+]);
 
 export default {
     name: 'TableBody',
 
-    components: { TableBody, Modal },
+    components: { Modal },
 
     props: {
         template: {
@@ -117,7 +134,7 @@ export default {
         },
         hiddenColSpan() {
             return this.template.columns.length - this.hiddenColumns.length
-                + (this.template.actions ? 2 : 1);
+            + (this.template.actions ? 2 : 1);
         },
     },
 
@@ -153,6 +170,11 @@ export default {
             this.row = null;
             this.button = null;
         },
+        clicked(column, row) {
+            if (column.meta.clickable) {
+                this.$emit('clicked', column, row);
+            }
+        },
         doAction(button, row) {
             if (this.modal) {
                 this.modal = false;
@@ -172,9 +194,9 @@ export default {
             }
         },
         getRouteParams(button, row) {
-            var params = {
-                id: row.dtRowId
-            }
+            const params = {
+                id: row.dtRowId,
+            };
 
             if (button.params) {
                 return Object.assign(params, button.params);
@@ -229,21 +251,25 @@ export default {
 
 </script>
 
-<style>
+<style lang="scss" scoped>
 
-    td.table-crt-no {
-        white-space:nowrap;
-        align-content: center;
+div.table-crt-no {
+    white-space:nowrap;
+    display: flex;
+
+    .crt-no-label {
+        margin: auto;
     }
 
-    .table-crt-no .fa-plus-square,
-    .table-crt-no .fa-minus-square {
+    .hidden-controls {
         cursor: pointer;
+        margin-left: auto;
+        margin-top: 0.1em;
     }
+}
 
-    td.table-actions {
-        padding: .35em .5em;
-    }
+td.table-actions {
+    padding: .35em .5em;
 
     span.table-action-buttons {
         display: inline-flex;
@@ -254,20 +280,19 @@ export default {
         width: 1.6em;
         font-size: .9em;
     }
+}
 
-    .tag.is-table-tag {
-        font-size: 0.8rem;
-        font-weight: bold;
-        height: 1.4em;
-        padding: 3px;
-    }
+li.child-row:not(:last-child) {
+    border-bottom: 1px solid #efefef;
+}
 
-    li.child-row:not(:last-child) {
-        border-bottom: 1px solid #efefef;
-    }
+li.child-row {
+    padding: 0.5em 0;
+}
 
-    li.child-row {
-        padding: 0.5em 0;
-    }
+.is-clickable {
+    cursor: pointer;
+    text-decoration: underline dotted;
+}
 
 </style>

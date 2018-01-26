@@ -17,7 +17,9 @@ class Columns
     {
         $this->template->columns = collect($this->template->columns)
             ->reduce(function ($columns, $column) {
-                $this->computeMeta($column);
+                if (property_exists($column, 'meta')) {
+                    $this->computeMeta($column);
+                }
 
                 if (property_exists($column, 'enum')) {
                     $this->template->enum = true;
@@ -32,14 +34,18 @@ class Columns
     private function computeMeta($column)
     {
         $column->meta = collect(Attributes::List)->reduce(function ($meta, $attribute) use ($column) {
-            if ($attribute === 'total' && collect($column->meta)->contains('total')) {
-                $this->template->total = true;
-            }
-
-            $meta[$attribute] = property_exists($column, 'meta') && collect($column->meta)->contains($attribute);
+            $meta[$attribute] = collect($column->meta)->contains($attribute);
 
             return $meta;
         }, []);
+
+        if ($column->meta['total']) {
+            $this->template->total = true;
+        }
+
+        if ($column->meta['date']) {
+            $this->template->date = true;
+        }
 
         $column->meta['visible'] = true;
     }

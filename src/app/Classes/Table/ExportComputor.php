@@ -17,11 +17,11 @@ class ExportComputor
     {
         $columns = $this->getColumns();
 
-        return $this->data->map(function ($record) use ($columns) {
+        return collect($this->data)->map(function ($record) use ($columns) {
             return $columns->reduce(function ($collector, $column) use ($record) {
                 $collector[$column->name] = $column->translation
-                    ? __($record->{$column->name})
-                    : $record->{$column->name};
+                    ? __($record[$column->name])
+                    : $record[$column->name];
 
                 return $collector;
             }, []);
@@ -32,7 +32,7 @@ class ExportComputor
     {
         return $this->columns->reduce(function ($columns, $column) {
             $columns->push((object) [
-                'name'        => $column->name,
+                'name' => $column->name,
                 'translation' => $column->meta->translation,
             ]);
 

@@ -3,8 +3,8 @@
 namespace LaravelEnso\VueDatatable\app\Exports;
 
 use Box\Spout\Common\Type;
-use Box\Spout\Writer\Style\StyleBuilder;
 use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Writer\Style\StyleBuilder;
 
 class Excel
 {

@@ -4,18 +4,18 @@
         <tr>
             <td></td>
             <td class="has-text-centered has-text-weight-bold"
-                v-if="template.columns[0].meta.visible">
+                v-if="template.columns[0].meta.visible && !template.columns[0].meta.hidden">
                 {{ i18n("Total") }}
             </td>
             <td class="has-text-centered has-text-weight-bold"
                 v-for="i in template.columns.length - 1"
                 :key="i"
-                v-if="template.columns[i].meta.visible">
+                v-if="template.columns[i].meta.visible && !template.columns[i].meta.hidden">
                 <span v-if="template.columns[i].meta.total">
                     {{ numberFormat(body.total[template.columns[i].name]) }}
                 </span>
             </td>
-            <td></td>
+            <td v-if="template.actions"></td>
         </tr>
     </tfoot>
 

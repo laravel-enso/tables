@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
-use LaravelEnso\VueDatatable\app\Classes\Attributes\Column as Attributes;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
+use LaravelEnso\VueDatatable\app\Classes\Attributes\Column as Attributes;
 
 class Columns
 {
@@ -28,8 +28,7 @@ class Columns
 
     private function checkFormat()
     {
-        if (!is_array($this->columns)
-            || empty($this->columns)
+        if (!is_array($this->columns) || empty($this->columns)
             || collect($this->columns)->first(function ($column) {
                 return !is_object($column);
             }) !== null
@@ -46,10 +45,10 @@ class Columns
             ->diff(collect($column)->keys());
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Mandatory column attribute(s) missing: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Mandatory column attribute(s) missing: ":attr"',
+                ['attr' => $diff->implode('", "')]
+            ));
         }
 
         return $this;
@@ -65,10 +64,10 @@ class Columns
             ->diff($attributes);
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(sprintf(
-                'Unknown Column Attribute(s) Found: "%s"',
-                $diff->implode('", "')
-            )));
+            throw new TemplateException(__(
+                'Unknown Column Attribute(s) Found: ":attr"',
+                ['attr' => $diff->implode('", "')]
+            ));
         }
 
         return $this;
@@ -78,10 +77,6 @@ class Columns
     {
         if (property_exists($column, 'meta')) {
             Meta::validate($column->meta);
-
-            if (collect($column->meta)->contains('editable') && !property_exists($column, 'data')) {
-                throw new TemplateException(__('Editable columns need data attribute'));
-            }
         }
 
         return $this;
@@ -91,10 +86,10 @@ class Columns
     {
         if (property_exists($column, 'enum')) {
             if (!class_exists($column->enum)) {
-                throw new TemplateException(__(sprintf(
-                    'Provided enum does not exist: %s',
-                    $column->enum
-                )));
+                throw new TemplateException(__(
+                    'Provided enum does not exist: ":enum"',
+                    ['enum' => $column->enum]
+                ));
             }
         }
 

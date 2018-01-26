@@ -23,7 +23,7 @@ return [
      */
 
     'labels' => [
-        'crtNo'   => '#',
+        'crtNo' => '#',
         'actions' => 'Actions',
     ],
 
@@ -55,53 +55,53 @@ return [
     'buttons' => [
         'global' => [
             'create' => [
-                'icon'        => 'fa fa-plus',
-                'class'       => 'is-success',
+                'icon' => 'plus',
+                'class' => 'is-success',
                 'routeSuffix' => 'create',
-                'event'       => 'create',
-                'action'      => 'router',
-                'label'       => 'Create',
+                'event' => 'create',
+                'action' => 'router',
+                'label' => 'Create',
             ],
             'excel' => [
-                'icon'        => 'fa fa-file-excel-o',
-                'class'       => 'is-info',
+                'icon' => 'file-excel',
+                'class' => null,
                 'routeSuffix' => 'exportExcel',
-                'event'       => 'export-excel',
-                'action'      => 'export',
-                'label'       => 'Excel',
+                'event' => 'export-excel',
+                'action' => 'export',
+                'label' => 'Excel',
             ],
         ],
         'row' => [
             'show' => [
-                'icon'        => 'fa fa-eye',
-                'class'       => 'is-success',
+                'icon' => 'eye',
+                'class' => 'is-success',
                 'routeSuffix' => 'show',
-                'event'       => 'show',
-                'action'      => 'router',
+                'event' => 'show',
+                'action' => 'router',
             ],
             'edit' => [
-                'icon'        => 'fa fa-pencil',
-                'class'       => 'is-warning',
+                'icon' => 'pencil-alt',
+                'class' => 'is-warning',
                 'routeSuffix' => 'edit',
-                'event'       => 'edit',
-                'action'      => 'router',
+                'event' => 'edit',
+                'action' => 'router',
             ],
             'destroy' => [
-                'icon'         => 'fa fa-trash',
-                'class'        => 'is-danger',
-                'routeSuffix'  => 'destroy',
-                'event'        => 'destroy',
-                'action'       => 'ajax',
-                'method'       => 'DELETE',
-                'message'      => 'The selected record is about to be deleted. Are you sure?',
+                'icon' => 'trash-alt',
+                'class' => 'is-danger',
+                'routeSuffix' => 'destroy',
+                'event' => 'destroy',
+                'action' => 'ajax',
+                'method' => 'DELETE',
+                'message' => 'The selected record is about to be deleted. Are you sure?',
                 'confirmation' => true,
             ],
             'download' => [
-                'icon'        => 'fa fa-cloud-download',
-                'class'       => 'is-primary',
+                'icon' => 'cloud-download-alt',
+                'class' => 'is-primary',
                 'routeSuffix' => 'download',
-                'event'       => 'download',
-                'action'      => 'href',
+                'event' => 'download',
+                'action' => 'href',
             ],
         ],
     ],
@@ -120,28 +120,14 @@ return [
             'striped', 'hover', 'bordered', 'center',
         ],
         'mapping' => [
-            'left'     => 'has-text-left',
-            'center'   => 'has-text-centered',
-            'right'    => 'has-text-right',
-            'compact'  => 'is-narrow',
-            'striped'  => 'is-striped',
+            'left' => 'has-text-left',
+            'center' => 'has-text-centered',
+            'right' => 'has-text-right',
+            'compact' => 'is-narrow',
+            'striped' => 'is-striped',
             'bordered' => 'is-bordered',
-            'hover'    => 'is-hoverable',
+            'hover' => 'is-hoverable',
         ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Boolean
-    |--------------------------------------------------------------------------
-    |
-    | HTML render code for the boolean type of columns
-    |
-    */
-
-    'boolean' => [
-        false => '<span class="tag is-table-tag is-danger"><span class="icon is-small"><i class="fa fa-times"></i></span></span>',
-        true  => '<span class="tag is-table-tag is-success"><span class="icon is-small"><i class="fa fa-check"></i></span></span>',
     ],
 
     /*
@@ -154,9 +140,20 @@ return [
     */
 
     'export' => [
-        'path'             => 'exports',
-        'limit'            => 20000,
+        'path' => 'exports',
+        'limit' => 20000,
         'maxExecutionTime' => 100,
-        'notifications'    => ['broadcast', 'database'],
+        'notifications' => ['broadcast', 'database'],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Date format
+    |--------------------------------------------------------------------------
+    | Global date format for date columns. Will use Carbon to parse the columns
+    | marked as date to the desired format.
+    |
+    */
+
+    'dateFormat' => 'd-m-Y',
 ];
