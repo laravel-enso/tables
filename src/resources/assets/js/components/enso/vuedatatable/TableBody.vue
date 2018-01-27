@@ -31,7 +31,7 @@
                         <fa :icon="row[column.name] ? 'check' : 'times'"></fa>
                     </span>
                 </span>
-                <span v-else-if="column.meta.icon">
+                <span v-else-if="column.meta.icon && row[column.name]">
                     <fa :icon="row[column.name]"></fa>
                 </span>
                 <span v-else-if="column.meta.render"
