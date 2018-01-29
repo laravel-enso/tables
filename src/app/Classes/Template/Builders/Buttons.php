@@ -81,7 +81,7 @@ class Buttons
 
     private function routeIsForbidden($route)
     {
-        if (empty(config('enso.config'))) {
+        if ($this->template->auth === false || empty(config('enso.config'))) {
             return false;
         }
 

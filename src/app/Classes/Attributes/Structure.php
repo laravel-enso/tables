@@ -6,5 +6,5 @@ class Structure
 {
     const Mandatory = ['routePrefix', 'readSuffix', 'columns'];
 
-    const Optional = ['name', 'icon', 'crtNo', 'appends', 'buttons', 'writeSuffix', 'lengthMenu'];
+    const Optional = ['name', 'icon', 'crtNo', 'appends', 'buttons', 'writeSuffix', 'lengthMenu', 'auth'];
 }
