@@ -192,6 +192,7 @@ is a string, with the date format for date columns, which will be used when disp
     "name": "Table Name",
     "icon": "list-alt",
     "crtNo": true,
+    "auth": false,
     "lengthMenu": [10, 15, 20, 25, 30],
     "appends": ["customAttribute"],
     "buttons": [
@@ -236,6 +237,7 @@ This is only needed when using the editor (N/A).
 (make sure the used class is avaible in the page, via a local or global import)
 - `crtNo`, optional, boolean, flag for showing the current line number. Note that if it's missing the responsive 
 functionality will be limited 
+- `auth`, optional, boolean, flag for removing auth when using in enso context.
 - `lengthMenu`, optional, array, list of options for the table pagination. If missing, the default values in the 
 global configuration are used. If given, the template values have higher precedence over the global configuration
 - `appends` - optional, array, list of appended attributes that need to be added to the query results. 
