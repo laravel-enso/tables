@@ -64,7 +64,7 @@ For the data editor functionality (WIP), separate requests will be used.
 Note: In order to make the above requests, named routes are required.
 
 #### Configuration
-The table comes with with a publishable configuration file which you may update in order to fit your 
+The package comes with with a publishable configuration file which you may update in order to fit your 
 project requirements. The various options are explained below.
 
 ```php
@@ -154,26 +154,34 @@ return [
 ];
 ```
 
-- `validations`, string, values may be `always`/`local`, default `local`. When parsing the template, the given options are validated because we want to avoid misconfiguration leading to unexpected results. It makes sense to run the validator just during development, however, if you want to also run it in production, you may configure that here.
-- `labels`, array of options for the header names of the implicit columns. Note that these labels are also translated if a translation function is given to the VueJS component, through the `i18n` parameter. Options:   
-    - `crtNo` is the current line number, default `#`
-    - `actions`, is the last table column that contains the row's buttons, default `Actions`
-- `lengthMenu`, array of numbers, default `[10, 15, 20, 25, 30]` representing the pagination options for the table. For each table's JSON template, the `lengthMenu` parameter is also available, and, if given, it will have higher priority over the global configuration. This allows for some tables to have a different pagination than the default.
-- `buttons`, array of button configurations, with 2 types:
-    - `global`, these buttons are the buttons that are rendered above the search input, global for the whole table, which do not depend on the data of a particular row. Defaults:
-       - `create`, button for creating a new resource
-       - `excel`, button for exporting the contents of the table. Note: The export process takes into account your current sorting and filtering.
-    - `row`, these are the buttons rendered in the `action` column, and defaults include: 
-    `show`, `edit`, `destroy`, `download`
-- `style`, array of style configurations, with 2 sections:
-    - `default`, array of classes, default is `['striped', 'hover', 'bordered', 'center']`, that are applied by default for all tables. Note that you should set only one alignment specific class in the default.
-    - `mapping`, array of configurations for the styles. While designed for/with Bulma, you may specify here custom classes in order to personalize your tables
-- `export`, array configuration options for exporting the contents of a file. Note: The export process takes into account your current sorting and filtering. Available options:
-    - `path`, string, folder where the temporary export file is saved, default `exports`. This folder is expected to reside in `storage/app`
-    - `limit`, number, the maximum limit of results that are exported, default 20000. You may want to tweak this depending on the time the export takes, the size of the file, etc. 
-    - `maxExecutionTime`, number, max number of seconds for the php script to run, before it times out. You may need to adjust this depending on how big your reports are. 
-    - `notifications`, array of notification options, default `['broadcast', 'database']`. Note that 
+##### validations 
+is a string, values may be `always`/`local`, default `local`. When parsing the template, the given options are validated because we want to avoid misconfiguration leading to unexpected results. It makes sense to run the validator just during development, however, if you want to also run it in production, you may configure that here.
+##### labels
+is an array of options for the header names of the implicit columns. Note that these labels are also translated if a translation function is given to the VueJS component, through the `i18n` parameter. Options:   
+- `crtNo` is the current line number, default `#`
+- `actions`, is the last table column that contains the row's buttons, default `Actions`
+##### lengthMenu
+is an array of numbers, default `[10, 15, 20, 25, 30]` representing the pagination options for the table. For each table's JSON template, the `lengthMenu` parameter is also available, and, if given, it will have higher priority over the global configuration. This allows for some tables to have a different pagination than the default.
+##### buttons, 
+is an array of button configurations, with 2 types:
+- `global`, these buttons are the buttons that are rendered above the search input, global for the whole table, which do not depend on the data of a particular row. Defaults:
+    - `create`, button for creating a new resource
+    - `excel`, button for exporting the contents of the table. Note: The export process takes into account your current sorting and filtering.
+- `row`, these are the buttons rendered in the `action` column, and defaults include: 
+        `show`, `edit`, `destroy`, `download`
+##### style
+is an array of style configurations, with 2 sections:
+- `default`, array of classes, default is `['striped', 'hover', 'bordered', 'center']`, that are applied by default for all tables. Note that you should set only one alignment specific class in the default.
+- `mapping`, array of configurations for the styles. While designed for/with Bulma, you may specify here custom classes in order to personalize your tables
+##### export
+is an array of configuration options for exporting the contents of a file. Note: The export process takes into account your current sorting and filtering. Available options:
+- `path`, string, folder where the temporary export file is saved, default `exports`. This folder is expected to reside in `storage/app`
+- `limit`, number, the maximum limit of results that are exported, default 20000. You may want to tweak this depending on the time the export takes, the size of the file, etc. 
+- `maxExecutionTime`, number, max number of seconds for the php script to run, before it times out. You may need to adjust this depending on how big your reports are. 
+- `notifications`, array of notification options, default `['broadcast', 'database']`. Note that 
     email notifications are always used for sending the actual export file, so you should take into account email attachment size and mail server timeout / other limitations when choosing values for the export.  
+##### dateFormat
+is a string, with the date format for date columns, which will be used when displaying date values
 
 #### Template
 ```JSON
@@ -219,16 +227,17 @@ return [
 ```
 
 Options:
-- `routePrefix`, required, string, the route segment, used for both read and write
+- `routePrefix`, required, string, the common route segment, used for both read and write
 - `readSuffix`, required, string, the route endpoint, that gets concatenated to the `routePrefix`
 - `writeSuffix`, optional, string, the route endpoint, that gets concatenated to the `routePrefix`. 
-This is only needed when using the editor. 
+This is only needed when using the editor (N/A). 
 - `name`, optional, string, the title used for the table.
-- `icon`, optional, string, expects Font Awesome icon classes
+- `icon`, optional, string, expects Font Awesome icon classes 
+(make sure the used class is avaible in the page, via a local or global import)
 - `crtNo`, optional, boolean, flag for showing the current line number. Note that if it's missing the responsive 
 functionality will be limited 
 - `lengthMenu`, optional, array, list of options for the table pagination. If missing, the default values in the 
-global configuration are used. If given, the template values have higher precedence
+global configuration are used. If given, the template values have higher precedence over the global configuration
 - `appends` - optional, array, list of appended attributes that need to be added to the query results. 
 Note that the appended attributes are available from the main query model
 - `buttons`, optional, array, list of buttons that need to be rendered. See below for more in-depth information.
@@ -256,7 +265,7 @@ By action:
 
 The configuration options for buttons are, as follows:
 - `type`: required, string, available options are `row` / `global`
-- `icon`: required, string, expects font awesome icon classes
+- `icon`: required, string, expects Font Awesome icon classes (ensure classes are available in the page)
 - `class`: required, string, expects CSS styling classes
 - `routeSuffix`: optional, string, if given, gets appended to the `routePrefix` param
 - `event`: optional, string, the name of an event that is emitted on click, which allows for custom in-page handling, 
@@ -287,12 +296,16 @@ the type for a model/table.
     - `sortable`, optional, string, marks this column as sortable. If not sortable, the controls to sort are 
     not available for sorting
     - `translation`, optional, string, marks this column's values as translatable. 
-    The `i18n` parameter translation function should be given to the VueJS component 
+    The `i18n` parameter translation function should be given to the VueJS table component in order for this to function 
     - `boolean`, optional, string, marks this column as boolean, which means it will be rendered as such
-    - `editable`, optional, string, marks this column as editable - WIP
+    - `editable`, optional, string, marks this column as editable (N/A)
     - `total`, optional, string, if flagged, calculates a total for this column 
     - `render`, optional, string, flags this column for custom rendering, allowing for unlimited customization 
     of the format of the data in this column
+    - `date`, optional, marks the data of the column as dates, 
+    which means it's formatted using the format given in the configuration file
+    - `clickable`, optiona, string, flags the column as clickable, which means it makes it - you guessed it - clickable. 
+    When clicked, it emits the `clicked` event, with the column & row as event payload 
 
 #### The VueJS Component
 The VueTable component takes the following parameters:
@@ -307,6 +320,43 @@ is be used to filter results
 a render dispatcher for when needing to custom render multiple columns for the same table
 - `i18n`, optional, function, that is used for translating labels, headers, and table data. 
 The default value (function) for this parameter simply returns it's argument as the translated value. 
+
+Examples:
+
+- `filters` - reactive object of the following format
+    ```
+    "filters": {
+        "table": {
+            "field_1" : '',
+            "field_2" : '',
+        }
+    }
+    ```
+- `params` - extra parameters sent to the back-end for custom logic / queries
+    ```
+    "params": {
+        "orders": {
+            dispatched: ''
+        }
+    }
+    ```
+- `intervals` - where `dbDateFormat` is REQUIRED if the filter values are dates. The given format has to match the database date format
+    ```
+    "intervalFilters": {
+       "table":{
+          "created_at": {
+             "min":"value",
+             "max":"value",
+             "dbDateFormat": "Y-m-d"
+          },
+          "amount": {
+            "min": 0,
+            "max": 1000
+          }
+       }
+    }
+    ```
+
 
 #### The query
 
@@ -333,6 +383,8 @@ Feel free to look around at the various packages in the [laravel-enso](https://g
 ### Publishes
 - `php artisan vendor:publish --tag=vuedatatable-config` - the component configuration
 - `php artisan vendor:publish --tag=vuedatatable-assets` - all the VueJS components and assets
+- `php artisan vendor:publish --tag=enso-assets` - a common alias for when wanting to update the VueJS components,
+once a newer version is released, usually used with the `--force` flag
 
 ### Notes
 
@@ -340,8 +392,7 @@ The [Laravel Enso Core](https://github.com/laravel-enso/Core) package comes with
 
 We've tried to make it as light as possible and use the minimum amount of external libraries and dependencies.
 Therefore, the package depends just on:
- - [Spout](https://github.com/box/spout) for fast & efficient xlsx exports 
- - [toastr](https://github.com/CodeSeven/toastr) for beautiful notifications
+ - [Spout](https://github.com/box/spout) for fast & efficient xlsx exports
  - [element-resize-detector](https://github.com/wnr/element-resize-detector) for making the table responsive
  - [lodash](https://github.com/lodash/lodash) for debouncing, using a selective import
 
