@@ -20,7 +20,8 @@
             "label": "Button Label", // optional, should be given only for global buttons
             "confirmation": false, // optional, if you need a modal confirmation before doing the action
             "message": "Are you sure?", // optional, if you want to customize the modal message
-            "method": "GET/PUT/PATCH/POST/DELETE" // optional, should be given if you have action set as ajax
+            "method": "GET/PUT/PATCH/POST/DELETE", // optional, should be given if you have action set as ajax
+            "params": {} //optional, object, can be used to pass extra params with a `router` action
         }
     ],
     "columns": [ //required, list of column configurations
@@ -28,7 +29,7 @@
             "label": "Name", //required, table header column name
             "data": "table.column", // required, the table and column name
             "name": "columnAlias", // required, alias from the query builder
-            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render", "date"], //optional
+            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render", "date", "clickable"], //optional
             "enum": "EnumClass" // optional
         }
     ]
