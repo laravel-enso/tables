@@ -233,7 +233,7 @@ Options:
 - `writeSuffix`, optional, string, the route endpoint, that gets concatenated to the `routePrefix`. 
 This is only needed when using the editor (N/A). 
 - `name`, optional, string, the title used for the table.
-- `icon`, optional, string, expects Font Awesome icon classes 
+- `icon`, optional, string or array of strings, expects Font Awesome icon classes 
 (make sure the used class is avaible in the page, via a local or global import)
 - `crtNo`, optional, boolean, flag for showing the current line number. Note that if it's missing the responsive 
 functionality will be limited 
@@ -305,6 +305,7 @@ the type for a model/table.
     - `render`, optional, string, flags this column for custom rendering, allowing for unlimited customization 
     of the format of the data in this column
     - `date`, optional, marks the data of the column as dates, 
+    - `icon`, optional, if given, it renders a Font Awesome 5 icon as contents, using the column.name as the icon's class 
     which means it's formatted using the format given in the configuration file
     - `clickable`, optiona, string, flags the column as clickable, which means it makes it - you guessed it - clickable. 
     When clicked, it emits the `clicked` event, with the column & row as event payload 
