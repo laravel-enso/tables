@@ -31,24 +31,74 @@ Data Table package with server-side processing and VueJS components. Build fast 
 - the configuration template for each table has been designed to be as light and straightforward as possible without losing 
 out on features
 - thorough validation of the JSON template with developer friendly messages, in order to avoid misconfiguration issues
+- can be used independently of the Enso ecosystem
 
-### Coming very soon
 
-- fully independent of the Enso ecosystem
-
-#### and sooner than later
-
+#### In the future
 - PDF export alongside the XLSX report 
+
+#### Considering
 - editable table cells, with input, date-picker, select, checkbox support
-
-#### and later or never
-
-- column reordering
 
 ### Installation
 
-... soon
+#### Enso
+If you're using [Laravel Enso](https://github.com/laravel-enso/Enso), this package is already included, 
+so no further installation is required
 
+#### Independently
+Note: the following steps assume you have some experience with Laravel and VueJS.
+
+Outside of Laravel Enso, the following dependencies are required:
+- [Bulma](https://bulma.io/) for styling
+- [Axios](https://github.com/axios/axios) for AJAX requests
+- [Lodash](https://lodash.com/) for debounce
+- [Font Awesome](https://fontawesome.com/) 5 for the icons
+
+Next:
+1. `composer require laravel-enso/vuedatatable` to pull in the package and its dependencies
+2. `php artisan vendor:publish --tag=enso-assets` to publish resources
+3. `php artisan vendor:publish --tag=vuedatatable-config` to publish configuration file
+4. import, include, setup the resources and dependencies
+
+```js
+import axios from 'axios';
+import VueTable from './components/enso/vuedatatable/VueTable.vue';
+import Toastr from './components/enso/bulma/toastr';
+
+Vue.use(Toastr, {
+    position: 'right',
+    duration: 3000,
+    closeButton: true,
+});
+
+window.axios = axios;
+```
+
+5. Create the JSON table configuration template. 
+    Example: [exampleTable.json](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/exampleTable.json)
+6. Create the table controller which defines the query and gives the path to the JSON template
+    Example: [TableController.php](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/TableController.php)
+7. Declare the route in your route file, to present your controller's methods
+```
+Route::get('init', 'TableController@init')->name('init');
+Route::get('data', 'TableController@data')->name('data');
+Route::get('exportExcel', 'TableController@exportExcel')->name('exportExcel');
+```
+   Full example: [web.php](https://github.com/laravel-enso/Enso/blob/master/routes/web.php)
+8. Place the vuedatatable `VueJS` component in your page/component:
+```
+<vue-table path="/examples/table/init"    
+    @clicked="clicked"
+    @excel="$toastr.info('You just pressed Excel', 'Event')"
+    @create="$toastr.success('You just pressed Create', 'Event')"
+    @edit="$toastr.warning('You just pressed Edit', 'Event')"
+    @destroy="$toastr.error('You just pressed Delete', 'Event')"
+    id="example">
+</vue-table>
+``` 
+   Full example: [table.blade.php](https://github.com/laravel-enso/Enso/blob/master/resources/views/examples/table.blade.php)
+ 
 ### Use
 The Vue Data Table component works by pulling its configuration through an initialization request. 
 After loading its configuration through that first request, it makes another request for pulling in its data, 
