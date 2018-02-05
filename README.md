@@ -5,6 +5,8 @@
 Data Table package with server-side processing and VueJS components. Build fast any complex table based on a JSON template.
 
 [![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.webm)
+
+
 <sup>click on the photo to view a short demo in compatible browsers</sup>
 
 
@@ -57,45 +59,51 @@ Outside of Laravel Enso, the following dependencies are required:
 Next:
 1. `composer require laravel-enso/vuedatatable` to pull in the package and its dependencies
 2. `php artisan vendor:publish --tag=enso-assets` to publish resources
-3. `php artisan vendor:publish --tag=vuedatatable-config` to publish configuration file
+3. `php artisan vendor:publish --tag=vuedatatable-config` to publish the configuration file
 4. import, include, setup the resources and dependencies
 
-```js
-import axios from 'axios';
-import VueTable from './components/enso/vuedatatable/VueTable.vue';
-import Toastr from './components/enso/bulma/toastr';
-
-Vue.use(Toastr, {
-    position: 'right',
-    duration: 3000,
-    closeButton: true,
-});
-
-window.axios = axios;
-```
+    ```js
+    import axios from 'axios';
+    import VueTable from './components/enso/vuedatatable/VueTable.vue';
+    import Toastr from './components/enso/bulma/toastr';
+    
+    Vue.use(Toastr, {
+        position: 'right',
+        duration: 3000,
+        closeButton: true,
+    });
+    
+    window.axios = axios;
+    ```
 
 5. Create the JSON table configuration template. 
+
     Example: [exampleTable.json](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/exampleTable.json)
+
 6. Create the table controller which defines the query and gives the path to the JSON template
+
     Example: [TableController.php](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/TableController.php)
+
 7. Declare the route in your route file, to present your controller's methods
-```
-Route::get('init', 'TableController@init')->name('init');
-Route::get('data', 'TableController@data')->name('data');
-Route::get('exportExcel', 'TableController@exportExcel')->name('exportExcel');
-```
-   Full example: [web.php](https://github.com/laravel-enso/Enso/blob/master/routes/web.php)
+    ```
+    Route::get('init', 'TableController@init')->name('init');
+    Route::get('data', 'TableController@data')->name('data');
+    Route::get('exportExcel', 'TableController@exportExcel')->name('exportExcel');
+    ```
+    Full example: [web.php](https://github.com/laravel-enso/Enso/blob/master/routes/web.php)
+   
 8. Place the vuedatatable `VueJS` component in your page/component:
-```
-<vue-table path="/examples/table/init"    
-    @clicked="clicked"
-    @excel="$toastr.info('You just pressed Excel', 'Event')"
-    @create="$toastr.success('You just pressed Create', 'Event')"
-    @edit="$toastr.warning('You just pressed Edit', 'Event')"
-    @destroy="$toastr.error('You just pressed Delete', 'Event')"
-    id="example">
-</vue-table>
-``` 
+    ```
+    <vue-table path="/examples/table/init"    
+        @clicked="clicked"
+        @excel="$toastr.info('You just pressed Excel', 'Event')"
+        @create="$toastr.success('You just pressed Create', 'Event')"
+        @edit="$toastr.warning('You just pressed Edit', 'Event')"
+        @destroy="$toastr.error('You just pressed Delete', 'Event')"
+        id="example">
+    </vue-table>
+    ``` 
+   
    Full example: [table.blade.php](https://github.com/laravel-enso/Enso/blob/master/resources/views/examples/table.blade.php)
  
 ### Use
