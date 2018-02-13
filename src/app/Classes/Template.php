@@ -32,7 +32,7 @@ class Template
         try {
             $this->template = json_decode(\File::get($template));
         } catch (FileNotFoundException $exception) {
-            throw new TemplateException(__('Template file :file not found', ['file' => $template]));
+            throw new TemplateException(__('Specified template file was not found'));
         }
 
         if (!$this->template) {
