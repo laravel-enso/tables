@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
-use LaravelEnso\VueDatatable\app\Classes\Template\Builder;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use LaravelEnso\VueDatatable\app\Classes\Template\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validator;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 
