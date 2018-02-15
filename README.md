@@ -94,7 +94,8 @@ Next:
    
 8. Place the vuedatatable `VueJS` component in your page/component:
     ```
-    <vue-table path="/examples/table/init"    
+    <vue-table class="box"
+        path="/examples/table/init"    
         @clicked="clicked"
         @excel="$toastr.info('You just pressed Excel', 'Event')"
         @create="$toastr.success('You just pressed Create', 'Event')"
