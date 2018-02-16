@@ -21,10 +21,12 @@ class Buttons
         $this->template->buttons = collect($this->template->buttons)
             ->reduce(function ($buttons, $button) {
                 [$button, $type] = is_string($button)
-                ? $this->getMapping($button)
-                : [$button, $button->type];
+                    ? $this->getMapping($button)
+                    : [$button, $button->type];
 
-                $valid = $this->computeRoute($button, $type);
+                if ($this->actionComputingFailes($button, $type)) {
+                    return $buttons;
+                }
 
                 $buttons[$type][] = $button;
 
@@ -45,27 +47,27 @@ class Buttons
             : [(object) $this->defaults['row'][$button], 'row'];
     }
 
-    private function computeRoute($button, $type)
+    private function actionComputingFailes($button, $type)
     {
         if (!property_exists($button, 'action')) {
-            return true;
+            return false;
         }
 
         $route = $this->getRoute($button);
 
         if ($this->routeIsForbidden($route)) {
-            return false;
+            return true;
         }
 
         if (collect(self::PathActions)->contains($button->action)) {
             $button->path = route($route, [$type === 'row' ? 'dtRowId' : null], false);
 
-            return true;
+            return false;
         }
 
         $button->route = $route;
 
-        return true;
+        return false;
     }
 
     private function getRoute($button)
