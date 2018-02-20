@@ -1,5 +1,11 @@
 <!--h-->
 # Vue Data Table
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3cf79a9ca584f08b3be0246cb488788)](https://www.codacy.com/app/laravel-enso/vuedatatable?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=laravel-enso/vuedatatable&amp;utm_campaign=Badge_Grade)
+[![StyleCI](https://styleci.io/repos/99695155/shield?branch=master)](https://styleci.io/repos/99695155)
+[![License](https://poser.pugx.org/laravel-enso/vuedatatable/license)](https://packagist.org/packages/laravel-enso/vuedatatable)
+[![Total Downloads](https://poser.pugx.org/laravel-enso/vuedatatable/downloads)](https://packagist.org/packages/laravel-enso/vuedatatable)
+[![Latest Stable Version](https://poser.pugx.org/laravel-enso/vuedatatable/version)](https://packagist.org/packages/laravel-enso/vuedatatable)
 <!--/h-->
 
 Data Table package with server-side processing and VueJS components. Build fast any complex table based on a JSON template.
