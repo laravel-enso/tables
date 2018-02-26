@@ -72,6 +72,11 @@ Next:
     import axios from 'axios';
     import VueTable from './components/enso/vuedatatable/VueTable.vue';
     import Toastr from './components/enso/bulma/toastr';
+ 
+    import fontawesome from '@fortawesome/fontawesome';
+    import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+    
+    Vue.component('fa', FontAwesomeIcon);
     
     Vue.use(Toastr, {
         position: 'right',
@@ -81,6 +86,17 @@ Next:
     
     window.axios = axios;
     ```
+    
+    Note on Font Awesome: Each icon used in the datatable should be available (imported) in the page/component where 
+    vue-table is used, for example:
+    ```js
+    import { faSearch, faSync, faAngleDown }
+        from '@fortawesome/fontawesome-free-solid/shakable.es';
+    fontawesome.library.add(faSearch, faSync, faAngleDown);
+    ``` 
+    
+    Please read the official Font Awesome 
+    [documentation](https://fontawesome.com/how-to-use/js-component-packages#vue-js) for further details.
 
 5. Create the JSON table configuration template. 
 
@@ -292,14 +308,14 @@ is a string, with the date format for date columns, which will be used when disp
 ```
 
 Options:
-- `routePrefix`, required, string, the common route segment, used for both read and write
+- `routePrefix`, required, string, the common route segment, used for both read and write (N/A)
 - `readSuffix`, required, string, the route endpoint, that gets concatenated to the `routePrefix`
 - `writeSuffix`, optional, string, the route endpoint, that gets concatenated to the `routePrefix`. 
 This is only needed when using the editor (N/A). 
 - `name`, optional, string, the title used for the table.
 - `icon`, optional, string or array of strings, expects Font Awesome icon classes 
 (make sure the used class is avaible in the page, via a local or global import)
-- `crtNo`, optional, boolean, flag for showing the current line number. Note that if it's missing the responsive 
+- `crtNo`, optional, boolean, flag for showing the current line number. Note that if it's missing, the responsive 
 functionality will be limited 
 - `auth`, optional, boolean, flag for removing auth when using in enso context.
 - `lengthMenu`, optional, array, list of options for the table pagination. If missing, the default values in the 
@@ -337,7 +353,7 @@ The configuration options for buttons are, as follows:
 - `event`: optional, string, the name of an event that is emitted on click, which allows for custom in-page handling, 
 outside of the table
 - `action`: optional, string, available options are `router` / `href` / `export` / `ajax`. 
-Depending on the chosen options other parameters could be required.
+Depending on the chosen options, other parameters could be required
 - `fullRoute`: optional, string, if given, is used independently from the `routePrefix` param
 - `label`: optional, string, should be given only for global buttons
 - `confirmation`: optional, boolean, flag for showing a confirmation modal before processing the action, such as deletion
@@ -351,7 +367,7 @@ The columns configuration attribute is required, and expects an array of configu
 Each configuration object may have the following attributes:
 - `label`, required, string, the column name used in the table header. This will be translated if a translation function 
 is available. 
-- `data`, required, string, the table + column that data gets pulled from, in the query. For example 'users.email'
+- `data`, required, string, the table + column wherefrom data gets pulled, in the query. For example 'users.email'
 - `name`, required, string, the alias for that column's data, given in the select query
 - `enum`, optional, string, the class name of the enumeration used to transform/map the values of that column/attribute. 
 For example, you may use this mechanism to show labels instead of integer values, for an attribute that holds 
@@ -369,24 +385,23 @@ the type for a model/table.
     - `render`, optional, string, flags this column for custom rendering, allowing for unlimited customization 
     of the format of the data in this column
     - `date`, optional, marks the data of the column as dates, 
-    - `icon`, optional, if given, it renders a Font Awesome 5 icon as contents, using the column.name as the icon's class 
-    which means it's formatted using the format given in the configuration file
-    - `clickable`, optiona, string, flags the column as clickable, which means it makes it - you guessed it - clickable. 
+    - `icon`, optional, string, if given, it renders a Font Awesome 5 icon as contents, using the 'column.icon' as the icon's class    
+    - `clickable`, optional, string, flags the column as clickable, which means it makes it - you guessed it - clickable. 
     When clicked, it emits the `clicked` event, with the column & row as event payload 
 
 #### The VueJS Component
 The VueTable component takes the following parameters:
 - `id`, required, string, identification for this table, is used to store the preferences in the browser's local storage
 - `path`, required, string, the URI for the table initialization request
-- `filters`, optional, object, reactive options that, if available, is sent with the getTableData request and 
+- `filters`, optional, object, reactive options that, if available, is sent along with the getTableData request and 
 is used to filter results
-- `params`, optional, object, reactive parameters, that, if available, is sent with the getTableData request and 
+- `params`, optional, object, reactive parameters, that, if available, is sent along with the getTableData request and 
 is be used to filter results
 - `intervals`, optional, object, reactive parameters, that, if available is used for interval filtering of the results
 - `customRender`, optional, function, that can be used as a custom render function for a single column or 
-a render dispatcher for when needing to custom render multiple columns for the same table
-- `i18n`, optional, function, that is used for translating labels, headers, and table data. 
-The default value (function) for this parameter simply returns it's argument as the translated value. 
+a render dispatcher for when needing to custom render multiple columns of the same table
+- `i18n`, optional, function, that is used for translating labels, headers, and table data 
+The default value (function) for this parameter simply returns its argument as the translated value 
 
 Examples:
 
