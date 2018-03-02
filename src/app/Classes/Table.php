@@ -193,7 +193,9 @@ class Table
 
     private function hasFilters()
     {
-        return $this->request->has('search')
+        \Log::info($this->request->filled('search'));
+
+        return $this->request->filled('search')
             || $this->request->has('filters')
             || $this->request->has('intervalFilters');
     }

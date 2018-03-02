@@ -26,7 +26,7 @@ class Filters
 
     private function setSearch()
     {
-        if (!$this->request->has('search')) {
+        if (!$this->request->filled('search')) {
             return $this;
         }
 
