@@ -2,7 +2,7 @@
 
     <tfoot>
         <tr>
-            <td></td>
+            <td v-if="template.crtNo"></td>
             <td class="has-text-centered has-text-weight-bold"
                 v-if="template.columns[0].meta.visible && !template.columns[0].meta.hidden">
                 {{ i18n("Total") }}
@@ -58,7 +58,3 @@ export default {
 };
 
 </script>
-
-<style>
-
-</style>
