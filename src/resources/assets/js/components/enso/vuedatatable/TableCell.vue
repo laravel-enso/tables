@@ -15,6 +15,12 @@
         <span v-else-if="column.meta.render">
             <slot name="custom-render"></slot>
         </span>
+        <span v-else-if="column.meta.slot">
+            <slot :name="column.name"
+                :column="column"
+                :value="value">
+            </slot>
+        </span>
         <span v-else-if="column.meta.translation">{{ i18n(value) }}</span>
         <span v-else>{{ value }}</span>
     </span>
