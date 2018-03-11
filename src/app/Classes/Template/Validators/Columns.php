@@ -22,7 +22,8 @@ class Columns
             $this->checkMandatoryAttributes($column)
                 ->checkOptionalAttributes($column)
                 ->checkMeta($column)
-                ->checkEnum($column);
+                ->checkEnum($column)
+                ->checkTooltip($column);
         });
     }
 
@@ -91,6 +92,18 @@ class Columns
                     ['enum' => $column->enum]
                 ));
             }
+        }
+
+        return $this;
+    }
+
+    private function checkTooltip($column)
+    {
+        if (property_exists($column, 'tooltip') && !is_string($column->tooltip)) {
+            throw new TemplateException(__(
+                    'The tooltip provided for ":column" must be a string',
+                    ['column' => $column->name]
+                ));
         }
 
         return $this;

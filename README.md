@@ -60,7 +60,8 @@ Outside of Laravel Enso, the following dependencies are required:
 - [Bulma](https://bulma.io/) for styling
 - [Axios](https://github.com/axios/axios) for AJAX requests
 - [Lodash](https://lodash.com/) for debounce
-- [Font Awesome](https://fontawesome.com/) 5 for the icons
+- [Font Awesome 5](https://fontawesome.com/) for the icons
+- [Akryum v-tooltip](https://github.com/Akryum/v-tooltip) for displaying tooltips
 
 Next:
 1. `composer require laravel-enso/vuedatatable` to pull in the package and its dependencies

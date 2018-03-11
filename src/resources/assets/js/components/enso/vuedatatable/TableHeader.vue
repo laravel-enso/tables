@@ -6,26 +6,24 @@
                 v-if="template.crtNo">
                 {{ i18n(template.labels.crtNo) }}
             </th>
-            <th class="vue-table-header"
-                :class="template.align"
+            <th :class="['vue-table-header', template.align]"
                 v-for="column in template.columns"
+                v-tooltip="column.tooltip || null"
                 :key="column.label"
                 v-if="column.meta.visible && !column.meta.hidden && !column.meta.rogue">
-                <span>
-                    {{ i18n(column.label) }}
-                    <span class="table-header-controls">
-                        <span class="sorter"
-                            @click="toggleSort($event, column)"
-                            v-if="column.meta.sortable">
-                            <span class="icon is-small">
-                                <fa :icon="sortIcon(column.meta.sort)" size="xs"></fa>
-                            </span>
+                {{ i18n(column.label) }}
+                <span class="table-header-controls">
+                    <span class="sorter"
+                        @click="toggleSort($event, column)"
+                        v-if="column.meta.sortable">
+                        <span class="icon is-small">
+                            <fa :icon="sortIcon(column.meta.sort)" size="xs"></fa>
                         </span>
-                        <a class="delete is-small"
-                            v-if="column.meta.sort"
-                            @click="clearColumnSort(column)">
-                        </a>
                     </span>
+                    <a class="delete is-small"
+                        v-if="column.meta.sort"
+                        @click="clearColumnSort(column)">
+                    </a>
                 </span>
             </th>
             <th :class="template.align"
@@ -39,7 +37,9 @@
 
 <script>
 
+import { VTooltip } from 'v-tooltip';
 import fontawesome from '@fortawesome/fontawesome';
+
 import { faSort, faSortUp, faSortDown, faPlus, faFileExcel }
     from '@fortawesome/fontawesome-free-solid/shakable.es';
 
@@ -47,6 +47,8 @@ fontawesome.library.add(faSort, faSortUp, faSortDown, faPlus, faFileExcel);
 
 export default {
     name: 'Header',
+
+    directives: { tooltip: VTooltip },
 
     props: {
         template: {
