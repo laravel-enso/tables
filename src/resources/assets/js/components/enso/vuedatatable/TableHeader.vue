@@ -8,11 +8,15 @@
             </th>
             <th :class="['vue-table-header', template.align]"
                 v-for="column in template.columns"
-                v-tooltip="column.tooltip || null"
                 :key="column.label"
                 v-if="column.meta.visible && !column.meta.hidden && !column.meta.rogue">
                 {{ i18n(column.label) }}
                 <span class="table-header-controls">
+                    <span class="icon is-small"
+                        v-if="column.tooltip"
+                        v-tooltip="column.tooltip || null">
+                        <fa icon="info" size="xs"></fa>
+                    </span>
                     <span class="sorter"
                         @click="toggleSort($event, column)"
                         v-if="column.meta.sortable">
@@ -40,10 +44,10 @@
 import { VTooltip } from 'v-tooltip';
 import fontawesome from '@fortawesome/fontawesome';
 
-import { faSort, faSortUp, faSortDown, faPlus, faFileExcel }
+import { faSort, faSortUp, faSortDown, faPlus, faFileExcel, faInfo }
     from '@fortawesome/fontawesome-free-solid/shakable.es';
 
-fontawesome.library.add(faSort, faSortUp, faSortDown, faPlus, faFileExcel);
+fontawesome.library.add(faSort, faSortUp, faSortDown, faPlus, faFileExcel, faInfo);
 
 export default {
     name: 'Header',
