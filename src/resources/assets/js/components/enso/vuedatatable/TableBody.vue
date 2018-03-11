@@ -21,7 +21,10 @@
         <td :class="template.align"
             v-for="(column, idx) in template.columns"
             :key="idx"
-            v-if="column.meta.visible && !column.meta.hidden && !isChild(row)">
+            v-if="
+                column.meta.visible && !column.meta.hidden
+                && !column.meta.rogue && !isChild(row)
+            ">
             <table-cell :i18n="i18n"
                 :hidden-controls="cascadesHiddenControls && idx === 0"
                 :column="column"
@@ -71,7 +74,8 @@
             <ul>
                 <li class="child-row"
                     v-for="(item, index) in row"
-                    :key="index">
+                    :key="index"
+                    v-if="!item.column.meta.rogue">
                     <b>{{ item.column.label }}</b>:
                     <table-cell :i18n="i18n"
                         :column="item.column"

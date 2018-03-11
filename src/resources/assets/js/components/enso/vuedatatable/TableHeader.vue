@@ -10,7 +10,7 @@
                 :class="template.align"
                 v-for="column in template.columns"
                 :key="column.label"
-                v-if="column.meta.visible && !column.meta.hidden">
+                v-if="column.meta.visible && !column.meta.hidden && !column.meta.rogue">
                 <span>
                     {{ i18n(column.label) }}
                     <span class="table-header-controls">
