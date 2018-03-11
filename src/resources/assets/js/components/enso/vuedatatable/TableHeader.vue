@@ -12,7 +12,7 @@
                 v-if="column.meta.visible && !column.meta.hidden && !column.meta.rogue">
                 {{ i18n(column.label) }}
                 <span class="table-header-controls">
-                    <span class="icon is-small"
+                    <span class="icon is-small has-text-info"
                         v-if="column.tooltip"
                         v-tooltip="column.tooltip">
                         <fa icon="info" size="xs"></fa>
