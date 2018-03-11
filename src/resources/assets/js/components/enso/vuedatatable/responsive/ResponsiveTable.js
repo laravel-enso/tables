@@ -1,19 +1,14 @@
-import throttle from 'lodash/throttle';
+import debounce from 'lodash/debounce';
 
 class ResponsiveTable {
     constructor(el, context) {
         this.el = el;
         this.context = context;
-        this.hiding = false;
+        this.resize = debounce(this.resize, 16);
         this.width = null;
-        this.resize = throttle(this.resize, 50);
     }
 
-    updateSize() {
-        this.width = this.el.offsetWidth;
-    }
-
-    shouldResize() {
+    hasChanged() {
         return this.width !== this.el.offsetWidth;
     }
 
@@ -22,10 +17,14 @@ class ResponsiveTable {
     }
 
     shouldShow() {
-        return this.el.offsetWidth === this.el.scrollWidth;
+        return this.el.offsetWidth === this.el.scrollWidth && this.hasChanged();
     }
 
-    hideColumns() {
+    updateWidth() {
+        this.width = this.el.offsetWidth;
+    }
+
+    hideColumn() {
         const column = this.context.template.columns
             .filter(column => column.meta.visible && !column.meta.hidden && !column.meta.rogue)
             .pop();
@@ -34,9 +33,9 @@ class ResponsiveTable {
             return;
         }
 
-        this.hiding = true;
         column.meta.hidden = true;
-        this.retryFit();
+
+        this.update();
     }
 
     showColumn() {
@@ -48,30 +47,21 @@ class ResponsiveTable {
         }
 
         column.meta.hidden = false;
-        this.retryFit();
+        this.update();
     }
 
-    resize() {
-        if (this.shouldResize()) {
-            this.fit();
-        }
-    }
-
-    retryFit() {
+    update() {
         this.context.$nextTick(() => {
-            this.updateSize();
-            this.fit();
+            this.updateWidth();
+            if (this.shouldHide()) {
+                this.hideColumn();
+            }
         });
     }
 
-    fit() {
+    resize() {
         if (this.shouldHide()) {
-            this.hideColumns();
-            return;
-        }
-
-        if (this.hiding) {
-            this.hiding = false;
+            this.hideColumn();
             return;
         }
 
