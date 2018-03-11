@@ -2,6 +2,7 @@
 
     <span :class="{ 'is-clickable': column.meta.clickable }"
         @click="$emit('clicked')">
+        <slot name="hidden-controls" v-if="hiddenControls"></slot>
         <span v-if="column.meta.boolean"
             class="tag is-table-tag"
             :class="value ? 'is-success' : 'is-danger'">
@@ -44,6 +45,10 @@ export default {
         i18n: {
             type: Function,
             required: true,
+        },
+        hiddenControls: {
+            type: Boolean,
+            default: false,
         },
     },
 };
