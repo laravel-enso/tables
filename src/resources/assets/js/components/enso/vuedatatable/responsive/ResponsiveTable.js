@@ -1,9 +1,12 @@
+import throttle from 'lodash/throttle';
+
 class ResponsiveTable {
     constructor(el, context) {
         this.el = el;
         this.context = context;
         this.hiding = false;
         this.width = null;
+        this.resize = throttle(this.resize, 50);
     }
 
     updateSize() {
@@ -49,11 +52,9 @@ class ResponsiveTable {
     }
 
     resize() {
-        this.context.$nextTick(() => {
-            if (this.shouldResize()) {
-                this.fit();
-            }
-        });
+        if (this.shouldResize()) {
+            this.fit();
+        }
     }
 
     retryFit() {

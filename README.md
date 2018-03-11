@@ -62,6 +62,7 @@ Outside of Laravel Enso, the following dependencies are required:
 - [Lodash](https://lodash.com/) for debounce
 - [Font Awesome 5](https://fontawesome.com/) for the icons
 - [Akryum v-tooltip](https://github.com/Akryum/v-tooltip) for displaying tooltips
+- [Css element queries - resize detector](https://github.com/marcj/css-element-queries) for responsiveness
 
 Next:
 1. `composer require laravel-enso/vuedatatable` to pull in the package and its dependencies
