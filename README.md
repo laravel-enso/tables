@@ -29,7 +29,7 @@ Data Table package with server-side processing and VueJS components. Build fast 
 - custom data rendering support via render functions
 - full customization via the use of slots for your columns
 - smart resizing & auto-hide based on screen width. Data is still accessible under an optional child row
-- tooltips for columns
+- tooltips for columns/rows
 - front-end translations for labels and even data
 - configurable, on-the-fly view modes: compact, striped, bordered, hover and left / center / right data alignment
 - preferences/state save for each table in the browser's localStorage
@@ -376,27 +376,29 @@ is available.
 - `enum`, optional, string, the class name of the enumeration used to transform/map the values of that column/attribute. 
 For example, you may use this mechanism to show labels instead of integer values, for an attribute that holds 
 the type for a model/table.  
-- `meta`, optional, array of string options, for further transformations:
-    - `searchable`, optional, string, marks this column as searchable. If not searchable, a column is not used when 
+- `meta`, optional, array of string tags/options, allowing further transformations:
+    - `searchable`, optional, marks this column as searchable. If not searchable, a column is not used when 
     using the table search functionality 
-    - `sortable`, optional, string, marks this column as sortable. If not sortable, the controls to sort are 
+    - `sortable`, optional, marks this column as sortable. If not sortable, the controls to sort are 
     not available for sorting
-    - `translation`, optional, string, marks this column's values as translatable. 
-    The `i18n` parameter translation function should be given to the VueJS table component in order for this to function 
-    - `boolean`, optional, string, marks this column as boolean, which means it will be rendered as such
-    - `slot`, optional, boolean, marks this column for slot customization, i.e. 
-    a slot with that column name will be rendered, allowing you to put the content/formatting/logic you desire for it 
-    - `rogue`, optional, boolean, marks this column as a rogue column. This marks the column as hidden for display, 
+    - `translation`, optional, marks this column's values as translatable. 
+    The `i18n` parameter translation function should be given to the VueJS table component in order for this to work
+    - `boolean`, optional, marks this column as boolean, which means it will be rendered as such
+    - `slot`, optional, marks this column for slot customization, i.e. 
+    a slot with that column name will be rendered, allowing you to put the content/formatting/logic you desire for it.
+    The cell value is available as a property for the slot. 
+    - `rogue`, optional, marks this column as a rogue column. This marks the column as hidden for display, 
     while still being available and used for searching
-    - `editable`, optional, string, marks this column as editable (N/A)
-    - `total`, optional, string, if flagged, calculates a total for this column 
-    - `render`, optional, string, flags this column for custom rendering, allowing for unlimited customization
-     of the data in this column
+    - `editable`, optional, marks this column as editable (N/A)
+    - `total`, optional, if flagged, calculates a total for this column 
+    - `render`, optional, flags this column for custom rendering, allowing for unlimited customization
+     of the data in this column. 
+     The column name and the whole row data are available as function parameters, and the render function should return HTML
     - `date`, optional, marks the data of the column as dates, 
-    - `icon`, optional, string, if given, it renders a Font Awesome 5 icon as contents, using the 'column.icon' as the icon's class    
-    - `clickable`, optional, string, flags the column as clickable, which means it makes it - you guessed it - clickable. 
+    - `icon`, optional, if given, it renders a Font Awesome 5 icon as contents, using the 'column.icon' as the icon's class    
+    - `clickable`, optional, flags the column as clickable, which means it makes it - you guessed it - clickable. 
     When clicked, it emits the `clicked` event, with the column & row as event payload
-- `tooltip`, optional, string, the text used for this column header's tooltip 
+    - `tooltip`, optional, the text used for this column header's tooltip 
 
 #### The VueJS Component
 The VueTable component takes the following parameters:
