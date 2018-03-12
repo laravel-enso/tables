@@ -26,8 +26,10 @@ Data Table package with server-side processing and VueJS components. Build fast 
 - user customizable column visibility
 - configurable action buttons
 - beautiful tag rendering for boolean flags
-- custom data rendering support
-- auto-hide based on screen width. Data is still accessible under an optional child row
+- custom data rendering support via render functions
+- full customization via the use of slots for your columns
+- smart resizing & auto-hide based on screen width. Data is still accessible under an optional child row
+- tooltips for columns
 - front-end translations for labels and even data
 - configurable, on-the-fly view modes: compact, striped, bordered, hover and left / center / right data alignment
 - preferences/state save for each table in the browser's localStorage
@@ -302,8 +304,9 @@ is a string, with the date format for date columns, which will be used when disp
             "label": "Name",
             "data": "table.column",
             "name": "columnAlias",
-            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render", "date", "icon", "clickable"],
-            "enum": "EnumClass"
+            "meta": ["searchable", "sortable", "translation", "boolean", "slot", "editable", "total", "render", "date", "icon", "clickable"],
+            "enum": "EnumClass",
+            "tooltip": "My Tooltip Column Detail"
         }
     ]
 }
@@ -317,8 +320,7 @@ This is only needed when using the editor (N/A).
 - `name`, optional, string, the title used for the table.
 - `icon`, optional, string or array of strings, expects Font Awesome icon classes 
 (make sure the used class is avaible in the page, via a local or global import)
-- `crtNo`, optional, boolean, flag for showing the current line number. Note that if it's missing, the responsive 
-functionality will be limited 
+- `crtNo`, optional, boolean, flag for showing the current line number
 - `auth`, optional, boolean, flag for removing auth when using in enso context.
 - `lengthMenu`, optional, array, list of options for the table pagination. If missing, the default values in the 
 global configuration are used. If given, the template values have higher precedence over the global configuration
@@ -382,14 +384,19 @@ the type for a model/table.
     - `translation`, optional, string, marks this column's values as translatable. 
     The `i18n` parameter translation function should be given to the VueJS table component in order for this to function 
     - `boolean`, optional, string, marks this column as boolean, which means it will be rendered as such
+    - `slot`, optional, boolean, marks this column for slot customization, i.e. 
+    a slot with that column name will be rendered, allowing you to put the content/formatting/logic you desire for it 
+    - `rogue`, optional, boolean, marks this column as a rogue column. This marks the column as hidden for display, 
+    while still being available and used for searching
     - `editable`, optional, string, marks this column as editable (N/A)
     - `total`, optional, string, if flagged, calculates a total for this column 
-    - `render`, optional, string, flags this column for custom rendering, allowing for unlimited customization 
-    of the format of the data in this column
+    - `render`, optional, string, flags this column for custom rendering, allowing for unlimited customization
+     of the data in this column
     - `date`, optional, marks the data of the column as dates, 
     - `icon`, optional, string, if given, it renders a Font Awesome 5 icon as contents, using the 'column.icon' as the icon's class    
     - `clickable`, optional, string, flags the column as clickable, which means it makes it - you guessed it - clickable. 
-    When clicked, it emits the `clicked` event, with the column & row as event payload 
+    When clicked, it emits the `clicked` event, with the column & row as event payload
+- `tooltip`, optional, string, the text used for this column header's tooltip 
 
 #### The VueJS Component
 The VueTable component takes the following parameters:
@@ -476,9 +483,11 @@ The [Laravel Enso Core](https://github.com/laravel-enso/Core) package comes with
 
 We've tried to make it as light as possible and use the minimum amount of external libraries and dependencies.
 Therefore, the package depends just on:
- - [Spout](https://github.com/box/spout) for fast & efficient xlsx exports
- - [element-resize-detector](https://github.com/wnr/element-resize-detector) for making the table responsive
- - [lodash](https://github.com/lodash/lodash) for debouncing, using a selective import
+ - [Spout](https://github.com/box/spout) for fast & efficient xlsx exports 
+ - [lodash](https://github.com/lodash/lodash) for debouncing & throttling, using selective imports
+ - [Font Awesome 5](https://fontawesome.com/) for the icons
+ - [Akryum v-tooltip](https://github.com/Akryum/v-tooltip) for displaying tooltips
+ - [Css element queries - resize detector](https://github.com/marcj/css-element-queries) for the table responsiveness
 
 
 <!--h-->
