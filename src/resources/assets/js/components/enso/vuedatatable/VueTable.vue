@@ -33,10 +33,11 @@
                     <template v-for="column in template.columns"
                         :slot="column.name"
                         v-if="column.meta.slot"
-                        slot-scope="{ column, value }">
+                        slot-scope="{ row, column }">
                         <slot :name="column.name"
                             :column="column"
-                            :value="value">
+                            :row="row">
+                            {{ row[column.name] }}
                         </slot>
                     </template>
                 </table-body>
