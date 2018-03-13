@@ -242,14 +242,25 @@ export default {
         },
         setPreferences() {
             this.setDefaultPreferences();
-
-            if (localStorage.getItem(this.preferencesKey) !== null) {
-                this.setUserPreferences();
-            }
+            this.checkSavedPreferences();
 
             this.$nextTick(() => {
                 this.initialised = true;
             });
+        },
+        checkSavedPreferences() {
+            if (localStorage.getItem(this.preferencesKey) === null) {
+                return;
+            }
+
+            const prefs = JSON.parse(localStorage.getItem(this.preferencesKey));
+
+            if (prefs.columns.length !== this.template.columns.length) {
+                localStorage.removeItem(this.preferencesKey);
+                return;
+            }
+
+            this.setUserPreferences(prefs);
         },
         setDefaultPreferences() {
             this.template.columns.forEach(({ meta }) => {
@@ -259,15 +270,15 @@ export default {
 
             this.$set(this.template, 'sort', false);
         },
-        setUserPreferences() {
-            const prefs = JSON.parse(localStorage.getItem(this.preferencesKey));
-
+        setUserPreferences(prefs) {
             Object.keys(prefs.global).forEach((key) => {
                 this.$set(this, key, prefs.global[key]);
             });
 
             Object.keys(prefs.template).forEach((key) => {
-                this.$set(this.template, key, prefs.template[key]);
+                if (this.template[key] !== undefined) {
+                    this.$set(this.template, key, prefs.template[key]);
+                }
             });
 
             prefs.columns.forEach((column, index) => {
