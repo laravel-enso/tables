@@ -30,15 +30,16 @@ class Filters
             return $this;
         }
 
-        collect(explode(' ', $this->request->get('search')))->each(function ($arg) {
-            $this->query->where(function ($query) use ($arg) {
-                $this->columns->each(function ($column) use ($query, $arg) {
-                    if ($column->meta->searchable) {
-                        $query->orWhere($column->data, 'LIKE', '%'.$arg.'%');
-                    }
+        collect(explode(' ', $this->request->get('search')))
+            ->each(function ($arg) {
+                $this->query->where(function ($query) use ($arg) {
+                    $this->columns->each(function ($column) use ($query, $arg) {
+                        if ($column->meta->searchable) {
+                            $query->orWhere($column->data, 'LIKE', '%'.$arg.'%');
+                        }
+                    });
                 });
             });
-        });
 
         return $this;
     }
@@ -50,13 +51,14 @@ class Filters
         }
 
         $this->query->where(function ($query) {
-            collect(json_decode($this->request->get('filters')))->each(function ($filters, $table) use ($query) {
-                collect($filters)->each(function ($value, $column) use ($table, $query) {
-                    if (!is_null($value) && $value !== '') {
-                        $query->where($table.'.'.$column, '=', $value);
-                    }
+            collect(json_decode($this->request->get('filters')))
+                ->each(function ($filters, $table) use ($query) {
+                    collect($filters)->each(function ($value, $column) use ($table, $query) {
+                        if (!is_null($value) && $value !== '' && $value !== []) {
+                            $query->whereIn($table.'.'.$column, (array) $value);
+                        }
+                    });
                 });
-            });
         });
 
         return $this;
@@ -71,10 +73,11 @@ class Filters
         $this->query->where(function () {
             collect(json_decode($this->request->get('intervals')))
                 ->each(function ($interval, $table) {
-                    collect($interval)->each(function ($value, $column) use ($table) {
-                        $this->setMinLimit($table, $column, $value)
+                    collect($interval)
+                        ->each(function ($value, $column) use ($table) {
+                            $this->setMinLimit($table, $column, $value)
                             ->setMaxLimit($table, $column, $value);
-                    });
+                        });
                 });
         });
 
