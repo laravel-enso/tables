@@ -309,9 +309,15 @@ export default {
             this.expanded = [];
 
             axios.get(this.template.readPath, { params: this.readRequest() }).then(({ data }) => {
-                this.body = data;
                 this.loading = false;
                 this.forceInfo = false;
+
+                if (data.data.length === 0 && this.start > 0) {
+                    this.start -= this.length;
+                    return;
+                }
+
+                this.body = data;
             }).catch((error) => {
                 this.handleError(error);
                 this.loading = false;
