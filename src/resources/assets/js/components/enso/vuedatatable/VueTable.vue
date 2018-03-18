@@ -44,7 +44,7 @@
                         </slot>
                     </template>
                 </table-body>
-                <table-footer v-if="body !== null && body.fullRecordInfo && template.total && hasContent"
+                <table-footer v-if="template.total && hasContent && body.fullRecordInfo"
                     :template="template"
                     :body="body"
                     :i18n="i18n">
@@ -130,6 +130,10 @@ export default {
         i18n: {
             type: Function,
             default: value => value,
+        },
+        debounce: {
+            type: Number,
+            default: 100,
         },
     },
 
@@ -222,7 +226,7 @@ export default {
     },
 
     created() {
-        this.getData = debounce(this.getData, 100);
+        this.getData = debounce(this.getData, this.debounce);
         this.init();
     },
 

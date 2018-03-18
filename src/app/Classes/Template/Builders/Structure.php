@@ -13,9 +13,9 @@ class Structure
 
     public function build()
     {
-        $this->computeRoutes();
-        $this->setLengthMenu();
-        $this->setDefaults();
+        $this->computeRoutes()
+            ->setLengthMenu()
+            ->setDefaults();
     }
 
     private function computeRoutes()
@@ -24,6 +24,8 @@ class Structure
         $this->template->writePath = !is_null($this->template->writeSuffix)
             ? route($this->template->routePrefix.'.'.$this->template->writeSuffix, [], false)
             : null;
+
+        return $this;
     }
 
     private function setLengthMenu()
@@ -31,6 +33,8 @@ class Structure
         if (!property_exists($this->template, 'lengthMenu')) {
             $this->template->lengthMenu = config('enso.datatable.lengthMenu');
         }
+
+        return $this;
     }
 
     private function setDefaults()
