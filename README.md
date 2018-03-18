@@ -94,9 +94,9 @@ Next:
     Note on Font Awesome: Each icon used in the datatable should be available (imported) in the page/component where 
     vue-table is used, for example:
     ```js
-    import { faSearch, faSync, faAngleDown }
+    import { faSearch, faSync, faAngleDown, faInfoCircle }
         from '@fortawesome/fontawesome-free-solid/shakable.es';
-    fontawesome.library.add(faSearch, faSync, faAngleDown);
+    fontawesome.library.add(faSearch, faSync, faAngleDown, faInfoCircle);
     ``` 
     
     Please read the official Font Awesome 

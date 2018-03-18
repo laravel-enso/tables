@@ -6,10 +6,12 @@
             :i18n="i18n"
             :length="length"
             :loading="loading"
+            :info="body !== null && !body.fullRecordInfo"
             @update-length="length=$event"
             @export-data="exportData"
             @reload="getData()"
             @reset="resetPreferences"
+            @request-full-info="forceInfo = true; getData()"
             v-on="$listeners"
             v-model="search">
         </top-controls>
@@ -42,7 +44,7 @@
                         </slot>
                     </template>
                 </table-body>
-                <table-footer v-if="template.total && hasContent"
+                <table-footer v-if="body !== null && body.fullRecordInfo && template.total && hasContent"
                     :template="template"
                     :body="body"
                     :i18n="i18n">
@@ -55,8 +57,7 @@
             <div class="column">
                 <records-info :body="body"
                     :i18n="i18n"
-                    :start="start"
-                    :length="length">
+                    :start="start">
                 </records-info>
             </div>
             <div class="column is-narrow has-text-right">
@@ -64,13 +65,15 @@
                     :length="length"
                     :records="body.filtered"
                     :i18n="i18n"
-                    @jump-to="start = $event;getData()">
+                    :extended="body.fullRecordInfo"
+                    @jump-to="start = $event;getData()"
+                    v-if="body.data.length > 0">
                 </pagination>
             </div>
         </div>
         <div v-if="body && !body.count"
             class="has-text-centered no-records-found">
-            {{ i18n('No records were found.') }}
+            {{ i18n('No records were found') }}
         </div>
     </div>
 
@@ -140,6 +143,7 @@ export default {
             body: null,
             length: null,
             expanded: [],
+            forceInfo: false,
         };
     },
 
@@ -303,6 +307,7 @@ export default {
             axios.get(this.template.readPath, { params: this.readRequest() }).then(({ data }) => {
                 this.body = data;
                 this.loading = false;
+                this.forceInfo = false;
             }).catch((error) => {
                 this.handleError(error);
                 this.loading = false;
@@ -319,6 +324,7 @@ export default {
                     enum: this.template.enum,
                     date: this.template.date,
                     actions: this.template.actions,
+                    forceInfo: this.forceInfo,
                 },
                 search: this.search,
                 appends: this.template.appends,

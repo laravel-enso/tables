@@ -21,6 +21,7 @@ class Table
     private $data;
     private $columns;
     private $meta;
+    private $fullRecordInfo;
 
     public function __construct(Request $request, Builder $query)
     {
@@ -43,6 +44,8 @@ class Table
             'filtered' => $this->filtered,
             'total' => $this->total,
             'data' => $this->data,
+            'fullRecordInfo' => $this->fullRecordInfo,
+            'filters' => $this->hasFilters()
         ];
     }
 
@@ -65,7 +68,8 @@ class Table
     {
         $this->filtered = $this->count = $this->count();
 
-        $this->filter()
+        $this->setDetailedInfo()
+            ->filter()
             ->sort()
             ->setTotal()
             ->limit()
@@ -78,7 +82,7 @@ class Table
 
     private function checkActions()
     {
-        if (!$this->filtered) {
+        if (count($this->data) === 0) {
             return;
         }
 
@@ -92,11 +96,23 @@ class Table
         return $this->query->count();
     }
 
+    private function setDetailedInfo()
+    {
+        $this->fullRecordInfo = $this->hasFilters() && !$this->meta->forceInfo
+            ? $this->count <= config('enso.datatable.fullInfoRecordLimit')
+            : true;
+
+        return $this;
+    }
+
     private function filter()
     {
         if ($this->hasFilters()) {
             (new Filters($this->request, $this->query, $this->columns))->set();
-            $this->filtered = $this->count();
+
+            if ($this->fullRecordInfo) {
+                $this->filtered = $this->count();
+            }
         }
 
         return $this;
@@ -119,7 +135,7 @@ class Table
 
     private function setTotal()
     {
-        if (!$this->meta->total) {
+        if (!$this->meta->total || !$this->fullRecordInfo) {
             return $this;
         }
 

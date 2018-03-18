@@ -13,7 +13,8 @@
             @click="jumpTo(page + 1)">
             {{ i18n('Next') }}
         </a>
-        <ul class="pagination-list">
+        <ul class="pagination-list"
+            v-if="extended">
             <li>
                 <a class="pagination-link"
                     :class="{ 'is-current': page === 1 }"
@@ -67,6 +68,10 @@ export default {
         },
         length: {
             type: Number,
+            required: true,
+        },
+        extended: {
+            type: Boolean,
             required: true,
         },
         i18n: {
