@@ -45,7 +45,7 @@ class Table
             'total' => $this->total,
             'data' => $this->data,
             'fullRecordInfo' => $this->fullRecordInfo,
-            'filters' => $this->hasFilters()
+            'filters' => $this->hasFilters(),
         ];
     }
 
