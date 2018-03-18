@@ -65,7 +65,7 @@
                     :length="length"
                     :records="body.filtered"
                     :i18n="i18n"
-                    :extended="body !== null && body.fullRecordInfo"
+                    :extended="body.fullRecordInfo"
                     @jump-to="start = $event;getData()"
                     v-if="body.data.length > 0">
                 </pagination>
