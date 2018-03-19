@@ -4,12 +4,12 @@
         role="navigation"
         aria-label="pagination">
         <a class="pagination-previous"
-            :disabled="page === 1"
+            :disabled="page === 1 || loading"
             @click="jumpTo(page - 1)">
             {{ i18n('Previous') }}
         </a>
         <a class="pagination-next"
-            :disabled="page === pages"
+            :disabled="page === pages || loading"
             @click="jumpTo(page + 1)">
             {{ i18n('Next') }}
         </a>
@@ -18,6 +18,7 @@
             <li>
                 <a class="pagination-link"
                     :class="{ 'is-current': page === 1 }"
+                    :disabled="loading"
                     @click="jumpTo(1)">
                     1
                 </a>
@@ -31,6 +32,7 @@
                 :key="i">
                 <a class="pagination-link"
                     :class="{ 'is-current': page === i }"
+                    :disabled="loading"
                     @click="jumpTo(i)">
                     {{ i }}
                 </a>
@@ -43,6 +45,7 @@
             <li v-if="pages > 1">
                 <a class="pagination-link"
                     :class="{ 'is-current': page === pages }"
+                    :disabled="loading"
                     @click="jumpTo(pages)">
                     {{ pages }}
                 </a>
@@ -58,6 +61,10 @@ export default {
     name: 'Pagination',
 
     props: {
+        loading: {
+            type: Boolean,
+            required: true,
+        },
         records: {
             type: Number,
             required: true,

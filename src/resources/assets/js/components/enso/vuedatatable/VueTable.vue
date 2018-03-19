@@ -61,7 +61,8 @@
                 </records-info>
             </div>
             <div class="column is-narrow has-text-right">
-                <pagination :start="start"
+                <pagination :loading="loading"
+                    :start="start"
                     :length="length"
                     :records="body.filtered"
                     :i18n="i18n"
