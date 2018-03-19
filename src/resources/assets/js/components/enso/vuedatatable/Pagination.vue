@@ -106,7 +106,11 @@ export default {
             }
 
             if (this.atEnd) {
-                pages.push(this.pages - 3, this.pages - 2, this.pages - 1);
+                if (pages > 4) {
+                    pages.push(this.pages - 3);
+                }
+
+                pages.push(this.pages - 2, this.pages - 1);
                 return pages;
             }
 
