@@ -5,6 +5,7 @@
     "name": "Table Name", //optional, the title for the table
     "icon": "list-alt", //optional, expects a font awesome icon class
     "crtNo": true, // optional, shows the line number
+    "debounce": 100, //optional, the debounce ms limit for reloading table data
     "lengthMenu": [10, 15, 20, 25, 30], //optional, table pagination options. If given, it overwrites the value from config
     "appends": ["customAttribute"], // optional, laravel model accessors for custom attributes
     "buttons": [
@@ -29,8 +30,9 @@
             "label": "Name", //required, table header column name
             "data": "table.column", // required, the table and column name
             "name": "columnAlias", // required, alias from the query builder
-            "meta": ["searchable", "sortable", "translation", "boolean", "editable", "total", "render", "date", "clickable"], //optional
-            "enum": "EnumClass" // optional
+            "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "render", "date", "icon", "clickable", "tooltip"], //optional
+            "enum": "EnumClass", // optional
+            "tooltip": "My Tooltip Column Detail"
         }
     ]
 }
