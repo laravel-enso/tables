@@ -15,6 +15,7 @@ class Structure
     {
         $this->computeRoutes()
             ->setLengthMenu()
+            ->setDebounce()
             ->setDefaults();
     }
 
@@ -32,6 +33,15 @@ class Structure
     {
         if (!property_exists($this->template, 'lengthMenu')) {
             $this->template->lengthMenu = config('enso.datatable.lengthMenu');
+        }
+
+        return $this;
+    }
+
+    private function setDebounce()
+    {
+        if (!property_exists($this->template, 'debounce')) {
+            $this->template->debounce = config('enso.datatable.debounce');
         }
 
         return $this;
