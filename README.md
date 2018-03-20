@@ -35,6 +35,7 @@ Data Table package with server-side processing and VueJS components. Build fast 
 - preferences/state save for each table in the browser's localStorage
 - server-side Excel exporting of the table data, using your current sorting and filtering choices, with email delivery and optional push notifications
 - reloading of data on demand
+- smart management of huge datasets, with configurable limit
 - Enso Enum computation
 - Laravel accessors for the main query model
 - the configuration template for each table has been designed to be as light and straightforward as possible without losing 
@@ -147,6 +148,16 @@ For the data editor functionality (WIP), separate requests will be used.
 
 Note: In order to make the above requests, named routes are required.
 
+#### Configurable huge resultset management
+When you have huge resultsets, the table component will take longer to respond to the user input. In order to improve 
+the user experience, when we have more results than the limit set in the configuration (in the `fullInfoRecordLimit` key),
+the back-end builder no longer computes the number filtered and any totals for that table.
+
+However, a blue information icon becomes available in the list of table buttons, that allows the user to
+request this computed information.
+
+Since this is an extreme case with tables this big and is a seldom situation, the limit configuration is global.
+
 #### Configuration
 The package comes with with a publishable configuration file which you may update in order to fit your 
 project requirements. The various options are explained below.
@@ -165,53 +176,53 @@ return [
     'buttons' => [
         'global' => [
             'create' => [
-                'icon'        => 'plus',
-                'class'       => 'is-success',
+                'icon' => 'plus',
+                'class' => 'is-success',
                 'routeSuffix' => 'create',
-                'event'       => 'create',
-                'action'      => 'router',
-                'label'       => 'Create',
+                'event' => 'create',
+                'action' => 'router',
+                'label' => 'Create',
             ],
             'excel' => [
-                'icon'        => 'file-excel',
-                'class'       => 'is-info',
+                'icon' => 'file-excel',
+                'class' => null,
                 'routeSuffix' => 'exportExcel',
-                'event'       => 'export-excel',
-                'action'      => 'export',
-                'label'       => 'Excel',
+                'event' => 'export-excel',
+                'action' => 'export',
+                'label' => 'Excel',
             ],
         ],
         'row' => [
             'show' => [
-                'icon'        => 'eye',
-                'class'       => 'is-success',
+                'icon' => 'eye',
+                'class' => 'is-success',
                 'routeSuffix' => 'show',
-                'event'       => 'show',
-                'action'      => 'router',
+                'event' => 'show',
+                'action' => 'router',
             ],
             'edit' => [
-                'icon'        => 'pencil',
-                'class'       => 'is-warning',
+                'icon' => 'pencil-alt',
+                'class' => 'is-warning',
                 'routeSuffix' => 'edit',
-                'event'       => 'edit',
-                'action'      => 'router',
+                'event' => 'edit',
+                'action' => 'router',
             ],
             'destroy' => [
-                'icon'         => 'trash',
-                'class'        => 'is-danger',
-                'routeSuffix'  => 'destroy',
-                'event'        => 'destroy',
-                'action'       => 'ajax',
-                'method'       => 'DELETE',
-                'message'      => 'The selected record is about to be deleted. Are you sure?',
+                'icon' => 'trash-alt',
+                'class' => 'is-danger',
+                'routeSuffix' => 'destroy',
+                'event' => 'destroy',
+                'action' => 'ajax',
+                'method' => 'DELETE',
+                'message' => 'The selected record is about to be deleted. Are you sure?',
                 'confirmation' => true,
             ],
             'download' => [
-                'icon'        => 'cloud-download-alt',
-                'class'       => 'is-primary',
+                'icon' => 'cloud-download-alt',
+                'class' => 'is-primary',
                 'routeSuffix' => 'download',
-                'event'       => 'download',
-                'action'      => 'href',
+                'event' => 'download',
+                'action' => 'href',
             ],
         ],
     ],
@@ -220,26 +231,28 @@ return [
             'striped', 'hover', 'bordered', 'center',
         ],
         'mapping' => [
-            'left'     => 'has-text-left',
-            'center'   => 'has-text-centered',
-            'right'    => 'has-text-right',
-            'compact'  => 'is-narrow',
-            'striped'  => 'is-striped',
+            'left' => 'has-text-left',
+            'center' => 'has-text-centered',
+            'right' => 'has-text-right',
+            'compact' => 'is-narrow',
+            'striped' => 'is-striped',
             'bordered' => 'is-bordered',
-            'hover'    => 'is-hoverable',
+            'hover' => 'is-hoverable',
         ],
     ],
     'export' => [
-        'path'             => 'exports',
-        'limit'            => 20000,
+        'path' => 'exports',
+        'limit' => 20000,
         'maxExecutionTime' => 100,
-        'notifications'    => ['broadcast', 'database'],
+        'notifications' => ['broadcast', 'database'],
     ],
+    'dateFormat' => 'd-m-Y',
+    'fullInfoRecordLimit' => 100000,
 ];
 ```
 
 ##### validations 
-is a string, values may be `always`/`local`, default `local`. When parsing the template, the given options are validated because we want to avoid misconfiguration leading to unexpected results. It makes sense to run the validator just during development, however, if you want to also run it in production, you may configure that here.
+is a string, values may be `always`/`local`, default `local`. When parsing the template, the given options are validated because we want to avoid misconfiguration leading to unexpected results. It makes sense to run the validator just during development, however, if you want to also run it in production, you may configure that here. 
 ##### labels
 is an array of options for the header names of the implicit columns. Note that these labels are also translated if a translation function is given to the VueJS component, through the `i18n` parameter. Options:   
 - `crtNo` is the current line number, default `#`
@@ -266,6 +279,9 @@ is an array of configuration options for exporting the contents of a file. Note:
     email notifications are always used for sending the actual export file, so you should take into account email attachment size and mail server timeout / other limitations when choosing values for the export.  
 ##### dateFormat
 is a string, with the date format for date columns, which will be used when displaying date values
+##### fullInfoRecordLimit
+is a numeric limit, representing the top resultset limit when the computation of the filtered & totals functionality 
+becomes disabled by default and is made avaible on-demand.
 
 #### Template
 ```JSON
@@ -304,7 +320,7 @@ is a string, with the date format for date columns, which will be used when disp
             "label": "Name",
             "data": "table.column",
             "name": "columnAlias",
-            "meta": ["searchable", "sortable", "translation", "boolean", "slot", "editable", "total", "render", "date", "icon", "clickable"],
+            "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "render", "date", "icon", "clickable", "tooltip"],
             "enum": "EnumClass",
             "tooltip": "My Tooltip Column Detail"
         }
@@ -328,6 +344,8 @@ global configuration are used. If given, the template values have higher precede
 Note that the appended attributes are available from the main query model
 - `buttons`, optional, array, list of buttons that need to be rendered. See below for more in-depth information.
 - `columns`, required, array, list of column configurations. See below for more in-depth information.
+- `debounce`, optional, number, the time in milliseconds that is used for the debounce when reloading data for the table,
+ for example when typing in the search box or changing filters, default `100`
 
 ##### Buttons
 There are several type of buttons, depending on how you classify them.
@@ -402,11 +420,12 @@ the type for a model/table.
 The VueTable component takes the following parameters:
 - `id`, required, string, identification for this table, is used to store the preferences in the browser's local storage
 - `path`, required, string, the URI for the table initialization request
-- `filters`, optional, object, reactive options that, if available, is sent along with the getTableData request and 
-is used to filter results
-- `params`, optional, object, reactive parameters, that, if available, is sent along with the getTableData request and 
-is be used to filter results
-- `intervals`, optional, object, reactive parameters, that, if available is used for interval filtering of the results
+- `filters`, optional, object, reactive options that, if available, are sent along with the getTableData request and 
+are used to filter results. Note that the selected values for the filters may be a value or an array 
+(in which case a `WHERE IN` logic is applied when filtering)
+- `params`, optional, object, reactive parameters, that, if available, are sent along with the getTableData request and 
+are be used to filter results
+- `intervals`, optional, object, reactive parameters, that, if available are used for interval filtering of the results
 - `customRender`, optional, function, that can be used as a custom render function for a single column or 
 a render dispatcher for when needing to custom render multiple columns of the same table
 - `i18n`, optional, function, that is used for translating labels, headers, and table data 
