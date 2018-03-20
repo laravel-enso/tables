@@ -132,10 +132,6 @@ export default {
             type: Function,
             default: value => value,
         },
-        debounce: {
-            type: Number,
-            default: 100,
-        },
     },
 
     data() {
@@ -227,7 +223,6 @@ export default {
     },
 
     created() {
-        this.getData = debounce(this.getData, this.debounce);
         this.init();
     },
 
@@ -237,6 +232,7 @@ export default {
                 this.template = data.template;
                 this.start = 0;
                 [this.length] = this.template.lengthMenu;
+                this.getData = debounce(this.getData, this.template.debounce);
                 this.setPreferences();
                 this.getData();
             }).catch((error) => {

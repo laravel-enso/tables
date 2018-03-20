@@ -64,5 +64,9 @@ class Structure
         if (property_exists($this->template, 'appends') && !is_array($this->template->appends)) {
             throw new TemplateException(__('"appends" attribute must be an array'));
         }
+
+        if (property_exists($this->template, 'debounce') && !is_int($this->template->debounce)) {
+            throw new TemplateException(__('"debounce" attribute must be an integer'));
+        }
     }
 }
