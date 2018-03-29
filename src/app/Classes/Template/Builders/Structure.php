@@ -51,6 +51,7 @@ class Structure
     {
         $this->template->total = false;
         $this->template->enum = false;
+        $this->template->money = false;
         $this->template->date = false;
         $this->template->labels = config('enso.datatable.labels');
     }

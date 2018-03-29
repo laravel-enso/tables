@@ -25,6 +25,10 @@ class Columns
                     $this->template->enum = true;
                 }
 
+                if (property_exists($column, 'money')) {
+                    $this->template->money = true;
+                }
+
                 $columns->push($column);
 
                 return $columns;
