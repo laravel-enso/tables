@@ -26,6 +26,7 @@ Data Table package with server-side processing and VueJS components. Build fast 
 - user customizable column visibility
 - configurable action buttons
 - beautiful tag rendering for boolean flags
+- can display and format numbers as money values, and the formatting can be customized via the template
 - custom data rendering support via render functions
 - full customization via the use of scoped slots for your columns
 - smart resizing & auto-hide based on screen width. Data is still accessible under an optional child row
@@ -42,6 +43,7 @@ Data Table package with server-side processing and VueJS components. Build fast 
 out on features
 - thorough validation of the JSON template with developer friendly messages, in order to avoid misconfiguration issues
 - can be used independently of the Enso ecosystem
+
 
 
 #### In the future
@@ -66,6 +68,7 @@ Outside of Laravel Enso, the following dependencies are required:
 - [Font Awesome 5](https://fontawesome.com/) for the icons
 - [Akryum v-tooltip](https://github.com/Akryum/v-tooltip) for displaying tooltips
 - [Css element queries - resize detector](https://github.com/marcj/css-element-queries) for responsiveness
+- [accounting.js](http://openexchangerates.github.io/accounting.js/) for formatting numbers as money values
 
 Next:
 1. `composer require laravel-enso/vuedatatable` to pull in the package and its dependencies
@@ -322,7 +325,14 @@ becomes disabled by default and is made avaible on-demand.
             "name": "columnAlias",
             "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "render", "date", "icon", "clickable", "tooltip"],
             "enum": "EnumClass",
-            "tooltip": "My Tooltip Column Detail"
+            "tooltip": "My Tooltip Column Detail",
+            "money": {
+                "symbol": "$",
+                "decimal": ".",
+                "thousand": ",",
+                "precision": 2,
+                "format": "%s%v"
+            }
         }
     ]
 }
@@ -337,13 +347,15 @@ This is only needed when using the editor (N/A).
 - `icon`, optional, string or array of strings, expects Font Awesome icon classes 
 (make sure the used class is avaible in the page, via a local or global import)
 - `crtNo`, optional, boolean, flag for showing the current line number
-- `auth`, optional, boolean, flag for removing auth when using in enso context.
+- `auth`, optional, boolean, flag for removing auth when using in enso context
 - `lengthMenu`, optional, array, list of options for the table pagination. If missing, the default values in the 
 global configuration are used. If given, the template values have higher precedence over the global configuration
 - `appends` - optional, array, list of appended attributes that need to be added to the query results. 
-Note that the appended attributes are available from the main query model
-- `buttons`, optional, array, list of buttons that need to be rendered. See below for more in-depth information.
-- `columns`, required, array, list of column configurations. See below for more in-depth information.
+Note that the appended attributes are available from the main query model.
+Also note, that in order the if the appended attributes use any of the model's relationships, 
+the raw table query should also select the id as id (this is a Laravel requirement).
+- `buttons`, optional, array, list of buttons that need to be rendered. See below for more in-depth information
+- `columns`, required, array, list of column configurations. See below for more in-depth information
 - `debounce`, optional, number, the time in milliseconds that is used for the debounce when reloading data for the table,
  for example when typing in the search box or changing filters, default `100`
 
@@ -393,7 +405,8 @@ is available.
 - `name`, required, string, the alias for that column's data, given in the select query
 - `enum`, optional, string, the class name of the enumeration used to transform/map the values of that column/attribute. 
 For example, you may use this mechanism to show labels instead of integer values, for an attribute that holds 
-the type for a model/table.  
+the type for a model/table.
+- `tooltip`, optional, the text used for this column header's tooltip  
 - `meta`, optional, array of string tags/options, allowing further transformations:
     - `searchable`, optional, marks this column as searchable. If not searchable, a column is not used when 
     using the table search functionality 
@@ -414,7 +427,10 @@ the type for a model/table.
     - `icon`, optional, if given, it renders a Font Awesome 5 icon as contents, using the 'column.icon' as the icon's class    
     - `clickable`, optional, flags the column as clickable, which means it makes it - you guessed it - clickable. 
     When clicked, it emits the `clicked` event, with the column & row as event payload
-    - `tooltip`, optional, the text used for this column header's tooltip 
+- `money`, optional, object, is the configuration object used for formatting numbers as money values. 
+Since this is achieved via the accounting.js library, you should take a look at its documentation 
+[here](http://openexchangerates.github.io/accounting.js/#documentation)  
+ 
 
 #### The VueJS Component
 The VueTable component takes the following parameters:
@@ -429,7 +445,8 @@ are be used to filter results
 - `customRender`, optional, function, that can be used as a custom render function for a single column or 
 a render dispatcher for when needing to custom render multiple columns of the same table
 - `i18n`, optional, function, that is used for translating labels, headers, and table data 
-The default value (function) for this parameter simply returns its argument as the translated value 
+The default value (function) for this parameter simply returns its argument as the translated value if used outside of 
+Enso while within Enso it will use it's translation function. 
 
 Examples:
 
@@ -475,11 +492,11 @@ In your controller, the query must look like this:
 ```php
 public function query()
 {
-    return Owner::select(\DB::raw('id as "dtRowId", name, description, is_active, created_at'));
+    return Owner::select(\DB::raw('id as "dtRowId", id, name, description, is_active, created_at'));
 }
 ```
 
-Keep in mind that the here we're returning a QueryBuilder not a collection of results.
+Keep in mind that at this stage, we're returning a QueryBuilder not a collection of results.
 
 #### Further Examples
 You may see the vue data table in action, with the code for the Owners page, right here:
@@ -507,6 +524,7 @@ Therefore, the package depends just on:
  - [Font Awesome 5](https://fontawesome.com/) for the icons
  - [Akryum v-tooltip](https://github.com/Akryum/v-tooltip) for displaying tooltips
  - [Css element queries - resize detector](https://github.com/marcj/css-element-queries) for the table responsiveness
+ - [accounting.js](http://openexchangerates.github.io/accounting.js/) for formatting numbers as money values
 
 
 <!--h-->
