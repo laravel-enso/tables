@@ -34,6 +34,7 @@ class ExportNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage())
+            ->subject(__('Export Notification'))
             ->line(__('You will find attached the requested report.'))
             ->line(__('Thank you for using our application!'))
             ->attach($this->file);
@@ -42,7 +43,7 @@ class ExportNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'body' => 'Export emailed: '.$this->name.' Table',
+            'body' => __('Export emailed').': '.__($this->name).' '.__('Table'),
             'link' => '#',
         ];
     }
