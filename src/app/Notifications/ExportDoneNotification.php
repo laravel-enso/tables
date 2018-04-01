@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class ExportNotification extends Notification
+class ExportDoneNotification extends Notification
 {
     use Queueable;
 
@@ -27,7 +27,8 @@ class ExportNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'body' => 'export notification',
+            'level' => 'success',
+            'body' => __('Export emailed').': '.__($this->name).' '.__('Table'),
         ]);
     }
 

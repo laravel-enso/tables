@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use LaravelEnso\VueDatatable\app\Exports\Excel;
-use LaravelEnso\VueDatatable\app\Notifications\ExportNotification;
+use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
 
 class ExcelExport implements ShouldQueue
 {
@@ -36,15 +36,19 @@ class ExcelExport implements ShouldQueue
 
     private function export()
     {
-        $exporter = new Excel($this->filePath, $this->table['header'], $this->table['data']);
-        $exporter->run();
+        (new Excel(
+            $this->filePath,
+            $this->table['header'],
+            $this->table['data']
+        ))->run();
 
         return $this;
     }
 
     private function sendReport()
     {
-        $this->user->notify(new ExportNotification($this->filePath, $this->table['name']));
+        $this->user
+            ->notify(new ExportDoneNotification($this->filePath, $this->table['name']));
 
         return $this;
     }

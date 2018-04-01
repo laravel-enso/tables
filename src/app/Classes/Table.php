@@ -8,7 +8,6 @@ use LaravelEnso\VueDatatable\app\Classes\Table\Filters;
 use LaravelEnso\VueDatatable\app\Exceptions\QueryException;
 use LaravelEnso\VueDatatable\app\Classes\Table\DateComputor;
 use LaravelEnso\VueDatatable\app\Classes\Table\EnumComputor;
-use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
 use LaravelEnso\VueDatatable\app\Classes\Table\ExportComputor;
 
 class Table
@@ -51,8 +50,6 @@ class Table
 
     public function excel()
     {
-        $this->checkExportLimit();
-
         $this->run();
 
         $export = new ExportComputor($this->data, $this->columns);
@@ -98,7 +95,7 @@ class Table
 
     private function setDetailedInfo()
     {
-        $this->fullRecordInfo = $this->hasFilters() && !$this->meta->forceInfo
+        $this->fullRecordInfo = $this->hasFilters() && !optional($this->meta)->forceInfo
             ? $this->count <= config('enso.datatable.fullInfoRecordLimit')
             : true;
 
@@ -212,15 +209,5 @@ class Table
         return $this->request->filled('search')
             || $this->request->has('filters')
             || $this->request->has('intervalFilters');
-    }
-
-    private function checkExportLimit()
-    {
-        if ($this->meta->length > config('enso.datatable.export.limit')) {
-            throw new ExportException(__(
-                'The table exceeds the maximum number of records allowed: :actual vs :limit',
-                ['actual' => $this->meta->length, 'limit' => config('enso.datatable.export.limit')]
-            ));
-        }
     }
 }
