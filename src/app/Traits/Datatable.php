@@ -3,22 +3,18 @@
 namespace LaravelEnso\VueDatatable\app\Traits;
 
 use Illuminate\Http\Request;
-use LaravelEnso\VueDatatable\app\Classes\Table;
-use LaravelEnso\VueDatatable\app\Classes\Template;
 
 trait Datatable
 {
     public function init()
     {
-        $template = new Template(self::Template);
-
-        return $template->get();
+        return (new $this->tableClass())
+            ->init();
     }
 
     public function data(Request $request)
     {
-        $table = new Table($request, $this->query());
-
-        return $table->data();
+        return (new $this->tableClass())
+            ->data($request->all());
     }
 }

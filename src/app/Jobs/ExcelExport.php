@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Jobs;
 
+use App\User;
 use Illuminate\Bus\Queueable;
-use LaravelEnso\Core\app\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,22 +14,27 @@ class ExcelExport implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
+    private $request;
     private $user;
+    private $tableClass;
     private $table;
     private $filePath;
 
-    public function __construct(User $user, $table)
+    public function __construct(User $user, array $request, string $tableClass)
     {
         $this->user = $user;
-        $this->table = $table;
+        $this->request = $request;
+        $this->tableClass = $tableClass;
         $this->timeout = config('enso.datatable.export.maxExecutionTime');
-
-        $this->setFilePath();
     }
 
     public function handle()
     {
-        $this->export()
+        $this->table = (new $this->tableClass())
+            ->excel($this->request);
+
+        $this->setFilePath()
+            ->export()
             ->sendReport()
             ->cleanUp();
     }
@@ -69,5 +74,7 @@ class ExcelExport implements ShouldQueue
         $this->filePath = storage_path(
             'app/'.config('enso.datatable.export.path').'/'.$filename
         );
+
+        return $this;
     }
 }

@@ -3,9 +3,7 @@
 namespace LaravelEnso\VueDatatable\app\Traits;
 
 use Illuminate\Http\Request;
-use LaravelEnso\VueDatatable\app\Classes\Table;
 use LaravelEnso\VueDatatable\app\Jobs\ExcelExport;
-use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
 use LaravelEnso\VueDatatable\app\Notifications\ExportStartNotification;
 
 trait Excel
@@ -17,10 +15,7 @@ trait Excel
         $request->user()
             ->notify(new ExportStartNotification($request->get('name')));
 
-        $table = (new Table($request, $this->query()))
-            ->excel();
-
-        $this->dispatch(new ExcelExport($request->user(), $table));
+        $this->dispatch(new ExcelExport($request->user(), $request->all(), $this->tableClass));
     }
 
     private function checkExportLimit(Request $request)

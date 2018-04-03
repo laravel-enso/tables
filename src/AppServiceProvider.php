@@ -20,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
             __DIR__.'/resources/assets/js' => resource_path('assets/js'),
         ], 'enso-assets');
 
+        $this->publishes([
+            __DIR__.'/app/Tabels' => app_path('Tables'),
+        ], 'tables');
+
         $this->mergeConfigFrom(__DIR__.'/config/datatable.php', 'enso.datatable');
     }
 
