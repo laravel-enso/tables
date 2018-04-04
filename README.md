@@ -8,8 +8,9 @@
 [![Latest Stable Version](https://poser.pugx.org/laravel-enso/vuedatatable/version)](https://packagist.org/packages/laravel-enso/vuedatatable)
 <!--/h-->
 
-Data Table package with server-side processing and VueJS components. Build fast any complex table based on a JSON template.
-**Important Note** This readme is relevant for v1.0.x and will be updated soon for v1.1.x.
+Data Table package with server-side processing and VueJS components. 
+Build fast any complex table based on a JSON template.
+
 
 [![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.webm)
 
@@ -99,8 +100,7 @@ Next:
     Note on Font Awesome: Each icon used in the datatable should be available (imported) in the page/component where 
     vue-table is used, for example:
     ```js
-    import { faSearch, faSync, faAngleDown, faInfoCircle }
-        from '@fortawesome/fontawesome-free-solid/shakable.es';
+    import { faSearch, faSync, faAngleDown, faInfoCircle } from '@fortawesome/fontawesome-free-solid/shakable.es';
     fontawesome.library.add(faSearch, faSync, faAngleDown, faInfoCircle);
     ``` 
     
@@ -113,7 +113,37 @@ Next:
 
 6. Create the table controller which defines the query and gives the path to the JSON template
 
+    ```php
+    class UserTableController extends Controller
+    {
+        use Datatable, Excel;
+    
+        protected $tableClass = UserTable::class;
+    }
+    ```
+
     Example: [TableController.php](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/TableController.php)
+
+7. Create the table builder class, which must extend the abstract `Table` class, set the `$template` variable 
+and implement the `query` method
+
+    ```php
+    class UserTable extends Table
+    {
+        protected $templatePath = __DIR__.'/../Templates/users.json';
+    
+        public function query()
+        {
+            return User::select(\DB::raw(
+                    'users.id as "dtRowId", owners.name as owner, users.first_name, users.last_name, users.phone,
+                    users.email, roles.name as role, users.is_active'
+                ))->join('owners', 'users.owner_id', '=', 'owners.id')
+                ->join('roles', 'users.role_id', '=', 'roles.id');
+        }
+    }
+    ```
+
+    Example: [ExampleTable](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/Tables/Builders/ExampleTable.php) 
 
 7. Declare the route in your route file, to present your controller's methods
     ```
@@ -148,7 +178,7 @@ additional data, such as when changing to the next page of results, another requ
 
 This means that the configuration is not re-read as long as the component is not re-drawn.   
 
-For the data editor functionality (WIP), separate requests will be used.
+For the data editor functionality (N/A), separate requests will be used.
 
 Note: In order to make the above requests, named routes are required.
 
@@ -160,7 +190,7 @@ the back-end builder no longer computes the number filtered and any totals for t
 However, a blue information icon becomes available in the list of table buttons, that allows the user to
 request this computed information.
 
-Since this is an extreme case with tables this big and is a seldom situation, the limit configuration is global.
+Since this is an extreme case with tables this big and is a seldom situation, the configuration for the limit is global.
 
 #### Configuration
 The package comes with with a publishable configuration file which you may update in order to fit your 
@@ -257,12 +287,15 @@ return [
 
 ##### validations 
 is a string, values may be `always`/`local`, default `local`. When parsing the template, the given options are validated because we want to avoid misconfiguration leading to unexpected results. It makes sense to run the validator just during development, however, if you want to also run it in production, you may configure that here. 
+
 ##### labels
 is an array of options for the header names of the implicit columns. Note that these labels are also translated if a translation function is given to the VueJS component, through the `i18n` parameter. Options:   
 - `crtNo` is the current line number, default `#`
 - `actions`, is the last table column that contains the row's buttons, default `Actions`
+
 ##### lengthMenu
 is an array of numbers, default `[10, 15, 20, 25, 30]` representing the pagination options for the table. For each table's JSON template, the `lengthMenu` parameter is also available, and, if given, it will have higher priority over the global configuration. This allows for some tables to have a different pagination than the default.
+
 ##### buttons, 
 is an array of button configurations, with 2 types:
 - `global`, these buttons are the buttons that are rendered above the search input, global for the whole table, which do not depend on the data of a particular row. Defaults:
@@ -270,10 +303,12 @@ is an array of button configurations, with 2 types:
     - `excel`, button for exporting the contents of the table. Note: The export process takes into account your current sorting and filtering.
 - `row`, these are the buttons rendered in the `action` column, and defaults include: 
         `show`, `edit`, `destroy`, `download`
+
 ##### style
 is an array of style configurations, with 2 sections:
 - `default`, array of classes, default is `['striped', 'hover', 'bordered', 'center']`, that are applied by default for all tables. Note that you should set only one alignment specific class in the default.
 - `mapping`, array of configurations for the styles. While designed for/with Bulma, you may specify here custom classes in order to personalize your tables
+
 ##### export
 is an array of configuration options for exporting the contents of a file. Note: The export process takes into account your current sorting and filtering. Available options:
 - `path`, string, folder where the temporary export file is saved, default `exports`. This folder is expected to reside in `storage/app`
@@ -281,8 +316,10 @@ is an array of configuration options for exporting the contents of a file. Note:
 - `maxExecutionTime`, number, max number of seconds for the php script to run, before it times out. You may need to adjust this depending on how big your reports are. 
 - `notifications`, array of notification options, default `['broadcast', 'database']`. Note that 
     email notifications are always used for sending the actual export file, so you should take into account email attachment size and mail server timeout / other limitations when choosing values for the export.  
+
 ##### dateFormat
 is a string, with the date format for date columns, which will be used when displaying date values
+
 ##### fullInfoRecordLimit
 is a numeric limit, representing the top resultset limit when the computation of the filtered & totals functionality 
 becomes disabled by default and is made avaible on-demand.
@@ -488,7 +525,7 @@ Examples:
 
 #### The query
 
-In your controller, the query must look like this:
+In your Table builder implementation, the query must look like this:
 
 ```php
 public function query()
@@ -497,7 +534,7 @@ public function query()
 }
 ```
 
-Keep in mind that at this stage, we're returning a QueryBuilder not a collection of results.
+Keep in mind that at this stage, we're returning a `QueryBuilder` not a collection of results.
 
 #### Further Examples
 You may see the vue data table in action, with the code for the Owners page, right here:
