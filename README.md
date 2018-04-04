@@ -21,6 +21,7 @@ Build fast any complex table based on a JSON template.
 [![Themed Screenshot](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002_thumb.png)](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002.png)
 
 ### Features
+
 - efficient server side data loading
 - multi-column searching
 - multi-column sorting
@@ -100,7 +101,8 @@ Next:
     Note on Font Awesome: Each icon used in the datatable should be available (imported) in the page/component where 
     vue-table is used, for example:
     ```js
-    import { faSearch, faSync, faAngleDown, faInfoCircle } from '@fortawesome/fontawesome-free-solid/shakable.es';
+    import { faSearch, faSync, faAngleDown, faInfoCircle }
+       from '@fortawesome/fontawesome-free-solid/shakable.es';
     fontawesome.library.add(faSearch, faSync, faAngleDown, faInfoCircle);
     ``` 
     
@@ -124,7 +126,7 @@ Next:
 
     Example: [TableController.php](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/TableController.php)
 
-7. Create the table builder class, which must extend the abstract `Table` class, set the `$template` variable 
+7. Create the table builder class, which must extend the abstract `Table` class, set the `$templatePath` variable 
 and implement the `query` method
 
     ```php
@@ -156,19 +158,15 @@ and implement the `query` method
 8. Place the vuedatatable `VueJS` component in your page/component:
     ```
     <vue-table class="box"
-        path="/examples/table/init"    
-        @clicked="clicked"
-        @excel="$toastr.info('You just pressed Excel', 'Event')"
-        @create="$toastr.success('You just pressed Create', 'Event')"
-        @edit="$toastr.warning('You just pressed Edit', 'Event')"
-        @destroy="$toastr.error('You just pressed Delete', 'Event')"
-        id="example">
+        path="administration.users.initTable"
+        id="users">
     </vue-table>
     ``` 
    
-   Full example: [table.blade.php](https://github.com/laravel-enso/Enso/blob/master/resources/views/examples/table.blade.php)
+   Example: [table.blade.php](https://github.com/laravel-enso/Enso/blob/master/resources/views/examples/table.blade.php)
  
-### Use
+### Usage
+
 The Vue Data Table component works by pulling its configuration through an initialization request. 
 After loading its configuration through that first request, it makes another request for pulling in its data, 
 based on its configuration.
@@ -325,6 +323,7 @@ is a numeric limit, representing the top resultset limit when the computation of
 becomes disabled by default and is made avaible on-demand.
 
 #### Template
+
 ```JSON
 {
     "routePrefix": "route.prefix",
@@ -398,6 +397,7 @@ the raw table query should also select the id as id (this is a Laravel requireme
  for example when typing in the search box or changing filters, default `100`
 
 ##### Buttons
+
 There are several type of buttons, depending on how you classify them.
 
 By configuration:
@@ -435,6 +435,7 @@ available options are: `"GET"` / `"PUT`" / `"PATCH`" / `"POST`" / `"DELETE`"
 - `params`: optional, object, used if action = `router`, object is added to route params object
 
 ##### Columns
+
 The columns configuration attribute is required, and expects an array of configuration objects. 
 Each configuration object may have the following attributes:
 - `label`, required, string, the column name used in the table header. This will be translated if a translation function 
@@ -471,6 +472,7 @@ Since this is achieved via the accounting.js library, you should take a look at 
  
 
 #### The VueJS Component
+
 The VueTable component takes the following parameters:
 - `id`, required, string, identification for this table, is used to store the preferences in the browser's local storage
 - `path`, required, string, the URI for the table initialization request
@@ -537,6 +539,7 @@ public function query()
 Keep in mind that at this stage, we're returning a `QueryBuilder` not a collection of results.
 
 #### Further Examples
+
 You may see the vue data table in action, with the code for the Owners page, right here:
 - [data controller](https://github.com/laravel-enso/Core/blob/master/src/app/Http/Controllers/Owner/OwnerTableController.php)
 - [table template](https://github.com/laravel-enso/Core/blob/master/src/app/Tables/owners.json)
@@ -546,13 +549,14 @@ You may see the vue data table in action, with the code for the Owners page, rig
 Feel free to look around at the various packages in the [laravel-enso](https://github.com/laravel-enso) repository, to find more examples.
 
 ### Publishes
+
 - `php artisan vendor:publish --tag=vuedatatable-config` - the component configuration
+- `php artisan vendor:publish --tag=tables` - the example table json config and builder 
 - `php artisan vendor:publish --tag=vuedatatable-assets` - all the VueJS components and assets
 - `php artisan vendor:publish --tag=enso-assets` - a common alias for when wanting to update the VueJS components,
 once a newer version is released, usually used with the `--force` flag
 
 ### Notes
-
 The [Laravel Enso Core](https://github.com/laravel-enso/Core) package comes with this package included.
 
 We've tried to make it as light as possible and use the minimum amount of external libraries and dependencies.
@@ -564,6 +568,9 @@ Therefore, the package depends just on:
  - [Css element queries - resize detector](https://github.com/marcj/css-element-queries) for the table responsiveness
  - [accounting.js](http://openexchangerates.github.io/accounting.js/) for formatting numbers as money values
 
+Internally, the package depends on (this applies when used outside of Enso):
+ - [Helpers](https://github.com/laravel-enso/Helpers) for utility classes
+ - [VueComponents](https://github.com/laravel-enso/VueComponents) various sub-resources used for the front-end
 
 <!--h-->
 ### Contributions
