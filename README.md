@@ -424,6 +424,8 @@ The configuration options for buttons are, as follows:
 - `routeSuffix`: optional, string, if given, gets appended to the `routePrefix` param
 - `event`: optional, string, the name of an event that is emitted on click, which allows for custom in-page handling, 
 outside of the table
+- `postEvent`: optional, string, the name of the event that is emitted after the completion of the ajax request 
+(only applies to ajax type of buttons) 
 - `action`: optional, string, available options are `router` / `href` / `export` / `ajax`. 
 Depending on the chosen options, other parameters could be required
 - `fullRoute`: optional, string, if given, is used independently from the `routePrefix` param
@@ -524,6 +526,23 @@ Examples:
     }
     ```
 
+#### The Events
+For integration with other in-page components, the datatable component can emit serveral events, 
+depending on the configuration:
+- `draw`, with no payload, after each retrieval of the table data, such as when first loading the initial chunk, 
+    when loading the next 'page' of data, when reloading after a filter has changed, etc.
+- `input`, with the search input as payload, when using the search box
+- `update-length`, with the selected length, when changing the pagination length
+- `update-visibility`, with no payload, when changing the columns visibility 
+- `reload`, with no payload, when reloading the table   
+- `reset`, with no payload, when resetting the table preferences
+- `request-full-info`, with no payload, when clicking on the button that load all information for a table working with a huge data set
+- `clicked`, with the column and the whole row as payload, when clicking on a clickable table cell, 
+    as configured in the template (also see the Columns section above)
+- custom events, with no payload, for `ajax` type of buttons, 
+    as configured in the template (also see the Buttons section above). 
+- custom events, with the whole row the button is positioned on as payload, 
+    for buttons that have a meta event property (the even name is the property value)
 
 #### The query
 
