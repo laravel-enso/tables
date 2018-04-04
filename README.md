@@ -163,7 +163,7 @@ and implement the `query` method
     </vue-table>
     ``` 
    
-   Example: [table.blade.php](https://github.com/laravel-enso/Enso/blob/master/resources/views/examples/table.blade.php)
+   Example: [index.blade.php](https://github.com/laravel-enso/Enso/blob/master/resources/views/examples/table/index.blade.php)
  
 ### Usage
 
@@ -560,10 +560,10 @@ Keep in mind that at this stage, we're returning a `QueryBuilder` not a collecti
 #### Further Examples
 
 You may see the vue data table in action, with the code for the Owners page, right here:
-- [data controller](https://github.com/laravel-enso/Core/blob/master/src/app/Http/Controllers/Owner/OwnerTableController.php)
-- [table template](https://github.com/laravel-enso/Core/blob/master/src/app/Tables/owners.json)
-- [front-end vue page](https://github.com/laravel-enso/Core/blob/master/src/resources/assets/js/pages/administration/owners/Index.vue)
-- [live result](http://enso.dev/administration/owners/) (if you're not already logged in, use `admin@laravel-enso.com` and `password`)
+- [data controller](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Administration/Owner/OwnerTableController.php)
+- [table template](https://github.com/laravel-enso/Enso/blob/master/app/Tables/Templates/owners.json)
+- [front-end vue page](https://github.com/laravel-enso/Enso/blob/master/resources/assets/js/pages/administration/owners/Index.vue)
+- [live result](https://www.laravel-enso.com/administration/owners/) (if you're not already logged in, use `admin@laravel-enso.com` and `password`)
 
 Feel free to look around at the various packages in the [laravel-enso](https://github.com/laravel-enso) repository, to find more examples.
 
