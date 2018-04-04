@@ -111,7 +111,7 @@ Next:
 
 5. Create the JSON table configuration template. 
 
-    Example: [exampleTable.json](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/exampleTable.json)
+    Example: [exampleTable.json](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/Tables/Templates/exampleTable.json)
 
 6. Create the table controller which defines the query and gives the path to the JSON template
 
