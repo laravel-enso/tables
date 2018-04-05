@@ -18,9 +18,9 @@ class Builder
     private $meta;
     private $fullRecordInfo;
 
-    public function __construct(array $request, QueryBuilder $query)
+    public function __construct(Obj $request, QueryBuilder $query)
     {
-        $this->request = new Obj($request);
+        $this->request = $request;
         $this->meta = json_decode($this->request->get('meta'));
         $this->query = $query;
         $this->total = collect();

@@ -30,8 +30,8 @@ class ExcelExport implements ShouldQueue
 
     public function handle()
     {
-        $this->table = (new $this->tableClass())
-            ->excel($this->request);
+        $this->table = (new $this->tableClass($this->request))
+            ->excel();
 
         $this->setFilePath()
             ->export()

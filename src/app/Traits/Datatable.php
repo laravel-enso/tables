@@ -14,7 +14,7 @@ trait Datatable
 
     public function data(Request $request)
     {
-        return (new $this->tableClass())
-            ->data($request->all());
+        return (new $this->tableClass($request->all()))
+            ->data();
     }
 }
