@@ -8,8 +8,9 @@
 [![Latest Stable Version](https://poser.pugx.org/laravel-enso/vuedatatable/version)](https://packagist.org/packages/laravel-enso/vuedatatable)
 <!--/h-->
 
-Data Table package with server-side processing and VueJS components. Build fast any complex table based on a JSON template.
-**Important Note** This readme is relevant for v1.0.x and will be updated soon for v1.1.x.
+Data Table package with server-side processing and VueJS components. 
+Build fast any complex table based on a JSON template.
+
 
 [![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.webm)
 
@@ -20,6 +21,7 @@ Data Table package with server-side processing and VueJS components. Build fast 
 [![Themed Screenshot](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002_thumb.png)](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002.png)
 
 ### Features
+
 - efficient server side data loading
 - multi-column searching
 - multi-column sorting
@@ -100,7 +102,7 @@ Next:
     vue-table is used, for example:
     ```js
     import { faSearch, faSync, faAngleDown, faInfoCircle }
-        from '@fortawesome/fontawesome-free-solid/shakable.es';
+       from '@fortawesome/fontawesome-free-solid/shakable.es';
     fontawesome.library.add(faSearch, faSync, faAngleDown, faInfoCircle);
     ``` 
     
@@ -109,11 +111,41 @@ Next:
 
 5. Create the JSON table configuration template. 
 
-    Example: [exampleTable.json](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/exampleTable.json)
+    Example: [exampleTable.json](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/Tables/Templates/exampleTable.json)
 
 6. Create the table controller which defines the query and gives the path to the JSON template
 
+    ```php
+    class UserTableController extends Controller
+    {
+        use Datatable, Excel;
+    
+        protected $tableClass = UserTable::class;
+    }
+    ```
+
     Example: [TableController.php](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/TableController.php)
+
+7. Create the table builder class, which must extend the abstract `Table` class, set the `$templatePath` variable 
+and implement the `query` method
+
+    ```php
+    class UserTable extends Table
+    {
+        protected $templatePath = __DIR__.'/../Templates/users.json';
+    
+        public function query()
+        {
+            return User::select(\DB::raw(
+                    'users.id as "dtRowId", owners.name as owner, users.first_name, users.last_name, users.phone,
+                    users.email, roles.name as role, users.is_active'
+                ))->join('owners', 'users.owner_id', '=', 'owners.id')
+                ->join('roles', 'users.role_id', '=', 'roles.id');
+        }
+    }
+    ```
+
+    Example: [ExampleTable](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Examples/Tables/Builders/ExampleTable.php) 
 
 7. Declare the route in your route file, to present your controller's methods
     ```
@@ -126,19 +158,15 @@ Next:
 8. Place the vuedatatable `VueJS` component in your page/component:
     ```
     <vue-table class="box"
-        path="/examples/table/init"    
-        @clicked="clicked"
-        @excel="$toastr.info('You just pressed Excel', 'Event')"
-        @create="$toastr.success('You just pressed Create', 'Event')"
-        @edit="$toastr.warning('You just pressed Edit', 'Event')"
-        @destroy="$toastr.error('You just pressed Delete', 'Event')"
-        id="example">
+        path="administration.users.initTable"
+        id="users">
     </vue-table>
     ``` 
    
-   Full example: [table.blade.php](https://github.com/laravel-enso/Enso/blob/master/resources/views/examples/table.blade.php)
+   Example: [index.blade.php](https://github.com/laravel-enso/Enso/blob/master/resources/views/examples/table/index.blade.php)
  
-### Use
+### Usage
+
 The Vue Data Table component works by pulling its configuration through an initialization request. 
 After loading its configuration through that first request, it makes another request for pulling in its data, 
 based on its configuration.
@@ -148,7 +176,7 @@ additional data, such as when changing to the next page of results, another requ
 
 This means that the configuration is not re-read as long as the component is not re-drawn.   
 
-For the data editor functionality (WIP), separate requests will be used.
+For the data editor functionality (N/A), separate requests will be used.
 
 Note: In order to make the above requests, named routes are required.
 
@@ -160,7 +188,7 @@ the back-end builder no longer computes the number filtered and any totals for t
 However, a blue information icon becomes available in the list of table buttons, that allows the user to
 request this computed information.
 
-Since this is an extreme case with tables this big and is a seldom situation, the limit configuration is global.
+Since this is an extreme case with tables this big and is a seldom situation, the configuration for the limit is global.
 
 #### Configuration
 The package comes with with a publishable configuration file which you may update in order to fit your 
@@ -257,12 +285,15 @@ return [
 
 ##### validations 
 is a string, values may be `always`/`local`, default `local`. When parsing the template, the given options are validated because we want to avoid misconfiguration leading to unexpected results. It makes sense to run the validator just during development, however, if you want to also run it in production, you may configure that here. 
+
 ##### labels
 is an array of options for the header names of the implicit columns. Note that these labels are also translated if a translation function is given to the VueJS component, through the `i18n` parameter. Options:   
 - `crtNo` is the current line number, default `#`
 - `actions`, is the last table column that contains the row's buttons, default `Actions`
+
 ##### lengthMenu
 is an array of numbers, default `[10, 15, 20, 25, 30]` representing the pagination options for the table. For each table's JSON template, the `lengthMenu` parameter is also available, and, if given, it will have higher priority over the global configuration. This allows for some tables to have a different pagination than the default.
+
 ##### buttons, 
 is an array of button configurations, with 2 types:
 - `global`, these buttons are the buttons that are rendered above the search input, global for the whole table, which do not depend on the data of a particular row. Defaults:
@@ -270,10 +301,12 @@ is an array of button configurations, with 2 types:
     - `excel`, button for exporting the contents of the table. Note: The export process takes into account your current sorting and filtering.
 - `row`, these are the buttons rendered in the `action` column, and defaults include: 
         `show`, `edit`, `destroy`, `download`
+
 ##### style
 is an array of style configurations, with 2 sections:
 - `default`, array of classes, default is `['striped', 'hover', 'bordered', 'center']`, that are applied by default for all tables. Note that you should set only one alignment specific class in the default.
 - `mapping`, array of configurations for the styles. While designed for/with Bulma, you may specify here custom classes in order to personalize your tables
+
 ##### export
 is an array of configuration options for exporting the contents of a file. Note: The export process takes into account your current sorting and filtering. Available options:
 - `path`, string, folder where the temporary export file is saved, default `exports`. This folder is expected to reside in `storage/app`
@@ -281,13 +314,16 @@ is an array of configuration options for exporting the contents of a file. Note:
 - `maxExecutionTime`, number, max number of seconds for the php script to run, before it times out. You may need to adjust this depending on how big your reports are. 
 - `notifications`, array of notification options, default `['broadcast', 'database']`. Note that 
     email notifications are always used for sending the actual export file, so you should take into account email attachment size and mail server timeout / other limitations when choosing values for the export.  
+
 ##### dateFormat
 is a string, with the date format for date columns, which will be used when displaying date values
+
 ##### fullInfoRecordLimit
 is a numeric limit, representing the top resultset limit when the computation of the filtered & totals functionality 
 becomes disabled by default and is made avaible on-demand.
 
 #### Template
+
 ```JSON
 {
     "routePrefix": "route.prefix",
@@ -361,6 +397,7 @@ the raw table query should also select the id as id (this is a Laravel requireme
  for example when typing in the search box or changing filters, default `100`
 
 ##### Buttons
+
 There are several type of buttons, depending on how you classify them.
 
 By configuration:
@@ -387,6 +424,8 @@ The configuration options for buttons are, as follows:
 - `routeSuffix`: optional, string, if given, gets appended to the `routePrefix` param
 - `event`: optional, string, the name of an event that is emitted on click, which allows for custom in-page handling, 
 outside of the table
+- `postEvent`: optional, string, the name of the event that is emitted after the completion of the ajax request 
+(only applies to ajax type of buttons) 
 - `action`: optional, string, available options are `router` / `href` / `export` / `ajax`. 
 Depending on the chosen options, other parameters could be required
 - `fullRoute`: optional, string, if given, is used independently from the `routePrefix` param
@@ -398,6 +437,7 @@ available options are: `"GET"` / `"PUT`" / `"PATCH`" / `"POST`" / `"DELETE`"
 - `params`: optional, object, used if action = `router`, object is added to route params object
 
 ##### Columns
+
 The columns configuration attribute is required, and expects an array of configuration objects. 
 Each configuration object may have the following attributes:
 - `label`, required, string, the column name used in the table header. This will be translated if a translation function 
@@ -434,6 +474,7 @@ Since this is achieved via the accounting.js library, you should take a look at 
  
 
 #### The VueJS Component
+
 The VueTable component takes the following parameters:
 - `id`, required, string, identification for this table, is used to store the preferences in the browser's local storage
 - `path`, required, string, the URI for the table initialization request
@@ -485,10 +526,27 @@ Examples:
     }
     ```
 
+#### The Events
+For integration with other in-page components, the datatable component can emit serveral events, 
+depending on the configuration:
+- `draw`, with no payload, after each retrieval of the table data, such as when first loading the initial chunk, 
+    when loading the next 'page' of data, when reloading after a filter has changed, etc.
+- `input`, with the search input as payload, when using the search box
+- `update-length`, with the selected length, when changing the pagination length
+- `update-visibility`, with no payload, when changing the columns visibility 
+- `reload`, with no payload, when reloading the table   
+- `reset`, with no payload, when resetting the table preferences
+- `request-full-info`, with no payload, when clicking on the button that load all information for a table working with a huge data set
+- `clicked`, with the column and the whole row as payload, when clicking on a clickable table cell, 
+    as configured in the template (also see the Columns section above)
+- custom events, with no payload, for `ajax` type of buttons, 
+    as configured in the template (also see the Buttons section above). 
+- custom events, with the whole row the button is positioned on as payload, 
+    for buttons that have a meta event property (the even name is the property value)
 
 #### The query
 
-In your controller, the query must look like this:
+In your Table builder implementation, the query must look like this:
 
 ```php
 public function query()
@@ -497,25 +555,27 @@ public function query()
 }
 ```
 
-Keep in mind that at this stage, we're returning a QueryBuilder not a collection of results.
+Keep in mind that at this stage, we're returning a `QueryBuilder` not a collection of results.
 
 #### Further Examples
+
 You may see the vue data table in action, with the code for the Owners page, right here:
-- [data controller](https://github.com/laravel-enso/Core/blob/master/src/app/Http/Controllers/Owner/OwnerTableController.php)
-- [table template](https://github.com/laravel-enso/Core/blob/master/src/app/Tables/owners.json)
-- [front-end vue page](https://github.com/laravel-enso/Core/blob/master/src/resources/assets/js/pages/administration/owners/Index.vue)
-- [live result](http://enso.dev/administration/owners/) (if you're not already logged in, use `admin@laravel-enso.com` and `password`)
+- [data controller](https://github.com/laravel-enso/Enso/blob/master/app/Http/Controllers/Administration/Owner/OwnerTableController.php)
+- [table template](https://github.com/laravel-enso/Enso/blob/master/app/Tables/Templates/owners.json)
+- [front-end vue page](https://github.com/laravel-enso/Enso/blob/master/resources/assets/js/pages/administration/owners/Index.vue)
+- [live result](https://www.laravel-enso.com/administration/owners/) (if you're not already logged in, use `admin@laravel-enso.com` and `password`)
 
 Feel free to look around at the various packages in the [laravel-enso](https://github.com/laravel-enso) repository, to find more examples.
 
 ### Publishes
+
 - `php artisan vendor:publish --tag=vuedatatable-config` - the component configuration
+- `php artisan vendor:publish --tag=tables` - the example table json config and builder 
 - `php artisan vendor:publish --tag=vuedatatable-assets` - all the VueJS components and assets
 - `php artisan vendor:publish --tag=enso-assets` - a common alias for when wanting to update the VueJS components,
 once a newer version is released, usually used with the `--force` flag
 
 ### Notes
-
 The [Laravel Enso Core](https://github.com/laravel-enso/Core) package comes with this package included.
 
 We've tried to make it as light as possible and use the minimum amount of external libraries and dependencies.
@@ -527,6 +587,9 @@ Therefore, the package depends just on:
  - [Css element queries - resize detector](https://github.com/marcj/css-element-queries) for the table responsiveness
  - [accounting.js](http://openexchangerates.github.io/accounting.js/) for formatting numbers as money values
 
+Internally, the package depends on (this applies when used outside of Enso):
+ - [Helpers](https://github.com/laravel-enso/Helpers) for utility classes
+ - [VueComponents](https://github.com/laravel-enso/VueComponents) various sub-resources used for the front-end
 
 <!--h-->
 ### Contributions
