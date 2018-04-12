@@ -35,6 +35,12 @@ abstract class Table
             ->excel();
     }
 
+    public function fetcher(int $chunk)
+    {
+        return $this->builder()
+            ->fetcher($chunk);
+    }
+
     private function builder()
     {
         return new Builder(
