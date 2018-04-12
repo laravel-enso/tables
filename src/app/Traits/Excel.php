@@ -15,7 +15,11 @@ trait Excel
         $request->user()
             ->notify(new ExportStartNotification($request->get('name')));
 
-        $this->dispatch(new ExcelExport($request->user(), $request->all(), $this->tableClass));
+        $this->dispatch(new ExcelExport(
+            $request->user(),
+            $request->all(),
+            $this->tableClass
+        ));
     }
 
     private function checkExportLimit(Request $request)

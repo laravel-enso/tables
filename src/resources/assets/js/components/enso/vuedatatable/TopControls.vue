@@ -146,6 +146,11 @@ export default {
 
             if (button.action === 'router') {
                 this.$router.push({ name: button.route });
+                return;
+            }
+
+            if (button.action === 'action') {
+                this.$emit('action', button.path, button.postEvent);
             }
         },
     },

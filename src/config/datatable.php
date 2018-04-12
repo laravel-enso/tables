@@ -70,6 +70,15 @@ return [
                 'action' => 'export',
                 'label' => 'Excel',
             ],
+            'action' => [
+                'icon' => 'check',
+                'class' => null,
+                'routeSuffix' => 'action',
+                'event' => 'custom-action',
+                'postEvent' => 'custom-action-done',
+                'action' => 'action',
+                'label' => 'Action',
+            ],
         ],
         'row' => [
             'show' => [
@@ -169,7 +178,7 @@ return [
 
     'fullInfoRecordLimit' => 100000,
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Debounce Rate
     |--------------------------------------------------------------------------

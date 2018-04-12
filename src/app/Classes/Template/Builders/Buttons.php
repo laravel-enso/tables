@@ -4,7 +4,7 @@ namespace LaravelEnso\VueDatatable\app\Classes\Template\Builders;
 
 class Buttons
 {
-    private const PathActions = ['href', 'ajax', 'export'];
+    private const PathActions = ['href', 'ajax', 'export', 'action'];
 
     private $template;
     private $defaults;
