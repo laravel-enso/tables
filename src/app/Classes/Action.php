@@ -3,17 +3,13 @@
  * Created with luv for spa2.
  * User: mihai
  * Date: 4/12/18
- * Time: 7:18 PM
+ * Time: 7:18 PM.
  */
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
-
-use LaravelEnso\VueDatatable\app\Classes\Table\Builder;
-
 abstract class Action
 {
-
     private $builder;
     private $request;
     private $class;
@@ -26,18 +22,21 @@ abstract class Action
     public function request(array $request)
     {
         $this->request = $request;
+
         return $this;
     }
 
     public function class(string $class)
     {
         $this->class = $class;
+
         return $this;
     }
 
     public function chunk(int $chunk)
     {
         $this->chunk = $chunk;
+
         return $this;
     }
 

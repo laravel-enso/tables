@@ -8,7 +8,6 @@ use LaravelEnso\VueDatatable\app\Exceptions\QueryException;
 
 class Builder
 {
-
     private $request;
     private $query;
     private $count;
@@ -52,12 +51,12 @@ class Builder
         $this->checkActions();
 
         return [
-            'count'          => $this->count,
-            'filtered'       => $this->filtered,
-            'total'          => $this->total,
-            'data'           => $this->data,
+            'count' => $this->count,
+            'filtered' => $this->filtered,
+            'total' => $this->total,
+            'data' => $this->data,
             'fullRecordInfo' => $this->fullRecordInfo,
-            'filters'        => $this->hasFilters(),
+            'filters' => $this->hasFilters(),
         ];
     }
 
@@ -68,9 +67,9 @@ class Builder
         $export = new ExportComputor($this->data, $this->columns);
 
         return [
-            'name'   => $this->request->get('name'),
+            'name' => $this->request->get('name'),
             'header' => $this->columns->pluck('label')->toArray(),
-            'data'   => $export->data()->toArray(),
+            'data' => $export->data()->toArray(),
         ];
     }
 
