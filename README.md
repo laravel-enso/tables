@@ -224,6 +224,16 @@ return [
                 'action' => 'export',
                 'label' => 'Excel',
             ],
+            'action' => [
+                'icon' => 'check',
+                'class' => null,
+                'routeSuffix' => 'action',
+                'event' => 'custom-action',
+                'postEvent' => 'custom-action-done',
+                'action' => 'ajax',
+                'method' => 'PATCH',
+                'label' => 'Action',
+            ],
         ],
         'row' => [
             'show' => [
@@ -249,6 +259,7 @@ return [
                 'method' => 'DELETE',
                 'message' => 'The selected record is about to be deleted. Are you sure?',
                 'confirmation' => true,
+                'postEvent' => 'destroyed',
             ],
             'download' => [
                 'icon' => 'cloud-download-alt',
@@ -577,6 +588,8 @@ resultset of the table.
 It is important to note that the action will be applied for **ALL** the **FILTERED** results, 
 even the ones that might not be visible on the current page of the table (if there is more than one page).
 
+##### In-depth example
+
 In order to achieve this functionality, we've included an example below, 
 where we add a new button for the owners table:
 
@@ -606,7 +619,7 @@ where we add a new button for the owners table:
     
     Note that, if needed, you may define several buttons in a similar fashion.
     
-3. Add a new `Action` implementation class, where you actually process the results.
+2. Add a new `Action` implementation class, where you actually process the results.
         
     ```php
     class OwnerMyAction extends Action
@@ -629,7 +642,7 @@ where we add a new button for the owners table:
     Depending on your requirements, you may do the processing here or even generate jobs that will do the processing 
     asynchronously.  
       
-2. Add a new controller for the action
+3. Add a new controller for the action
     ```php
     class OwnerMyActionController extends Controller
     {
@@ -652,6 +665,23 @@ where we add a new button for the owners table:
 
     Note that you may also reuse your TableController if you prefer and have only one 'action' for a given table.
 
+    ##### Additional Advanced Details
+    The `Action` trait defines an `action` method that is a bit of a wrapper, and looks like this:
+    ```php
+    public function action(Request $request)
+        {
+            (new $this->actionClass())
+                ->request($request->all())
+                ->class($this->tableClass)
+                ->chunk($this->chunk ?? 1000)
+                ->run();
+        }
+    ```
+    
+    If for any reason you want to handle more than one action through the same controller, 
+    you may declare multiple actionClasses, create multiple action methods that achieve the same process as the above, 
+    and, in conjuction with the proper routes, it can be done.  
+
 4. Add the new route
     ```php
     Route::patch('myAction', 'OwnerMyActionController@action')
@@ -668,6 +698,18 @@ where we add a new button for the owners table:
     Navigate in the app to `system/permissions` and add the new `administration.owners.myAction` permission.
 
 6. That's it.
+
+##### The default action button
+
+If you take a look the package config file, you'll notice that there already is a global action button defined.
+If you want to use it, you make skip the definition of a button at #1 step above, instead just declare `"action"` 
+and continue with the other steps, taking into account the 
+changed suffix (the route and permissions need to be altered).
+
+##### Defining reusable action buttons
+
+Similarly to the default action button, you may define other 'global' action buttons in the datable configuration, 
+that can then be used as needed in any table templates in your project.  
 
 ### Publishes
 
