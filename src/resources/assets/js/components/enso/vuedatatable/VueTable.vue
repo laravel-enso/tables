@@ -429,9 +429,17 @@ export default {
                 }
             }).catch(error => this.handleError(error));
         },
-        action(path, postEvent) {
-            axios.get(path, { params: this.readRequest() })
+        action(method, path, postEvent) {
+            this.loading = true;
+
+            const params = method === 'GET'
+                ? { params: this.readRequest() }
+                : this.readRequest();
+
+            axios[method.toLowerCase()](path, params)
                 .then(() => {
+                    this.loading = false;
+
                     if (postEvent) {
                         this.$emit(postEvent);
                     }

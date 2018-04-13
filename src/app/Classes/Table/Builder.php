@@ -21,7 +21,9 @@ class Builder
     public function __construct(Obj $request, QueryBuilder $query)
     {
         $this->request = $request;
-        $this->meta = json_decode($this->request->get('meta'));
+        $this->meta = is_string($this->request->get('meta'))
+            ? json_decode($this->request->get('meta'))
+            : (object) $this->request->get('meta');
         $this->query = $query;
         $this->total = collect();
 
@@ -212,7 +214,9 @@ class Builder
     {
         $this->columns = collect($this->request->get('columns'))
             ->map(function ($column) {
-                return json_decode($column);
+                return is_string($column)
+                    ? json_decode($column)
+                    : $column;
             });
     }
 

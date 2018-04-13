@@ -149,8 +149,8 @@ export default {
                 return;
             }
 
-            if (button.action === 'action') {
-                this.$emit('action', button.path, button.postEvent);
+            if (button.action === 'ajax') {
+                this.$emit('action', button.method, button.path, button.postEvent);
             }
         },
     },
