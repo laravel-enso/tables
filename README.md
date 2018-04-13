@@ -40,6 +40,7 @@ Build fast any complex table based on a JSON template.
 - server-side Excel exporting of the table data, using your current sorting and filtering choices, with email delivery and optional push notifications
 - reloading of data on demand
 - smart management of huge datasets, with configurable limit
+- posibility to define actions that apply to the entire, filtered, dataset
 - Enso Enum computation
 - Laravel accessors for the main query model
 - the configuration template for each table has been designed to be as light and straightforward as possible without losing 
@@ -566,6 +567,107 @@ You may see the vue data table in action, with the code for the Owners page, rig
 - [live result](https://www.laravel-enso.com/administration/owners/) (if you're not already logged in, use `admin@laravel-enso.com` and `password`)
 
 Feel free to look around at the various packages in the [laravel-enso](https://github.com/laravel-enso) repository, to find more examples.
+
+
+#### Actions
+
+While you may have action buttons on each table row, sometimes you may wish to have custom actions, for the entire 
+resultset of the table.
+
+It is important to note that the action will be applied for **ALL** the **FILTERED** results, 
+even the ones that might not be visible on the current page of the table (if there is more than one page).
+
+In order to achieve this functionality, we've included an example below, 
+where we add a new button for the owners table:
+
+1. Update your table JSON template, to include the button(s) for the action(s)
+    ```php
+    ...
+    "buttons": [
+            "excel", "create", "edit", "destroy",
+            {
+                "type": "global",
+                "icon": "check",
+                "class": null,
+                "routeSuffix": "myAction",
+                "event": "custom-action",
+                "postEvent": "custom-action-done",
+                "action": "ajax",
+                "method": "PATCH",
+                "label": "My Action"
+            }
+    ]
+    ...    
+    ```
+    
+    Customize the attributes as required, keeping in mind:
+    * the method should match the action performed and needs to be the same as when defining the route
+    * the suffix is what you'll need to use when defining the route (more on that below)
+    
+    Note that, if needed, you may define several buttons in a similar fashion.
+    
+3. Add a new `Action` implementation class, where you actually process the results.
+        
+    ```php
+    class OwnerMyAction extends Action
+    {
+    
+        public function process()
+        {
+            \Log::info($this->data());
+        }
+    }
+    ```
+    
+    This needs to extend the abstract `LaravelEnso\VueDatatable\app\Classes\Action` class, 
+    and implement the `process` method. 
+    The process method will be called for each available chunk of data, and the respective chunk is retrieved via
+    the public `data` method.
+    
+    The `data` method will return an array of the IDs in a chunk.
+     
+    Depending on your requirements, you may do the processing here or even generate jobs that will do the processing 
+    asynchronously.  
+      
+2. Add a new controller for the action
+    ```php
+    class OwnerMyActionController extends Controller
+    {
+        use Datatable, Action;
+    
+        protected $tableClass = OwnerTable::class;
+        protected $actionClass = OwnerMyAction::class;
+        protected $chunk = 2;
+    }
+    ```
+    
+    The controller manages the VueJS component's action request.
+    You require:
+    * the `Datatable` and `Action` trait
+    * the `$tableClass` variable, for the query
+    * the `$actionClass` variable, for your particular action implementation (from step 2)
+    * the `$chunk` variable is *optional*, and represents the number of results in a chunk of data, 
+    the maximum available at any time, within the `process` method of your action implementation. 
+    Be default, a chunk of `1000` is used if the variable is missing.
+
+    Note that you may also reuse your TableController if you prefer and have only one 'action' for a given table.
+
+4. Add the new route
+    ```php
+    Route::patch('myAction', 'OwnerMyActionController@action')
+                                ->name('myAction');
+    ```
+    
+    Remember to place the route nested correctly, considering the possible uri and route name prefixes, 
+    as well as the controller namespace.
+    
+    In this example, the url called for the Owners table will be 'administration/owners/myAction' and 
+    the name of the route will be 'administration.owners.myAction'.
+    
+5. Create the new permission
+    Navigate in the app to `system/permissions` and add the new `administration.owners.myAction` permission.
+
+6. That's it.
 
 ### Publishes
 
