@@ -214,9 +214,14 @@ class Builder
     {
         $this->columns = collect($this->request->get('columns'))
             ->map(function ($column) {
-                return is_string($column)
-                    ? json_decode($column)
-                    : $column;
+                if (is_string($column)) {
+                    return json_decode($column);
+                }
+
+                $column = (object) $column;
+                $column->meta = (object) $column->meta;
+
+                return $column;
             });
     }
 
