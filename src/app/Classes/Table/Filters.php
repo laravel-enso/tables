@@ -51,7 +51,7 @@ class Filters
         }
 
         $this->query->where(function ($query) {
-            collect(json_decode($this->request->get('filters')))
+            collect($this->parse('filters'))
                 ->each(function ($filters, $table) use ($query) {
                     collect($filters)->each(function ($value, $column) use ($table, $query) {
                         if (!is_null($value) && $value !== '' && $value !== []) {
@@ -71,7 +71,7 @@ class Filters
         }
 
         $this->query->where(function () {
-            collect(json_decode($this->request->get('intervals')))
+            collect($this->parse('intervals'))
                 ->each(function ($interval, $table) {
                     collect($interval)
                         ->each(function ($value, $column) use ($table) {
@@ -117,5 +117,12 @@ class Filters
     private function formatDate(string $date, string $dbDateFormat)
     {
         return (new Carbon($date))->format($dbDateFormat);
+    }
+
+    private function parse($type)
+    {
+        return is_string($this->request->get($type))
+            ? json_decode($this->request->get($type))
+            : (object) $this->request->get($type);
     }
 }
