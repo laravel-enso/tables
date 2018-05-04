@@ -38,8 +38,8 @@ class ExportDoneNotification extends Notification
             ->subject(__('Export Notification'))
             ->view('emails.exportDone',
                 [
-                    'line1'          => __('You will find attached the requested report.'),
-                    'line2'          => __('Thank you for using our application!'),
+                    'line1' => __('You will find attached the requested report.'),
+                    'line2' => __('Thank you for using our application!'),
                 ])
             ->attach($this->file);
     }
