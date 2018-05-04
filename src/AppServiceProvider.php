@@ -26,11 +26,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/resources/views' => resource_path('views'),
-        ], 'email-notifications');
+        ], 'email-templates');
 
         $this->publishes([
             __DIR__.'/resources/views' => resource_path('views'),
-        ], 'vuedatatable-email-notification');
+        ], 'vuedatatable-email-templates');
 
         $this->mergeConfigFrom(__DIR__.'/config/datatable.php', 'enso.datatable');
     }
