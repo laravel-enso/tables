@@ -9,7 +9,6 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class ExportDoneNotification extends Notification
 {
-
     use Queueable;
 
     public $file;
@@ -29,7 +28,7 @@ class ExportDoneNotification extends Notification
     {
         return new BroadcastMessage([
             'level' => 'success',
-            'body'  => __('Export emailed') . ': ' . __($this->name) . ' ' . __('Table'),
+            'body' => __('Export emailed').': '.__($this->name).' '.__('Table'),
         ]);
     }
 
@@ -49,7 +48,7 @@ class ExportDoneNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'body' => __('Export emailed') . ': ' . __($this->name) . ' ' . __('Table'),
+            'body' => __('Export emailed').': '.__($this->name).' '.__('Table'),
             'link' => '#',
         ];
     }
