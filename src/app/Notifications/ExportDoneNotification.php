@@ -34,6 +34,8 @@ class ExportDoneNotification extends Notification
 
     public function toMail($notifiable)
     {
+        app()->setLocale($notifiable->preferences->global->lang);
+
         return (new MailMessage())
             ->subject(__('Export Notification'))
             ->view('emails.exportDone', [
