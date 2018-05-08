@@ -38,7 +38,7 @@ class ExportDoneNotification extends Notification
 
         return (new MailMessage())
             ->subject(__('Export Notification'))
-            ->view('emails.exportDone', [
+            ->view('laravel-enso/vuedatatable::emails.exportDone', [
                 'lines' => [
                     __('You will find attached the requested report.'),
                     __('Thank you for using our application!'),

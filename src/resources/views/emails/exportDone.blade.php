@@ -1,4 +1,4 @@
-@extends('emails.layouts.main')
+@extends('laravel-enso/core::emails.layouts.main')
 
 @section('content')
 
