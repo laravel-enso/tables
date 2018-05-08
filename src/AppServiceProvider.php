@@ -20,12 +20,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/resources/assets/js' => resource_path('assets/js'),
-            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),
         ], 'vuedatatable-assets');
 
         $this->publishes([
             __DIR__.'/resources/assets/js' => resource_path('assets/js'),
-            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),
         ], 'enso-assets');
 
         $this->publishes([
@@ -35,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),
         ], 'vuedatatable-email-templates');
+
+        $this->publishes([
+            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),
+        ], 'email-templates');
     }
 
     private function loadDependencies()
