@@ -79,6 +79,8 @@ return [
                 'action' => 'ajax',
                 'method' => 'PATCH',
                 'label' => 'Action',
+                'message' => 'Custom Action. Are you sure?',
+                'confirmation' => true,
             ],
         ],
         'row' => [
