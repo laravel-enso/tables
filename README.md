@@ -718,6 +718,9 @@ that can then be used as needed in any table templates in your project.
 - `php artisan vendor:publish --tag=vuedatatable-assets` - all the VueJS components and assets
 - `php artisan vendor:publish --tag=enso-assets` - a common alias for when wanting to update the VueJS components,
 once a newer version is released, usually used with the `--force` flag
+- `php artisan vendor:publish --tag=vuedatatable-email-templates` - the templates used for notifications
+- `php artisan vendor:publish --tag=email-templates` - a common alias for when wanting to update the templates 
+used for notifications
 
 ### Notes
 The [Laravel Enso Core](https://github.com/laravel-enso/Core) package comes with this package included.
