@@ -28,29 +28,23 @@ class ExportDoneNotification extends Notification
     {
         return new BroadcastMessage([
             'level' => 'success',
-            'body' => __('Export emailed').': '.__($this->name).' '.__('Table'),
+            'body' => __('Export emailed').': '.__($this->name.' Table'),
         ]);
     }
 
     public function toMail($notifiable)
     {
-        app()->setLocale($notifiable->preferences->global->lang);
-
         return (new MailMessage())
             ->subject(__('Export Notification'))
-            ->view('laravel-enso/vuedatatable::emails.exportDone', [
-                'lines' => [
-                    __('You will find attached the requested report.'),
-                    __('Thank you for using our application!'),
-                ],
-            ])
+            ->line(__('You will find attached the requested report.'))
+            ->line(__('Thank you for using our application!'))
             ->attach($this->file);
     }
 
     public function toArray($notifiable)
     {
         return [
-            'body' => __('Export emailed').': '.__($this->name).' '.__('Table'),
+            'body' => __('Export emailed').': '.__($this->name.' Table'),
             'link' => '#',
         ];
     }
