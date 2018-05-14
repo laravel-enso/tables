@@ -18,14 +18,15 @@ class EnumComputor
 
     public function get()
     {
-        return collect($this->data)->map(function ($record) {
-            $this->withEnum->each(function ($column) use (&$record) {
-                $enum = new $column->enum();
-                $record[$column->name] = $enum::get($record[$column->name]);
-            });
+        return collect($this->data)
+            ->map(function ($record) {
+                $this->withEnum->each(function ($column) use (&$record) {
+                    $enum = new $column->enum();
+                    $record[$column->name] = $enum::get($record[$column->name]);
+                });
 
-            return $record;
-        });
+                return $record;
+            });
     }
 
     private function setWithEnum()

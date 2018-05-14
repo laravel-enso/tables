@@ -18,11 +18,27 @@ class Builder
 
     public function run()
     {
-        (new Structure($this->template))->build();
-        (new Columns($this->template))->build();
-        (new Buttons($this->template))->build();
-        (new Style($this->template))->build();
+        (new Structure($this->template))
+            ->build();
 
-        unset($this->template->readSuffix, $this->template->writeSuffix, $this->template->routePrefix);
+        (new Columns($this->template))
+            ->build();
+
+        (new Buttons($this->template))
+            ->build();
+
+        (new Style($this->template))
+            ->build();
+
+        $this->cleanUp();
+    }
+
+    private function cleanUp()
+    {
+        unset(
+            $this->template->readSuffix,
+            $this->template->writeSuffix,
+            $this->template->routePrefix
+        );
     }
 }

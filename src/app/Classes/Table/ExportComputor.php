@@ -17,26 +17,28 @@ class ExportComputor
     {
         $columns = $this->getColumns();
 
-        return collect($this->data)->map(function ($record) use ($columns) {
-            return $columns->reduce(function ($collector, $column) use ($record) {
-                $collector[$column->name] = $column->translation
+        return collect($this->data)
+            ->map(function ($record) use ($columns) {
+                return $columns->reduce(function ($collector, $column) use ($record) {
+                    $collector[$column->name] = $column->translation
                     ? __($record[$column->name])
                     : $record[$column->name];
 
-                return $collector;
-            }, []);
-        });
+                    return $collector;
+                }, []);
+            });
     }
 
     private function getColumns()
     {
-        return $this->columns->reduce(function ($columns, $column) {
-            $columns->push((object) [
-                'name' => $column->name,
-                'translation' => $column->meta->translation,
-            ]);
+        return $this->columns
+            ->reduce(function ($columns, $column) {
+                $columns->push((object) [
+                    'name' => $column->name,
+                    'translation' => $column->meta->translation,
+                ]);
 
-            return $columns;
-        }, collect());
+                return $columns;
+            }, collect());
     }
 }

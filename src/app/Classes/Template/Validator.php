@@ -18,12 +18,16 @@ class Validator
 
     public function run()
     {
-        (new Structure($this->template))->validate();
-        (new Routes($this->template))->validate();
+        (new Structure($this->template))
+            ->validate();
+
+        (new Routes($this->template))
+            ->validate();
 
         $this->validateButtons();
 
-        (new Columns($this->template))->validate();
+        (new Columns($this->template))
+            ->validate();
     }
 
     private function validateButtons()
@@ -34,6 +38,7 @@ class Validator
             return;
         }
 
-        (new Buttons($this->template))->validate();
+        (new Buttons($this->template))
+            ->validate();
     }
 }

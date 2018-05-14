@@ -150,13 +150,14 @@ class Builder
             return $this;
         }
 
-        $this->total = $this->columns->reduce(function ($total, $column) {
-            if ($column->meta->total) {
-                $total[$column->name] = $this->query->sum($column->data);
-            }
+        $this->total = $this->columns
+            ->reduce(function ($total, $column) {
+                if ($column->meta->total) {
+                    $total[$column->name] = $this->query->sum($column->data);
+                }
 
-            return $total;
-        }, []);
+                return $total;
+            }, []);
 
         return $this;
     }
@@ -182,7 +183,8 @@ class Builder
             return $this;
         }
 
-        $this->data->each->setAppends($this->request->get('appends'));
+        $this->data->each
+            ->setAppends($this->request->get('appends'));
 
         return $this;
     }

@@ -19,10 +19,12 @@ class Template
     public function get()
     {
         if ($this->needsValidation()) {
-            (new Validator($this->template))->run();
+            (new Validator($this->template))
+                ->run();
         }
 
-        (new Builder($this->template))->run();
+        (new Builder($this->template))
+            ->run();
 
         return ['template' => $this->template];
     }
@@ -32,16 +34,21 @@ class Template
         try {
             $this->template = json_decode(\File::get($template));
         } catch (FileNotFoundException $exception) {
-            throw new TemplateException(__('Specified template file was not found'));
+            throw new TemplateException(__(
+                'Specified template file was not found'
+            ));
         }
 
         if (!$this->template) {
-            throw new TemplateException(__('Template is not readable'));
+            throw new TemplateException(__(
+                'Template is not readable'
+            ));
         }
     }
 
     private function needsValidation()
     {
-        return config('app.env') === 'local' || config('enso.datatable.validations') === 'always';
+        return config('app.env') === 'local'
+            || config('enso.datatable.validations') === 'always';
     }
 }
