@@ -12,8 +12,9 @@ trait Excel
     {
         $this->checkExportLimit($request);
 
-        $request->user()
-            ->notify(new ExportStartNotification($request->get('name')));
+        $request->user()->notify(
+            new ExportStartNotification($request->get('name'))
+        );
 
         $this->dispatch(new ExcelExport(
             $request->user(),

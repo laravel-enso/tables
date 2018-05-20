@@ -33,7 +33,7 @@ class ExcelExport implements ShouldQueue
         $this->table = (new $this->tableClass($this->request))
             ->excel();
 
-        $this->setFilePath()
+        $this->filePath()
             ->export()
             ->sendReport()
             ->cleanUp();
@@ -52,8 +52,12 @@ class ExcelExport implements ShouldQueue
 
     private function sendReport()
     {
-        $this->user
-            ->notify(new ExportDoneNotification($this->filePath, $this->table['name']));
+        $this->user->notify(
+            new ExportDoneNotification(
+                $this->filePath,
+                $this->table['name']
+            )
+        );
 
         return $this;
     }
@@ -63,7 +67,7 @@ class ExcelExport implements ShouldQueue
         \Storage::delete($this->filePath);
     }
 
-    private function setFilePath()
+    private function filePath()
     {
         $filename = preg_replace(
             '/[^A-Za-z0-9_.-]/',
@@ -71,9 +75,8 @@ class ExcelExport implements ShouldQueue
             __($this->table['name']).'_'.__('Report')
         ).'.xlsx';
 
-        $this->filePath = storage_path(
-            'app/'.config('enso.datatable.export.path').'/'.$filename
-        );
+        $this->filePath = config('enso.datatable.export.path')
+            .DIRECTORY_SEPARATOR.$filename;
 
         return $this;
     }

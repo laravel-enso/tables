@@ -8,14 +8,14 @@ use Box\Spout\Writer\Style\StyleBuilder;
 
 class Excel
 {
-    private $fullPath;
+    private $filePath;
     private $header;
     private $data;
     private $writer;
 
-    public function __construct(string $fullPath, $header, $data)
+    public function __construct(string $filePath, $header, $data)
     {
-        $this->fullPath = $fullPath;
+        $this->filePath = $filePath;
         $this->header = $header;
         $this->data = $data;
     }
@@ -46,6 +46,6 @@ class Excel
         $this->writer = WriterFactory::create(Type::XLSX);
 
         $this->writer->setDefaultRowStyle($defaultStyle)
-            ->openToFile($this->fullPath);
+            ->openToFile(\Storage::path($this->filePath));
     }
 }

@@ -42,7 +42,7 @@ class ExportDoneNotification extends Notification
                     __('Thank you for using our application!'),
                 ],
             ])
-            ->attach($this->file);
+            ->attach(\Storage::path($this->file));
     }
 
     public function toArray($notifiable)
