@@ -32,11 +32,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),
-        ], 'vuedatatable-email-templates');
+        ], 'vuedatatable-mail');
 
         $this->publishes([
             __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),
-        ], 'email-templates');
+        ], 'enso-mail');
     }
 
     private function loadDependencies()
