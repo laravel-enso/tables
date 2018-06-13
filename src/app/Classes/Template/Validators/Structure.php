@@ -68,5 +68,10 @@ class Structure
         if (property_exists($this->template, 'debounce') && !is_int($this->template->debounce)) {
             throw new TemplateException(__('"debounce" attribute must be an integer'));
         }
+
+        if (property_exists($this->template, 'method')
+            && !collect(['GET', 'POST'])->contains($this->template->method)) {
+            throw new TemplateException(__('"method" attribute can be either "GET" or "POST"'));
+        }
     }
 }

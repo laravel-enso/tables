@@ -206,6 +206,7 @@ return [
     'lengthMenu' => [
         10, 15, 20, 25, 30,
     ],
+    "method": "GET",
     'buttons' => [
         'global' => [
             'create' => [
@@ -306,7 +307,10 @@ is an array of options for the header names of the implicit columns. Note that t
 ##### lengthMenu
 is an array of numbers, default `[10, 15, 20, 25, 30]` representing the pagination options for the table. For each table's JSON template, the `lengthMenu` parameter is also available, and, if given, it will have higher priority over the global configuration. This allows for some tables to have a different pagination than the default.
 
-##### buttons, 
+##### method
+is a either "GET" or "POST". If you're working with larger tables sometimes the URI can get too long and you may run in a 414 Exception. This option allows to configure the request method for fetching data in a local table, and if is given it will have higher priority over the global configuration.
+
+##### buttons
 is an array of button configurations, with 2 types:
 - `global`, these buttons are the buttons that are rendered above the search input, global for the whole table, which do not depend on the data of a particular row. Defaults:
     - `create`, button for creating a new resource
@@ -346,6 +350,7 @@ becomes disabled by default and is made avaible on-demand.
     "crtNo": true,
     "auth": false,
     "lengthMenu": [10, 15, 20, 25, 30],
+    "method": "POST",
     "appends": ["customAttribute"],
     "buttons": [
         "show", "create", "edit", "destroy", "download", "exportExcel",
@@ -399,6 +404,8 @@ This is only needed when using the editor (N/A).
 - `auth`, optional, boolean, flag for removing auth when using in enso context
 - `lengthMenu`, optional, array, list of options for the table pagination. If missing, the default values in the 
 global configuration are used. If given, the template values have higher precedence over the global configuration
+- `method`, optional, string, either "GET" or "POST". If missing, the default value in the 
+global configuration is used.
 - `appends` - optional, array, list of appended attributes that need to be added to the query results. 
 Note that the appended attributes are available from the main query model.
 Also note, that in order the if the appended attributes use any of the model's relationships, 

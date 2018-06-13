@@ -25,8 +25,9 @@ trait Excel
 
     private function checkExportLimit(Request $request)
     {
-        $length = json_decode($request->get('meta'))
-            ->length;
+        $length = is_string($request->get('meta'))
+            ? json_decode($request->get('meta'))->length
+            : $request->get('meta')['length'];
 
         if ($length > config('enso.datatable.export.limit')) {
             throw new ExportException(__(
