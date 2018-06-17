@@ -380,6 +380,7 @@ becomes disabled by default and is made avaible on-demand.
             "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "render", "date", "icon", "clickable", "tooltip"],
             "enum": "EnumClass",
             "tooltip": "My Tooltip Column Detail",
+            "class": "is-custom-class",
             "money": {
                 "symbol": "$",
                 "decimal": ".",
@@ -467,6 +468,7 @@ is available.
 For example, you may use this mechanism to show labels instead of integer values, for an attribute that holds 
 the type for a model/table.
 - `tooltip`, optional, the text used for this column header's tooltip  
+- `class`, optional, will be applied on the tables `<td>`
 - `meta`, optional, array of string tags/options, allowing further transformations:
     - `searchable`, optional, marks this column as searchable. If not searchable, a column is not used when 
     using the table search functionality 
