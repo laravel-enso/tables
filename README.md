@@ -477,7 +477,7 @@ the type for a model/table.
     - `translation`, optional, marks this column's values as translatable. 
     The `i18n` parameter translation function should be given to the VueJS table component in order for this to work
     - `boolean`, optional, marks this column as boolean, which means it will be rendered as such
-    - `slot`, optional, renders a scoped slot for the named after the specified column, exposing as props `column` (object)and `row` (array)
+    - `slot`, optional, renders a scoped slot for the named after the specified column, exposing as props `column` (object), `row` (array) and `loading` (boolean)
     - `rogue`, optional, marks this column as a rogue column. This marks the column as hidden for display, 
     while still being available and used for searching
     - `editable`, optional, marks this column as editable (N/A)
