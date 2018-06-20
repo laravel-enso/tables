@@ -20,8 +20,8 @@ class Style
     {
         $this->template->align = $this->compute(self::Align);
         $this->template->style = $this->compute(self::Table);
-        $this->template->aligns = $this->getPresets(self::Align);
-        $this->template->styles = $this->getPresets(self::Table);
+        $this->template->aligns = $this->preset(self::Align);
+        $this->template->styles = $this->preset(self::Table);
     }
 
     private function compute($style)
@@ -35,7 +35,7 @@ class Style
             }, collect())->unique()->implode(' ');
     }
 
-    private function getPresets($style)
+    private function preset($style)
     {
         return collect($style)->reduce(function ($styles, $style) {
             $styles[$style] = $this->style['mapping'][$style];

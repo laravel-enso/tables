@@ -1,10 +1,4 @@
 <?php
-/**
- * Created with luv for spa2.
- * User: mihai
- * Date: 4/12/18
- * Time: 7:18 PM.
- */
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 

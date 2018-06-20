@@ -8,21 +8,21 @@ class DateComputor
 {
     private $columns;
     private $data;
-    private $withDate;
+    private $dates;
 
     public function __construct($data, $columns)
     {
         $this->data = $data;
         $this->columns = $columns;
 
-        $this->setWithDate();
+        $this->setDates();
     }
 
     public function get()
     {
         return collect($this->data)
             ->map(function ($record) {
-                $this->withDate->each(function ($column) use (&$record) {
+                $this->dates->each(function ($column) use (&$record) {
                     $record[$column->name] = Carbon::parse($record[$column->name])
                         ->format(config('enso.datatable.dateFormat'));
                 });
@@ -31,13 +31,13 @@ class DateComputor
             })->toArray();
     }
 
-    private function setWithDate()
+    private function setDates()
     {
-        $this->withDate = collect();
+        $this->dates = collect();
 
         $this->columns->each(function ($column) {
             if ($column->meta->date) {
-                $this->withDate->push($column);
+                $this->dates->push($column);
             }
         });
     }

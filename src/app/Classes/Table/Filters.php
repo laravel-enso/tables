@@ -76,7 +76,7 @@ class Filters
                     collect($interval)
                         ->each(function ($value, $column) use ($table) {
                             $this->setMinLimit($table, $column, (object) $value)
-                            ->setMaxLimit($table, $column, (object) $value);
+                                ->setMaxLimit($table, $column, (object) $value);
                         });
                 });
         });
