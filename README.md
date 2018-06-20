@@ -567,7 +567,7 @@ depending on the configuration:
 
 #### The query
 
-In your Table builder implementation, the query must look like this:
+In your TableBuilder implementation, the query must look like this:
 
 ```php
 public function query()
@@ -577,6 +577,8 @@ public function query()
 ```
 
 Keep in mind that at this stage, we're returning a `QueryBuilder` not a collection of results.
+
+If you need custom logic based on the request you have a `request()` getter available in the TableBuilder.
 
 #### Further Examples
 

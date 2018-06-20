@@ -17,6 +17,11 @@ abstract class Table
 
     abstract public function query();
 
+    public function request()
+    {
+        return $this->request;
+    }
+
     public function init()
     {
         return (new Template($this->templatePath))
