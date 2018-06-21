@@ -30,12 +30,12 @@ Build fast any complex table based on a JSON template.
 - configurable action buttons
 - beautiful tag rendering for boolean flags
 - can display and format numbers as money values, and the formatting can be customized via the template
-- custom data rendering support via render functions
 - full customization via the use of scoped slots for your columns
 - smart resizing & auto-hide based on screen width. Data is still accessible under an optional child row
 - tooltips for columns/rows
 - front-end translations for labels and even data
-- configurable, on-the-fly view modes: compact, striped, bordered, hover and left / center / right data alignment
+- configurable, on-the-fly view modes: compact, striped, bordered, hover
+- configurable column alignment from the template left / center / right
 - preferences/state save for each table in the browser's localStorage
 - server-side Excel exporting of the table data, using your current sorting and filtering choices, with email delivery and optional push notifications
 - reloading of data on demand
@@ -377,10 +377,11 @@ becomes disabled by default and is made avaible on-demand.
             "label": "Name",
             "data": "table.column",
             "name": "columnAlias",
-            "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "render", "date", "icon", "clickable", "tooltip"],
+            "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "date","icon", "clickable", "tooltip"],
             "enum": "EnumClass",
             "tooltip": "My Tooltip Column Detail",
             "class": "is-custom-class",
+            "align": "right",
             "money": {
                 "symbol": "$",
                 "decimal": ".",
@@ -469,6 +470,7 @@ For example, you may use this mechanism to show labels instead of integer values
 the type for a model/table.
 - `tooltip`, optional, the text used for this column header's tooltip  
 - `class`, optional, will be applied on the tables `<td>`
+- `align`, optional, a value in ["left", "center", "right"], will be applied to the column including header and footer. It has higher priority than the global template `align` attribute
 - `meta`, optional, array of string tags/options, allowing further transformations:
     - `searchable`, optional, marks this column as searchable. If not searchable, a column is not used when 
     using the table search functionality 
@@ -505,8 +507,6 @@ are used to filter results. Note that the selected values for the filters may be
 - `params`, optional, object, reactive parameters, that, if available, are sent along with the getTableData request and 
 are be used to filter results
 - `intervals`, optional, object, reactive parameters, that, if available are used for interval filtering of the results
-- `customRender`, optional, function, that can be used as a custom render function for a single column or 
-a render dispatcher for when needing to custom render multiple columns of the same table
 - `i18n`, optional, function, that is used for translating labels, headers, and table data 
 The default value (function) for this parameter simply returns its argument as the translated value if used outside of 
 Enso while within Enso it will use it's translation function. 

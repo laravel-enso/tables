@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
+use LaravelEnso\VueDatatable\app\Classes\Attributes\Style;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 use LaravelEnso\VueDatatable\app\Classes\Attributes\Column as Attributes;
 
@@ -24,7 +25,9 @@ class Columns
                 ->checkMeta($column)
                 ->checkEnum($column)
                 ->checkTooltip($column)
-                ->checkMoney($column);
+                ->checkMoney($column)
+                ->checkClass($column)
+                ->checkAlign($column);
         });
     }
 
@@ -102,7 +105,7 @@ class Columns
     {
         if (property_exists($column, 'tooltip') && !is_string($column->tooltip)) {
             throw new TemplateException(__(
-                    'The tooltip provided for ":column" must be a string',
+                    'The tooltip attribute provided for ":column" must be a string',
                     ['column' => $column->name]
                 ));
         }
@@ -115,6 +118,31 @@ class Columns
         if (property_exists($column, 'money') && !is_object($column->money)) {
             throw new TemplateException(__(
                     'Provided money attribute for ":column" must be an object',
+                    ['column' => $column->name]
+                ));
+        }
+
+        return $this;
+    }
+
+    private function checkClass($column)
+    {
+        if (property_exists($column, 'class') && !is_string($column->class)) {
+            throw new TemplateException(__(
+                    'The class attribute provided for ":column" must be a string',
+                    ['column' => $column->name]
+                ));
+        }
+
+        return $this;
+    }
+
+    private function checkAlign($column)
+    {
+        if (property_exists($column, 'align')
+            && !collect(Style::Align)->contains($column->align)) {
+            throw new TemplateException(__(
+                    'The align attribute provided for ":column" is incorrect',
                     ['column' => $column->name]
                 ));
         }

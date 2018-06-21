@@ -2,11 +2,10 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Builders;
 
+use LaravelEnso\VueDatatable\app\Classes\Attributes\Style as Attributes;
+
 class Style
 {
-    private const Table = ['compact', 'hover', 'striped', 'bordered'];
-    private const Align = ['center', 'left', 'right'];
-
     private $template;
     private $style;
 
@@ -18,10 +17,10 @@ class Style
 
     public function build()
     {
-        $this->template->align = $this->compute(self::Align);
-        $this->template->style = $this->compute(self::Table);
-        $this->template->aligns = $this->preset(self::Align);
-        $this->template->styles = $this->preset(self::Table);
+        $this->template->align = $this->compute(Attributes::Align);
+        $this->template->style = $this->compute(Attributes::Table);
+        $this->template->aligns = $this->preset(Attributes::Align);
+        $this->template->styles = $this->preset(Attributes::Table);
     }
 
     private function compute($style)
