@@ -86,8 +86,9 @@ class Buttons
         if (empty(config('enso.config'))
             || (property_exists($this->template, 'auth') && $this->template->auth === false)) {
             return false;
-        } //fixme change this to 'authorize' and add it to the datatable.php config file
+        }
 
-        return auth()->user()->cannot('access-route', $route);
+        return auth()->user()
+            ->cannot('access-route', $route);
     }
 }
