@@ -37,7 +37,6 @@ class Builder
     {
         unset(
             $this->template->readSuffix,
-            $this->template->writeSuffix,
             $this->template->routePrefix
         );
     }

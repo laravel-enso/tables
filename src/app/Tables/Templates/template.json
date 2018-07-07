@@ -1,7 +1,6 @@
 {
     "routePrefix": "route.prefix", // required, the main segment of a named route
     "readSuffix": "read.suffix", // required, the data read endpoint suffix that gets appended to the routePrefix param
-    "writeSuffix": "write.suffix", // optional, the data write endpoint suffix that gets appended to the routePrefix param
     "name": "Table Name", //optional, the title for the table
     "icon": "list-alt", //optional, expects a font awesome icon class
     "crtNo": true, // optional, shows the line number

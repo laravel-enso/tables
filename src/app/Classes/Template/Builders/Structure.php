@@ -22,10 +22,8 @@ class Structure
 
     private function routes()
     {
-        $this->template->readPath = route($this->template->routePrefix.'.'.$this->template->readSuffix, [], false);
-        $this->template->writePath = !is_null($this->template->writeSuffix)
-            ? route($this->template->routePrefix.'.'.$this->template->writeSuffix, [], false)
-            : null;
+        $this->template->readPath =
+            route($this->template->routePrefix.'.'.$this->template->readSuffix, [], false);
 
         return $this;
     }

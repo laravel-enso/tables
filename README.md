@@ -344,7 +344,6 @@ becomes disabled by default and is made avaible on-demand.
 {
     "routePrefix": "route.prefix",
     "readSuffix": "read.suffix",
-    "writeSuffix": "write.suffix",
     "name": "Table Name",
     "icon": "list-alt",
     "crtNo": true,
@@ -397,8 +396,6 @@ becomes disabled by default and is made avaible on-demand.
 Options:
 - `routePrefix`, required, string, the common route segment, used for both read and write (N/A)
 - `readSuffix`, required, string, the route endpoint, that gets concatenated to the `routePrefix`
-- `writeSuffix`, optional, string, the route endpoint, that gets concatenated to the `routePrefix`. 
-This is only needed when using the editor (N/A). 
 - `name`, optional, string, the title used for the table.
 - `icon`, optional, string or array of strings, expects Font Awesome icon classes 
 (make sure the used class is avaible in the page, via a local or global import)
