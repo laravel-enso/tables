@@ -46,7 +46,7 @@ class ExportDoneNotification extends Notification
     {
         return [
             'body' => __('Export emailed').': '.__($this->name.' Table'),
-            'link' => '#',
+            'path' => '#',
         ];
     }
 }
