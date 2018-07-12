@@ -378,6 +378,7 @@ becomes disabled by default and is made avaible on-demand.
             "name": "columnAlias",
             "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "date","icon", "clickable", "tooltip"],
             "enum": "EnumClass",
+            "dateFormat": "d-m-Y",
             "tooltip": "My Tooltip Column Detail",
             "class": "is-custom-class",
             "align": "right",
@@ -465,6 +466,7 @@ is available.
 - `enum`, optional, string, the class name of the enumeration used to transform/map the values of that column/attribute. 
 For example, you may use this mechanism to show labels instead of integer values, for an attribute that holds 
 the type for a model/table.
+- `dateFormat`, string, with the date format for date columns, overrides the default from config
 - `tooltip`, optional, the text used for this column header's tooltip  
 - `class`, optional, will be applied on the tables `<td>`
 - `align`, optional, a value in ["left", "center", "right"], will be applied to the column including header and footer. It has higher priority than the global template `align` attribute

@@ -6,5 +6,5 @@ class Column
 {
     const Mandatory = ['label', 'name', 'data'];
 
-    const Optional = ['meta', 'enum', 'tooltip', 'money', 'class', 'align'];
+    const Optional = ['meta', 'enum', 'tooltip', 'money', 'class', 'align', 'dateFormat'];
 }

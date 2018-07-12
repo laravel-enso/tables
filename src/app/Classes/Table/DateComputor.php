@@ -24,11 +24,17 @@ class DateComputor
             ->map(function ($record) {
                 $this->dates->each(function ($column) use (&$record) {
                     $record[$column->name] = Carbon::parse($record[$column->name])
-                        ->format(config('enso.datatable.dateFormat'));
+                        ->format($this->format($column));
                 });
 
                 return $record;
             })->toArray();
+    }
+
+    private function format($column)
+    {
+        return $column->dateFormat
+            ?? config('enso.datatable.dateFormat');
     }
 
     private function setDates()
