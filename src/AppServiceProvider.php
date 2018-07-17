@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
         ], 'enso-assets');
 
         $this->publishes([
-            __DIR__.'/app/Tabels' => app_path('Tables'),
+            __DIR__.'/app/Tables' => app_path('Tables'),
         ], 'tables');
 
         $this->publishes([
