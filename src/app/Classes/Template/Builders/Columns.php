@@ -43,6 +43,10 @@ class Columns
             return $meta;
         }, []);
 
+        if ($column->meta['searchable']) {
+            $this->template->searchable = true;
+        }
+
         if ($column->meta['total']) {
             $this->template->total = true;
         }

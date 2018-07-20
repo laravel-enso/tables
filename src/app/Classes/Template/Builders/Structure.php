@@ -61,6 +61,7 @@ class Structure
         $this->template->enum = false;
         $this->template->money = false;
         $this->template->date = false;
+        $this->template->searchable = false;
         $this->template->labels = config('enso.datatable.labels');
     }
 }
