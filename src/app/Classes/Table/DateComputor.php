@@ -23,8 +23,10 @@ class DateComputor
         return collect($this->data)
             ->map(function ($record) {
                 $this->dates->each(function ($column) use (&$record) {
-                    $record[$column->name] = Carbon::parse($record[$column->name])
-                        ->format($this->format($column));
+                    $record[$column->name] = $record[$column->name]
+                        ? Carbon::parse($record[$column->name])
+                            ->format($this->format($column))
+                        : $record[$column->name];
                 });
 
                 return $record;
