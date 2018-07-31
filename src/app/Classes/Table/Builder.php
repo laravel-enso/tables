@@ -53,7 +53,7 @@ class Builder
         $this->checkActions();
 
         return [
-            'count' => $this->count,
+            'count' => $this->count(),
             'filtered' => $this->filtered,
             'total' => $this->total,
             'data' => $this->data,
