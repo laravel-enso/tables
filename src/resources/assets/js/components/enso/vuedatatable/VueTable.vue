@@ -68,7 +68,7 @@
                     v-if="body.data.length > 0"/>
             </div>
         </div>
-        <div v-if="body && !body.count"
+        <div v-if="body && (!body.count || !body.filtered)"
             class="has-text-centered no-records-found">
             {{ i18n('No records were found') }}
         </div>
