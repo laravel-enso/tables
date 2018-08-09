@@ -47,7 +47,7 @@ class Columns
             $this->template->searchable = true;
         }
 
-        if ($column->meta['total']) {
+        if ($column->meta['total'] || $column->meta['customTotal']) {
             $this->template->total = true;
         }
 
