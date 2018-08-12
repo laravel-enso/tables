@@ -119,7 +119,7 @@ class Buttons
         if (property_exists($button, 'action')) {
             if (!property_exists($button, 'fullRoute') && !property_exists($button, 'routeSuffix')) {
                 throw new TemplateException(__(
-                    'Whenever you set an action for a button you need to provide the fullRoute or routeSuffix aswell'
+                    'Whenever you set an action for a button you need to provide the fullRoute or routeSuffix'
                 ));
             }
 
