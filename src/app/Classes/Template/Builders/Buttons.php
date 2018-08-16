@@ -60,7 +60,7 @@ class Buttons
         }
 
         if (collect(self::PathActions)->contains($button->action)) {
-            $button->path = route($route, [$type === 'row' ? 'dtRowId' : null], false);
+            $button->path = route($route, $type === 'row' ? isset($button->params) ? json_decode(json_encode($button->params), true) : ['dtRowId'] : null, false);
 
             return false;
         }

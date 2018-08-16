@@ -201,7 +201,7 @@ export default {
             }
 
             if (button.action === 'ajax') {
-                this.$emit('ajax', button.method, this.getPath(button, row.dtRowId), button.postEvent);
+                this.$emit('ajax', button.method, this.getPath(button, row.dtRowId), this.getRouteParams(button, row), button.postEvent);
                 return;
             }
 

@@ -439,14 +439,22 @@ export default {
                 ? { params }
                 : params;
         },
-        ajax(method, path, postEvent) {
-            axios[method.toLowerCase()](path).then(({ data }) => {
-                this.$toastr.success(data.message);
-                this.getData();
-                if (postEvent) {
-                    this.$emit(postEvent);
-                }
-            }).catch(error => this.handleError(error));
+        ajax(method, path, params, postEvent) {
+          let args = [];
+          if (method === 'POST') {
+            args.push(this.stripPathParams(path));
+            args.push(params);
+          } else {
+            args.push(path);
+          }
+
+          axios[method.toLowerCase()](...args).then(({ data }) => {
+            this.$toastr.success(data.message);
+            this.getData();
+            if (postEvent) {
+              this.$emit(postEvent);
+            }
+          }).catch(error => this.handleError(error));
         },
         action(method, path, postEvent) {
             this.loading = true;
@@ -459,6 +467,9 @@ export default {
                         this.$emit(postEvent);
                     }
                 }).catch(error => this.handleError(error));
+        },
+        stripPathParams(path) {
+            return path.substring(0, path.indexOf('?')).replace('?', '');
         },
         filterUpdate() {
             if (!this.initialised) {
