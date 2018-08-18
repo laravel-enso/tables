@@ -74,7 +74,7 @@ class ExcelExport implements ShouldQueue
         $filename = preg_replace(
             '/[^A-Za-z0-9_.-]/',
             '_',
-            __($this->table['name']).'_'.__('Report')
+            __($this->table['name']).'_'.__('report')
         ).'.xlsx';
 
         $this->filePath = config('enso.datatable.export.path')
