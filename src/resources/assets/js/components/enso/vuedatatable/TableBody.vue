@@ -4,6 +4,23 @@
     <tr v-for="(row, index) in body.data"
         :key="index">
         <td :class="template.align"
+            v-if="template.selectable && selectable && !isChild(row)">
+            <div class="selectable">
+                <span class="selectable-input">
+                    <label class="form-checkbox">
+    					<input type="checkbox" :value="row.dtRowId" v-model="selected">
+  					</label>
+                </span>
+                <span class="hidden-controls"
+                      v-if="hiddenCount"
+                      @click="toggleExpand(row, index)">
+                    <span class="icon is-small">
+                        <fa :icon="isExpanded(row) ? 'minus-square' : 'plus-square'"/>
+                    </span>
+                </span>
+            </div>
+        </td>
+        <td :class="template.align"
             v-if="template.crtNo && !isChild(row)">
             <div class="crt-no">
                 <span class="crt-no-label">
@@ -140,6 +157,10 @@ export default {
             type: Array,
             required: true,
         },
+        selectable: {
+          type: Boolean,
+          required: true
+        },
     },
 
     data() {
@@ -147,7 +168,16 @@ export default {
             modal: false,
             row: null,
             button: null,
+            selected: [],
+            selectAll: false
         };
+    },
+
+    mounted() {
+        this.$root.$on('dtSelectAllRows', data => {
+          this.selected = data.selected;
+          this.selectAll = data.selectAll
+        })
     },
 
     computed: {
@@ -179,6 +209,11 @@ export default {
                 this.refreshExpanded();
             },
         },
+        selected: {
+          handler(selected) {
+            this.$emit('selected', selected)
+          }
+        }
     },
 
     methods: {

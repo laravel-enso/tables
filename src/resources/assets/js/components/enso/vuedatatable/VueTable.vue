@@ -21,15 +21,20 @@
                 :class="template.style"
                 id="id">
                 <table-header :template="template"
+                    :body="body"
                     :i18n="i18n"
-                    @sort-update="getData"/>
+                    :selectable="selectable"
+                    @sort-update="getData"
+                    v-if="hasContent" />
                 <table-body :template="template"
                     v-on="$listeners"
                     :body="body"
                     :start="start"
                     :i18n="i18n"
                     :expanded="expanded"
+                    :selectable="selectable"
                     @ajax="ajax"
+                    @selected="updateSelected"
                     v-if="hasContent">
                     <template v-for="column in template.columns"
                         :slot="column.name"
@@ -120,6 +125,10 @@ export default {
             type: Object,
             default: null,
         },
+        selectable: {
+            type: Boolean,
+            default: true
+        },
         i18n: {
             type: Function,
             default(key) {
@@ -142,6 +151,7 @@ export default {
             length: null,
             expanded: [],
             forceInfo: false,
+            selected: []
         };
     },
 
@@ -163,6 +173,7 @@ export default {
                 template: {
                     sort: this.template.sort,
                     style: this.template.style,
+                    selectable: this.template.selectable
                 },
                 columns: this.template.columns
                     .reduce((collector, column) => {
@@ -350,6 +361,7 @@ export default {
                 filters: this.filters,
                 intervals: this.intervals,
                 params: this.params,
+                selected: this.selected
             };
 
             method = method || this.template.method;
@@ -462,6 +474,9 @@ export default {
             this.start = 0;
             this.getData();
         },
+        updateSelected(selected) {
+            this.selected = selected
+        }
     },
 };
 

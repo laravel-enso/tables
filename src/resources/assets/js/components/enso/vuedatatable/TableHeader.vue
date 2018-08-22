@@ -3,6 +3,12 @@
     <thead>
         <tr :class="['has-background-light', template.style]">
             <th :class="['vue-table-header', template.align]"
+                v-if="template.selectable && selectable">
+                <label class="form-checkbox">
+                    <input type="checkbox" v-model="selectAll" @click="selectAllRows">
+                </label>
+            </th>
+            <th :class="['vue-table-header', template.align]"
                 v-if="template.crtNo">
                 {{ i18n(template.labels.crtNo) }}
             </th>
@@ -70,10 +76,25 @@ export default {
             type: Object,
             required: true,
         },
+        body: {
+          type: Object,
+          required: true
+        },
+        selectable: {
+          type: Boolean,
+          required: true
+        },
         i18n: {
             type: Function,
             required: true,
         },
+    },
+
+    data() {
+      return {
+        selected: [],
+        selectAll: false
+      }
     },
 
     methods: {
@@ -108,6 +129,23 @@ export default {
             this.template.columns.forEach(({ meta }) => {
                 meta.sort = null;
             });
+        },
+        isChild(row) {
+          return Array.isArray(row);
+        },
+        selectAllRows() {
+          this.selected = [];
+          if (!this.selectAll && Array.isArray(this.body.data)) {
+            this.body.data.forEach(row => {
+              if (!this.isChild(row)) {
+                this.selected.push(row.dtRowId)
+              }
+            });
+          }
+          this.$root.$emit('dtSelectAllRows', {
+            selected: this.selected,
+            selectAll: this.selectAll
+          })
         },
     },
 };
