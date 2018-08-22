@@ -57,7 +57,7 @@ class ExcelExport implements ShouldQueue
         $this->user->notify(
             new ExportDoneNotification(
                 $this->filePath,
-                $this->table['name']
+                ucfirst($this->table['name'])
             )
         );
 
