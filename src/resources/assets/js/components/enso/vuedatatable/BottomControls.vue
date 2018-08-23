@@ -3,7 +3,8 @@
         <div class="column">
             <records-info :body="body"
                 :i18n="i18n"
-                :start="start"/>
+                :start="start"
+                :selected="selected"/>
         </div>
         <div class="column is-narrow has-text-right">
             <pagination :loading="loading"
@@ -49,6 +50,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        selected: {
+            type: Array,
+            required: true,
+        }
     },
 
     computed: {

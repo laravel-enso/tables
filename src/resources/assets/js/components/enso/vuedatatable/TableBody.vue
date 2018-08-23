@@ -8,8 +8,8 @@
             <div class="selectable">
                 <span class="selectable-input">
                     <label class="form-checkbox">
-    					<input type="checkbox" :value="row.dtRowId" v-model="selected">
-  					</label>
+                        <input type="checkbox" :value="row.dtRowId" v-model="selected">
+                    </label>
                 </span>
                 <span class="hidden-controls"
                       v-if="hiddenCount"
@@ -159,7 +159,7 @@ export default {
         },
         selectable: {
           type: Boolean,
-          required: true
+          required: true,
         },
     },
 

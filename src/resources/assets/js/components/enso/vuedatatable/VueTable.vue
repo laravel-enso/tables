@@ -70,6 +70,7 @@
             :loading="loading"
             :start="start"
             :length="length"
+            :selected="selected"
             @jump-to="start = $event;getData()"
             v-if="hasContent"/>
         <div class="has-text-centered no-records-found"
