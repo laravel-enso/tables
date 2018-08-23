@@ -17,6 +17,7 @@ class Structure
             ->lengthMenu()
             ->debounce()
             ->method()
+            ->selectable()
             ->defaults();
     }
 
@@ -48,8 +49,17 @@ class Structure
 
     private function method()
     {
-        if (!isset($this->template->method)) {
+        if (!property_exists($this->template, 'method')) {
             $this->template->method = config('enso.datatable.method');
+        }
+
+        return $this;
+    }
+
+    private function selectable()
+    {
+        if (!property_exists($this->template, 'selectable')) {
+            $this->template->selectable = false;
         }
 
         return $this;

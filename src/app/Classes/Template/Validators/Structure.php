@@ -73,5 +73,9 @@ class Structure
             && !collect(['GET', 'POST'])->contains($this->template->method)) {
             throw new TemplateException(__('"method" attribute can be either "GET" or "POST"'));
         }
+
+        if (property_exists($this->template, 'selectable') && !is_bool($this->template->selectable)) {
+            throw new TemplateException(__('"selectable" attribute must be a boolean'));
+        }
     }
 }
