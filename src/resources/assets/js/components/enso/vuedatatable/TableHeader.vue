@@ -3,9 +3,11 @@
     <thead>
         <tr :class="['has-background-light', template.style]">
             <th :class="['vue-table-header', template.align]"
-                v-if="template.selectable && selectable">
-                <label class="form-checkbox">
-                    <input type="checkbox" v-model="selectAll" @click="selectAllRows">
+                v-if="template.selectable">
+                <label class="checkbox">
+                    <input type="checkbox"
+                        v-model="pageSelected"
+                        @change="$emit('select-page', pageSelected)">
                 </label>
             </th>
             <th :class="['vue-table-header', template.align]"
@@ -60,7 +62,6 @@
 
 import { VTooltip } from 'v-tooltip';
 import { library } from '@fortawesome/fontawesome-svg-core';
-
 import { faSort, faSortUp, faSortDown, faPlus, faFileExcel, faInfo }
     from '@fortawesome/free-solid-svg-icons';
 
@@ -76,14 +77,6 @@ export default {
             type: Object,
             required: true,
         },
-        body: {
-          type: Object,
-          required: true
-        },
-        selectable: {
-          type: Boolean,
-          required: true
-        },
         i18n: {
             type: Function,
             required: true,
@@ -91,15 +84,16 @@ export default {
     },
 
     data() {
-      return {
-        selected: [],
-        selectAll: false
-      }
+        return {
+            pageSelected: false,
+        };
     },
 
     methods: {
         sortIcon(sort) {
-            if (!sort) return faSort;
+            if (!sort) {
+                return faSort;
+            }
 
             return sort === 'ASC'
                 ? faSortUp
@@ -130,26 +124,11 @@ export default {
                 meta.sort = null;
             });
         },
-        isChild(row) {
-          return Array.isArray(row);
-        },
-        selectAllRows() {
-          this.selected = [];
-          if (!this.selectAll && Array.isArray(this.body.data)) {
-            this.body.data.forEach(row => {
-              if (!this.isChild(row)) {
-                this.selected.push(row.dtRowId)
-              }
-            });
-          }
-          this.$root.$emit('dtSelectAllRows', {
-            selected: this.selected,
-            selectAll: this.selectAll
-          })
+        updateSelectedFlag(state) {
+            this.pageSelected = state;
         },
     },
 };
-
 </script>
 
 <style lang="scss" scoped>
