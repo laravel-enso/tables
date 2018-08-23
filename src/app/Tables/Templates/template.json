@@ -7,6 +7,7 @@
     "debounce": 100, //optional, the debounce ms limit for reloading table data
     "lengthMenu": [10, 15, 20, 25, 30], //optional, table pagination options. If given, it overwrites the value from config
     "appends": ["customAttribute"], // optional, laravel model accessors for custom attributes
+    "selectable": false, //optional, adds checkboxes to first column
     "buttons": [
         "show", "create", "edit", "destroy", "download", "exportExcel", // string buttons must match the config
         {
