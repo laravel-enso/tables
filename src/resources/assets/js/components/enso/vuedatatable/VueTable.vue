@@ -486,7 +486,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
     .table-wrapper {
 
@@ -511,6 +511,10 @@ export default {
 
             .table {
                 font-size: 0.95em;
+
+                td, th {
+                    vertical-align: middle;
+                }
             }
         }
 
