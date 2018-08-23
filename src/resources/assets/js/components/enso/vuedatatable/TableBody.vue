@@ -301,7 +301,9 @@ export default {
                         return;
                     }
 
-                    this.selected.splice(index, 1);
+                    if (!status) {
+                        this.selected.splice(index, 1);
+                    }
                 }
             });
 
