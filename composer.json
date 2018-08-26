@@ -21,7 +21,7 @@
     "require": {
         "php": ">=7.1.0",
         "laravel/framework": "5.6.*",
-        "laravel-enso/helpers": "1.7.*",
+        "laravel-enso/helpers": "1.8.*",
         "laravel-enso/vuecomponents": "2.3.*",
         "box/spout": "2.7.*"
     },
