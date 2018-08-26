@@ -17,9 +17,7 @@ class Columns
     {
         $this->template->columns = collect($this->template->columns)
             ->reduce(function ($columns, $column) {
-                if (property_exists($column, 'meta')) {
-                    $this->computeMeta($column);
-                }
+                $this->computeMeta($column);
 
                 if (property_exists($column, 'enum')) {
                     $this->template->enum = true;
