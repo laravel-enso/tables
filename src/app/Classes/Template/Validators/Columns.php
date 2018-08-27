@@ -82,8 +82,6 @@ class Columns
     {
         if (property_exists($column, 'meta')) {
             Meta::validate($column->meta);
-        } else {
-            $column->meta = [];
         }
 
         return $this;
