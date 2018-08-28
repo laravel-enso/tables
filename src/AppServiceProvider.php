@@ -8,19 +8,19 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->loadDependencies();
+        $this->load();
 
-        $this->publishesAll();
+        $this->publish();
     }
 
-    private function loadDependencies()
+    private function load()
     {
         $this->mergeConfigFrom(__DIR__.'/config/datatable.php', 'enso.datatable');
 
         $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-enso/vuedatatable');
     }
 
-    private function publishesAll()
+    private function publish()
     {
         $this->publishes([
             __DIR__.'/config' => config_path('enso'),
