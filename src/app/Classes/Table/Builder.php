@@ -131,8 +131,6 @@ class Builder
             }
         }
 
-        $this->setRaw();
-
         return $this;
     }
 
@@ -182,7 +180,7 @@ class Builder
         if ($this->fullRecordInfo && $this->selectable) {
             $this->setRaw();
         }
-        
+
         $this->query->skip($this->meta->start)
             ->take($this->meta->length);
 
