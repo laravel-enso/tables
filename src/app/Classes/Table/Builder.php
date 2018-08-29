@@ -167,7 +167,6 @@ class Builder
         return $this;
     }
 
-
     private function setRaw()
     {
         $this->raw = $this->query->get();
