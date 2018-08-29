@@ -48,6 +48,15 @@ abstract class Action
         return $this->data;
     }
 
+    public function isSelected(int $dtRowId)
+    {
+        if (in_array($dtRowId, $this->request->selected)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private function next()
     {
         $this->data = $this->builder
@@ -60,14 +69,5 @@ abstract class Action
     {
         $this->builder = (new $this->class($this->request))
             ->fetcher($this->chunk);
-    }
-
-    private function isSelected(int $dtRowId)
-    {
-        if (in_array($dtRowId, $this->request->selected)) {
-            return true;
-        }
-
-        return false;
     }
 }
