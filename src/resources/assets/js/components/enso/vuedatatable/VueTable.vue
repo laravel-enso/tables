@@ -437,6 +437,7 @@ export default {
                 filters: this.filters,
                 intervals: this.intervals,
                 params: this.params,
+                selected: this.selected
             };
 
             return this.template.method === 'GET'
