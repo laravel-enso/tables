@@ -61,4 +61,13 @@ abstract class Action
         $this->builder = (new $this->class($this->request))
             ->fetcher($this->chunk);
     }
+
+    private function isSelected(int $dtRowId)
+    {
+        if (in_array($dtRowId, $this->request->selected)) {
+            return true;
+        }
+
+        return false;
+    }
 }
