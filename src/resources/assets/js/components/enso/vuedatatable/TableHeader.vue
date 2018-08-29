@@ -85,6 +85,7 @@ export default {
 
     data() {
         return {
+            allSelected: false,
             pageSelected: false,
         };
     },
@@ -123,6 +124,9 @@ export default {
             this.template.columns.forEach(({ meta }) => {
                 meta.sort = null;
             });
+        },
+        updateAllSelectedFlag(state) {
+            this.allSelected = state;
         },
         updateSelectedFlag(state) {
             this.pageSelected = state;

@@ -151,10 +151,6 @@ export default {
             type: Array,
             required: true,
         },
-        selected: {
-            type: Array,
-            required: true,
-        },
     },
 
     data() {
@@ -294,15 +290,15 @@ export default {
         selectPage(status) {
             this.body.data.forEach((row) => {
                 if (!this.isChild(row)) {
-                    const index = this.selected.findIndex(id => id === row.dtRowId);
+                    const index = this.$parent.selected.findIndex(id => id === row.dtRowId);
 
                     if (status && index === -1) {
-                        this.selected.push(row.dtRowId);
+                        this.$parent.selected.push(row.dtRowId);
                         return;
                     }
 
                     if (!status) {
-                        this.selected.splice(index, 1);
+                        this.$parent.selected.splice(index, 1);
                     }
                 }
             });
@@ -310,7 +306,7 @@ export default {
             this.updateSelected();
         },
         updateSelected() {
-            this.$emit('update-selected', this.selected);
+            this.$emit('update-selected', this.$parent.selected);
         },
     },
 };

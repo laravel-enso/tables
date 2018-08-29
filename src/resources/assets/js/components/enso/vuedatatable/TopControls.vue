@@ -14,6 +14,9 @@
                     v-on="$listeners"/>
                 <style-selector :template="template"
                     class="is-hidden-mobile"/>
+                <select-all
+                    v-if="info && template.selectable"
+                    v-on="$listeners"/>
                 <button class="button"
                     @click="$emit('reload')">
                     <span class="icon is-small">
@@ -89,6 +92,7 @@ import { faSync, faUndo, faSearch, faInfoCircle } from '@fortawesome/free-solid-
 import LengthMenu from './topControls/LengthMenu.vue';
 import ColumnVisibility from './topControls/ColumnVisibility.vue';
 import StyleSelector from './topControls/StyleSelector.vue';
+import SelectAll from './topControls/SelectAll.vue';
 import Modal from './Modal.vue';
 
 library.add(faSync, faUndo, faSearch, faInfoCircle);
@@ -97,7 +101,7 @@ export default {
     name: 'TopControls',
 
     components: {
-        LengthMenu, ColumnVisibility, StyleSelector, Modal,
+        LengthMenu, ColumnVisibility, StyleSelector, SelectAll, Modal,
     },
 
     props: {

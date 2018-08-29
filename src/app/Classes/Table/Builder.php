@@ -13,9 +13,11 @@ class Builder
     private $count;
     private $filtered;
     private $total;
+    private $raw;
     private $data;
     private $columns;
     private $meta;
+    private $selectable;
     private $fullRecordInfo;
 
     public function __construct(Obj $request, QueryBuilder $query)
@@ -24,8 +26,10 @@ class Builder
         $this->meta = is_string($this->request->get('meta'))
             ? json_decode($this->request->get('meta'))
             : (object) $this->request->get('meta');
+        $this->selectable = $this->request->has('selectable') ? $this->request->get('selectable') : false;
         $this->query = $query;
         $this->total = collect();
+        $this->raw = collect();
 
         $this->setColumns();
     }
@@ -56,6 +60,7 @@ class Builder
             'count' => $this->count,
             'filtered' => $this->filtered,
             'total' => $this->total,
+            'raw' => $this->raw,
             'data' => $this->data,
             'fullRecordInfo' => $this->fullRecordInfo,
             'filters' => $this->hasFilters(),
@@ -126,6 +131,8 @@ class Builder
             }
         }
 
+        $this->setRaw();
+
         return $this;
     }
 
@@ -162,8 +169,20 @@ class Builder
         return $this;
     }
 
+
+    private function setRaw()
+    {
+        $this->raw = $this->query->get();
+
+        return $this;
+    }
+
     private function limit()
     {
+        if ($this->fullRecordInfo && $this->selectable) {
+            $this->setRaw();
+        }
+        
         $this->query->skip($this->meta->start)
             ->take($this->meta->length);
 
@@ -191,6 +210,7 @@ class Builder
 
     private function toArray()
     {
+        $this->raw = $this->raw->toArray();
         $this->data = $this->data->toArray();
 
         return $this;

@@ -10,6 +10,7 @@
             @update-length="length=$event"
             @export-data="exportData"
             @action="action"
+            @select-all="selectAll"
             @reload="getData()"
             @reset="resetPreferences"
             @request-full-info="forceInfo = true; getData()"
@@ -32,7 +33,6 @@
                     :start="start"
                     :i18n="i18n"
                     :expanded="expanded"
-                    :selected="selected"
                     @ajax="ajax"
                     @update-selected="updateSelectedFlag()"
                     ref="body"
@@ -474,6 +474,34 @@ export default {
         },
         selectPage(state) {
             this.$refs.body.selectPage(state);
+        },
+        selectAll(status) {
+            this.body.raw.forEach((row) => {
+                if (!this.$refs.body.isChild(row)) {
+                    const index = this.selected.findIndex(id => id === row.dtRowId);
+
+                    if (status && index === -1) {
+                        this.selected.push(row.dtRowId);
+                        return;
+                    }
+
+                    if (!status) {
+                        this.selected = [];
+                    }
+                }
+            });
+
+            this.$refs.body.updateSelected();
+            this.updateAllSelectedFlag();
+        },
+        updateAllSelectedFlag() {
+            if (!this.$refs.header) {
+                return;
+            }
+
+            const selected = this.body.raw.length === this.selected.length;
+
+            this.$refs.header.updateAllSelectedFlag(selected);
         },
         updateSelectedFlag() {
             if (!this.$refs.header) {
