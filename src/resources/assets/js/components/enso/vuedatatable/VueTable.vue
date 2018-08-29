@@ -357,6 +357,7 @@ export default {
                 filters: this.filters,
                 intervals: this.intervals,
                 params: this.params,
+                selectable: this.template.selectable,
                 selected: this.selected,
             };
 

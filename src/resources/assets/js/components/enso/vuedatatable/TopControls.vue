@@ -15,7 +15,7 @@
                 <style-selector :template="template"
                     class="is-hidden-mobile"/>
                 <select-all
-                    v-if="info && template.selectable"
+                    v-if="!info && template.selectable"
                     v-on="$listeners"/>
                 <button class="button"
                     @click="$emit('reload')">
