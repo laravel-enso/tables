@@ -126,6 +126,10 @@ export default {
             type: Object,
             default: null,
         },
+        select: {
+            type: Array,
+            default: []
+        },
         i18n: {
             type: Function,
             default(key) {
@@ -331,6 +335,7 @@ export default {
                     ? this.processMoney(data)
                     : data;
 
+                this.selected = this.select;
                 this.$nextTick(() => this.updateSelectedFlag());
 
                 this.$emit('draw');
