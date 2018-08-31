@@ -128,7 +128,7 @@ export default {
         },
         select: {
             type: Array,
-            default: []
+            default: () => []
         },
         i18n: {
             type: Function,
