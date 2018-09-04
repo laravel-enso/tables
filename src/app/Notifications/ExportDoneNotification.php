@@ -28,7 +28,9 @@ class ExportDoneNotification extends Notification
     {
         return new BroadcastMessage([
             'level' => 'success',
+            'title' => __('Export Done'),
             'body' => __('Export emailed').': '.__($this->name.' Table'),
+            'icon' => 'file-excel',
         ]);
     }
 

@@ -24,7 +24,9 @@ class ExportStartNotification extends Notification
     {
         return new BroadcastMessage([
             'level' => 'info',
+            'title' => __('Export Started'),
             'body' => __('Export started').': '.__($this->name.' Table'),
+            'icon' => 'file-excel',
         ]);
     }
 
