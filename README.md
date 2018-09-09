@@ -7,7 +7,7 @@
 [![Latest Stable Version](https://poser.pugx.org/laravel-enso/vuedatatable/version)](https://packagist.org/packages/laravel-enso/vuedatatable)
 
 Data Table package with server-side processing and VueJS components. 
-Build fast any complex table based on a JSON template.
+Build fast any complex table based on a JSON template. [Read Docs](https://docs.laravel-enso.com/packages/vue-datatable.html)
 
 
 [![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.webm)
