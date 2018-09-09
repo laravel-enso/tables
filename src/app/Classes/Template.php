@@ -2,26 +2,23 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use LaravelEnso\Helpers\app\Classes\JsonParser;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validator;
-use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 
 class Template
 {
+    private $filename;
     private $template;
 
-    public function __construct(string $template)
+    public function __construct(string $filename)
     {
-        $this->set($template);
+        $this->filename = $filename;
     }
 
     public function get()
     {
-        if ($this->needsValidation()) {
-            (new Validator($this->template))
-                ->run();
-        }
+        $this->readTemplate();
 
         (new Builder($this->template))
             ->run();
@@ -29,20 +26,13 @@ class Template
         return ['template' => $this->template];
     }
 
-    private function set(string $template)
+    private function readTemplate()
     {
-        try {
-            $this->template = json_decode(\File::get($template));
-        } catch (FileNotFoundException $exception) {
-            throw new TemplateException(__(
-                'Specified template file was not found'
-            ));
-        }
+        $this->template = (new JsonParser($this->filename))->object();
 
-        if (!$this->template) {
-            throw new TemplateException(__(
-                'Template is not readable'
-            ));
+        if ($this->needsValidation()) {
+            (new Validator($this->template))
+                ->run();
         }
     }
 
