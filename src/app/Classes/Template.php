@@ -48,7 +48,7 @@ class Template
 
     private function needsValidation()
     {
-        return app()->environment() === 'local'
-            || config('enso.datatable.validations') === 'always';
+        return config('enso.datatable.validations') === 'always'
+            || app()->environment() === config('enso.datatable.validations');
     }
 }
