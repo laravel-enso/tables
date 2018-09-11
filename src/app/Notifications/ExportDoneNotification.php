@@ -63,6 +63,9 @@ class ExportDoneNotification extends Notification
                 ? __('Export available for download').': '.__($this->filename)
                 : __('Export emailed').': '.__($this->filename),
             'icon' => 'file-excel',
+            'path' => $this->link
+                ? '/files'
+                : null,
         ];
     }
 }
