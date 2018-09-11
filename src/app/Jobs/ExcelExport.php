@@ -4,10 +4,12 @@ namespace LaravelEnso\VueDatatable\app\Jobs;
 
 use App\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use LaravelEnso\VueDatatable\app\Exports\Excel;
+use LaravelEnso\DataExport\app\Models\DataExport;
 use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
 
 class ExcelExport implements ShouldQueue
@@ -18,7 +20,7 @@ class ExcelExport implements ShouldQueue
     private $user;
     private $tableClass;
     private $table;
-    private $filePath;
+    private $export;
 
     public function __construct(User $user, array $request, string $tableClass)
     {
@@ -35,16 +37,16 @@ class ExcelExport implements ShouldQueue
         $this->table = (new $this->tableClass($this->request))
             ->excel();
 
-        $this->filePath()
-            ->export()
-            ->sendReport()
+        $this->export()
+            ->store()
+            ->notify()
             ->cleanUp();
     }
 
     private function export()
     {
         (new Excel(
-            $this->filePath,
+            $this->filePath(),
             $this->table['header'],
             $this->table['data']
         ))->run();
@@ -52,12 +54,37 @@ class ExcelExport implements ShouldQueue
         return $this;
     }
 
-    private function sendReport()
+    private function store()
     {
+        if ($this->isNotEnso()) {
+            return;
+        }
+
+        $file = new UploadedFile(
+            storage_path('app/'.$this->filePath()),
+            $this->filename(),
+            \Storage::mimeType($this->filePath()),
+            \Storage::size($this->filePath()),
+            0,
+            true
+        );
+
+        \DB::transaction(function () use ($file) {
+            $this->export = DataExport::create();
+            $this->export->upload($file);
+        });
+
+        return $this;
+    }
+
+    private function notify()
+    {
+        \Log::info(optional($this->export)->temporaryLink());
         $this->user->notify(
             new ExportDoneNotification(
-                $this->filePath,
-                ucfirst($this->table['name'])
+                $this->filePath(),
+                $this->filename(),
+                optional($this->export)->temporaryLink()
             )
         );
 
@@ -66,20 +93,26 @@ class ExcelExport implements ShouldQueue
 
     private function cleanUp()
     {
-        \Storage::delete($this->filePath);
+        \Storage::delete($this->filePath());
     }
 
     private function filePath()
     {
-        $filename = preg_replace(
+        return config('enso.datatable.export.path')
+            .DIRECTORY_SEPARATOR.$this->filename().'.xlsx';
+    }
+
+    private function filename()
+    {
+        return preg_replace(
             '/[^A-Za-z0-9_.-]/',
             '_',
-            __($this->table['name']).'_'.__('report')
-        ).'.xlsx';
+            __(ucfirst($this->table['name'])).__('TableReport')
+        );
+    }
 
-        $this->filePath = config('enso.datatable.export.path')
-            .DIRECTORY_SEPARATOR.$filename;
-
-        return $this;
+    private function isNotEnso()
+    {
+        return empty(config('enso.config'));
     }
 }
