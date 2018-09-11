@@ -108,7 +108,7 @@ class ExcelExport implements ShouldQueue
             '/[^A-Za-z0-9_.-]/',
             '_',
             __(ucfirst($this->table['name'])).__('TableReport')
-        );
+        ).'.xlsx';
     }
 
     private function isNotEnso()
