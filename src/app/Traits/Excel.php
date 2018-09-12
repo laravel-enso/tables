@@ -13,7 +13,7 @@ trait Excel
         $this->checkExportLimit($request);
 
         $request->user()->notify(
-            new ExportStartNotification(ucfirst($request->get('name')).'Table')
+            new ExportStartNotification(ucfirst($request->get('name')).__('Table'))
         );
 
         $this->dispatch(new ExcelExport(

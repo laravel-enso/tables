@@ -45,6 +45,8 @@ class ExcelExport implements ShouldQueue
 
     private function export()
     {
+        app()->setLocale($this->user->preferences()->global->lang);
+
         (new Excel(
             $this->filePath(),
             $this->table['header'],
@@ -79,7 +81,6 @@ class ExcelExport implements ShouldQueue
 
     private function notify()
     {
-        \Log::info(optional($this->export)->temporaryLink());
         $this->user->notify(
             new ExportDoneNotification(
                 $this->filePath(),
@@ -107,7 +108,7 @@ class ExcelExport implements ShouldQueue
         return preg_replace(
             '/[^A-Za-z0-9_.-]/',
             '_',
-            __(ucfirst($this->table['name'])).__('TableReport')
+            __(ucfirst($this->table['name'])).__('Table').__('Report')
         ).'.xlsx';
     }
 

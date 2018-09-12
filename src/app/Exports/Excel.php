@@ -30,7 +30,7 @@ class Excel
             ->getCurrentSheet()
             ->setName('Sheet1');
 
-        $this->writer->addRow($this->header)
+        $this->writer->addRow($this->header())
             ->addRows($this->data)
             ->close();
 
@@ -47,5 +47,13 @@ class Excel
 
         $this->writer->setDefaultRowStyle($defaultStyle)
             ->openToFile(\Storage::path($this->filePath));
+    }
+
+    public function header()
+    {
+        return collect($this->header)
+            ->map(function ($column) {
+                return __($column);
+            })->toArray();
     }
 }
