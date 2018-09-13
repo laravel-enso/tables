@@ -2,20 +2,29 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
+use Illuminate\Support\Str;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 use LaravelEnso\VueDatatable\app\Classes\Attributes\Meta as Attributes;
 
 class Meta
 {
-    public static function validate($meta)
+    public static function validate($column)
     {
-        $diff = collect($meta)
-            ->diff(Attributes::List);
+        $attributes = collect($column->meta);
+        $diff = $attributes->diff(Attributes::List);
 
         if ($diff->isNotEmpty()) {
             throw new TemplateException(__(
                 'Unknown Meta Parameter(s): ":attr"',
                 ['attr' => $diff->implode('", "')]
+            ));
+        }
+
+        if (Str::contains($column->name, '.')
+            && ($attributes->contains('searchable') || $attributes->contains('sortable'))) {
+            throw new TemplateException(__(
+                'Nested columns do not support "searchable" nor "sortable": ":column"',
+                ['column' => $column->name]
             ));
         }
     }

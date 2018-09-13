@@ -81,7 +81,7 @@ class Columns
     private function checkMeta($column)
     {
         if (property_exists($column, 'meta')) {
-            Meta::validate($column->meta);
+            Meta::validate($column);
         }
 
         return $this;
