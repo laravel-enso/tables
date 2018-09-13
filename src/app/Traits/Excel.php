@@ -4,6 +4,7 @@ namespace LaravelEnso\VueDatatable\app\Traits;
 
 use Illuminate\Http\Request;
 use LaravelEnso\VueDatatable\app\Jobs\ExcelExport;
+use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
 use LaravelEnso\VueDatatable\app\Notifications\ExportStartNotification;
 
 trait Excel
