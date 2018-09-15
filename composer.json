@@ -22,7 +22,7 @@
         "php": ">=7.1.0",
         "laravel/framework": "5.7.*",
         "laravel-enso/helpers": "1.8.*",
-        "laravel-enso/vuecomponents": "2.4.*",
+        "laravel-enso/vuecomponents": "2.5.*",
         "box/spout": "2.7.*"
     },
     "autoload": {
