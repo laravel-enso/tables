@@ -17,11 +17,11 @@ trait Excel
             new ExportStartNotification(ucfirst($request->get('name')).__('Table'))
         );
 
-        $this->dispatch(new ExcelExport(
+        ExcelExport::dispatch(
             $request->user(),
             $request->all(),
             $this->tableClass
-        ));
+        );
     }
 
     private function checkExportLimit(Request $request)

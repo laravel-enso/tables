@@ -8,13 +8,14 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use LaravelEnso\VueDatatable\app\Exports\Excel;
 use LaravelEnso\DataExport\app\Models\DataExport;
 use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
 
 class ExcelExport implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $request;
     private $user;
