@@ -225,10 +225,11 @@ class Builder
 
     private function excelHeader()
     {
-        return $this->columns->filter(function ($column) {
-            return !$column->meta->rogue;
-        })->pluck('label')
-        ->toArray();
+        return $this->columns
+            ->filter(function ($column) {
+                return !$column->meta->rogue && !$column->meta->notExportable;
+            })->pluck('label')
+            ->toArray();
     }
 
     private function setColumns()

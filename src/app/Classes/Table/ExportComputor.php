@@ -2,6 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Table;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
+
 class ExportComputor
 {
     private $data;
@@ -10,14 +12,14 @@ class ExportComputor
     public function __construct($data, $columns)
     {
         $this->data = $data;
-        $this->columns = $columns;
+        $this->columns = $this->columns($columns);
     }
 
     public function data()
     {
         return collect($this->data)
             ->map(function ($record) {
-                return $this->columns()
+                return $this->columns
                     ->reduce(function ($collector, $column) use ($record) {
                         $collector[$column->name] = $column->translation
                             ? __($record[$column->name])
@@ -28,15 +30,15 @@ class ExportComputor
             });
     }
 
-    private function columns()
+    private function columns($columns)
     {
-        return $this->columns
+        return $columns
             ->reduce(function ($columns, $column) {
-                if (!$column->meta->rogue) {
-                    $columns->push((object) [
+                if (!$column->meta->notExportable && !$column->meta->rogue) {
+                    $columns->push(new Obj([
                         'name' => $column->name,
                         'translation' => $column->meta->translation,
-                    ]);
+                    ]));
                 }
 
                 return $columns;
