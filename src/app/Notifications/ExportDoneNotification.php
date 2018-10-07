@@ -44,7 +44,8 @@ class ExportDoneNotification extends Notification
         $mail = (new MailMessage())
             ->subject(__(config('app.name')).': '.__('Table Export Notification'))
             ->markdown('laravel-enso/vuedatatable::emails.export', [
-                'name' => $notifiable->first_name,
+                'name' => $notifiable->person->appellative
+                    ?: $notifiable->person->name,
                 'filename' => __($this->filename),
                 'link' => $this->link,
             ]);

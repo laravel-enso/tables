@@ -10,9 +10,11 @@ class ExportStartNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(string $name)
+    private $exportName;
+
+    public function __construct(string $exportName)
     {
-        $this->name = $name;
+        $this->exportName = $exportName;
     }
 
     public function via($notifiable)
@@ -25,7 +27,7 @@ class ExportStartNotification extends Notification
         return new BroadcastMessage([
             'level' => 'info',
             'title' => __('Export Started'),
-            'body' => __('Export started').': '.__($this->name),
+            'body' => __('Export started').': '.__($this->exportName),
             'icon' => 'file-excel',
         ]);
     }
@@ -33,7 +35,7 @@ class ExportStartNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'body' => __('Export started').': '.__($this->name),
+            'body' => __('Export started').': '.__($this->exportName),
             'path' => '#',
             'icon' => 'file-excel',
         ];
