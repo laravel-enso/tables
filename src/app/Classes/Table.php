@@ -8,7 +8,7 @@ use LaravelEnso\VueDatatable\app\Classes\Table\Builder;
 abstract class Table
 {
     protected $request;
-    protected $templatePath = '';
+    protected $templatePath;
 
     public function __construct(array $request = [])
     {
@@ -24,7 +24,7 @@ abstract class Table
 
     public function init()
     {
-        return (new Template($this->templatePath))
+        return (new Template($this->templatePath()))
             ->get();
     }
 
@@ -44,6 +44,11 @@ abstract class Table
     {
         return $this->builder()
             ->fetcher($chunk);
+    }
+
+    public function templatePath()
+    {
+        return $this->templatePath;
     }
 
     private function builder()

@@ -2,14 +2,11 @@
 
 namespace LaravelEnso\VueDatatable\app\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class ExportStartNotification extends Notification
 {
-    use Queueable;
-
     private $exportName;
 
     public function __construct(string $exportName)
