@@ -21,6 +21,7 @@ class Style
         $this->template->style = $this->compute(Attributes::Table);
         $this->template->aligns = $this->preset(Attributes::Align);
         $this->template->styles = $this->preset(Attributes::Table);
+        $this->template->highlight = $this->style['highlight'] ?? null; //fixme
     }
 
     private function compute($style)

@@ -139,6 +139,7 @@ return [
             'bordered' => 'is-bordered',
             'hover' => 'is-hoverable',
         ],
+        'highlight' => 'has-background-info',
     ],
 
     /*
