@@ -20,7 +20,7 @@ class Routes
     {
         $readRoute = $this->prefix.'.'.$this->readSuffix;
 
-        if (!\Route::has($readRoute)) {
+        if (! \Route::has($readRoute)) {
             throw new TemplateException(__(
                 'Read route does not exist: ":route"',
                 ['route' => $readRoute]

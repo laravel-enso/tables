@@ -27,7 +27,7 @@ class Columns
 
     private function computeMeta($column)
     {
-        if (!isset($column->meta)) {
+        if (! isset($column->meta)) {
             $column->meta = [];
         }
 

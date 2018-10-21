@@ -26,7 +26,7 @@ class Filters
 
     private function setSearch()
     {
-        if (!$this->request->filled('search')) {
+        if (! $this->request->filled('search')) {
             return $this;
         }
 
@@ -46,7 +46,7 @@ class Filters
 
     private function setFilters()
     {
-        if (!$this->request->has('filters')) {
+        if (! $this->request->has('filters')) {
             return $this;
         }
 
@@ -54,7 +54,7 @@ class Filters
             collect($this->parse('filters'))
                 ->each(function ($filters, $table) use ($query) {
                     collect($filters)->each(function ($value, $column) use ($table, $query) {
-                        if (!is_null($value) && $value !== '' && $value !== []) {
+                        if (! is_null($value) && $value !== '' && $value !== []) {
                             $query->whereIn($table.'.'.$column, (array) $value);
                         }
                     });
@@ -66,7 +66,7 @@ class Filters
 
     private function setIntervals()
     {
-        if (!$this->request->has('intervals')) {
+        if (! $this->request->has('intervals')) {
             return $this;
         }
 

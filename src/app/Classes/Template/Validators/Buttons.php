@@ -30,7 +30,7 @@ class Buttons
     {
         $formattedWrong = collect($this->buttons)
             ->filter(function ($button) {
-                return !is_string($button) && !is_object($button);
+                return ! is_string($button) && ! is_object($button);
             });
 
         if ($formattedWrong->isNotEmpty()) {
@@ -117,13 +117,13 @@ class Buttons
     private function checkComplementaryAttributes($button)
     {
         if (property_exists($button, 'action')) {
-            if (!property_exists($button, 'fullRoute') && !property_exists($button, 'routeSuffix')) {
+            if (! property_exists($button, 'fullRoute') && ! property_exists($button, 'routeSuffix')) {
                 throw new TemplateException(__(
                     'Whenever you set an action for a button you need to provide the fullRoute or routeSuffix'
                 ));
             }
 
-            if ($button->action === 'ajax' && !property_exists($button, 'method')) {
+            if ($button->action === 'ajax' && ! property_exists($button, 'method')) {
                 throw new TemplateException(__(
                     'Whenever you set an ajax action for a button you need to provide the method aswell'
                 ));
@@ -136,7 +136,7 @@ class Buttons
     private function checkActions($button)
     {
         $formattedWrong = property_exists($button, 'action')
-            && !collect(Attributes::Actions)->contains($button->action);
+            && ! collect(Attributes::Actions)->contains($button->action);
 
         if ($formattedWrong) {
             throw new TemplateException(__(
@@ -150,15 +150,15 @@ class Buttons
 
     private function checkRoute($button)
     {
-        $route = property_exists($button, 'fullRoute') && !is_null($button->fullRoute)
+        $route = property_exists($button, 'fullRoute') && ! is_null($button->fullRoute)
             ? $button->fullRoute
             : null;
 
-        $route = is_null($route) && property_exists($button, 'routeSuffix') && !is_null($button->routeSuffix)
+        $route = is_null($route) && property_exists($button, 'routeSuffix') && ! is_null($button->routeSuffix)
             ? $this->routePrefix.'.'.$button->routeSuffix
             : $route;
 
-        if (!is_null($route) && !\Route::has($route)) {
+        if (! is_null($route) && ! \Route::has($route)) {
             throw new TemplateException(__(
                 'Button route does not exist: ":route"',
                 ['route' => $route]
@@ -170,11 +170,11 @@ class Buttons
 
     private function checkMethod($button)
     {
-        if (!property_exists($button, 'method')) {
+        if (! property_exists($button, 'method')) {
             return;
         }
 
-        if (!collect(Attributes::Methods)->contains($button->method)) {
+        if (! collect(Attributes::Methods)->contains($button->method)) {
             throw new TemplateException(__(
                 'Method is incorrect: ":method"',
                 ['method' => $button->method]

@@ -33,9 +33,9 @@ class Columns
 
     private function checkFormat()
     {
-        if (!is_array($this->columns) || empty($this->columns)
+        if (! is_array($this->columns) || empty($this->columns)
             || collect($this->columns)->first(function ($column) {
-                return !is_object($column);
+                return ! is_object($column);
             }) !== null
         ) {
             throw new TemplateException(__(
@@ -90,7 +90,7 @@ class Columns
     private function checkEnum($column)
     {
         if (property_exists($column, 'enum')) {
-            if (!class_exists($column->enum)) {
+            if (! class_exists($column->enum)) {
                 throw new TemplateException(__(
                     'Provided enum does not exist: ":enum"',
                     ['enum' => $column->enum]
@@ -103,7 +103,7 @@ class Columns
 
     private function checkTooltip($column)
     {
-        if (property_exists($column, 'tooltip') && !is_string($column->tooltip)) {
+        if (property_exists($column, 'tooltip') && ! is_string($column->tooltip)) {
             throw new TemplateException(__(
                     'The tooltip attribute provided for ":column" must be a string',
                     ['column' => $column->name]
@@ -115,7 +115,7 @@ class Columns
 
     private function checkMoney($column)
     {
-        if (property_exists($column, 'money') && !is_object($column->money)) {
+        if (property_exists($column, 'money') && ! is_object($column->money)) {
             throw new TemplateException(__(
                     'Provided money attribute for ":column" must be an object',
                     ['column' => $column->name]
@@ -127,7 +127,7 @@ class Columns
 
     private function checkClass($column)
     {
-        if (property_exists($column, 'class') && !is_string($column->class)) {
+        if (property_exists($column, 'class') && ! is_string($column->class)) {
             throw new TemplateException(__(
                     'The class attribute provided for ":column" must be a string',
                     ['column' => $column->name]
@@ -140,7 +140,7 @@ class Columns
     private function checkAlign($column)
     {
         if (property_exists($column, 'align')
-            && !collect(Style::Align)->contains($column->align)) {
+            && ! collect(Style::Align)->contains($column->align)) {
             throw new TemplateException(__(
                     'The align attribute provided for ":column" is incorrect',
                     ['column' => $column->name]

@@ -30,7 +30,7 @@ class Buttons
 
                 $buttons[$type][] = $button;
 
-                if (!$this->template->actions && $type === 'row') {
+                if (! $this->template->actions && $type === 'row') {
                     $this->template->actions = true;
                 }
 
@@ -49,7 +49,7 @@ class Buttons
 
     private function actionComputingFailes($button, $type)
     {
-        if (!property_exists($button, 'action')) {
+        if (! property_exists($button, 'action')) {
             return false;
         }
 
@@ -72,11 +72,11 @@ class Buttons
 
     private function route($button)
     {
-        if (property_exists($button, 'fullRoute') && !is_null($button->fullRoute)) {
+        if (property_exists($button, 'fullRoute') && ! is_null($button->fullRoute)) {
             return $button->fullRoute;
         }
 
-        return property_exists($button, 'routeSuffix') && !is_null($button->routeSuffix)
+        return property_exists($button, 'routeSuffix') && ! is_null($button->routeSuffix)
             ? $this->template->routePrefix.'.'.$button->routeSuffix
             : null;
     }

@@ -32,7 +32,7 @@ class Validator
 
     private function validateButtons()
     {
-        if (!property_exists($this->template, 'buttons')) {
+        if (! property_exists($this->template, 'buttons')) {
             $this->template->buttons = [];
 
             return;

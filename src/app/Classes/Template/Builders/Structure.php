@@ -31,7 +31,7 @@ class Structure
 
     private function lengthMenu()
     {
-        if (!property_exists($this->template, 'lengthMenu')) {
+        if (! property_exists($this->template, 'lengthMenu')) {
             $this->template->lengthMenu = config('enso.datatable.lengthMenu');
         }
 
@@ -40,7 +40,7 @@ class Structure
 
     private function debounce()
     {
-        if (!property_exists($this->template, 'debounce')) {
+        if (! property_exists($this->template, 'debounce')) {
             $this->template->debounce = config('enso.datatable.debounce');
         }
 
@@ -49,7 +49,7 @@ class Structure
 
     private function method()
     {
-        if (!property_exists($this->template, 'method')) {
+        if (! property_exists($this->template, 'method')) {
             $this->template->method = config('enso.datatable.method');
         }
 
@@ -58,7 +58,7 @@ class Structure
 
     private function selectable()
     {
-        if (!property_exists($this->template, 'selectable')) {
+        if (! property_exists($this->template, 'selectable')) {
             $this->template->selectable = false;
         }
 

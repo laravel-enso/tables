@@ -53,7 +53,7 @@ abstract class Action
         $this->data = $this->builder
             ->fetch($this->page++);
 
-        return !$this->data->isEmpty();
+        return ! $this->data->isEmpty();
     }
 
     private function init()

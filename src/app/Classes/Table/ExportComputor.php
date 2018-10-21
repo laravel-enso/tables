@@ -34,7 +34,7 @@ class ExportComputor
     {
         return $columns
             ->reduce(function ($columns, $column) {
-                if (!$column->meta->notExportable && !$column->meta->rogue) {
+                if (! $column->meta->notExportable && ! $column->meta->rogue) {
                     $columns->push(new Obj([
                         'name' => $column->name,
                         'translation' => $column->meta->translation,

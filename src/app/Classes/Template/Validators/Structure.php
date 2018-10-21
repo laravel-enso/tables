@@ -57,24 +57,24 @@ class Structure
 
     private function checkFormat()
     {
-        if (property_exists($this->template, 'lengthMenu') && !is_array($this->template->lengthMenu)) {
+        if (property_exists($this->template, 'lengthMenu') && ! is_array($this->template->lengthMenu)) {
             throw new TemplateException(__('"lengthMenu" attribute must be an array'));
         }
 
-        if (property_exists($this->template, 'appends') && !is_array($this->template->appends)) {
+        if (property_exists($this->template, 'appends') && ! is_array($this->template->appends)) {
             throw new TemplateException(__('"appends" attribute must be an array'));
         }
 
-        if (property_exists($this->template, 'debounce') && !is_int($this->template->debounce)) {
+        if (property_exists($this->template, 'debounce') && ! is_int($this->template->debounce)) {
             throw new TemplateException(__('"debounce" attribute must be an integer'));
         }
 
         if (property_exists($this->template, 'method')
-            && !collect(['GET', 'POST'])->contains($this->template->method)) {
+            && ! collect(['GET', 'POST'])->contains($this->template->method)) {
             throw new TemplateException(__('"method" attribute can be either "GET" or "POST"'));
         }
 
-        if (property_exists($this->template, 'selectable') && !is_bool($this->template->selectable)) {
+        if (property_exists($this->template, 'selectable') && ! is_bool($this->template->selectable)) {
             throw new TemplateException(__('"selectable" attribute must be a boolean'));
         }
     }

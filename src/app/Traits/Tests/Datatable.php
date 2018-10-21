@@ -7,7 +7,7 @@ trait Datatable
     /** @test */
     public function can_view_index()
     {
-        if (!isset($this->permissionGroup)) {
+        if (! isset($this->permissionGroup)) {
             throw Exception('"permissionGroup" property is missing from your test');
         }
 

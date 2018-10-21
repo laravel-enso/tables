@@ -50,7 +50,7 @@ class ExportDoneNotification extends Notification
                 'link' => $this->link,
             ]);
 
-        if (!$this->link) {
+        if (! $this->link) {
             $mail->attach(\Storage::path($this->filePath));
         }
 
