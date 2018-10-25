@@ -8,7 +8,7 @@ class Button
 
     const Optional = [
         'routeSuffix', 'action', 'fullRoute', 'label', 'method', 'confirmation',
-        'event', 'message', 'params', 'postEvent'
+        'event', 'message', 'params', 'postEvent',
     ];
 
     const Actions = ['router', 'href', 'ajax', 'export'];
