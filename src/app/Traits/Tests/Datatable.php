@@ -22,7 +22,7 @@ trait Datatable
             'meta' => $meta,
         ];
 
-        $this->get(route($this->permissionGroup.'.getTableData', $params, false))
+        $this->get(route($this->permissionGroup.'.tableData', $params, false))
             ->assertStatus(200)
             ->assertJsonStructure(['data']);
     }

@@ -36,7 +36,7 @@ class Builder
     private function cleanUp()
     {
         unset(
-            $this->template->readSuffix,
+            $this->template->dataRouteSuffix,
             $this->template->routePrefix
         );
     }

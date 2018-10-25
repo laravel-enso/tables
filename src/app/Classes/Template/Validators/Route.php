@@ -2,28 +2,26 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
-use Symfony\Component\Routing\Route;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 
-class Routes
+class Route
 {
-    private $prefix;
-    private $readSuffix;
+    private $readRoute;
 
     public function __construct($template)
     {
-        $this->prefix = $template->routePrefix;
-        $this->readSuffix = $template->readSuffix;
+        $this->readRoute = $template->routePrefix.'.'.(
+            $template->dataRouteSuffix
+                ?? config('enso.datatable.dataRouteSuffix')
+        );
     }
 
     public function validate()
     {
-        $readRoute = $this->prefix.'.'.$this->readSuffix;
-
-        if (! \Route::has($readRoute)) {
+        if (! \Route::has($this->readRoute)) {
             throw new TemplateException(__(
                 'Read route does not exist: ":route"',
-                ['route' => $readRoute]
+                ['route' => $this->readRoute]
             ));
         }
     }

@@ -2,6 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Builders;
 
+use Illuminate\Support\Str;
+
 class Structure
 {
     private $template;
@@ -13,7 +15,7 @@ class Structure
 
     public function build()
     {
-        $this->routes()
+        $this->readPath()
             ->lengthMenu()
             ->debounce()
             ->method()
@@ -21,10 +23,14 @@ class Structure
             ->defaults();
     }
 
-    private function routes()
+    private function readPath()
     {
-        $this->template->readPath =
-            route($this->template->routePrefix.'.'.$this->template->readSuffix, [], false);
+        $route = $this->template->routePrefix.'.'.(
+            $this->template->dataRouteSuffix
+                ?? config('enso.datatable.dataRouteSuffix')
+        );
+
+        $this->template->readPath = route($route, [], false);
 
         return $this;
     }
@@ -73,5 +79,15 @@ class Structure
         $this->template->date = false;
         $this->template->searchable = false;
         $this->template->labels = config('enso.datatable.labels');
+        $this->template->pathSegment = $this->pathSegment();
+    }
+
+    private function pathSegment()
+    {
+        $segment = collect(
+                explode('.', $this->template->routePrefix)
+            )->last();
+
+        return Str::singular($segment);
     }
 }
