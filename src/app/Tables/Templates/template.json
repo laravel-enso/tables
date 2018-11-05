@@ -30,7 +30,7 @@
             "label": "Name", //required, table header column name
             "data": "table.column", // required, the table and column name
             "name": "columnAlias", // required, alias from the query builder
-            "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "render", "date", "icon", "clickable", "tooltip"], //optional
+            "meta": ["searchable", "sortable", "translation", "boolean", "slot", "rogue", "editable", "total", "render", "date", "icon", "clickable", "tooltip", "nullsLast"], //optional
             "enum": "EnumClass", // optional
             "tooltip": "My Tooltip Column Detail"
         }

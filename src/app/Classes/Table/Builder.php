@@ -138,7 +138,11 @@ class Builder
 
         $this->columns->each(function ($column) {
             if ($column->meta->sortable && $column->meta->sort) {
-                $this->query->orderBy($column->data, $column->meta->sort);
+                if ($column->meta->nullsLast){
+                    $this->query->orderByRaw("ISNULL({$column->data}), {$column->data} {$column->meta->sort}");
+                }else{
+                    $this->query->orderBy($column->data, $column->meta->sort);
+                }
             }
         });
 
