@@ -46,8 +46,8 @@ class Columns
             $this->template->searchable = true;
         }
 
-        if ($column->meta['nullsLast']) {
-            $this->template->nullsLast = true;
+        if ($column->meta['nullLast']) {
+            $this->template->nullLast = true;
         }
 
         if ($column->meta['total'] || $column->meta['customTotal']) {

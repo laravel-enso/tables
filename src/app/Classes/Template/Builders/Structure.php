@@ -78,7 +78,7 @@ class Structure
         $this->template->money = false;
         $this->template->date = false;
         $this->template->searchable = false;
-        $this->template->nullsLast = false;
+        $this->template->nullLast = false;
         $this->template->labels = config('enso.datatable.labels');
         $this->template->pathSegment = $this->pathSegment();
     }

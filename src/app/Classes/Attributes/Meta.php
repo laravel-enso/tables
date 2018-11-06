@@ -7,6 +7,6 @@ class Meta
     const List = [
         'searchable', 'sortable', 'translation', 'boolean', 'slot',
         'rogue', 'editable', 'total', 'date', 'icon', 'clickable',
-        'customTotal', 'notExportable', 'nullsLast',
+        'customTotal', 'notExportable', 'nullLast',
     ];
 }
