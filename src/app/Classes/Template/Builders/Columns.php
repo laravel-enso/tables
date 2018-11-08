@@ -31,11 +31,13 @@ class Columns
             $column->meta = [];
         }
 
-        $column->meta = collect(Attributes::List)->reduce(function ($meta, $attribute) use ($column) {
-            $meta[$attribute] = collect($column->meta)->contains($attribute);
+        $column->meta = collect(Attributes::List)
+            ->reduce(function ($meta, $attribute) use ($column) {
+                $meta[$attribute] = collect($column->meta)
+                    ->contains($attribute);
 
-            return $meta;
-        }, []);
+                return $meta;
+            }, []);
 
         $column->meta['visible'] = true;
     }
@@ -44,10 +46,6 @@ class Columns
     {
         if ($column->meta['searchable']) {
             $this->template->searchable = true;
-        }
-
-        if ($column->meta['nullLast']) {
-            $this->template->nullLast = true;
         }
 
         if ($column->meta['total'] || $column->meta['customTotal']) {
