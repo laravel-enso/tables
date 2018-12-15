@@ -60,6 +60,7 @@ abstract class Table
         // Call query before builder
         // Sometimes we need declare template path in current request
         $query = $this->query();
+
         return new Builder($this->request, $query, $this->getTemplate($this->templatePath()));
     }
 
