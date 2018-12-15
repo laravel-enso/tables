@@ -8,6 +8,6 @@ class Structure
 
     const Optional = [
         'dataRouteSuffix', 'crtNo', 'appends', 'buttons', 'lengthMenu',
-        'auth', 'debounce', 'method', 'selectable',
+        'auth', 'debounce', 'method', 'selectable', 'searchOperator'
     ];
 }

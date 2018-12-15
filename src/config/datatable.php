@@ -214,4 +214,17 @@ return [
     */
 
     'dataRouteSuffix' => 'tableData',
+
+    /*
+    |--------------------------------------------------------------------------
+    | SQL search operator
+    |--------------------------------------------------------------------------
+    |
+    | The search operator will be the default used for every table. You will still 
+    | have the option of customizing the operator for certain tables by using 
+    | the same attribute in the table's json template.
+    | Possible values for search operator: LIKE, ILIKE
+    */
+
+    'searchOperator' => 'LIKE',
 ];

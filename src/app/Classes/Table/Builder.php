@@ -17,8 +17,9 @@ class Builder
     private $columns;
     private $meta;
     private $fullRecordInfo;
+    private $template;
 
-    public function __construct(Obj $request, QueryBuilder $query)
+    public function __construct(Obj $request, QueryBuilder $query, $template)
     {
         $this->request = $request;
         $this->meta = is_string($this->request->get('meta'))
@@ -28,6 +29,7 @@ class Builder
         $this->total = collect();
 
         $this->setColumns();
+        $this->template = $template;
     }
 
     public function fetcher(int $chunk)
@@ -120,7 +122,7 @@ class Builder
     private function filter()
     {
         if ($this->hasFilters()) {
-            (new Filters($this->request, $this->query, $this->columns))->set();
+            (new Filters($this->request, $this->query, $this->columns, $this->template))->set();
 
             if ($this->fullRecordInfo) {
                 $this->filtered = $this->count();

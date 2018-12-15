@@ -9,12 +9,14 @@ class Filters
     private $request;
     private $query;
     private $columns;
+    private $template;
 
-    public function __construct($request, $query, $columns)
+    public function __construct($request, $query, $columns, $template)
     {
         $this->request = $request;
         $this->query = $query;
         $this->columns = $columns;
+        $this->template = $template;
     }
 
     public function set()
@@ -35,7 +37,7 @@ class Filters
                 $this->query->where(function ($query) use ($arg) {
                     $this->columns->each(function ($column) use ($query, $arg) {
                         if ($column->meta->searchable) {
-                            $query->orWhere($column->data, 'LIKE', '%'.$arg.'%');
+                            $query->orWhere($column->data, $this->template->searchOperator, '%'.$arg.'%');
                         }
                     });
                 });

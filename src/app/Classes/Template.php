@@ -16,6 +16,11 @@ class Template
         $this->filename = $filename;
     }
 
+    /**
+     * Get template object from current json file
+     * 
+     * @return \stdClass
+     */
     public function get()
     {
         $this->readTemplate();
@@ -23,7 +28,7 @@ class Template
         (new Builder($this->template))
             ->run();
 
-        return ['template' => $this->template];
+        return $this->template;
     }
 
     private function readTemplate()

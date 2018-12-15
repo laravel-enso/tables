@@ -22,10 +22,13 @@ abstract class Table
         return $this->request;
     }
 
+    /**
+     * init VueDatatable
+     * @return array
+     */
     public function init()
     {
-        return (new Template($this->templatePath()))
-            ->get();
+        return ['template' => $this->getTemplate($this->templatePath())];
     }
 
     public function data()
@@ -53,9 +56,20 @@ abstract class Table
 
     private function builder()
     {
-        return new Builder(
-            $this->request,
-            $this->query()
-        );
+        // Call query before builder 
+        // Sometimes we need declare template path in current request
+        $query = $this->query();
+        return new Builder($this->request, $query, $this->getTemplate($this->templatePath()));
+    }
+    
+    /**
+     * Get template object
+     * 
+     * @param string $path - path to template.json
+     * @return \stdClass
+     */
+    protected function getTemplate($path)
+    {
+        return (new Template($path))->get();
     }
 }

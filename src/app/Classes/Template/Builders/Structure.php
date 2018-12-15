@@ -20,6 +20,7 @@ class Structure
             ->debounce()
             ->method()
             ->selectable()
+            ->searchOperator()
             ->defaults();
     }
 
@@ -90,5 +91,14 @@ class Structure
             )->last();
 
         return Str::singular($segment);
+    }
+    
+    private function searchOperator()
+    {
+        if (! property_exists($this->template, 'searchOperator')) {
+            $this->template->searchOperator = config('enso.datatable.searchOperator');
+        }
+
+        return $this;
     }
 }
