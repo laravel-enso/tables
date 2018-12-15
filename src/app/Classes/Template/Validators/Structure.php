@@ -77,7 +77,7 @@ class Structure
         if (property_exists($this->template, 'selectable') && ! is_bool($this->template->selectable)) {
             throw new TemplateException(__('"selectable" attribute must be a boolean'));
         }
-        
+
         if (property_exists($this->template, 'searchOperator')
             && ! collect(['LIKE', 'ILIKE'])->contains($this->template->searchOperator)) {
             throw new TemplateException(__('"searchOperator" attribute can be either "LIKE" or "ILIKE"'));

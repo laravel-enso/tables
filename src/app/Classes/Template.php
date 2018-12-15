@@ -17,8 +17,8 @@ class Template
     }
 
     /**
-     * Get template object from current json file
-     * 
+     * Get template object from current json file.
+     *
      * @return \stdClass
      */
     public function get()

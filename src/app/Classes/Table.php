@@ -23,7 +23,8 @@ abstract class Table
     }
 
     /**
-     * init VueDatatable
+     * init VueDatatable.
+     *
      * @return array
      */
     public function init()
@@ -56,16 +57,17 @@ abstract class Table
 
     private function builder()
     {
-        // Call query before builder 
+        // Call query before builder
         // Sometimes we need declare template path in current request
         $query = $this->query();
         return new Builder($this->request, $query, $this->getTemplate($this->templatePath()));
     }
-    
+
     /**
-     * Get template object
-     * 
+     * Get template object.
+     *
      * @param string $path - path to template.json
+     *
      * @return \stdClass
      */
     protected function getTemplate($path)

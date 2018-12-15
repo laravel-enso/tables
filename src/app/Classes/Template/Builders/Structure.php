@@ -92,7 +92,7 @@ class Structure
 
         return Str::singular($segment);
     }
-    
+
     private function searchOperator()
     {
         if (! property_exists($this->template, 'searchOperator')) {
