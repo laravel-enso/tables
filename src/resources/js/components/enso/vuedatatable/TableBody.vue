@@ -19,7 +19,7 @@
             v-if="template.crtNo && !isChild(row)">
             <div class="crt-no">
                 <span class="crt-no-label">
-                    {{ getIndex(row) }}
+                    {{ rowIndex(row) }}
                 </span>
                 <span class="hidden-controls"
                     v-if="hiddenCount"
@@ -73,7 +73,7 @@
                     :key="index"
                     class="button is-small is-table-button has-margin-left-small"
                     :class="button.class"
-                    :href="button.action === 'href' ? getPath(button, row.dtRowId) : null"
+                    :href="button.action === 'href' ? path(button, row.dtRowId) : null"
                     @click="button.confirmation ? showModal(button, row) : doAction(button, row)">
                     <span v-if="button.label">
                         {{ i18n(button.label) }}
@@ -209,7 +209,7 @@ export default {
     },
 
     methods: {
-        getPath(button, dtRowId) {
+        path(button, dtRowId) {
             return button.path.replace('dtRowId', dtRowId);
         },
         showModal(button, row) {
@@ -232,18 +232,18 @@ export default {
             }
 
             if (button.action === 'ajax') {
-                this.$emit('ajax', button.method, this.getPath(button, row.dtRowId), button.postEvent);
+                this.$emit('ajax', button.method, this.path(button, row.dtRowId), button.postEvent);
                 return;
             }
 
             if (button.action === 'router') {
                 this.$router.push({
                     name: button.route,
-                    params: this.getRouteParams(button, row),
+                    params: this.routeParams(button, row),
                 });
             }
         },
-        getRouteParams(button, row) {
+        routeParams(button, row) {
             const params = {};
 
             params[this.template.pathSegment] = row.dtRowId;
@@ -252,10 +252,10 @@ export default {
                 ? { ...params, ...button.params }
                 : params;
         },
-
-        getIndex(row) {
+        rowIndex(row) {
             return this.body.data.filter(r => !this.isChild(r))
-                .findIndex(r => r.dtRowId === row.dtRowId) + this.start + 1;
+                .findIndex(({ dtRowId }) => dtRowId === row.dtRowId)
+                    + this.start + 1;
         },
         isExpanded(row) {
             return this.expanded.includes(row.dtRowId);
