@@ -69,11 +69,15 @@
             v-if="template.actions && !isChild(row)">
             <span class="table-action-buttons">
                 <a v-for="(button, index) in template.buttons.row"
+                    v-tooltip="i18n(button.tooltip)"
                     :key="index"
                     class="button is-small is-table-button has-margin-left-small"
                     :class="button.class"
                     :href="button.action === 'href' ? getPath(button, row.dtRowId) : null"
                     @click="button.confirmation ? showModal(button, row) : doAction(button, row)">
+                    <span v-if="button.label">
+                        {{ i18n(button.label) }}
+                    </span>
                     <span class="icon is-small">
                         <fa :icon="button.icon"/>
                     </span>
@@ -119,6 +123,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMinusSquare, faPlusSquare, faEye, faPencilAlt, faTrashAlt, faCloudDownloadAlt }
     from '@fortawesome/free-solid-svg-icons';
+import { VTooltip } from 'v-tooltip';
 import TableCell from './TableCell.vue';
 import Modal from './Modal.vue';
 
@@ -128,6 +133,8 @@ library.add([
 
 export default {
     name: 'TableBody',
+
+    directives: { tooltip: VTooltip },
 
     components: { TableCell, Modal },
 
@@ -350,7 +357,7 @@ export default {
         .button.is-small {
             &.is-table-button {
                 height: 1.6em;
-                width: 1.6em;
+                padding: 0.4em;
                 font-size: .9em;
             }
 
