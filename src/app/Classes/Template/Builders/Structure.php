@@ -30,7 +30,7 @@ class Structure
                 ?? config('enso.datatable.dataRouteSuffix')
         );
 
-        $this->template->readPath = route($route, [], false);
+        $this->template->readPath = route($route, [], config('enso.datatable.dataPathAbsolute', false));
 
         return $this;
     }
