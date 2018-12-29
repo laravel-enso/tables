@@ -78,9 +78,9 @@ class Structure
             throw new TemplateException(__('"selectable" attribute must be a boolean'));
         }
 
-        if (property_exists($this->template, 'searchOperator')
-            && ! collect(['LIKE', 'ILIKE'])->contains($this->template->searchOperator)) {
-            throw new TemplateException(__('"searchOperator" attribute can be either "LIKE" or "ILIKE"'));
+        if (property_exists($this->template, 'comparisonOperator')
+            && ! collect(['LIKE', 'ILIKE'])->contains($this->template->comparisonOperator)) {
+            throw new TemplateException(__('"comparisonOperator" attribute can be either "LIKE" or "ILIKE"'));
         }
     }
 }

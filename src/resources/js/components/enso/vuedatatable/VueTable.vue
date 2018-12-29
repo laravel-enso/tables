@@ -355,6 +355,7 @@ export default {
                 intervals: this.intervals,
                 params: this.params,
                 selected: this.selected,
+                comparisonOperator: this.template.comparisonOperator,
             };
 
             method = method || this.template.method;

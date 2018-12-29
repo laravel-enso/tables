@@ -20,7 +20,7 @@ class Structure
             ->debounce()
             ->method()
             ->selectable()
-            ->searchOperator()
+            ->comparisonOperator()
             ->defaults();
     }
 
@@ -93,10 +93,10 @@ class Structure
         return Str::singular($segment);
     }
 
-    private function searchOperator()
+    private function comparisonOperator()
     {
-        if (! property_exists($this->template, 'searchOperator')) {
-            $this->template->searchOperator = config('enso.datatable.searchOperator');
+        if (! property_exists($this->template, 'comparisonOperator')) {
+            $this->template->comparisonOperator = config('enso.datatable.comparisonOperator');
         }
 
         return $this;
