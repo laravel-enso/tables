@@ -58,7 +58,7 @@ abstract class Table
     private function builder()
     {
         return new Builder(
-            $this->request, 
+            $this->request,
             $this->query()
         );
     }
