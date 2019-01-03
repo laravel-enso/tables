@@ -29,7 +29,7 @@ abstract class Table
      */
     public function init()
     {
-        return ['template' => $this->getTemplate($this->templatePath())];
+        return ['template' => (new Template($this->templatePath()))->get()];
     }
 
     public function data()
@@ -57,22 +57,9 @@ abstract class Table
 
     private function builder()
     {
-        // Call query before builder
-        // Sometimes we need declare template path in current request
-        $query = $this->query();
-
-        return new Builder($this->request, $query, $this->getTemplate($this->templatePath()));
-    }
-
-    /**
-     * Get template object.
-     *
-     * @param string $path - path to template.json
-     *
-     * @return \stdClass
-     */
-    protected function getTemplate($path)
-    {
-        return (new Template($path))->get();
+        return new Builder(
+            $this->request, 
+            $this->query()
+        );
     }
 }

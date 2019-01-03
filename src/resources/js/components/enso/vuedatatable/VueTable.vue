@@ -435,6 +435,7 @@ export default {
                 filters: this.filters,
                 intervals: this.intervals,
                 params: this.params,
+                comparisonOperator: this.template.comparisonOperator,
             };
 
             return this.template.method === 'GET'
