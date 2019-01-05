@@ -22,11 +22,6 @@ abstract class Table
         return $this->request;
     }
 
-    /**
-     * init VueDatatable.
-     *
-     * @return array
-     */
     public function init()
     {
         return ['template' => (new Template($this->templatePath()))->get()];
