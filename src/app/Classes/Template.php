@@ -23,7 +23,7 @@ class Template
         (new Builder($this->template))
             ->run();
 
-        return ['template' => $this->template];
+        return $this->template;
     }
 
     private function readTemplate()

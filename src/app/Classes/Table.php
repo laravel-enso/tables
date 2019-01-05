@@ -24,8 +24,7 @@ abstract class Table
 
     public function init()
     {
-        return (new Template($this->templatePath()))
-            ->get();
+        return ['template' => (new Template($this->templatePath()))->get()];
     }
 
     public function data()

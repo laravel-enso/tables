@@ -20,6 +20,7 @@ class Structure
             ->debounce()
             ->method()
             ->selectable()
+            ->comparisonOperator()
             ->defaults();
     }
 
@@ -90,5 +91,14 @@ class Structure
             )->last();
 
         return Str::singular($segment);
+    }
+
+    private function comparisonOperator()
+    {
+        if (! property_exists($this->template, 'comparisonOperator')) {
+            $this->template->comparisonOperator = config('enso.datatable.comparisonOperator');
+        }
+
+        return $this;
     }
 }

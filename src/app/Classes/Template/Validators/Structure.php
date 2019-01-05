@@ -77,5 +77,10 @@ class Structure
         if (property_exists($this->template, 'selectable') && ! is_bool($this->template->selectable)) {
             throw new TemplateException(__('"selectable" attribute must be a boolean'));
         }
+
+        if (property_exists($this->template, 'comparisonOperator')
+            && ! collect(['LIKE', 'ILIKE'])->contains($this->template->comparisonOperator)) {
+            throw new TemplateException(__('"comparisonOperator" attribute can be either "LIKE" or "ILIKE"'));
+        }
     }
 }

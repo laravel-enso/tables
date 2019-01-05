@@ -355,6 +355,7 @@ export default {
                 intervals: this.intervals,
                 params: this.params,
                 selected: this.selected,
+                comparisonOperator: this.template.comparisonOperator,
             };
 
             method = method || this.template.method;
@@ -434,6 +435,7 @@ export default {
                 filters: this.filters,
                 intervals: this.intervals,
                 params: this.params,
+                comparisonOperator: this.template.comparisonOperator,
             };
 
             return this.template.method === 'GET'

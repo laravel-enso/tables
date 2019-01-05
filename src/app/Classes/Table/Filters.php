@@ -35,7 +35,7 @@ class Filters
                 $this->query->where(function ($query) use ($arg) {
                     $this->columns->each(function ($column) use ($query, $arg) {
                         if ($column->meta->searchable) {
-                            $query->orWhere($column->data, 'LIKE', '%'.$arg.'%');
+                            $query->orWhere($column->data, $this->request->get('comparisonOperator'), '%'.$arg.'%');
                         }
                     });
                 });
