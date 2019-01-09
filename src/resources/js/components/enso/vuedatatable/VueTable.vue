@@ -378,6 +378,7 @@ export default {
                         nullLast: column.meta.nullLast,
                     },
                     enum: column.enum,
+                    dateFormat: column.dateFormat,
                 });
 
                 return columns;
