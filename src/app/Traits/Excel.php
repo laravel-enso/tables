@@ -36,7 +36,7 @@ trait Excel
     {
         return $this->ensoEnvironment()
             ? DataExport::create([
-                'type' => str_replace('_', ' ', $type),
+                'name' => str_replace('_', ' ', $type),
                 'entries' => 0,
                 'status' => Statuses::Waiting,
             ]) : null;
