@@ -156,11 +156,6 @@ export default {
                 this.$emit(button.event);
             }
 
-            if (button.action === 'export') {
-                this.$emit('export-data', button.path);
-                return;
-            }
-
             if (button.action === 'router') {
                 this.$router.push({ name: button.route });
                 return;

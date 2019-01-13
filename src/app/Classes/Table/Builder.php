@@ -5,6 +5,9 @@ namespace LaravelEnso\VueDatatable\app\Classes\Table;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use LaravelEnso\VueDatatable\app\Exceptions\QueryException;
+use LaravelEnso\VueDatatable\app\Classes\Table\Computors\Date;
+use LaravelEnso\VueDatatable\app\Classes\Table\Computors\Enum;
+use LaravelEnso\VueDatatable\app\Classes\Table\Computors\Translatable;
 
 class Builder
 {
@@ -17,33 +20,44 @@ class Builder
     private $columns;
     private $meta;
     private $fullRecordInfo;
+    private $statics;
+    private $fetchMode;
 
     public function __construct(Obj $request, QueryBuilder $query)
     {
         $this->request = $request;
-        $this->meta = is_string($this->request->get('meta'))
-            ? json_decode($this->request->get('meta'))
-            : (object) $this->request->get('meta');
+        $this->computeMeta();
+        $this->meta = $this->request->get('meta');
+        $this->computeColumns();
+        $this->columns = $this->request->get('columns');
         $this->query = $query;
         $this->total = collect();
-
-        $this->setColumns();
+        $this->statics = false;
+        $this->fetchMode = false;
     }
 
-    public function fetcher(int $chunk)
+    public function fetcher()
     {
-        $this->meta->length = $chunk;
-        $this->filter();
+        $this->meta->set(
+            'length',
+            config('enso.datatable.export.chunk')
+        );
 
         return $this;
     }
 
-    public function fetch($page)
+    public function fetch($page = 0)
     {
-        return $this->query
-            ->skip($this->meta->length * $page)
-            ->take($this->meta->length)
-            ->pluck('dtRowId');
+        $this->fetchMode = true;
+
+        $this->meta->set(
+            'start',
+            $this->meta->get('length') * $page
+        );
+
+        $this->run();
+
+        return $this->data;
     }
 
     public function data()
@@ -62,34 +76,25 @@ class Builder
         ];
     }
 
-    public function excel()
-    {
-        $this->run();
-
-        $export = new ExportComputor($this->data, $this->columns);
-
-        return [
-            'name' => $this->request->get('name'),
-            'header' => $this->excelHeader(),
-            'data' => $export->data()->toArray(),
-        ];
-    }
-
     private function run()
     {
-        $this->filtered = $this->count = $this->count();
-
-        $this->setDetailedInfo()
+        $this->initStatics()
+            ->setCount()
+            ->setDetailedInfo()
             ->filter()
             ->sort()
             ->setTotal()
             ->limit()
-            ->setData()
-            ->setAppends()
-            ->toArray()
+            ->setData();
+
+        if ($this->data->count()) {
+            $this->setAppends()
+            ->collect()
             ->computeEnum()
             ->computeDate()
+            ->computeTranslatable()
             ->flatten();
+        }
     }
 
     private function checkActions()
@@ -99,7 +104,9 @@ class Builder
         }
 
         if (! isset($this->data[0]['dtRowId'])) {
-            throw new QueryException(__('You have to add in the main query \'id as "dtRowId"\' for the actions to work'));
+            throw new QueryException(__(
+                'You have to add in the main query \'id as "dtRowId"\' for the actions to work'
+            ));
         }
     }
 
@@ -108,11 +115,21 @@ class Builder
         return $this->query->count();
     }
 
+    private function setCount()
+    {
+        if (! $this->fetchMode) {
+            $this->filtered = $this->count = $this->count();
+        }
+
+        return $this;
+    }
+
     private function setDetailedInfo()
     {
-        $this->fullRecordInfo = $this->hasFilters() && ! optional($this->meta)->forceInfo
-            ? $this->count <= config('enso.datatable.fullInfoRecordLimit')
-            : true;
+        $this->fullRecordInfo = ! $this->fetchMode
+            && (! $this->hasFilters()
+                || ! $this->meta->get('forceInfo')
+                    && $this->count <= config('enso.datatable.fullInfoRecordLimit'));
 
         return $this;
     }
@@ -132,32 +149,39 @@ class Builder
 
     private function sort()
     {
-        if (! $this->meta->sort) {
+        if (! $this->meta->get('sort')) {
             return $this;
         }
 
         $this->columns->each(function ($column) {
-            if ($column->meta->sortable && $column->meta->sort) {
-                $column->meta->nullLast
-                    ? $this->query->orderByRaw(
-                        "ISNULL({$column->data}), {$column->data} {$column->meta->sort}"
-                    ) : $this->query->orderBy($column->data, $column->meta->sort);
+            if ($column->get('meta')->get('sortable') && $column->get('meta')->get('sort')) {
+                $column->get('meta')->get('nullLast')
+                    ? $this->query->orderByRaw($this->rawSort($column))
+                    : $this->query->orderBy(
+                        $column->get('data'), $column->get('meta')->get('sort')
+                    );
             }
         });
 
         return $this;
     }
 
+    private function rawSort($column)
+    {
+        return "ISNULL({$column->get('data')}),"
+            ."{$column->get('data')} {$column->get('meta')->get('sort')}";
+    }
+
     private function setTotal()
     {
-        if (! $this->meta->total || ! $this->fullRecordInfo) {
+        if (! $this->meta->get('total') || ! $this->fullRecordInfo || $this->fetchMode) {
             return $this;
         }
 
         $this->total = $this->columns
             ->reduce(function ($total, $column) {
-                if ($column->meta->total) {
-                    $total[$column->name] = $this->query->sum($column->data);
+                if ($column->get('meta')->get('total')) {
+                    $total[$column->get('name')] = $this->query->sum($column->get('data'));
                 }
 
                 return $total;
@@ -168,8 +192,8 @@ class Builder
 
     private function limit()
     {
-        $this->query->skip($this->meta->start)
-            ->take($this->meta->length);
+        $this->query->skip($this->meta->get('start'))
+            ->take($this->meta->get('length'));
 
         return $this;
     }
@@ -187,23 +211,49 @@ class Builder
             return $this;
         }
 
-        $this->data->each
-            ->setAppends($this->request->get('appends'));
+        $this->data->each->setAppends(
+            $this->request->get('appends')
+        );
 
         return $this;
     }
 
-    private function toArray()
+    private function collect()
     {
-        $this->data = $this->data->toArray();
+        $this->data = collect($this->data->toArray());
+
+        return $this;
+    }
+
+    private function initStatics()
+    {
+        if ($this->statics) {
+            return $this;
+        }
+
+        if ($this->meta->get('enum')) {
+            Enum::columns($this->columns);
+        }
+
+        if ($this->meta->get('date')) {
+            Date::columns($this->columns);
+        }
+
+        if ($this->fetchMode && $this->meta->get('translatable')) {
+            Translatable::columns($this->columns);
+        }
+
+        $this->statics = true;
 
         return $this;
     }
 
     private function computeEnum()
     {
-        if ($this->meta->enum) {
-            $this->data = (new EnumComputor($this->data, $this->columns))->get();
+        if ($this->meta->get('enum')) {
+            $this->data = $this->data->map(function ($row) {
+                return Enum::compute($row, $this->columns);
+            });
         }
 
         return $this;
@@ -211,8 +261,21 @@ class Builder
 
     private function computeDate()
     {
-        if ($this->meta->date) {
-            $this->data = (new DateComputor($this->data, $this->columns))->get();
+        if ($this->meta->get('date')) {
+            $this->data = $this->data->map(function ($row) {
+                return Date::compute($row, $this->columns);
+            });
+        }
+
+        return $this;
+    }
+
+    private function computeTranslatable()
+    {
+        if ($this->fetchMode && $this->meta->get('translatable')) {
+            $this->data = $this->data->map(function ($row) {
+                return Translatable::compute($row);
+            });
         }
 
         return $this;
@@ -226,28 +289,30 @@ class Builder
             });
     }
 
-    private function excelHeader()
+    private function computeMeta()
     {
-        return $this->columns
-            ->filter(function ($column) {
-                return ! $column->meta->rogue && ! $column->meta->notExportable;
-            })->pluck('label')
-            ->toArray();
+        $this->request->set(
+            'meta',
+            new Obj($this->array($this->request->get('meta')))
+        );
     }
 
-    private function setColumns()
+    private function computeColumns()
     {
-        $this->columns = collect($this->request->get('columns'))
-            ->map(function ($column) {
-                if (is_string($column)) {
-                    return json_decode($column);
-                }
+        $this->request->set(
+            'columns',
+            collect($this->request->get('columns'))
+                ->map(function ($column) {
+                    return new Obj($this->array($column));
+                })
+        );
+    }
 
-                $column = (object) $column;
-                $column->meta = (object) $column->meta;
-
-                return $column;
-            });
+    private function array($arg)
+    {
+        return is_string($arg)
+            ? json_decode($arg, true)
+            : $arg;
     }
 
     private function hasFilters()

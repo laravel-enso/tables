@@ -8,10 +8,8 @@ trait Action
 {
     public function action(Request $request)
     {
-        (new $this->actionClass())
-            ->request($request->all())
-            ->class($this->tableClass)
-            ->chunk($this->chunk ?? 1000)
-            ->run();
+        (new $this->actionClass(
+            $this->tableClass, $request->all()
+        ))->run();
     }
 }

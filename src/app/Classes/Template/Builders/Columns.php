@@ -81,6 +81,10 @@ class Columns
             $this->template->date = true;
         }
 
+        if ($column->meta['translatable']) {
+            $this->template->translatable = true;
+        }
+
         if (property_exists($column, 'enum')) {
             $this->template->enum = true;
         }

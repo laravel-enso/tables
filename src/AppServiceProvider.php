@@ -36,8 +36,8 @@ class AppServiceProvider extends ServiceProvider
         ], 'enso-assets');
 
         $this->publishes([
-            __DIR__.'/app/Tables' => app_path('Tables'),
-        ], 'tables');
+            __DIR__.'/../resources' => app_path(),
+        ], 'vuedatatable-classes');
 
         $this->publishes([
             __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),

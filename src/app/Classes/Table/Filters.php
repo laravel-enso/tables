@@ -34,8 +34,11 @@ class Filters
             ->each(function ($arg) {
                 $this->query->where(function ($query) use ($arg) {
                     $this->columns->each(function ($column) use ($query, $arg) {
-                        if ($column->meta->searchable) {
-                            $query->orWhere($column->data, $this->request->get('comparisonOperator'), '%'.$arg.'%');
+                        if ($column->get('meta')->get('searchable')) {
+                            $query->orWhere(
+                                $column->get('data'),
+                                $this->request->get('comparisonOperator'), '%'.$arg.'%'
+                            );
                         }
                     });
                 });

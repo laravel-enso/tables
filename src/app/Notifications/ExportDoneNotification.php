@@ -4,22 +4,25 @@ namespace LaravelEnso\VueDatatable\app\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class ExportDoneNotification extends Notification
 {
-    use Queueable;
+    use Dispatchable, Queueable;
 
     public $filePath;
     public $filename;
-    public $link;
+    public $dataExport;
 
-    public function __construct(string $filePath, string $filename, string $link = null)
+    public function __construct(string $filePath, string $filename, $dataExport)
     {
         $this->filePath = $filePath;
         $this->filename = $filename;
-        $this->link = $link;
+        $this->dataExport = $dataExport;
+        $this->link = optional($this->dataExport)->temporaryLink();
+        $this->queue = config('enso.datatable.queues.notifications');
     }
 
     public function via($notifiable)
@@ -29,14 +32,14 @@ class ExportDoneNotification extends Notification
 
     public function toBroadcast($notifiable)
     {
-        return new BroadcastMessage([
+        return (new BroadcastMessage([
             'level' => 'success',
             'title' => __('Export Done'),
             'body' => $this->link
                 ? __('Export available for download').': '.__($this->filename)
                 : __('Export emailed').': '.__($this->filename),
             'icon' => 'file-excel',
-        ]);
+        ]))->onQueue(config('enso.datatable.queues.notifications'));
     }
 
     public function toMail($notifiable)
@@ -47,6 +50,7 @@ class ExportDoneNotification extends Notification
                 'name' => $notifiable->person->appellative
                     ?: $notifiable->person->name,
                 'filename' => __($this->filename),
+                'entries' => optional($this->dataExport)->entries,
                 'link' => $this->link,
             ]);
 

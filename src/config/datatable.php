@@ -9,7 +9,7 @@ return [
     | or only in local/development.
     | Values: 'always/local/yourEnv...'
     |
-    */
+ */
 
     'validations' => 'local',
 
@@ -36,7 +36,7 @@ return [
     | set of pagination options is given in a table template, the global
     | configuration is disregarded for that table.
     |
-    */
+     */
 
     'lengthMenu' => [
         10, 15, 20, 25, 30,
@@ -126,7 +126,7 @@ return [
     | Style defaults and mapping for your front-end framework. Note: You should
     | set only one align attribute in default list.
     |
-    */
+     */
 
     'style' => [
         'default' => ['hover', 'center'],
@@ -149,13 +149,26 @@ return [
     | Path where the temporary files are stored within storage/app folder; row
     | limit for exports; php max_execution_time; Note: email notification
     | will be used in non Enso environments.
-    */
+     */
 
     'export' => [
         'path' => 'exports',
-        'limit' => 20000,
-        'maxExecutionTime' => 100,
+        'timeout' => 500,
         'notifications' => ['broadcast', 'database'],
+        'chunk' => 250,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Queues
+    |--------------------------------------------------------------------------
+    | Specifies the queue for exports generation and for notifications.
+    |
+     */
+
+    'queues' => [
+        'exports' => 'heavy',
+        'notifications' => 'notifications',
     ],
 
     /*
@@ -165,7 +178,7 @@ return [
     | Global date format for date columns. Will use Carbon to parse the columns
     | marked as date to the desired format.
     |
-    */
+     */
 
     'dateFormat' => 'd-m-Y',
 
@@ -176,7 +189,7 @@ return [
     | Sometimes the table handles hundreds of millions of records. By setting
     | an upper limit for detailed information the permformance can be
     | greatly improved. The info can still be called on demand.
-    */
+     */
 
     'fullInfoRecordLimit' => 100000,
 
@@ -187,7 +200,7 @@ return [
     |
     | Configure the debounce for the serverside requests. Use a higher value for
     | a bigger table.
-    */
+     */
 
     'debounce' => 100,
 
@@ -199,7 +212,7 @@ return [
     | If you're working with larger tables sometimes the URI can get too long
     | and you may run in a 414 Exception. This flag allows to globally
     | configure the request method for fetching data.
-    */
+     */
 
     'method' => 'GET',
 
@@ -211,20 +224,7 @@ return [
     | The route suffix will be the default used for every table. You will still
     | have the option of customizing the suffix for certain tables by using
     | the same attribute in the table's json template.
-    */
+     */
 
     'dataRouteSuffix' => 'tableData',
-
-    /*
-    |--------------------------------------------------------------------------
-    | SQL comparison operator
-    |--------------------------------------------------------------------------
-    |
-    | The comparison operator will be the default used for every table. You
-    | will still have the option of customizing the operator for certain
-    | tables by using the same attribute in the table's json template.
-    | Possible values for comparison operator: LIKE, ILIKE
-    */
-
-    'comparisonOperator' => 'LIKE',
 ];

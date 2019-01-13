@@ -2,9 +2,11 @@
 {{ __('Hi :name', ['name' => $name]) }},
 
 @if(is_null($link))
-{{ __('You will find the requested report attached to this email.') }}
+{{ __('You will find the report attached to this email.') }}
 @else
-{{ __('To download the requested report click below or visit the app')}}
+{{ __('Your report has :entries entries', ['entries' => $entries]) }}.
+
+{{ __('To download the report click below or visit the app') }}
 
 [{{ $filename }}]({!! $link !!})
 @endif

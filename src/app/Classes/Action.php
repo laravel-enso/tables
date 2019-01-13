@@ -2,63 +2,39 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
+
 abstract class Action
 {
-    private $builder;
+    private $fetcher;
     private $request;
     private $class;
-    private $chunk;
-    private $data;
-    private $page = 0;
 
-    abstract public function process();
-
-    public function request(array $request)
+    public function __construct(string $class, array $request)
     {
-        $this->request = $request;
-
-        return $this;
+        $this->fetcher = $this->fetcher = new Fetcher($class, $request);
+        $this->request = new Obj($request);
     }
 
-    public function class(string $class)
-    {
-        $this->class = $class;
-
-        return $this;
-    }
-
-    public function chunk(int $chunk)
-    {
-        $this->chunk = $chunk;
-
-        return $this;
-    }
+    abstract public function process(array $row);
 
     public function run()
     {
-        $this->init();
+        $this->fetcher->next();
 
-        while ($this->next()) {
-            $this->process();
+        while ($this->fetcher->valid()) {
+            $this->fetcher->data()->each(function ($row) {
+                $this->process($row);
+            });
+
+            $this->fetcher->next();
         }
+
+        return $this;
     }
 
-    public function data()
+    public function request()
     {
-        return $this->data;
-    }
-
-    private function next()
-    {
-        $this->data = $this->builder
-            ->fetch($this->page++);
-
-        return ! $this->data->isEmpty();
-    }
-
-    private function init()
-    {
-        $this->builder = (new $this->class($this->request))
-            ->fetcher($this->chunk);
+        return $this->request;
     }
 }

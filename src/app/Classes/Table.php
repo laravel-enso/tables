@@ -12,7 +12,7 @@ abstract class Table
 
     public function __construct(array $request = [])
     {
-        $this->request = new Obj($request);
+        $this->request = new Obj(json_decode(json_encode($request), true));
     }
 
     abstract public function query();

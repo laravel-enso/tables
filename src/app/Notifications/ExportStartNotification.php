@@ -2,16 +2,19 @@
 
 namespace LaravelEnso\VueDatatable\app\Notifications;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class ExportStartNotification extends Notification
 {
-    private $exportName;
+    use Queueable;
 
-    public function __construct(string $exportName)
+    private $name;
+
+    public function __construct(string $name)
     {
-        $this->exportName = $exportName;
+        $this->name = $name;
     }
 
     public function via($notifiable)
@@ -21,18 +24,18 @@ class ExportStartNotification extends Notification
 
     public function toBroadcast($notifiable)
     {
-        return new BroadcastMessage([
+        return (new BroadcastMessage([
             'level' => 'info',
             'title' => __('Export Started'),
-            'body' => __('Export started').': '.__($this->exportName),
+            'body' => __('Export started').': '.__($this->name),
             'icon' => 'file-excel',
-        ]);
+        ]))->onQueue(config('enso.datatable.queues.notifications'));
     }
 
     public function toArray($notifiable)
     {
         return [
-            'body' => __('Export started').': '.__($this->exportName),
+            'body' => __('Export started').': '.__($this->name),
             'path' => '#',
             'icon' => 'file-excel',
         ];
