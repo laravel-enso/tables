@@ -11,12 +11,11 @@ class Fetcher
     private $builder;
     private $data;
     private $page = 0;
-    private $chunk = 1000;
 
     public function __construct(string $class, array $request)
     {
         $this->builder = (new $class($request))
-            ->fetcher($this->chunk);
+            ->fetcher();
 
         $this->request = new Obj($request);
     }

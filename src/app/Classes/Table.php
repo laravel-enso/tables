@@ -33,16 +33,10 @@ abstract class Table
             ->data();
     }
 
-    public function excel()
+    public function fetcher()
     {
         return $this->builder()
-            ->excel();
-    }
-
-    public function fetcher(int $chunk)
-    {
-        return $this->builder()
-            ->fetcher($chunk);
+            ->fetcher();
     }
 
     public function templatePath()

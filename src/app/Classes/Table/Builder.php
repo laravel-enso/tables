@@ -39,8 +39,7 @@ class Builder
     public function fetcher()
     {
         $this->meta->set(
-            'length',
-            config('enso.datatable.export.chunk')
+            'length', config('enso.datatable.export.chunk')
         );
 
         return $this;
@@ -51,8 +50,7 @@ class Builder
         $this->fetchMode = true;
 
         $this->meta->set(
-            'start',
-            $this->meta->get('length') * $page
+            'start', $this->meta->get('length') * $page
         );
 
         $this->run();
@@ -87,7 +85,7 @@ class Builder
             ->limit()
             ->setData();
 
-        if ($this->data->count()) {
+        if ($this->data->isNotEmpty()) {
             $this->setAppends()
             ->collect()
             ->computeEnum()
