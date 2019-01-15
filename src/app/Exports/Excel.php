@@ -15,6 +15,8 @@ use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
 
 class Excel
 {
+    private const Extension = '.xlsx';
+
     private $user;
     private $dataExport;
     private $request;
@@ -22,6 +24,7 @@ class Excel
     private $writer;
     private $columns;
     private $header;
+    private $hashName;
 
     public function __construct(string $class, array $request, User $user, $dataExport = null)
     {
@@ -29,6 +32,7 @@ class Excel
         $this->dataExport = $dataExport;
         $this->request = new Obj($request);
         $this->fetcher = new Fetcher($class, $request);
+        $this->hashName = Str::random(40).self::Extension;
     }
 
     public function run()
@@ -137,17 +141,18 @@ class Excel
     private function filePath()
     {
         return config('enso.datatable.export.path')
-            .DIRECTORY_SEPARATOR.$this->filename().'.xlsx';
+            .DIRECTORY_SEPARATOR
+            .$this->hashName;
     }
 
-    private function filename() //TODO move this in the tempalte validation
+    private function filename()
     {
         return preg_replace(
             '/[^A-Za-z0-9_.-]/',
             '_',
             Str::title(Str::snake($this->request->get('name')))
             .'_'.__('Table_Report')
-        ).'.xlsx';
+        ).self::Extension;
     }
 
     private function header()
