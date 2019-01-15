@@ -7,7 +7,8 @@
 [![Latest Stable Version](https://poser.pugx.org/laravel-enso/vuedatatable/version)](https://packagist.org/packages/laravel-enso/vuedatatable)
 
 Data Table package with server-side processing and VueJS components. 
-Build fast any complex table based on a JSON template. [Read Docs](https://docs.laravel-enso.com/packages/vue-datatable.html)
+Build fast any complex table based on a JSON template. 
+[Read Docs](https://docs.laravel-enso.com/packages/vue-datatable.html)
 
 
 [![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.webm)
@@ -33,12 +34,12 @@ Build fast any complex table based on a JSON template. [Read Docs](https://docs.
 - tooltips for columns/rows
 - front-end translations for labels and even data
 - configurable, on-the-fly view modes: compact, striped, bordered, hover
-- configurable column alignment from the template left / center / right
 - preferences/state save for each table in the browser's localStorage
-- server-side Excel exporting of the table data, using your current sorting and filtering choices, with email delivery and optional push notifications
+- server-side Excel exporting of the table data, using your current sorting and filtering choices, with email notification and optional push notifications.
+    The export supports a practically unlimited dataset and features realtime progress reporting in the interface
 - reloading of data on demand
 - smart management of huge datasets, with configurable limit
-- posibility to define actions that apply to the entire, filtered, dataset
+- posibility to define actions that apply to the entire ( and filtered if filters are active) dataset
 - Enso Enum computation
 - Laravel accessors for the main query model
 - the configuration template for each table has been designed to be as light and straightforward as possible without losing 
