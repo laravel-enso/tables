@@ -6,8 +6,9 @@
 [![Total Downloads](https://poser.pugx.org/laravel-enso/vuedatatable/downloads)](https://packagist.org/packages/laravel-enso/vuedatatable)
 [![Latest Stable Version](https://poser.pugx.org/laravel-enso/vuedatatable/version)](https://packagist.org/packages/laravel-enso/vuedatatable)
 
-Data Table package with server-side processing and VueJS components. 
-Build fast any complex table based on a JSON template. 
+Data Table package with server-side processing, unlimited exporting and VueJS components. 
+Quickly build any complex table based on a JSON template.
+ 
 [Read Docs](https://docs.laravel-enso.com/packages/vue-datatable.html)
 
 
