@@ -24,7 +24,7 @@ Quickly build any complex table based on a JSON template.
 
 - efficient server side data loading
 - multi-column searching
-- multi-column sorting
+- multi-column sorting with the option to set per column default sorting
 - configurable pagination
 - user customizable column visibility
 - configurable action buttons
@@ -35,12 +35,13 @@ Quickly build any complex table based on a JSON template.
 - tooltips for columns/rows
 - front-end translations for labels and even data
 - configurable, on-the-fly view modes: compact, striped, bordered, hover
+- configurable column alignment from the template left / center / right
 - preferences/state save for each table in the browser's localStorage
 - server-side Excel exporting of the table data, using your current sorting and filtering choices, with email notification and optional push notifications.
     The export supports a practically unlimited dataset and features realtime progress reporting in the interface
 - reloading of data on demand
 - smart management of huge datasets, with configurable limit
-- posibility to define actions that apply to the entire ( and filtered if filters are active) dataset
+- possibility to define actions that apply to the entire, filtered, dataset
 - Enso Enum computation
 - Laravel accessors for the main query model
 - the configuration template for each table has been designed to be as light and straightforward as possible without losing 
