@@ -18,7 +18,10 @@ Quickly build any complex table based on a JSON template.
 <sup>click on the photo to view a short demo in compatible browsers</sup>
 
 
-[![Themed Screenshot](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002_thumb.png)](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002.png)
+[![Themed screenshot](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_02.mp4)
+
+<sup>click on the photo to view an **export** demo in compatible browsers</sup>
+
 
 ### Features
 
