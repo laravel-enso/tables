@@ -29,7 +29,6 @@ class Filters
         if (! $this->request->filled('search')) {
             return $this;
         }
-
         collect(explode(' ', $this->request->get('search')))
             ->each(function ($arg) {
                 $this->query->where(function ($query) use ($arg) {
