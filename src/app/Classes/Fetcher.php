@@ -6,7 +6,6 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Fetcher
 {
-    private $class;
     private $request;
     private $builder;
     private $data;

@@ -8,7 +8,6 @@ abstract class Action
 {
     private $fetcher;
     private $request;
-    private $class;
 
     public function __construct(string $class, array $request)
     {

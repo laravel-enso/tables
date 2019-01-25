@@ -23,7 +23,6 @@ class Excel
     private $fetcher;
     private $writer;
     private $columns;
-    private $header;
     private $hashName;
 
     public function __construct(string $class, array $request, User $user, $dataExport = null)

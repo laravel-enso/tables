@@ -17,7 +17,6 @@ class ExcelExport implements ShouldQueue
     private $request;
     private $user;
     private $tableClass;
-    private $table;
     private $dataExport;
 
     public function __construct(User $user, array $request, string $tableClass, $dataExport = null)
