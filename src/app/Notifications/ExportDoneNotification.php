@@ -4,17 +4,19 @@ namespace LaravelEnso\VueDatatable\app\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class ExportDoneNotification extends Notification
+class ExportDoneNotification extends Notification implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
-    public $filePath;
-    public $filename;
-    public $dataExport;
+    private $filePath;
+    private $filename;
+    private $dataExport;
+    private $link;
 
     public function __construct(string $filePath, string $filename, $dataExport)
     {

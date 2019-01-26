@@ -4,9 +4,10 @@ namespace LaravelEnso\VueDatatable\app\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class ExportStartNotification extends Notification
+class ExportStartNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
