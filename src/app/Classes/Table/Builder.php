@@ -124,10 +124,9 @@ class Builder
 
     private function setDetailedInfo()
     {
-        $this->fullRecordInfo = ! $this->fetchMode
-            && (! $this->hasFilters()
-                || ! $this->meta->get('forceInfo')
-                    && $this->count <= config('enso.datatable.fullInfoRecordLimit'));
+        $this->fullRecordInfo = $this->meta->get('forceInfo')
+            || (! $this->fetchMode && (! $this->hasFilters()
+                || $this->count <= config('enso.datatable.fullInfoRecordLimit')));
 
         return $this;
     }
