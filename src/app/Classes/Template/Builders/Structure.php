@@ -21,6 +21,7 @@ class Structure
             ->method()
             ->selectable()
             ->comparisonOperator()
+            ->fullInfoRecordLimit()
             ->defaults();
     }
 
@@ -98,6 +99,15 @@ class Structure
     {
         if (! property_exists($this->template, 'comparisonOperator')) {
             $this->template->comparisonOperator = config('enso.datatable.comparisonOperator');
+        }
+
+        return $this;
+    }
+
+    private function fullInfoRecordLimit()
+    {
+        if (! property_exists($this->template, 'fullInfoRecordLimit')) {
+            $this->template->fullInfoRecordLimit = config('enso.datatable.fullInfoRecordLimit');
         }
 
         return $this;

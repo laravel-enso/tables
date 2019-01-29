@@ -13,6 +13,7 @@ class Builder
 {
     private $request;
     private $query;
+    private $filters;
     private $count;
     private $filtered;
     private $total;
@@ -34,12 +35,14 @@ class Builder
         $this->total = collect();
         $this->statics = false;
         $this->fetchMode = false;
+        $this->filters = false;
     }
 
     public function fetcher()
     {
         $this->meta->set(
-            'length', config('enso.datatable.export.chunk')
+            'length',
+            config('enso.datatable.export.chunk')
         );
 
         return $this;
@@ -50,7 +53,8 @@ class Builder
         $this->fetchMode = true;
 
         $this->meta->set(
-            'start', $this->meta->get('length') * $page
+            'start',
+            $this->meta->get('length') * $page
         );
 
         $this->run();
@@ -70,7 +74,7 @@ class Builder
             'total' => $this->total,
             'data' => $this->data,
             'fullRecordInfo' => $this->fullRecordInfo,
-            'filters' => $this->hasFilters(),
+            'filters' => $this->filters,
         ];
     }
 
@@ -78,8 +82,9 @@ class Builder
     {
         $this->initStatics()
             ->setCount()
-            ->setDetailedInfo()
             ->filter()
+            ->setDetailedInfo()
+            ->countFiltered()
             ->sort()
             ->setTotal()
             ->limit()
@@ -87,11 +92,11 @@ class Builder
 
         if ($this->data->isNotEmpty()) {
             $this->setAppends()
-            ->collect()
-            ->computeEnum()
-            ->computeDate()
-            ->computeTranslatable()
-            ->flatten();
+                ->collect()
+                ->computeEnum()
+                ->computeDate()
+                ->computeTranslatable()
+                ->flatten();
         }
     }
 
@@ -122,23 +127,30 @@ class Builder
         return $this;
     }
 
-    private function setDetailedInfo()
+    private function filter()
     {
-        $this->fullRecordInfo = $this->meta->get('forceInfo')
-            || (! $this->fetchMode && (! $this->hasFilters()
-                || $this->count <= config('enso.datatable.fullInfoRecordLimit')));
+        $this->filters = (new Filters(
+            $this->request,
+            $this->query,
+            $this->columns
+        ))->handle();
 
         return $this;
     }
 
-    private function filter()
+    private function setDetailedInfo()
     {
-        if ($this->hasFilters()) {
-            (new Filters($this->request, $this->query, $this->columns))->set();
+        $this->fullRecordInfo = $this->meta->get('forceInfo')
+            || (! $this->fetchMode && (! $this->filters
+            || $this->count <= $this->meta->get('fullInfoRecordLimit')));
 
-            if ($this->fullRecordInfo) {
-                $this->filtered = $this->count();
-            }
+        return $this;
+    }
+
+    private function countFiltered()
+    {
+        if ($this->filters && $this->fullRecordInfo) {
+            $this->filtered = $this->count();
         }
 
         return $this;
@@ -155,8 +167,9 @@ class Builder
                 $column->get('meta')->get('nullLast')
                     ? $this->query->orderByRaw($this->rawSort($column))
                     : $this->query->orderBy(
-                        $column->get('data'), $column->get('meta')->get('sort')
-                    );
+                    $column->get('data'),
+                    $column->get('meta')->get('sort')
+                );
             }
         });
 
@@ -310,12 +323,5 @@ class Builder
         return is_string($arg)
             ? json_decode($arg, true)
             : $arg;
-    }
-
-    private function hasFilters()
-    {
-        return $this->request->filled('search')
-            || $this->request->has('filters')
-            || $this->request->has('intervals');
     }
 }

@@ -9,19 +9,23 @@ class Filters
     private $request;
     private $query;
     private $columns;
+    private $filters;
 
     public function __construct($request, $query, $columns)
     {
         $this->request = $request;
         $this->query = $query;
         $this->columns = $columns;
+        $this->filters = false;
     }
 
-    public function set()
+    public function handle()
     {
         $this->setSearch()
             ->setFilters()
             ->setIntervals();
+
+        return $this->filters;
     }
 
     private function setSearch()
@@ -29,6 +33,7 @@ class Filters
         if (! $this->request->filled('search')) {
             return $this;
         }
+
         collect(explode(' ', $this->request->get('search')))
             ->each(function ($arg) {
                 $this->query->where(function ($query) use ($arg) {
@@ -42,6 +47,8 @@ class Filters
                     });
                 });
             });
+
+        $this->filters = true;
 
         return $this;
     }
@@ -58,6 +65,7 @@ class Filters
                     collect($filters)->each(function ($value, $column) use ($table, $query) {
                         if (! is_null($value) && $value !== '' && $value !== []) {
                             $query->whereIn($table.'.'.$column, (array) $value);
+                            $this->filters = true;
                         }
                     });
                 });
@@ -97,6 +105,7 @@ class Filters
             : $value->min;
 
         $this->query->where($table.'.'.$column, '>=', $min);
+        $this->filters = true;
 
         return $this;
     }
@@ -112,6 +121,7 @@ class Filters
             : $value->max;
 
         $this->query->where($table.'.'.$column, '<=', $max);
+        $this->filters = true;
 
         return $this;
     }
