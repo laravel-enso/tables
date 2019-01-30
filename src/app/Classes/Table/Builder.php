@@ -113,15 +113,10 @@ class Builder
         }
     }
 
-    private function count()
-    {
-        return $this->query->count();
-    }
-
     private function setCount()
     {
         if (! $this->fetchMode) {
-            $this->filtered = $this->count = $this->count();
+            $this->filtered = $this->count = $this->cachedCount();
         }
 
         return $this;
@@ -316,6 +311,30 @@ class Builder
                     return new Obj($this->array($column));
                 })
         );
+    }
+
+    private function cachedCount()
+    {
+        if (! $this->request->get('cache')) {
+            return $this->count();
+        }
+
+        if (! cache()->has('datatable:'.$this->request->get('name'))) {
+            cache()->put(
+                'datatable:'.$this->request->get('name'),
+                $this->count(),
+                now()->addHours(1)
+            );
+        }
+
+        return cache()->get(
+            'datatable:'.$this->request->get('name')
+        );
+    }
+
+    private function count()
+    {
+        return $this->query->count();
     }
 
     private function array($arg)
