@@ -2,8 +2,6 @@
 
 namespace LaravelEnso\VueDatatable\app\Traits;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
-
 trait TableCache
 {
     protected static function bootTableCache()
@@ -21,6 +19,6 @@ trait TableCache
     {
         if (property_exists($this, 'cachedTable')) {
             cache()->forget('datatable:'.$this->cachedTable);
-        };
+        }
     }
 }
