@@ -4,7 +4,7 @@ namespace LaravelEnso\VueDatatable\app\Traits;
 
 trait TableCache
 {
-    // protected $tableCache = 'tableId';
+    // protected $cachedTable = 'tableId';
 
     protected static function bootTableCache()
     {

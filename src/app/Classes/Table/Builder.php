@@ -327,7 +327,7 @@ class Builder
             );
         }
 
-        return cache()->get(
+        return (int) cache()->get(
             'datatable:'.$this->request->get('name')
         );
     }
