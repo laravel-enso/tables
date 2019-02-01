@@ -66,6 +66,7 @@ class Excel
 
     public function start()
     {
+        auth()->onceUsingId($this->user->id);
         app()->setLocale($this->user->preferences()->global->lang);
         optional($this->dataExport)->update(['status' => Statuses::Processing]);
         $this->writer->addRow($this->header());
@@ -112,7 +113,6 @@ class Excel
         );
 
         $this->dataExport->upload($file);
-        $this->dataExport->file->created_by = $this->user->id;
         $this->dataExport->file->save();
         $this->dataExport->update(['status' => Statuses::Finalized]);
 
