@@ -148,14 +148,13 @@ return [
     |--------------------------------------------------------------------------
     | Path where the temporary files are stored within storage/app folder; timeout
     | limit for jobs; notification options; Note: email notification
-    | will be used in non Enso environments; the chunk size.
+    | will be used in non Enso environments.
      */
 
     'export' => [
         'path' => 'exports',
         'timeout' => 60 * 60,
         'notifications' => ['broadcast', 'database'],
-        'chunk' => 2000,
     ],
 
     /*

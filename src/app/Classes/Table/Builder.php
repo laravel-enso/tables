@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use LaravelEnso\VueDatatable\app\Exceptions\QueryException;
 use LaravelEnso\VueDatatable\app\Classes\Table\Computors\Date;
 use LaravelEnso\VueDatatable\app\Classes\Table\Computors\Enum;
+use LaravelEnso\VueDatatable\app\Classes\Table\Computors\OptimalChunk;
 use LaravelEnso\VueDatatable\app\Classes\Table\Computors\Translatable;
 
 class Builder
@@ -41,8 +42,7 @@ class Builder
     public function fetcher()
     {
         $this->meta->set(
-            'length',
-            config('enso.datatable.export.chunk')
+            'length', OptimalChunk::get($this->count())
         );
 
         return $this;
