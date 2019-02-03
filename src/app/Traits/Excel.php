@@ -4,7 +4,7 @@ namespace LaravelEnso\VueDatatable\app\Traits;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use LaravelEnso\DataExport\app\Enums\Statuses;
+use LaravelEnso\IO\app\Enums\IOStatuses;
 use LaravelEnso\DataExport\app\Models\DataExport;
 use LaravelEnso\VueDatatable\app\Jobs\ExcelExport;
 use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
@@ -38,12 +38,14 @@ trait Excel
 
     private function dataExportExists($user, $type)
     {
-        return DataExport::whereName(str_replace('_', ' ', $type))
+        return $this->ensoEnvironment()
+            ? DataExport::whereName(str_replace('_', ' ', $type))
             ->whereCreatedBy($user->id)
-            ->where('status', '<', Statuses::Finalized)
+            ->where('status', '<', IOStatuses::Finalized)
             ->where('created_at', '>', now()->subSeconds(
                 config('enso.datatable.export.timeout')
-            ))->first() !== null;
+            ))->first() !== null
+            : false;
     }
 
     private function createDataExport($type)
@@ -52,7 +54,6 @@ trait Excel
             ? DataExport::create([
                 'name' => str_replace('_', ' ', $type),
                 'entries' => 0,
-                'status' => Statuses::Waiting,
             ]) : null;
     }
 

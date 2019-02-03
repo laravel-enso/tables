@@ -9,7 +9,6 @@ use Illuminate\Http\UploadedFile;
 use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Writer\Style\StyleBuilder;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\DataExport\app\Enums\Statuses;
 use LaravelEnso\VueDatatable\app\Classes\Fetcher;
 use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
 
@@ -75,7 +74,7 @@ class Excel
     public function start()
     {
         app()->setLocale($this->user->preferences()->global->lang);
-        optional($this->dataExport)->update(['status' => Statuses::Processing]);
+        optional($this->dataExport)->startProcessing();
 
         $this->writer->addRow($this->header());
 
@@ -122,7 +121,7 @@ class Excel
 
         $this->dataExport->upload($file);
         $this->dataExport->file->save();
-        $this->dataExport->update(['status' => Statuses::Finalized]);
+        $this->dataExport->endOperation();
 
         return $this;
     }
