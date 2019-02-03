@@ -16,6 +16,7 @@ use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
 class Excel
 {
     private const Extension = '.xlsx';
+    private const SheetSize = 1000000;
 
     private $user;
     private $dataExport;
@@ -24,6 +25,7 @@ class Excel
     private $writer;
     private $columns;
     private $hashName;
+    private $count;
 
     public function __construct(string $class, array $request, User $user, $dataExport = null)
     {
@@ -55,6 +57,10 @@ class Excel
         $this->fetcher->next();
 
         while ($this->fetcher->valid()) {
+            if ($this->needsNewSheet()) {
+                $this->addNewSheet();
+            }
+
             $this->writer->addRows(
                 $this->map($this->fetcher->data())
             );
@@ -71,6 +77,7 @@ class Excel
     {
         app()->setLocale($this->user->preferences()->global->lang);
         optional($this->dataExport)->update(['status' => Statuses::Processing]);
+
         $this->writer->addRow($this->header());
 
         return $this;
@@ -176,7 +183,7 @@ class Excel
                     ? json_decode($column)
                     : (object) $column;
 
-                if (! $column->meta->rogue && ! $column->meta->notExportable) {
+                if ($column->meta->visible && ! $column->meta->rogue && ! $column->meta->notExportable) {
                     $columns->push($column);
                 }
 
@@ -202,5 +209,18 @@ class Excel
         optional($this->dataExport)->update([
             'entries' => $this->dataExport->entries + $entries,
         ]);
+    }
+
+    private function addNewSheet()
+    {
+        $this->writer->addNewSheetAndMakeItCurrent();
+        $this->writer->addRow($this->header());
+    }
+
+    private function needsNewSheet()
+    {
+        return $this->fetcher->chunkSize() < self::SheetSize
+            && round($this->dataExport->entries / self::SheetSize)
+            !== round($this->dataExport->entries + $this->fetcher->chunkSize() / self::SheetSize);
     }
 }
