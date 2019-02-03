@@ -25,7 +25,6 @@ class Excel
     private $writer;
     private $columns;
     private $hashName;
-    private $count;
 
     public function __construct(string $class, array $request, User $user, $dataExport = null)
     {
