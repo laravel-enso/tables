@@ -2,13 +2,13 @@
 
 namespace LaravelEnso\VueDatatable\app\Jobs;
 
-use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use LaravelEnso\VueDatatable\app\Exports\Excel;
+use LaravelEnso\Core\app\Models\User;
 
 class ExcelExport implements ShouldQueue
 {

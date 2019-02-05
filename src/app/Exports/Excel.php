@@ -2,13 +2,13 @@
 
 namespace LaravelEnso\VueDatatable\app\Exports;
 
-use App\User;
 use Box\Spout\Common\Type;
 use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Writer\Style\StyleBuilder;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Core\app\Models\User;
 use LaravelEnso\VueDatatable\app\Classes\Fetcher;
 use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
 
