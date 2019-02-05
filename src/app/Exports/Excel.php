@@ -6,9 +6,9 @@ use Box\Spout\Common\Type;
 use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Box\Spout\Writer\WriterFactory;
+use LaravelEnso\Core\app\Models\User;
 use Box\Spout\Writer\Style\StyleBuilder;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Core\app\Models\User;
 use LaravelEnso\VueDatatable\app\Classes\Fetcher;
 use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
 
