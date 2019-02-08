@@ -7,6 +7,6 @@ class Meta
     const List = [
         'searchable', 'sortable', 'sort:ASC', 'sort:DESC', 'translatable',
         'boolean', 'slot', 'rogue', 'total', 'date', 'icon', 'clickable',
-        'customTotal', 'notExportable', 'nullLast', 'totalPage'
+        'customTotal', 'notExportable', 'nullLast', 'totalPage',
     ];
 }
