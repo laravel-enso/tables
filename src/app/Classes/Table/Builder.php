@@ -189,6 +189,19 @@ class Builder
                     $total[$column->get('name')] = $this->query->sum($column->get('data'));
                 }
 
+                if($column->get('meta')->get('totalPage')){
+
+                    $dados = $this->query->skip($this->meta->get('start'))
+                    ->take($this->meta->get('length'))->get();
+  
+                      $to = 0;
+                    for ($i=0; $i < sizeof($dados); $i++) { 
+                      $to = $to + $dados[$i]->valor;
+                    }
+  
+                    $total[$column->get('name')] = $to;
+                  }
+
                 return $total;
             }, []);
 

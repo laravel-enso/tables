@@ -76,6 +76,7 @@ class Structure
     private function defaults()
     {
         $this->template->total = false;
+        $this->template->totalPage = false;
         $this->template->enum = false;
         $this->template->money = false;
         $this->template->date = false;

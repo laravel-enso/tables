@@ -73,7 +73,7 @@ class Columns
             $this->template->sort = true;
         }
 
-        if ($column->meta['total'] || $column->meta['customTotal']) {
+        if ($column->meta['total'] || $column->meta['customTotal'] || $column->meta['totalPage']) {
             $this->template->total = true;
         }
 

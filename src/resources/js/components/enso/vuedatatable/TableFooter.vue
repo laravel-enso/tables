@@ -1,4 +1,5 @@
 <template>
+
     <tfoot>
         <tr>
             <td v-if="template.crtNo"/>
@@ -31,6 +32,13 @@
                             : numberFormat(body.total[visibleColumns[i].name])
                     }}
                 </span>
+                 <span v-if="visibleColumns[i].meta.totalPage">
+                    {{
+                        visibleColumns[i].money
+                            ? body.total[visibleColumns[i].name]
+                            : numberFormat(body.total[visibleColumns[i].name])
+                    }}
+                </span>
                 <slot :name="`${visibleColumns[i].name}_custom_total`"
                     v-else-if="visibleColumns[i].meta.customTotal">
                     {{ `${visibleColumns[i].name}_custom_total` }}
@@ -39,6 +47,7 @@
             <td v-if="template.actions"/>
         </tr>
     </tfoot>
+
 </template>
 
 <script>
@@ -88,3 +97,4 @@ export default {
         font-family: monospace;
     }
 </style>
+

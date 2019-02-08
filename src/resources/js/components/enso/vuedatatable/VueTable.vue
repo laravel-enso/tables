@@ -1,4 +1,5 @@
 <template>
+
     <div class="table-wrapper"
         v-if="initialised">
         <top-controls :template="template"
@@ -59,9 +60,7 @@
                         v-if="visibleColumns[i].meta.customTotal">
                         <slot :name="`${visibleColumns[i].name}_custom_total`"
                             :total="body ? body.total : []"
-                            :column="visibleColumns[i]">
-                            {{ `${visibleColumns[i].name}_custom_total` }}
-                        </slot>
+                            :column="visibleColumns[i]">{{ `${visibleColumns[i].name}_custom_total` }}</slot>
                     </template>
                 </table-footer>
             </table>
@@ -81,6 +80,7 @@
             {{ i18n('No records were found') }}
         </div>
     </div>
+
 </template>
 
 <script>
@@ -130,27 +130,29 @@ export default {
         i18n: {
             type: Function,
             default(key) {
-                return this.$options.methods
-                    && Object.keys(this.$options.methods).includes('__')
+                return this.$options.methods &&
+                    Object.keys(this.$options.methods).includes('__')
                     ? this.__(key)
                     : key;
             },
         },
     },
 
-    data: () => ({
-        loading: false,
-        initialised: false,
-        template: null,
-        search: '',
-        start: null,
-        body: null,
-        length: null,
-        expanded: [],
-        forceInfo: false,
-        selected: [],
-        highlighted: [],
-    }),
+    data() {
+        return {
+            loading: false,
+            initialised: false,
+            template: null,
+            search: '',
+            start: null,
+            body: null,
+            length: null,
+            expanded: [],
+            forceInfo: false,
+            selected: [],
+            highlighted: [],
+        };
+    },
 
     computed: {
         preferencesKey() {
@@ -336,20 +338,18 @@ export default {
         },
         readRequest(method = null) {
             const params = {
-                name: this.id,
-                cache: this.template.cache,
                 columns: this.requestColumns(),
                 meta: {
                     start: this.start,
                     length: this.length,
                     sort: this.template.sort,
                     total: this.template.total,
+                    totalPage: this.template.totalPage,
                     enum: this.template.enum,
                     date: this.template.date,
                     translatable: this.template.translatable,
                     actions: this.template.actions,
                     forceInfo: this.forceInfo,
-                    fullInfoRecordLimit: this.template.fullInfoRecordLimit
                 },
                 search: this.search,
                 appends: this.template.appends,
@@ -369,7 +369,6 @@ export default {
         requestColumns() {
             return this.template.columns.reduce((columns, column) => {
                 columns.push({
-                    label: column.label,
                     name: column.name,
                     data: column.data,
                     meta: {
@@ -377,13 +376,12 @@ export default {
                         sortable: column.meta.sortable,
                         sort: column.meta.sort,
                         total: column.meta.total,
+                        totalPage: column.meta.totalPage,
                         date: column.meta.date,
                         translatable: column.meta.translatable,
                         nullLast: column.meta.nullLast,
                         rogue: column.meta.rogue,
                         notExportable: column.meta.notExportable,
-                        visible: column.meta.visible,
-                        x: 1,
                     },
                     enum: column.enum,
                 });
@@ -405,6 +403,11 @@ export default {
                     if (this.template.total && body.total.hasOwnProperty(column.name)) {
                         body.total[column.name] = accounting
                             .formatMoney(body.total[column.name], column.money);
+                    }
+
+                         if (this.template.totalPage && body.totalPage.hasOwnProperty(column.name)) {
+                        body.total[column.name] = accounting
+                            .formatMoney(body.totalPage[column.name], column.money);
                     }
                 });
 
@@ -436,6 +439,7 @@ export default {
                     date: this.template.date,
                     translatable: this.template.translatable,
                     total: false,
+                    totalPage: false,
                 },
                 search: this.search,
                 appends: this.template.appends,
@@ -487,9 +491,9 @@ export default {
                 return;
             }
 
-            const selected = !this.body.data
-                .some(row => this.selected
-                    .findIndex(id => id === row.dtRowId) === -1);
+            const selected = this.body.data.filter(row =>
+                this.selected.findIndex(id => id === row.dtRowId) === -1)
+                .length === 0;
 
             this.$refs.header.updateSelectedFlag(selected);
         },
