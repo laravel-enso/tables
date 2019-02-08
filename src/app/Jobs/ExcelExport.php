@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Jobs;
 
-use App\User;
 use Illuminate\Bus\Queueable;
+use LaravelEnso\Core\app\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
