@@ -41,4 +41,8 @@ class ExportStartNotification extends Notification implements ShouldQueue
             'icon' => 'file-excel',
         ];
     }
+
+    public function toMail($notifiable)
+    {
+    }
 }
