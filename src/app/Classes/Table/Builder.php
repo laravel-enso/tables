@@ -288,6 +288,10 @@ class Builder
 
     private function flatten()
     {
+        if (! $this->request->get('flatten')) {
+            return;
+        }
+
         $this->data = collect($this->data)
             ->map(function ($record) {
                 return array_dot($record);
