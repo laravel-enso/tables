@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Table;
 
+use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use LaravelEnso\VueDatatable\app\Exceptions\QueryException;
@@ -323,15 +324,15 @@ class Builder
             return $this->count();
         }
 
-        if (! cache()->has('datatable:'.$this->request->get('name'))) {
-            cache()->put(
+        if (! Cache::has('datatable:'.$this->request->get('name'))) {
+            Cache::put(
                 'datatable:'.$this->request->get('name'),
                 $this->count(),
                 now()->addHours(1)
             );
         }
 
-        return (int) cache()->get(
+        return (int) Cache::get(
             'datatable:'.$this->request->get('name')
         );
     }

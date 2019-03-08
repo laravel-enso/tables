@@ -2,6 +2,8 @@
 
 namespace LaravelEnso\VueDatatable\app\Traits;
 
+use Illuminate\Support\Facades\Cache;
+
 trait TableCache
 {
     // protected $cachedTable = 'tableId';
@@ -20,7 +22,7 @@ trait TableCache
     public function resetTableCache()
     {
         if (property_exists($this, 'cachedTable')) {
-            cache()->forget('datatable:'.$this->cachedTable);
+            Cache::forget('datatable:'.$this->cachedTable);
         }
     }
 }
