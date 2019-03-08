@@ -3,14 +3,17 @@
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Builders;
 
 use Illuminate\Support\Str;
+use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Structure
 {
     private $template;
+    private $meta;
 
-    public function __construct($template)
+    public function __construct(Obj $template, Obj $meta)
     {
         $this->template = $template;
+        $this->meta = $meta;
     }
 
     public function build()
@@ -27,20 +30,23 @@ class Structure
 
     private function readPath()
     {
-        $route = $this->template->routePrefix.'.'.(
-            $this->template->dataRouteSuffix
-                ?? config('enso.datatable.dataRouteSuffix')
+        $route = $this->template->get('routePrefix').'.'.(
+            $this->template->has('dataRouteSuffix')
+                ? $this->template->get('dataRouteSuffix')
+                : config('enso.datatable.dataRouteSuffix')
         );
 
-        $this->template->readPath = route($route, [], false);
+        $this->template->set('readPath', route($route, [], false));
 
         return $this;
     }
 
     private function lengthMenu()
     {
-        if (! property_exists($this->template, 'lengthMenu')) {
-            $this->template->lengthMenu = config('enso.datatable.lengthMenu');
+        if (! $this->template->has('lengthMenu')) {
+            $options = config('enso.datatable.lengthMenu');
+            $this->template->set('lengthMenu', $options);
+            $this->meta->set('length', $options[0]);
         }
 
         return $this;
@@ -48,8 +54,8 @@ class Structure
 
     private function debounce()
     {
-        if (! property_exists($this->template, 'debounce')) {
-            $this->template->debounce = config('enso.datatable.debounce');
+        if (! $this->template->has('debounce')) {
+            $this->template->set('debounce', config('enso.datatable.debounce'));
         }
 
         return $this;
@@ -57,8 +63,8 @@ class Structure
 
     private function method()
     {
-        if (! property_exists($this->template, 'method')) {
-            $this->template->method = config('enso.datatable.method');
+        if (! $this->template->has('method')) {
+            $this->template->set('method', config('enso.datatable.method'));
         }
 
         return $this;
@@ -66,8 +72,8 @@ class Structure
 
     private function selectable()
     {
-        if (! property_exists($this->template, 'selectable')) {
-            $this->template->selectable = false;
+        if (! $this->template->has('selectable')) {
+            $this->template->set('selectable', false);
         }
 
         return $this;
@@ -75,21 +81,26 @@ class Structure
 
     private function defaults()
     {
-        $this->template->total = false;
-        $this->template->enum = false;
-        $this->template->money = false;
-        $this->template->date = false;
-        $this->template->searchable = false;
-        $this->template->translatable = false;
-        $this->template->sort = false;
-        $this->template->labels = config('enso.datatable.labels');
-        $this->template->pathSegment = $this->pathSegment();
+        $this->template->set('labels', config('enso.datatable.labels'));
+        $this->template->set('pathSegment', $this->pathSegment());
+        $this->template->set('apiVersion', config('enso.datatable.apiVersion'));
+        $this->meta->set('start', 0);
+        $this->meta->set('search', '');
+        $this->meta->set('loading', false);
+        $this->meta->set('forceInfo', false);
+        $this->meta->set('searchable', false);
+        $this->meta->set('sort', false);
+        $this->meta->set('total', false);
+        $this->meta->set('date', false);
+        $this->meta->set('translatable', false);
+        $this->meta->set('enum', false);
+        $this->meta->set('money', false);
     }
 
     private function pathSegment()
     {
         $segment = collect(
-                explode('.', $this->template->routePrefix)
+                explode('.', $this->template->get('routePrefix'))
             )->last();
 
         return Str::singular($segment);
@@ -97,8 +108,8 @@ class Structure
 
     private function comparisonOperator()
     {
-        if (! property_exists($this->template, 'comparisonOperator')) {
-            $this->template->comparisonOperator = config('enso.datatable.comparisonOperator');
+        if (! $this->template->has('comparisonOperator')) {
+            $this->meta->set('comparisonOperator', config('enso.datatable.comparisonOperator'));
         }
 
         return $this;
@@ -106,8 +117,9 @@ class Structure
 
     private function fullInfoRecordLimit()
     {
-        if (! property_exists($this->template, 'fullInfoRecordLimit')) {
-            $this->template->fullInfoRecordLimit = config('enso.datatable.fullInfoRecordLimit');
+        if (! $this->template->has('fullInfoRecordLimit')) {
+            $this->template->set('fullInfoRecordLimit', config('enso.datatable.fullInfoRecordLimit'));
+            $this->meta->set('fullInfoRecordLimit', config('enso.datatable.fullInfoRecordLimit'));
         }
 
         return $this;

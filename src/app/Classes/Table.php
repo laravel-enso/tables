@@ -24,7 +24,7 @@ abstract class Table
 
     public function init()
     {
-        return ['template' => (new Template($this->templatePath()))->get()];
+        return (new Template($this->templatePath()))->get();
     }
 
     public function data()
@@ -47,8 +47,7 @@ abstract class Table
     private function builder()
     {
         return new Builder(
-            $this->request,
-            $this->query()
+            $this->request, $this->query()
         );
     }
 }

@@ -2,54 +2,60 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Builders;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
+
 class Buttons
 {
     private const PathActions = ['href', 'ajax', 'export', 'action'];
 
     private $template;
+    private $meta;
     private $defaults;
 
-    public function __construct($template)
+    public function __construct(Obj $template, Obj $meta)
     {
         $this->template = $template;
-        $this->defaults = config('enso.datatable.buttons');
-        $this->template->actions = false;
+        $this->meta = $meta;
+        $this->meta->set('actions', false);
+        $this->defaults = new Obj(config('enso.datatable.buttons'));
+        $this->template->set('actions', false);
     }
 
     public function build()
     {
-        $this->template->buttons = collect($this->template->buttons)
+        $buttons = collect($this->template->get('buttons'))
             ->reduce(function ($buttons, $button) {
                 [$button, $type] = is_string($button)
                     ? $this->mapping($button)
-                    : [$button, $button->type];
+                    : [$button, $button->get('type')];
 
                 if ($this->actionComputingFailes($button, $type)) {
                     return $buttons;
                 }
 
-                $buttons[$type][] = $button;
+                $buttons[$type]->push($button);
 
-                if (! $this->template->actions && $type === 'row') {
-                    $this->template->actions = true;
+                if ($type === 'row') {
+                    $this->meta->set('actions', true);
                 }
 
-                unset($button->fullRoute, $button->routeSuffix);
+                $button->forget(['fullRoute', 'routeSuffix']);
 
                 return $buttons;
-            }, ['global' => [], 'row' => []]);
+            }, collect(['global' => collect(), 'row' => collect()]));
+        $this->template->set('buttons', $buttons);
     }
 
     private function mapping($button)
     {
-        return collect($this->defaults['global'])->keys()->contains($button)
-            ? [(object) $this->defaults['global'][$button], 'global']
-            : [(object) $this->defaults['row'][$button], 'row'];
+        return collect($this->defaults->get('global'))->keys()->contains($button)
+            ? [$this->defaults->get('global')->get($button), 'global']
+            : [$this->defaults->get('row')->get($button), 'row'];
     }
 
     private function actionComputingFailes($button, $type)
     {
-        if (! property_exists($button, 'action')) {
+        if (! $button->has('action')) {
             return false;
         }
 
@@ -59,32 +65,38 @@ class Buttons
             return true;
         }
 
-        if (collect(self::PathActions)->contains($button->action)) {
-            $button->path = route($route, [$type === 'row' ? 'dtRowId' : null], false);
+        if (collect(self::PathActions)->contains($button->get('action'))) {
+            $button->set(
+                'path',
+                 route($route, [$type === 'row' ? 'dtRowId' : null], false)
+            );
 
             return false;
         }
 
-        $button->route = $route;
+        $button->set('route', $route);
 
         return false;
     }
 
     private function route($button)
     {
-        if (property_exists($button, 'fullRoute') && ! is_null($button->fullRoute)) {
-            return $button->fullRoute;
+        if ($button->has('fullRoute')
+            && ! is_null($button->get('fullRoute'))) {
+            return $button->get('fullRoute');
         }
 
-        return property_exists($button, 'routeSuffix') && ! is_null($button->routeSuffix)
-            ? $this->template->routePrefix.'.'.$button->routeSuffix
+        return $button->has('routeSuffix')
+            && ! is_null($button->get('routeSuffix'))
+            ? $this->template->get('routePrefix')
+                .'.'.$button->get('routeSuffix')
             : null;
     }
 
     private function routeIsForbidden($route)
     {
         if (empty(config('enso.config'))
-            || (property_exists($this->template, 'auth') && $this->template->auth === false)) {
+            || ($this->template->has('auth') && $this->template->get('auth') === false)) {
             return false;
         }
 

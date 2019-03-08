@@ -30,18 +30,18 @@ class Filters
 
     private function setSearch()
     {
-        if (! $this->request->filled('search')) {
+        if (! $this->request->get('meta')->filled('search')) {
             return $this;
         }
 
-        collect(explode(' ', $this->request->get('search')))
+        collect(explode(' ', $this->request->get('meta')->get('search')))
             ->each(function ($arg) {
                 $this->query->where(function ($query) use ($arg) {
                     $this->columns->each(function ($column) use ($query, $arg) {
                         if ($column->get('meta')->get('searchable')) {
                             $query->orWhere(
                                 $column->get('data'),
-                                $this->request->get('comparisonOperator'), '%'.$arg.'%'
+                                $this->request->get('meta')->get('comparisonOperator'), '%'.$arg.'%'
                             );
                         }
                     });

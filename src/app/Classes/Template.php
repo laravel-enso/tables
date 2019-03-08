@@ -2,38 +2,46 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Helpers\app\Classes\JsonParser;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builder;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validator;
 
 class Template
 {
-    private $filename;
     private $template;
+    private $meta;
 
     public function __construct(string $filename)
     {
-        $this->filename = $filename;
+        $this->template = $this->template($filename);
+        $this->meta = new Obj();
     }
 
     public function get()
     {
-        $this->readTemplate();
-
-        (new Builder($this->template))
+        (new Builder($this->template, $this->meta))
             ->run();
 
-        return $this->template;
+        return [
+            'template' => $this->template,
+            'meta' => $this->meta,
+        ];
     }
 
-    private function readTemplate()
+    private function template($filename)
     {
-        $this->template = (new JsonParser($this->filename))->object();
+        $template = new Obj(
+            (new JsonParser($filename))
+                ->array()
+        );
 
         if ($this->needsValidation()) {
-            (new Validator($this->template))
-                ->run();
+            (new Validator($template))
+            ->run();
         }
+
+        return $template;
     }
 
     private function needsValidation()

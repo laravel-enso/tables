@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 use LaravelEnso\VueDatatable\app\Classes\Attributes\Button as Attributes;
 
@@ -11,10 +12,10 @@ class Buttons
     private $routePrefix;
     private $defaults;
 
-    public function __construct($template)
+    public function __construct(Obj $template)
     {
-        $this->buttons = $template->buttons;
-        $this->routePrefix = $template->routePrefix;
+        $this->buttons = $template->get('buttons');
+        $this->routePrefix = $template->get('routePrefix');
 
         $this->setDefaults();
     }
@@ -61,9 +62,9 @@ class Buttons
     {
         collect($this->buttons)
             ->each(function ($button) {
-                $button = is_object($button)
-                    ? $button
-                    : (object) $this->defaults[$button];
+                $button = new Obj(
+                    is_object($button) ? $button : $this->defaults[$button]
+                );
 
                 $this->checkAttributes($button);
             });
@@ -84,7 +85,7 @@ class Buttons
     private function checkMandatoryAttributes($button)
     {
         $formattedWrong = collect(Attributes::Mandatory)
-            ->diff(collect($button)->keys())
+            ->diff(collect($button->keys()))
             ->isNotEmpty();
 
         if ($formattedWrong) {
@@ -99,7 +100,7 @@ class Buttons
 
     private function checkOptionalAttributes($button)
     {
-        $formattedWrong = collect($button)->keys()
+        $formattedWrong = collect($button->keys())
             ->diff(Attributes::Mandatory)
             ->diff(Attributes::Optional)
             ->isNotEmpty();
@@ -116,14 +117,14 @@ class Buttons
 
     private function checkComplementaryAttributes($button)
     {
-        if (property_exists($button, 'action')) {
-            if (! property_exists($button, 'fullRoute') && ! property_exists($button, 'routeSuffix')) {
+        if ($button->has('action')) {
+            if (! $button->has('fullRoute') && ! $button->has('routeSuffix')) {
                 throw new TemplateException(__(
                     'Whenever you set an action for a button you need to provide the fullRoute or routeSuffix'
                 ));
             }
 
-            if ($button->action === 'ajax' && ! property_exists($button, 'method')) {
+            if ($button->get('action') === 'ajax' && ! $button->has('method')) {
                 throw new TemplateException(__(
                     'Whenever you set an ajax action for a button you need to provide the method aswell'
                 ));
@@ -135,8 +136,8 @@ class Buttons
 
     private function checkActions($button)
     {
-        $formattedWrong = property_exists($button, 'action')
-            && ! collect(Attributes::Actions)->contains($button->action);
+        $formattedWrong = $button->has('action')
+            && ! collect(Attributes::Actions)->contains($button->get('action'));
 
         if ($formattedWrong) {
             throw new TemplateException(__(
@@ -150,12 +151,10 @@ class Buttons
 
     private function checkRoute($button)
     {
-        $route = property_exists($button, 'fullRoute') && ! is_null($button->fullRoute)
-            ? $button->fullRoute
-            : null;
+        $route = $button->get('fullRoute');
 
-        $route = is_null($route) && property_exists($button, 'routeSuffix') && ! is_null($button->routeSuffix)
-            ? $this->routePrefix.'.'.$button->routeSuffix
+        $route = is_null($route) && $button->has('routeSuffix') && ! is_null($button->get('routeSuffix'))
+            ? $this->routePrefix.'.'.$button->get('routeSuffix')
             : $route;
 
         if (! is_null($route) && ! \Route::has($route)) {
@@ -170,14 +169,14 @@ class Buttons
 
     private function checkMethod($button)
     {
-        if (! property_exists($button, 'method')) {
+        if (! $button->has('method')) {
             return;
         }
 
-        if (! collect(Attributes::Methods)->contains($button->method)) {
+        if (! collect(Attributes::Methods)->contains($button->get('method'))) {
             throw new TemplateException(__(
                 'Method is incorrect: ":method"',
-                ['method' => $button->method]
+                ['method' => $button->get('method')]
             ));
         }
 

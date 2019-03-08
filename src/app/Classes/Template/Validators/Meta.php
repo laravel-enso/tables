@@ -3,15 +3,16 @@
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
 use Illuminate\Support\Str;
+use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
-use LaravelEnso\VueDatatable\app\Classes\Attributes\Meta as Attributes;
+use LaravelEnso\VueDatatable\app\Classes\Attributes\Column as Attributes;
 
 class Meta
 {
-    public static function validate($column)
+    public static function validate(Obj $column)
     {
-        $attributes = collect($column->meta);
-        $diff = $attributes->diff(Attributes::List);
+        $attributes = collect($column->get('meta'));
+        $diff = $attributes->diff(Attributes::Meta);
 
         if ($diff->isNotEmpty()) {
             throw new TemplateException(__(
@@ -24,7 +25,7 @@ class Meta
             && ($attributes->contains('searchable') || $attributes->contains('sortable'))) {
             throw new TemplateException(__(
                 'Nested columns do not support "searchable" nor "sortable": ":column"',
-                ['column' => $column->name]
+                ['column' => $column->get('name')]
             ));
         }
     }

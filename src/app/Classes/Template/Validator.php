@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Route;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Buttons;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Columns;
@@ -11,7 +12,7 @@ class Validator
 {
     private $template;
 
-    public function __construct($template)
+    public function __construct(Obj $template)
     {
         $this->template = $template;
     }
@@ -32,7 +33,7 @@ class Validator
 
     private function validateButtons()
     {
-        if (! property_exists($this->template, 'buttons')) {
+        if (! $this->template->has('buttons')) {
             $this->template->buttons = [];
 
             return;

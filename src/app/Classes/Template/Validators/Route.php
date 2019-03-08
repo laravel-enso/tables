@@ -2,17 +2,19 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Validators;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\VueDatatable\app\Exceptions\TemplateException;
 
 class Route
 {
     private $readRoute;
 
-    public function __construct($template)
+    public function __construct(Obj $template)
     {
-        $this->readRoute = $template->routePrefix.'.'.(
-            $template->dataRouteSuffix
-                ?? config('enso.datatable.dataRouteSuffix')
+        $this->readRoute = $template->get('routePrefix').'.'.(
+            $template->has('dataRouteSuffix')
+                ? $template->get('dataRouteSuffix')
+                : config('enso.datatable.dataRouteSuffix')
         );
     }
 

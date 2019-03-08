@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
     private function loadDependencies()
     {
         $this->mergeConfigFrom(__DIR__.'/config/datatable.php', 'enso.datatable');
+        $this->mergeConfigFrom(__DIR__.'/config/api.php', 'enso.datatable');
 
         $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-enso/vuedatatable');
 
@@ -24,8 +25,12 @@ class AppServiceProvider extends ServiceProvider
     private function publishDependencies()
     {
         $this->publishes([
-            __DIR__.'/config' => config_path('enso'),
+            __DIR__.'/config/datatable.php' => config_path('enso/datatable.php'),
         ], 'vuedatatable-config');
+
+        $this->publishes([
+            __DIR__.'/config/datatable.php' => config_path('enso/datatable.php'),
+        ], 'enso-config');
 
         $this->publishes([
             __DIR__.'/resources/js' => resource_path('js'),

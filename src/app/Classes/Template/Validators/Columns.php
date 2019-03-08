@@ -12,7 +12,7 @@ class Columns
 
     public function __construct($template)
     {
-        $this->columns = $template->columns;
+        $this->columns = $template->get('columns');
     }
 
     public function validate()
@@ -47,7 +47,7 @@ class Columns
     private function checkMandatoryAttributes($column)
     {
         $diff = collect(Attributes::Mandatory)
-            ->diff(collect($column)->keys());
+            ->diff($column->keys());
 
         if ($diff->isNotEmpty()) {
             throw new TemplateException(__(
@@ -80,7 +80,7 @@ class Columns
 
     private function checkMeta($column)
     {
-        if (property_exists($column, 'meta')) {
+        if ($column->has('meta')) {
             Meta::validate($column);
         }
 
@@ -89,11 +89,11 @@ class Columns
 
     private function checkEnum($column)
     {
-        if (property_exists($column, 'enum')) {
-            if (! class_exists($column->enum)) {
+        if ($column->has('enum')) {
+            if (! class_exists($column->get('enum'))) {
                 throw new TemplateException(__(
                     'Provided enum does not exist: ":enum"',
-                    ['enum' => $column->enum]
+                    ['enum' => $column->get('enum')]
                 ));
             }
         }

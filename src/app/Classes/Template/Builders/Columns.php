@@ -2,95 +2,100 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Builders;
 
-use LaravelEnso\VueDatatable\app\Classes\Attributes\Meta as Attributes;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\VueDatatable\app\Classes\Attributes\Column as Attributes;
 
 class Columns
 {
     private $template;
+    private $meta;
 
-    public function __construct($template)
+    public function __construct(Obj $template, Obj $meta)
     {
         $this->template = $template;
+        $this->meta = $meta;
     }
 
     public function build()
     {
-        $this->template->columns = collect($this->template->columns)
+        $columns = collect($this->template->get('columns'))
             ->reduce(function ($columns, $column) {
                 $this->computeMeta($column)
                     ->computeDefaultSort($column)
-                    ->updateTemplate($column);
+                    ->updateDefaults($column);
                 $columns->push($column);
 
                 return $columns;
             }, collect());
+
+        $this->template->set('columns', $columns);
     }
 
     private function computeMeta($column)
     {
-        if (! isset($column->meta)) {
-            $column->meta = [];
+        if (! $column->has('meta')) {
+            $column->set('meta', []);
         }
 
-        $column->meta = collect(Attributes::List)
+        $meta = collect(Attributes::Meta)
             ->reduce(function ($meta, $attribute) use ($column) {
-                $meta[$attribute] = collect($column->meta)
-                    ->contains($attribute);
+                $meta->set($attribute, collect($column->meta)->contains($attribute));
 
                 return $meta;
-            }, []);
+            }, new Obj);
 
-        $column->meta['visible'] = true;
-        $column->meta['hidden'] = false;
+        $meta->set('visible', true);
+        $meta->set('hidden', false);
+        $column->set('meta', $meta);
 
         return $this;
     }
 
     private function computeDefaultSort($column)
     {
-        if ($column->meta['sort:ASC']) {
-            $column->meta['sort'] = 'ASC';
-        } elseif ($column->meta['sort:DESC']) {
-            $column->meta['sort'] = 'DESC';
+        $meta = $column->get('meta');
+
+        if ($meta->get('sort:ASC')) {
+            $meta->set('sort', 'ASC');
+        } elseif ($meta->get('sort:DESC')) {
+            $meta->set('sort', 'DESC');
         }
 
-        if (! isset($column->meta['sort'])) {
-            $column->meta['sort'] = null;
+        if (! $meta->has('sort')) {
+            $meta->set('sort', null);
         }
 
-        unset($column->meta['sort:ASC'], $column->meta['sort:DESC']);
+        $meta->forget(['sort:ASC', 'sort:DESC']);
 
         return $this;
     }
 
-    private function updateTemplate($column)
+    private function updateDefaults($column)
     {
-        if ($column->meta['searchable']) {
-            $this->template->searchable = true;
+        $meta = $column->get('meta');
+
+        if ($meta->get('searchable')) {
+            $this->meta->set('searchable', true);
         }
 
-        if ($column->meta['sort']) {
-            $this->template->sort = true;
+        if ($meta->get('total') && $meta->get('customTotal')) {
+            $this->meta->set('total', true);
         }
 
-        if ($column->meta['total'] || $column->meta['customTotal']) {
-            $this->template->total = true;
+        if ($meta->get('date')) {
+            $this->meta->set('date', true);
         }
 
-        if ($column->meta['date']) {
-            $this->template->date = true;
+        if ($meta->get('translatable')) {
+            $this->meta->set('translatable', true);
         }
 
-        if ($column->meta['translatable']) {
-            $this->template->translatable = true;
+        if ($meta->get('enum')) {
+            $this->meta->set('enum', true);
         }
 
-        if (property_exists($column, 'enum')) {
-            $this->template->enum = true;
-        }
-
-        if (property_exists($column, 'money')) {
-            $this->template->money = true;
+        if ($meta->get('money')) {
+            $this->meta->set('money', true);
         }
     }
 }
