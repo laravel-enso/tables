@@ -26,6 +26,7 @@ class Template
         return [
             'template' => $this->template,
             'meta' => $this->meta,
+            'apiVersion' => config('enso.datatable.apiVersion'),
         ];
     }
 

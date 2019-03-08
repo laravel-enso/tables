@@ -12,6 +12,7 @@ class Meta
     public static function validate(Obj $column)
     {
         $attributes = collect($column->get('meta'));
+
         $diff = $attributes->diff(Attributes::Meta);
 
         if ($diff->isNotEmpty()) {

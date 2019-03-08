@@ -16,7 +16,6 @@ class Buttons
     {
         $this->template = $template;
         $this->meta = $meta;
-        $this->meta->set('actions', false);
         $this->defaults = new Obj(config('enso.datatable.buttons'));
         $this->template->set('actions', false);
     }
@@ -36,7 +35,7 @@ class Buttons
                 $buttons[$type]->push($button);
 
                 if ($type === 'row') {
-                    $this->meta->set('actions', true);
+                    $this->template->set('actions', true);
                 }
 
                 $button->forget(['fullRoute', 'routeSuffix']);

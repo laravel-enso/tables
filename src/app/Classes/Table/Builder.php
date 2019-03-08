@@ -162,9 +162,9 @@ class Builder
                 $column->get('meta')->get('nullLast')
                     ? $this->query->orderByRaw($this->rawSort($column))
                     : $this->query->orderBy(
-                    $column->get('data'),
-                    $column->get('meta')->get('sort')
-                );
+                        $column->get('data'),
+                        $column->get('meta')->get('sort')
+                    );
             }
         });
 
@@ -173,7 +173,7 @@ class Builder
 
     private function rawSort($column)
     {
-        return "ISNULL({$column->get('data')}),"
+        return "({$column->get('data')} IS NULL),"
             ."{$column->get('data')} {$column->get('meta')->get('sort')}";
     }
 

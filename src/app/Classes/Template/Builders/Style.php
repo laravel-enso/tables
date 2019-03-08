@@ -2,31 +2,26 @@
 
 namespace LaravelEnso\VueDatatable\app\Classes\Template\Builders;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\VueDatatable\app\Classes\Attributes\Style as Attributes;
 
 class Style
 {
     private $template;
-    private $styling;
     private $defaultStyle;
 
     public function __construct($template)
     {
         $this->template = $template;
-        $this->styling = new Obj();
         $this->defaultStyle = config('enso.datatable.style');
     }
 
     public function build()
     {
-        $this->styling->set('align', $this->compute(Attributes::Align));
-        $this->styling->set('style', $this->compute(Attributes::Table));
-        $this->styling->set('aligns', $this->preset(Attributes::Align));
-        $this->styling->set('styles', $this->preset(Attributes::Table));
-        $this->styling->set('highlight', $this->defaultStyle['highlight'] ?? null); //fixme
-
-        $this->template->set('styling', $this->styling);
+        $this->template->set('align', $this->compute(Attributes::Align));
+        $this->template->set('style', $this->compute(Attributes::Table));
+        $this->template->set('aligns', $this->preset(Attributes::Align));
+        $this->template->set('styles', $this->preset(Attributes::Table));
+        $this->template->set('highlight', $this->defaultStyle['highlight'] ?? null);
     }
 
     private function compute($style)

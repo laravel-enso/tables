@@ -7,7 +7,7 @@ class Structure
     const Mandatory = ['routePrefix', 'columns'];
 
     const Optional = [
-        'name', 'dataRouteSuffix', 'crtNo', 'appends', 'buttons', 'lengthMenu', 'auth', 'debounce', //TODO implement name
+        'name', 'dataRouteSuffix', 'crtNo', 'appends', 'buttons', 'lengthMenu', 'auth', 'debounce',
         'method', 'selectable', 'comparisonOperator', 'fullInfoRecordLimit', 'cache', 'flatten'
     ];
 }

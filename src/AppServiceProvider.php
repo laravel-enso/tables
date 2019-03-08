@@ -16,7 +16,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/config/datatable.php', 'enso.datatable');
         $this->mergeConfigFrom(__DIR__.'/config/api.php', 'enso.datatable');
-
         $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-enso/vuedatatable');
 
         return $this;
@@ -31,14 +30,6 @@ class AppServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/datatable.php' => config_path('enso/datatable.php'),
         ], 'enso-config');
-
-        $this->publishes([
-            __DIR__.'/resources/js' => resource_path('js'),
-        ], 'vuedatatable-assets');
-
-        $this->publishes([
-            __DIR__.'/resources/js' => resource_path('js'),
-        ], 'enso-assets');
 
         $this->publishes([
             __DIR__.'/../resources' => app_path(),

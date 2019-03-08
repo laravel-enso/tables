@@ -105,9 +105,9 @@ class Columns
     {
         if (property_exists($column, 'tooltip') && ! is_string($column->tooltip)) {
             throw new TemplateException(__(
-                    'The tooltip attribute provided for ":column" must be a string',
-                    ['column' => $column->name]
-                ));
+                'The tooltip attribute provided for ":column" must be a string',
+                ['column' => $column->name]
+            ));
         }
 
         return $this;
@@ -117,9 +117,9 @@ class Columns
     {
         if (property_exists($column, 'money') && ! is_object($column->money)) {
             throw new TemplateException(__(
-                    'Provided money attribute for ":column" must be an object',
-                    ['column' => $column->name]
-                ));
+                'Provided money attribute for ":column" must be a non empty object',
+                ['column' => $column->name]
+            ));
         }
 
         return $this;
@@ -129,9 +129,9 @@ class Columns
     {
         if (property_exists($column, 'class') && ! is_string($column->class)) {
             throw new TemplateException(__(
-                    'The class attribute provided for ":column" must be a string',
-                    ['column' => $column->name]
-                ));
+                'The class attribute provided for ":column" must be a string',
+                ['column' => $column->name]
+            ));
         }
 
         return $this;
@@ -142,9 +142,9 @@ class Columns
         if (property_exists($column, 'align')
             && ! collect(Style::Align)->contains($column->align)) {
             throw new TemplateException(__(
-                    'The align attribute provided for ":column" is incorrect',
-                    ['column' => $column->name]
-                ));
+                'The align attribute provided for ":column" is incorrect',
+                ['column' => $column->name]
+            ));
         }
 
         return $this;

@@ -78,7 +78,7 @@ class Columns
             $this->meta->set('searchable', true);
         }
 
-        if ($meta->get('total') && $meta->get('customTotal')) {
+        if ($meta->get('total') || $meta->get('customTotal')) {
             $this->meta->set('total', true);
         }
 
@@ -90,11 +90,11 @@ class Columns
             $this->meta->set('translatable', true);
         }
 
-        if ($meta->get('enum')) {
+        if ($column->has('enum')) {
             $this->meta->set('enum', true);
         }
 
-        if ($meta->get('money')) {
+        if ($column->has('money')) {
             $this->meta->set('money', true);
         }
     }

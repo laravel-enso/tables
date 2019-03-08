@@ -83,7 +83,6 @@ class Structure
     {
         $this->template->set('labels', config('enso.datatable.labels'));
         $this->template->set('pathSegment', $this->pathSegment());
-        $this->template->set('apiVersion', config('enso.datatable.apiVersion'));
         $this->meta->set('start', 0);
         $this->meta->set('search', '');
         $this->meta->set('loading', false);
@@ -108,19 +107,27 @@ class Structure
 
     private function comparisonOperator()
     {
-        if (! $this->template->has('comparisonOperator')) {
-            $this->meta->set('comparisonOperator', config('enso.datatable.comparisonOperator'));
-        }
+        $this->meta->set(
+            'comparisonOperator',
+            $this->template->has('comparisonOperator')
+                ? $this->template->get('comparisonOperator')
+                : config('enso.datatable.comparisonOperator')
+        );
+
+        $this->template->forget('comparisonOperator');
 
         return $this;
     }
 
     private function fullInfoRecordLimit()
     {
-        if (! $this->template->has('fullInfoRecordLimit')) {
-            $this->template->set('fullInfoRecordLimit', config('enso.datatable.fullInfoRecordLimit'));
-            $this->meta->set('fullInfoRecordLimit', config('enso.datatable.fullInfoRecordLimit'));
-        }
+        $this->meta->set(
+            'fullInfoRecordLimit',
+            $this->template->get('fullInfoRecordLimit')
+                ?? config('enso.datatable.fullInfoRecordLimit')
+        );
+
+        $this->template->forget('fullInfoRecordLimit');
 
         return $this;
     }
