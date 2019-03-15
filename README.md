@@ -9,7 +9,13 @@
 Data Table package with server-side processing, unlimited exporting and VueJS components. 
 Quickly build any complex table based on a JSON template.
  
-[Read Docs](https://docs.laravel-enso.com/packages/vue-datatable.html)
+This package can work independently of the [Enso](https://github.com/laravel-enso/Enso) ecosystem.
+
+The front end assets that utilize this api are present in the [tables](https://github.com/enso-ui/tables) package.
+
+For live examples and demos, you may visit [laravel-enso.com](https://www.laravel-enso.com) 
+ 
+[Read the docs](https://docs.laravel-enso.com/backend/vue-datatable.html)
 
 
 [![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.webm)
@@ -54,7 +60,7 @@ out on features
 
 ### Configuration & Usage
 
-Be sure to check out the full documentation for this package available at [docs.laravel-enso.com](https://docs.laravel-enso.com/packages/vue-datatable.html)
+Be sure to check out the full documentation for this package available at [docs.laravel-enso.com](https://docs.laravel-enso.com/backend/vue-datatable.html)
 
 ### Contributions
 
