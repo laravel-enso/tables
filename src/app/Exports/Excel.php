@@ -178,10 +178,12 @@ class Excel
         $this->columns = collect($this->request->get('columns'))
             ->reduce(function ($columns, $column) {
                 $column = is_string($column)
-                    ? json_decode($column)
-                    : (object) $column;
+                    ? new Obj(json_decode($column))
+                    : $column;
 
-                if ($column->meta->visible && ! $column->meta->rogue && ! $column->meta->notExportable) {
+                $meta = $column->get('meta');
+
+                if ($meta->get('visible') && ! $meta->get('rogue') && ! $meta->get('notExportable')) {
                     $columns->push($column);
                 }
 
@@ -195,7 +197,7 @@ class Excel
     {
         return $data->map(function ($row) {
             return $this->columns->reduce(function ($mappedRow, $column) use ($row) {
-                $mappedRow->push($row[$column->name]);
+                $mappedRow->push($row[$column->get('name')]);
 
                 return $mappedRow;
             }, collect());

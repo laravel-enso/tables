@@ -138,7 +138,7 @@ class Builder
     {
         $this->fullRecordInfo = $this->meta->get('forceInfo')
             || (! $this->fetchMode && (! $this->filters
-            || $this->count <= $this->meta->get('fullInfoRecordLimit')));
+                || $this->count <= $this->meta->get('fullInfoRecordLimit')));
 
         return $this;
     }
