@@ -1,4 +1,4 @@
-# Vue Data Table
+# Vue Datatable
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3cf79a9ca584f08b3be0246cb488788)](https://www.codacy.com/app/laravel-enso/vuedatatable?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=laravel-enso/vuedatatable&amp;utm_campaign=Badge_Grade)
 [![StyleCI](https://styleci.io/repos/99695155/shield?branch=master)](https://styleci.io/repos/99695155)
@@ -8,28 +8,35 @@
 
 Data Table package with server-side processing, unlimited exporting and VueJS components. 
 Quickly build any complex table based on a JSON template.
- 
+
 This package can work independently of the [Enso](https://github.com/laravel-enso/Enso) ecosystem.
 
 The front end assets that utilize this api are present in the [tables](https://github.com/enso-ui/tables) package.
 
-For live examples and demos, you may visit [laravel-enso.com](https://www.laravel-enso.com) 
- 
-[Read the docs](https://docs.laravel-enso.com/backend/vue-datatable.html)
+For live examples and demos, you may visit [laravel-enso.com](https://www.laravel-enso.com)
 
-
-[![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.webm)
-
+[![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.mp4)
 
 <sup>click on the photo to view a short demo in compatible browsers</sup>
-
 
 [![Themed screenshot](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_02.mp4)
 
 <sup>click on the photo to view an **export** demo in compatible browsers</sup>
 
+## Installation
 
-### Features
+Comes pre-installed in Enso. 
+
+To install outside of Enso:
+
+1. install the package `composer require laravel-enso/vuedatatable` 
+
+2. if needed, publish and customize the config: `php artisan vendor:publish --tag=vuedatatable-config`
+
+3. install the api implementation for the front end, [tables](https://github.com/enso-ui/tables). Be sure to check
+out front end docs [here](https://docs.laravel-enso.com/frontend/tables.html).
+
+## Features
 
 - efficient server side data loading
 - multi-column searching
@@ -47,7 +54,7 @@ For live examples and demos, you may visit [laravel-enso.com](https://www.larave
 - configurable column alignment from the template left / center / right
 - preferences/state save for each table in the browser's localStorage
 - server-side Excel exporting of the table data, using your current sorting and filtering choices, with email notification and optional push notifications.
-    The export supports a practically unlimited dataset and features realtime progress reporting in the interface
+    The export supports a practically unlimited dataset and features real time progress reporting in the interface
 - reloading of data on demand
 - smart management of huge datasets, with configurable limit
 - possibility to define actions that apply to the entire, filtered, dataset
@@ -55,8 +62,10 @@ For live examples and demos, you may visit [laravel-enso.com](https://www.larave
 - Laravel accessors for the main query model
 - the configuration template for each table has been designed to be as light and straightforward as possible without losing 
 out on features
+- caching support for speeding up the retrieval of data
 - thorough validation of the JSON template with developer friendly messages, in order to avoid misconfiguration issues
-- can be used independently of the [Enso](https://github.com/laravel-enso/Enso) ecosystem
+- Eloquent query friendly with the possibility to easily display nested models attribute values
+- can be used independently of the Enso ecosystem
 
 ### Configuration & Usage
 
