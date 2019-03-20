@@ -25,6 +25,7 @@ class Structure
             ->selectable()
             ->comparisonOperator()
             ->fullInfoRecordLimit()
+            ->responsive()
             ->defaults();
     }
 
@@ -128,6 +129,15 @@ class Structure
         );
 
         $this->template->forget('fullInfoRecordLimit');
+
+        return $this;
+    }
+
+    private function responsive()
+    {
+        if (! $this->template->has('responsive')) {
+            $this->template->set('responsive', config('enso.datatable.responsive'));
+        }
 
         return $this;
     }
