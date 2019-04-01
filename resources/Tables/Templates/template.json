@@ -49,5 +49,6 @@
                 "format": "%s%v"
             }
         }
-    ]
+    ],
+    "controls": [ "length", "columns", "style", "reload", "reset" ],
 }

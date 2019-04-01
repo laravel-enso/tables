@@ -144,6 +144,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Controls
+    |--------------------------------------------------------------------------
+    | Controls defaults and mapping for your front-end framework.
+    |
+     */
+
+    'controls' => [ "length", "columns", "style", "reload", "reset" ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Export Settings
     |--------------------------------------------------------------------------
     | Path where the temporary files are stored within storage/app folder; timeout
