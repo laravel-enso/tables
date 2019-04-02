@@ -13,7 +13,7 @@ class Controls
     public function __construct(Obj $template)
     {
         $this->controls = $template->get('controls');
-        $this->defaults = config('enso.datatable.controls'));
+        $this->defaults = config('enso.datatable.controls');
     }
 
     public function validate()
