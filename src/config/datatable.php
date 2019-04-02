@@ -146,7 +146,8 @@ return [
     |--------------------------------------------------------------------------
     | Controls
     |--------------------------------------------------------------------------
-    | Controls defaults and mapping for your front-end framework.
+    | Default controls list. Can be overriden in for each table in its own
+    | template
     |
      */
 
