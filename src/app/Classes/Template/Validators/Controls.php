@@ -13,8 +13,7 @@ class Controls
     public function __construct(Obj $template)
     {
         $this->controls = $template->get('controls');
-
-        $this->setDefaults();
+        $this->defaults = config('enso.datatable.controls'));
     }
 
     public function validate()
@@ -40,22 +39,15 @@ class Controls
     private function checkDefault()
     {
         $diff = collect($this->controls)
-            ->filter(function ($control) {
-                return is_string($control);
-            })->diff(collect($this->defaults));
+            ->diff($this->defaults);
 
         if ($diff->isNotEmpty()) {
             throw new TemplateException(__(
-                'Unknown control(s) Found: ":control"',
-                ['control' => $diff->implode('", "')]
+                'Unknown control(s) Found: ":controls"',
+                ['controls' => $diff->implode('", "')]
             ));
         }
 
         return $this;
-    }
-
-    private function setDefaults()
-    {
-        $this->defaults = collect(config('enso.datatable.controls'))->toArray();
     }
 }
