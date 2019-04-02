@@ -6,6 +6,7 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Style;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Buttons;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Columns;
+use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Controls;
 use LaravelEnso\VueDatatable\app\Classes\Template\Builders\Structure;
 
 class Builder
@@ -31,6 +32,9 @@ class Builder
             ->build();
 
         (new Style($this->template))
+            ->build();
+
+        (new Controls($this->template))
             ->build();
 
         $this->cleanUp();
