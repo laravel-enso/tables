@@ -61,7 +61,9 @@ class Columns
             $meta->set('sort', 'DESC');
         }
 
-        if (! $meta->has('sort')) {
+        if ($meta->has('sort')) {
+            $this->meta->set('sort', $meta->get('sort'));
+        } else {
             $meta->set('sort', null);
         }
 
