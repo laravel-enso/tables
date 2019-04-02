@@ -17,7 +17,7 @@ class Controls
 
     public function build()
     {
-        if (!$this->template->has('controls')) {
+        if (! $this->template->has('controls')) {
             if ($this->defaultControls) {
                 $this->template->set('controls', $this->defaultControls);
             } else {

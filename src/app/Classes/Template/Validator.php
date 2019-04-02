@@ -3,10 +3,10 @@
 namespace LaravelEnso\VueDatatable\app\Classes\Template;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Controls;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Route;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Buttons;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Columns;
+use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Controls;
 use LaravelEnso\VueDatatable\app\Classes\Template\Validators\Structure;
 
 class Validator

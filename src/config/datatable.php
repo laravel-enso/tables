@@ -150,7 +150,7 @@ return [
     |
      */
 
-    'controls' => [ "length", "columns", "style", "reload", "reset" ],
+    'controls' => ['length', 'columns', 'style', 'reload', 'reset'],
 
     /*
     |--------------------------------------------------------------------------

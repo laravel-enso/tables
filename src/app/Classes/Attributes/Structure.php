@@ -9,6 +9,6 @@ class Structure
     const Optional = [
         'name', 'dataRouteSuffix', 'crtNo', 'appends', 'buttons', 'lengthMenu', 'auth', 'debounce',
         'method', 'selectable', 'comparisonOperator', 'fullInfoRecordLimit', 'cache', 'flatten',
-        'responsive', 'controls'
+        'responsive', 'controls',
     ];
 }
