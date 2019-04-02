@@ -19,18 +19,10 @@ class Controls
     {
         if (! $this->template->has('controls')) {
             if ($this->defaultControls) {
-                $this->template->set('controls', $this->defaultControls);
-            } else {
-                $this->template->set('controls', Attributes::List);
+                $this->template->set(
+                    'controls', $this->defaultControls ?? Attributes::List
+                );
             }
-        } else {
-            $this->template->set('controls', $this->template->get('controls'));
         }
-    }
-
-    private function compute($controls)
-    {
-        return collect($this->defaultControls)->intersect($controls)
-            ->values()->unique()->implode(' ');
     }
 }
