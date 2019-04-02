@@ -11,6 +11,7 @@
     "appends": ["customAttribute"], // optional, laravel model accessors for custom attributes
     "selectable": false, //optional, adds checkboxes to first column
     "comparisonOperator": "LIKE", // optional, sql comparison operator for text search method. If given, it overwrites the value from config
+    "controls": [ "length", "columns", "style", "reload", "reset" ],
     "buttons": [
         "show", "create", "edit", "destroy", "download", "exportExcel", // string buttons must match the config
         {
@@ -49,6 +50,5 @@
                 "format": "%s%v"
             }
         }
-    ],
-    "controls": [ "length", "columns", "style", "reload", "reset" ],
+    ]
 }
