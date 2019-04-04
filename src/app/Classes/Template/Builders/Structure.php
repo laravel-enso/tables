@@ -47,8 +47,11 @@ class Structure
         if (! $this->template->has('lengthMenu')) {
             $options = config('enso.datatable.lengthMenu');
             $this->template->set('lengthMenu', $options);
-            $this->meta->set('length', $options[0]);
         }
+
+        $this->meta->set(
+            'length', $this->template->get('lengthMenu')[0]
+        );
 
         return $this;
     }
