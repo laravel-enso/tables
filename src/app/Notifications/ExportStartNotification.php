@@ -30,7 +30,7 @@ class ExportStartNotification extends Notification implements ShouldQueue
             'title' => __('Export Started'),
             'body' => __('Export started').': '.__($this->name),
             'icon' => 'file-excel',
-        ]))->onQueue(config('enso.datatable.queues.notifications'));
+        ]))->onQueue($this->queue);
     }
 
     public function toArray($notifiable)

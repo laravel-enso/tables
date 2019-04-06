@@ -128,13 +128,11 @@ class Excel
 
     public function notify()
     {
-        $this->user->notify(
-            (new ExportDoneNotification(
-                $this->filePath(),
-                $this->filename(),
-                $this->dataExport
-            ))->onQueue(config('enso.datatable.queues.notifications'))
-        );
+        $this->user->notify((new ExportDoneNotification(
+            $this->filePath(),
+            $this->filename(),
+            $this->dataExport
+        ))->onQueue(config('enso.datatable.queues.notifications')));
 
         return $this;
     }

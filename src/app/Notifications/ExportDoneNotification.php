@@ -24,7 +24,6 @@ class ExportDoneNotification extends Notification implements ShouldQueue
         $this->filename = $filename;
         $this->dataExport = $dataExport;
         $this->link = optional($this->dataExport)->temporaryLink();
-        $this->queue = config('enso.datatable.queues.notifications');
     }
 
     public function via($notifiable)
@@ -41,7 +40,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
                 ? __('Export available for download').': '.__($this->filename)
                 : __('Export emailed').': '.__($this->filename),
             'icon' => 'file-excel',
-        ]))->onQueue(config('enso.datatable.queues.notifications'));
+        ]))->onQueue($this->queue);
     }
 
     public function toMail($notifiable)
