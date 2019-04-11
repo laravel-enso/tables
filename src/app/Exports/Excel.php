@@ -24,6 +24,7 @@ class Excel
     private $writer;
     private $columns;
     private $hashName;
+    private $sheetCount;
 
     public function __construct(string $class, array $request, User $user, $dataExport = null)
     {
@@ -75,7 +76,7 @@ class Excel
     {
         app()->setLocale($this->user->preferences()->global->lang);
         optional($this->dataExport)->startProcessing();
-
+        $this->sheetCount = 1;
         $this->writer->addRow($this->header());
 
         return $this;
@@ -213,12 +214,12 @@ class Excel
     {
         $this->writer->addNewSheetAndMakeItCurrent();
         $this->writer->addRow($this->header());
+        $this->sheetCount++;
     }
 
     private function needsNewSheet()
     {
-        return $this->fetcher->chunkSize() < self::SheetSize
-            && round($this->dataExport->entries / self::SheetSize)
-            !== round($this->dataExport->entries + $this->fetcher->chunkSize() / self::SheetSize);
+        return $this->dataExport->entries / self::SheetSize
+            >= $this->sheetCount;
     }
 }
