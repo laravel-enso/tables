@@ -100,9 +100,15 @@ class Filters
             return $this;
         }
 
-        $min = property_exists($value, 'dbDateFormat')
-            ? $this->formatDate($value->min, $value->dbDateFormat)
-            : $value->min;
+        $dateFormat = $value->dateFormat
+            ?? config('enso.config.dateFormat');
+
+        $dbDateFormat = $value->dbDateFormat ?? null;
+
+        $min = $dateFormat || $dbDateFormat
+            ? $this->formatDate(
+                $value->min, $dateFormat, $dbDateFormat
+            ) : $value->min;
 
         $this->query->where($table.'.'.$column, '>=', $min);
         $this->filters = true;
@@ -116,9 +122,15 @@ class Filters
             return $this;
         }
 
-        $max = property_exists($value, 'dbDateFormat')
-            ? $this->formatDate($value->max, $value->dbDateFormat)
-            : $value->max;
+        $dateFormat = $value->dateFormat
+            ?? config('enso.config.dateFormat');
+
+        $dbDateFormat = $value->dbDateFormat ?? null;
+
+        $max = $dateFormat || $dbDateFormat
+            ? $this->formatDate(
+                $value->max, $dateFormat, $dbDateFormat
+            ) : $value->max;
 
         $this->query->where($table.'.'.$column, '<=', $max);
         $this->filters = true;
@@ -126,9 +138,15 @@ class Filters
         return $this;
     }
 
-    private function formatDate(string $date, string $dbDateFormat)
+    private function formatDate(string $date, $dateFormat, $dbDateFormat)
     {
-        return (new Carbon($date))->format($dbDateFormat);
+        $date = $dateFormat
+            ? Carbon::createFromFormat($dateFormat, $date)
+            : new Carbon($date);
+
+        return $dbDateFormat
+            ? $date->format($dbDateFormat)
+            : $date;
     }
 
     private function parse($type)
