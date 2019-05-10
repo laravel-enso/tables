@@ -23,7 +23,8 @@ class Filters
     {
         $this->setSearch()
             ->setFilters()
-            ->setIntervals();
+            ->setIntervals()
+            ->checkParams();
 
         return $this->filters;
     }
@@ -92,6 +93,13 @@ class Filters
         });
 
         return $this;
+    }
+
+    private function checkParams()
+    {
+        if ($this->request->has('params')) {
+            $this->filters = true;
+        }
     }
 
     private function setMinLimit($table, $column, $value)
