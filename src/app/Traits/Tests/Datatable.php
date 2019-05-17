@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Traits\Tests;
+namespace LaravelEnso\Tables\app\Traits\Tests;
 
 trait Datatable
 {

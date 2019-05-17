@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Notifications;
+namespace LaravelEnso\Tables\app\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -20,7 +20,7 @@ class ExportStartNotification extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        return config('enso.datatable.export.notifications');
+        return config('enso.tables.export.notifications');
     }
 
     public function toBroadcast($notifiable)

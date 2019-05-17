@@ -2,7 +2,7 @@
 
 namespace App\Tables\Actions;
 
-use LaravelEnso\VueDatatable\app\Classes\Action;
+use LaravelEnso\Tables\app\Services\Action;
 
 class CustomAction extends Action
 {

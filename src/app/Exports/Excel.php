@@ -1,41 +1,39 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Exports;
+namespace LaravelEnso\Tables\app\Exports;
 
+use Illuminate\Http\File;
 use Box\Spout\Common\Type;
 use Illuminate\Support\Str;
-use Illuminate\Http\UploadedFile;
 use Box\Spout\Writer\WriterFactory;
 use LaravelEnso\Core\app\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Box\Spout\Writer\Style\StyleBuilder;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\VueDatatable\app\Classes\Fetcher;
-use LaravelEnso\VueDatatable\app\Notifications\ExportDoneNotification;
+use LaravelEnso\Tables\app\Services\Fetcher;
+use LaravelEnso\Tables\app\Notifications\ExportDoneNotification;
 
 class Excel
 {
-    private const Extension = '.xlsx';
+    private const Extension = 'xlsx';
     private const SheetSize = 1000000;
 
+    private $request;
     private $user;
     private $dataExport;
-    private $request;
     private $fetcher;
     private $writer;
     private $columns;
-    private $hashName;
     private $sheetCount;
+    private $filename;
+    private $filePath;
 
     public function __construct(string $class, array $request, User $user, $dataExport = null)
     {
         $this->user = $user;
-
-        auth()->onceUsingId($this->user->id);
-
         $this->dataExport = $dataExport;
         $this->request = new Obj($request);
         $this->fetcher = new Fetcher($class, $request);
-        $this->hashName = Str::random(40).self::Extension;
     }
 
     public function run()
@@ -45,8 +43,7 @@ class Excel
             ->process()
             ->closeWriter()
             ->finalize()
-            ->notify()
-            ->cleanUp();
+            ->notify();
 
         return $this;
     }
@@ -74,6 +71,7 @@ class Excel
 
     public function start()
     {
+        auth()->onceUsingId($this->user->id);
         app()->setLocale($this->user->preferences()->global->lang);
         optional($this->dataExport)->startProcessing();
         $this->sheetCount = 1;
@@ -100,7 +98,7 @@ class Excel
         $this->writer = WriterFactory::create(Type::XLSX);
 
         $this->writer->setDefaultRowStyle($defaultStyle)
-            ->openToFile(\Storage::path($this->filePath()));
+            ->openToFile($this->filePath());
 
         return $this;
     }
@@ -111,17 +109,11 @@ class Excel
             return;
         }
 
-        $file = new UploadedFile(
-            storage_path('app/'.$this->filePath()),
-            $this->filename(),
-            \Storage::mimeType($this->filePath()),
-            \Storage::size($this->filePath()),
-            0,
-            true
+        $this->dataExport->attach(
+            new File($this->filePath()),
+            $this->filename()
         );
 
-        $this->dataExport->upload($file);
-        $this->dataExport->file->save();
         $this->dataExport->endOperation();
 
         return $this;
@@ -133,31 +125,35 @@ class Excel
             $this->filePath(),
             $this->filename(),
             $this->dataExport
-        ))->onQueue(config('enso.datatable.queues.notifications')));
+        ))->onQueue(config('enso.tables.queues.notifications')));
 
         return $this;
     }
 
-    public function cleanUp()
-    {
-        \Storage::delete($this->filePath());
-    }
-
     private function filePath()
     {
-        return config('enso.datatable.export.path')
-            .DIRECTORY_SEPARATOR
-            .$this->hashName;
+        return $this->filePath
+            ?? $this->filePath = Storage::path(
+                config('enso.tables.export.path')
+                    .DIRECTORY_SEPARATOR
+                    .$this->hashName()
+            );
+    }
+
+    private function hashName()
+    {
+        return Str::random(40).'.'.self::Extension;
     }
 
     private function filename()
     {
-        return preg_replace(
-            '/[^A-Za-z0-9_.-]/',
-            '_',
-            Str::title(Str::snake($this->request->get('name')))
-            .'_'.__('Table_Report')
-        ).self::Extension;
+        return $this->filename
+            ?? $this->filename = preg_replace(
+                '/[^A-Za-z0-9_.-]/',
+                '_',
+                Str::title(Str::snake($this->request->get('name')))
+                .'_'.__('Table_Report')
+            ).'.'.self::Extension;
     }
 
     private function header()
@@ -196,9 +192,7 @@ class Excel
     {
         return $data->map(function ($row) {
             return $this->columns->reduce(function ($mappedRow, $column) use ($row) {
-                $mappedRow->push($row[$column->get('name')]);
-
-                return $mappedRow;
+                return $mappedRow->push($row[$column->get('name')]);
             }, collect());
         })->toArray();
     }

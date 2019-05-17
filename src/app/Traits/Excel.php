@@ -1,14 +1,14 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Traits;
+namespace LaravelEnso\Tables\app\Traits;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use LaravelEnso\IO\app\Enums\IOStatuses;
+use LaravelEnso\Tables\app\Jobs\ExcelExport;
 use LaravelEnso\DataExport\app\Models\DataExport;
-use LaravelEnso\VueDatatable\app\Jobs\ExcelExport;
-use LaravelEnso\VueDatatable\app\Exceptions\ExportException;
-use LaravelEnso\VueDatatable\app\Notifications\ExportStartNotification;
+use LaravelEnso\Tables\app\Exceptions\ExportException;
+use LaravelEnso\Tables\app\Notifications\ExportStartNotification;
 
 trait Excel
 {
@@ -24,7 +24,7 @@ trait Excel
 
         $request->user()->notify(
             (new ExportStartNotification($type.'_'.__('Table_Report')))
-                ->onQueue(config('enso.datatable.queues.notifications'))
+                ->onQueue(config('enso.tables.queues.notifications'))
         );
 
         $dataExport = $this->createDataExport($type);
@@ -43,7 +43,7 @@ trait Excel
             ->whereCreatedBy($user->id)
             ->where('status', '<', IOStatuses::Finalized)
             ->where('created_at', '>', now()->subSeconds(
-                config('enso.datatable.export.timeout')
+                config('enso.tables.export.timeout')
             ))->first() !== null
             : false;
     }

@@ -1,7 +1,7 @@
 @component('mail::message')
 {{ __('Hi :name', ['name' => $name]) }},
 
-@if(is_null($link))
+@if($link === null)
 {{ __('You will find the report attached to this email.') }}
 @else
 {{ __('Your report has :entries entries', ['entries' => $entries]) }}.

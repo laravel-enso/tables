@@ -1,7 +1,8 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Traits;
+namespace LaravelEnso\Tables\app\Traits;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 
 trait TableCache
@@ -19,6 +20,6 @@ trait TableCache
 
     public function resetTableCache()
     {
-        Cache::forget('datatable:'.$this->getTable());
+        Cache::forget('table:'.Str::camel($this->getTable()));
     }
 }

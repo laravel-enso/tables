@@ -1,14 +1,14 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Jobs;
+namespace LaravelEnso\Tables\app\Jobs;
 
 use Illuminate\Bus\Queueable;
 use LaravelEnso\Core\app\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use LaravelEnso\Tables\app\Exports\Excel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use LaravelEnso\VueDatatable\app\Exports\Excel;
 
 class ExcelExport implements ShouldQueue
 {
@@ -25,8 +25,8 @@ class ExcelExport implements ShouldQueue
         $this->request = $request;
         $this->tableClass = $tableClass;
         $this->dataExport = $dataExport;
-        $this->timeout = config('enso.datatable.export.timeout');
-        $this->queue = config('enso.datatable.queues.exports');
+        $this->timeout = config('enso.tables.export.timeout');
+        $this->queue = config('enso.tables.queues.exports');
     }
 
     public function handle()

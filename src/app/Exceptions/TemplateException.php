@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Exceptions;
+namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
 

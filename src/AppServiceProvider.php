@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\VueDatatable;
+namespace LaravelEnso\Tables;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -14,11 +14,11 @@ class AppServiceProvider extends ServiceProvider
 
     private function loadDependencies()
     {
-        $this->mergeConfigFrom(__DIR__.'/config/datatable.php', 'enso.datatable');
+        $this->mergeConfigFrom(__DIR__.'/config/tables.php', 'enso.tables');
 
-        $this->mergeConfigFrom(__DIR__.'/config/api.php', 'enso.datatable');
+        $this->mergeConfigFrom(__DIR__.'/config/api.php', 'enso.tables');
 
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-enso/vuedatatable');
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-enso/tables');
 
         return $this;
     }
@@ -26,23 +26,23 @@ class AppServiceProvider extends ServiceProvider
     private function publishDependencies()
     {
         $this->publishes([
-            __DIR__.'/config/datatable.php' => config_path('enso/datatable.php'),
-        ], 'vuedatatable-config');
+            __DIR__.'/config/tables.php' => config_path('enso/tables.php'),
+        ], 'tables-config');
 
         $this->publishes([
-            __DIR__.'/config/datatable.php' => config_path('enso/datatable.php'),
+            __DIR__.'/config/tables.php' => config_path('enso/tables.php'),
         ], 'enso-config');
 
         $this->publishes([
             __DIR__.'/../resources' => app_path(),
-        ], 'vuedatatable-classes');
+        ], 'tables-classes');
 
         $this->publishes([
-            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),
-        ], 'vuedatatable-mail');
+            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/tables'),
+        ], 'tables-mail');
 
         $this->publishes([
-            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/vuedatatable'),
+            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/tables'),
         ], 'enso-mail');
     }
 }

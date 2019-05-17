@@ -1,10 +1,10 @@
-# Vue Datatable
+# Tables
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3cf79a9ca584f08b3be0246cb488788)](https://www.codacy.com/app/laravel-enso/vuedatatable?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=laravel-enso/vuedatatable&amp;utm_campaign=Badge_Grade)
-[![StyleCI](https://styleci.io/repos/99695155/shield?branch=master)](https://styleci.io/repos/99695155)
-[![License](https://poser.pugx.org/laravel-enso/vuedatatable/license)](https://packagist.org/packages/laravel-enso/vuedatatable)
-[![Total Downloads](https://poser.pugx.org/laravel-enso/vuedatatable/downloads)](https://packagist.org/packages/laravel-enso/vuedatatable)
-[![Latest Stable Version](https://poser.pugx.org/laravel-enso/vuedatatable/version)](https://packagist.org/packages/laravel-enso/vuedatatable)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d54378598375451382b4d5d248d5a8dd)](https://www.codacy.com/app/laravel-enso/tables?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=laravel-enso/tables&amp;utm_campaign=Badge_Grade)
+[![StyleCI](https://github.styleci.io/repos/111688250/shield?branch=master)](https://github.styleci.io/repos/111688250)
+[![License](https://poser.pugx.org/laravel-enso/tables/license)](https://packagist.org/packages/laravel-enso/tables)
+[![Total Downloads](https://poser.pugx.org/laravel-enso/tables/downloads)](https://packagist.org/packages/laravel-enso/tables)
+[![Latest Stable Version](https://poser.pugx.org/laravel-enso/tables/version)](https://packagist.org/packages/laravel-enso/tables)
 
 Data Table package with server-side processing, unlimited exporting and VueJS components. 
 Quickly build any complex table based on a JSON template.
@@ -15,11 +15,11 @@ The front end assets that utilize this api are present in the [tables](https://g
 
 For live examples and demos, you may visit [laravel-enso.com](https://www.laravel-enso.com)
 
-[![Watch the demo](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_01.mp4)
+[![Watch the demo](https://laravel-enso.github.io/tables/screenshots/bulma_001_thumb.png)](https://laravel-enso.github.io/tables/videos/bulma_demo_01.mp4)
 
 <sup>click on the photo to view a short demo in compatible browsers</sup>
 
-[![Themed screenshot](https://laravel-enso.github.io/vuedatatable/screenshots/bulma_002_thumb.png)](https://laravel-enso.github.io/vuedatatable/videos/bulma_demo_02.mp4)
+[![Themed screenshot](https://laravel-enso.github.io/tables/screenshots/bulma_002_thumb.png)](https://laravel-enso.github.io/tables/videos/bulma_demo_02.mp4)
 
 <sup>click on the photo to view an **export** demo in compatible browsers</sup>
 
@@ -29,9 +29,9 @@ Comes pre-installed in Enso.
 
 To install outside of Enso:
 
-1. install the package `composer require laravel-enso/vuedatatable` 
+1. install the package `composer require laravel-enso/tables` 
 
-2. if needed, publish and customize the config: `php artisan vendor:publish --tag=vuedatatable-config`
+2. if needed, publish and customize the config: `php artisan vendor:publish --tag=tables-config`
 
 3. install the api implementation for the front end, [tables](https://github.com/enso-ui/tables). Be sure to check
 out front end docs [here](https://docs.laravel-enso.com/frontend/tables.html).
@@ -69,7 +69,7 @@ out on features
 
 ### Configuration & Usage
 
-Be sure to check out the full documentation for this package available at [docs.laravel-enso.com](https://docs.laravel-enso.com/backend/vue-datatable.html)
+Be sure to check out the full documentation for this package available at [docs.laravel-enso.com](https://docs.laravel-enso.com/backend/tables.html)
 
 ### Contributions
 

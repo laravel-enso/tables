@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Notifications;
+namespace LaravelEnso\Tables\app\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -28,7 +28,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        return array_merge(['mail'], config('enso.datatable.export.notifications'));
+        return array_merge(['mail'], config('enso.tables.export.notifications'));
     }
 
     public function toBroadcast($notifiable)
@@ -47,7 +47,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
     {
         $mail = (new MailMessage())
             ->subject(__(config('app.name')).': '.__('Table Export Notification'))
-            ->markdown('laravel-enso/vuedatatable::emails.export', [
+            ->markdown('laravel-enso/tables::emails.export', [
                 'name' => $notifiable->person->appellative
                     ?: $notifiable->person->name,
                 'filename' => __($this->filename),
@@ -56,7 +56,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
             ]);
 
         if (! $this->link) {
-            $mail->attach(\Storage::path($this->filePath));
+            $mail->attach($this->filePath);
         }
 
         return $mail;

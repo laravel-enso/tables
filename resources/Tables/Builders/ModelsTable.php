@@ -3,7 +3,7 @@
 namespace App\Tabels\Builders;
 
 use App\Model;
-use LaravelEnso\VueDatatable\app\Classes\Table;
+use LaravelEnso\Tables\app\Services\Table;
 
 class ModelsTable extends Table
 {
@@ -11,8 +11,8 @@ class ModelsTable extends Table
 
     public function query()
     {
-        return Model::select(\DB::raw('
+        return Model::selectRaw('
             id as "dtRowId", ......
-        '));
+        ');
     }
 }

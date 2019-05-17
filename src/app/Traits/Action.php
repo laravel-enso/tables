@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\VueDatatable\app\Traits;
+namespace LaravelEnso\Tables\app\Traits;
 
 use Illuminate\Http\Request;
 
