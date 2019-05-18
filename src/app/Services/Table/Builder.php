@@ -4,7 +4,6 @@ namespace LaravelEnso\Tables\app\Services\Table;
 
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Table\Filters;
 use LaravelEnso\Tables\app\Exceptions\QueryException;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use LaravelEnso\Tables\app\Services\Table\Computors\Date;

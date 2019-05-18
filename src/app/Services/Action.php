@@ -17,7 +17,7 @@ abstract class Action
 
     abstract public function process(array $row);
 
-    public function run()
+    public function handle()
     {
         $this->fetcher->next();
 
