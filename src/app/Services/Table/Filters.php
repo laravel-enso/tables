@@ -104,19 +104,19 @@ class Filters
 
     private function setMinLimit($table, $column, $value)
     {
-        if ($value->min === null) {
+        if ($value->get('min') === null) {
             return $this;
         }
 
-        $dateFormat = $value->dateFormat
+        $dateFormat = $value->get('dateFormat')
             ?? config('enso.config.dateFormat');
 
-        $dbDateFormat = $value->dbDateFormat ?? null;
+        $dbDateFormat = $value->get('dbDateFormat');
 
         $min = $dateFormat || $dbDateFormat
             ? $this->formatDate(
-                $value->min, $dateFormat, $dbDateFormat
-            ) : $value->min;
+                $value->get('min'), $dateFormat, $dbDateFormat
+            ) : $value->get('min');
 
         $this->query->where($table.'.'.$column, '>=', $min);
         $this->filters = true;
@@ -126,19 +126,19 @@ class Filters
 
     private function setMaxLimit($table, $column, $value)
     {
-        if ($value->max === null) {
+        if ($value->get('max') === null) {
             return $this;
         }
 
         $dateFormat = $value->dateFormat
             ?? config('enso.config.dateFormat');
 
-        $dbDateFormat = $value->dbDateFormat ?? null;
+        $dbDateFormat = $value->get('dbDateFormat');
 
         $max = $dateFormat || $dbDateFormat
             ? $this->formatDate(
-                $value->max, $dateFormat, $dbDateFormat
-            ) : $value->max;
+                $value->get('max'), $dateFormat, $dbDateFormat
+            ) : $value->get('max');
 
         $this->query->where($table.'.'.$column, '<=', $max);
         $this->filters = true;
