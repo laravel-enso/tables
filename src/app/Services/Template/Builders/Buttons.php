@@ -22,7 +22,7 @@ class Buttons
 
     public function build()
     {
-        $buttons = collect($this->template->get('buttons'))
+        $buttons = $this->template->get('buttons')
             ->reduce(function ($buttons, $button) {
                 [$button, $type] = is_string($button)
                     ? $this->mapping($button)
@@ -47,7 +47,7 @@ class Buttons
 
     private function mapping($button)
     {
-        return collect($this->defaults->get('global'))->keys()->contains($button)
+        return $this->defaults->get('global')->keys()->contains($button)
             ? [$this->defaults->get('global')->get($button), 'global']
             : [$this->defaults->get('row')->get($button), 'row'];
     }

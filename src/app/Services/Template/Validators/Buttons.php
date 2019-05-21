@@ -30,10 +30,9 @@ class Buttons
 
     private function checkFormat()
     {
-        $formattedWrong = collect($this->buttons)
-            ->filter(function ($button) {
-                return ! is_string($button) && ! is_object($button);
-            });
+        $formattedWrong = $this->buttons->filter(function ($button) {
+            return ! is_string($button) && ! $button instanceof Obj;
+        });
 
         if ($formattedWrong->isNotEmpty()) {
             throw new TemplateException(__('The buttons array may contain only strings and objects.'));
@@ -44,10 +43,9 @@ class Buttons
 
     private function checkDefault()
     {
-        $diff = collect($this->buttons)
-            ->filter(function ($button) {
-                return is_string($button);
-            })->diff(collect($this->defaults)->keys());
+        $diff = $this->buttons->filter(function ($button) {
+            return is_string($button);
+        })->diff($this->defaults->keys());
 
         if ($diff->isNotEmpty()) {
             throw new TemplateException(__(
@@ -61,14 +59,13 @@ class Buttons
 
     private function checkStructure()
     {
-        collect($this->buttons)
-            ->each(function ($button) {
-                $button = new Obj(
-                    is_object($button) ? $button : $this->defaults[$button]
-                );
+        $this->buttons->each(function ($button) {
+            $button = $button instanceof Obj
+                ? $button
+                : $this->defaults->get($button);
 
-                $this->checkAttributes($button);
-            });
+            $this->checkAttributes($button);
+        });
 
         return $this;
     }
@@ -86,7 +83,7 @@ class Buttons
     private function checkMandatoryAttributes($button)
     {
         $formattedWrong = collect(Attributes::Mandatory)
-            ->diff(collect($button->keys()))
+            ->diff($button->keys())
             ->isNotEmpty();
 
         if ($formattedWrong) {
@@ -101,7 +98,7 @@ class Buttons
 
     private function checkOptionalAttributes($button)
     {
-        $formattedWrong = collect($button->keys())
+        $formattedWrong = $button->keys()
             ->diff(Attributes::Mandatory)
             ->diff(Attributes::Optional)
             ->isNotEmpty();
@@ -187,16 +184,14 @@ class Buttons
 
     private function setDefaults()
     {
-        $this->defaults = collect(config('enso.tables.buttons.global'))
+        $this->defaults = (new Obj(config('enso.tables.buttons.global')))
             ->map(function ($button) {
-                $button['type'] = 'global';
-
-                return $button;
-            })->merge(collect(config('enso.tables.buttons.row'))
-            ->map(function ($button) {
-                $button['type'] = 'row';
-
-                return $button;
-            }))->toArray();
+                return $button->set('type', 'global');
+            })->merge(
+                (new Obj(config('enso.tables.buttons.row')))
+                    ->map(function ($button) {
+                        return $button->set('type', 'row');
+                    })
+            );
     }
 }

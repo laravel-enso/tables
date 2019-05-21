@@ -218,7 +218,7 @@ class Builder
         }
 
         $this->data->each->setAppends(
-            $this->request->get('appends')
+            $this->request->get('appends')->toArray()
         );
 
         return $this;
@@ -311,7 +311,7 @@ class Builder
     {
         $this->request->set(
             'columns',
-            collect($this->request->get('columns'))
+            $this->request->get('columns')
                 ->map(function ($column) {
                     return new Obj($this->array($column));
                 })

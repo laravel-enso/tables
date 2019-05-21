@@ -11,7 +11,7 @@ class Meta
 {
     public static function validate(Obj $column)
     {
-        $attributes = collect($column->get('meta'));
+        $attributes = $column->get('meta');
 
         $diff = $attributes->diff(Attributes::Meta);
 
@@ -22,7 +22,7 @@ class Meta
             ));
         }
 
-        if (Str::contains($column->name, '.')
+        if (Str::contains($column->get('name'), '.')
             && ($attributes->contains('searchable') || $attributes->contains('sortable'))) {
             throw new TemplateException(__(
                 'Nested columns do not support "searchable" nor "sortable": ":column"',

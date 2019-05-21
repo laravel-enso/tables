@@ -13,23 +13,25 @@ class Controls
     public function __construct(Obj $template)
     {
         $this->controls = $template->get('controls');
-        $this->defaults = config('enso.tables.controls');
+        $this->defaults = new Obj(config('enso.tables.controls'));
     }
 
     public function validate()
     {
-        $this->checkFormat()
-            ->checkDefault();
+        if ($this->controls !== null) {
+            $this->checkFormat()
+                ->checkDefault();
+        }
     }
 
     private function checkFormat()
     {
-        $formattedWrong = collect($this->controls)
-            ->filter(function ($control) {
+        $formattedWrong = ! $this->controls instanceof Obj
+            || $this->controls->filter(function ($control) {
                 return ! is_string($control);
-            });
+            })->isNotEmpty();
 
-        if ($formattedWrong->isNotEmpty()) {
+        if ($formattedWrong) {
             throw new TemplateException(__('The controls array may contain only strings.'));
         }
 
@@ -38,8 +40,7 @@ class Controls
 
     private function checkDefault()
     {
-        $diff = collect($this->controls)
-            ->diff($this->defaults);
+        $diff = $this->controls->diff($this->defaults);
 
         if ($diff->isNotEmpty()) {
             throw new TemplateException(__(

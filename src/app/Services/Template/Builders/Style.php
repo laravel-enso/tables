@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\app\Services\Template\Builders;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Attributes\Style as Attributes;
 
 class Style
@@ -12,7 +13,7 @@ class Style
     public function __construct($template)
     {
         $this->template = $template;
-        $this->defaultStyle = config('enso.tables.style');
+        $this->defaultStyle = new Obj(config('enso.tables.style'));
     }
 
     public function build()
@@ -21,26 +22,27 @@ class Style
         $this->template->set('style', $this->compute(Attributes::Table));
         $this->template->set('aligns', $this->preset(Attributes::Align));
         $this->template->set('styles', $this->preset(Attributes::Table));
-        $this->template->set('highlight', $this->defaultStyle['highlight'] ?? null);
+        $this->template->set('highlight', $this->defaultStyle->get('highlight'));
     }
 
     private function compute($style)
     {
-        return collect($this->defaultStyle['default'])->intersect($style)
+        return $this->defaultStyle->get('default')
+            ->intersect($style)
             ->values()
             ->reduce(function ($style, $param) {
-                $style->push($this->defaultStyle['mapping'][$param]);
-
-                return $style;
+                return $style->push(
+                    $this->defaultStyle->get('mapping')->get($param)
+                );
             }, collect())->unique()->implode(' ');
     }
 
     private function preset($style)
     {
         return collect($style)->reduce(function ($styles, $style) {
-            $styles[$style] = $this->defaultStyle['mapping'][$style];
-
-            return $styles;
-        }, []);
+            return $styles->set(
+                $style, $this->defaultStyle->get('mapping')->get($style)
+            );
+        }, new Obj);
     }
 }

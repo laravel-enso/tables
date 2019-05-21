@@ -42,8 +42,7 @@ class Structure
         $attributes = collect(Attributes::Mandatory)
             ->merge(Attributes::Optional);
 
-        $diff = collect($this->template->keys())
-            ->diff($attributes);
+        $diff = $this->template->keys()->diff($attributes);
 
         if ($diff->isNotEmpty()) {
             throw new TemplateException(__(
@@ -57,15 +56,18 @@ class Structure
 
     private function checkFormat()
     {
-        if ($this->template->has('lengthMenu') && ! is_array($this->template->get('lengthMenu'))) {
+        if ($this->template->has('lengthMenu')
+            && ! $this->template->get('lengthMenu') instanceof Obj) {
             throw new TemplateException(__('"lengthMenu" attribute must be an array'));
         }
 
-        if ($this->template->has('appends') && ! is_array($this->template->get('appends'))) {
+        if ($this->template->has('appends')
+            && ! $this->template->get('appends') instanceof Obj) {
             throw new TemplateException(__('"appends" attribute must be an array'));
         }
 
-        if ($this->template->has('debounce') && ! is_int($this->template->get('debounce'))) {
+        if ($this->template->has('debounce')
+            && ! is_int($this->template->get('debounce'))) {
             throw new TemplateException(__('"debounce" attribute must be an integer'));
         }
 
@@ -74,7 +76,8 @@ class Structure
             throw new TemplateException(__('"method" attribute can be either "GET" or "POST"'));
         }
 
-        if ($this->template->has('selectable') && ! is_bool($this->template->get('selectable'))) {
+        if ($this->template->has('selectable')
+            && ! is_bool($this->template->get('selectable'))) {
             throw new TemplateException(__('"selectable" attribute must be a boolean'));
         }
 
