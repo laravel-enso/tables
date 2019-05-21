@@ -104,7 +104,7 @@ class Filters
 
     private function setMinLimit($table, $column, $value)
     {
-        if ($value->min !== null) {
+        if ($value->min === null) {
             return $this;
         }
 
@@ -126,7 +126,7 @@ class Filters
 
     private function setMaxLimit($table, $column, $value)
     {
-        if ($value->max !== null) {
+        if ($value->max === null) {
             return $this;
         }
 
