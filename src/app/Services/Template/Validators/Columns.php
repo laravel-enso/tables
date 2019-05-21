@@ -34,7 +34,7 @@ class Columns
 
     private function checkFormat()
     {
-        if (!$this->columns instanceof Obj || $this->columns->isEmpty()
+        if (! $this->columns instanceof Obj || $this->columns->isEmpty()
             || $this->columns->first(function ($column) {
                 return ! $column instanceof Obj;
             }) !== null
