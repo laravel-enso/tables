@@ -19,7 +19,10 @@ trait Datatable
         $meta = '{"start":0,"length":10,"sort":false,"total":false,"enum":false,"date":false,"translatable": false,"actions":true,"forceInfo":false}';
 
         $params = json_decode($init->getContent(), true) + [
-            'columns' => '',
+            'columns' => [[
+                'name' => 'id',
+                'meta' => ['sortable'],
+            ]],
             'meta' => $meta,
         ];
 

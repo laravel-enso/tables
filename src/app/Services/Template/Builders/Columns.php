@@ -18,7 +18,7 @@ class Columns
 
     public function build()
     {
-        $columns = collect($this->template->get('columns'))
+        $columns = $this->template->get('columns')
             ->reduce(function ($columns, $column) {
                 $this->computeMeta($column)
                     ->computeDefaultSort($column)
@@ -34,12 +34,12 @@ class Columns
     private function computeMeta($column)
     {
         if (! $column->has('meta')) {
-            $column->set('meta', []);
+            $column->set('meta', new Obj);
         }
 
         $meta = collect(Attributes::Meta)
             ->reduce(function ($meta, $attribute) use ($column) {
-                $meta->set($attribute, collect($column->meta)->contains($attribute));
+                $meta->set($attribute, $column->get('meta')->contains($attribute));
 
                 return $meta;
             }, new Obj);
