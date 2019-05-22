@@ -104,19 +104,16 @@ class Filters
 
     private function setMinLimit($table, $column, $value)
     {
-        if ($value->get('min') === null) {
+        if ($value->min === null) {
             return $this;
         }
 
-        $dateFormat = $value->get('dateFormat')
+        $dateFormat = $value->dateFormat
             ?? config('enso.config.dateFormat');
 
-        $dbDateFormat = $value->get('dbDateFormat');
-
-        $min = $dateFormat || $dbDateFormat
-            ? $this->formatDate(
-                $value->get('min'), $dateFormat, $dbDateFormat
-            ) : $value->get('min');
+        $min = $dateFormat
+            ? $this->formatDate($value->min, $dateFormat)
+            : $value->min;
 
         $this->query->where($table.'.'.$column, '>=', $min);
         $this->filters = true;
@@ -126,19 +123,16 @@ class Filters
 
     private function setMaxLimit($table, $column, $value)
     {
-        if ($value->get('max') === null) {
+        if ($value->max === null) {
             return $this;
         }
 
         $dateFormat = $value->dateFormat
             ?? config('enso.config.dateFormat');
 
-        $dbDateFormat = $value->get('dbDateFormat');
-
-        $max = $dateFormat || $dbDateFormat
-            ? $this->formatDate(
-                $value->get('max'), $dateFormat, $dbDateFormat
-            ) : $value->get('max');
+        $max = $dateFormat
+            ? $this->formatDate($value->max, $dateFormat)
+            : $value->max;
 
         $this->query->where($table.'.'.$column, '<=', $max);
         $this->filters = true;
@@ -146,15 +140,13 @@ class Filters
         return $this;
     }
 
-    private function formatDate(string $date, $dateFormat, $dbDateFormat)
+    private function formatDate(string $date, $dateFormat)
     {
         $date = $dateFormat
             ? Carbon::createFromFormat($dateFormat, $date)
             : new Carbon($date);
 
-        return $dbDateFormat
-            ? $date->format($dbDateFormat)
-            : $date;
+        return $date->format(config('enso.tables.dbDateFormat'));
     }
 
     private function parse($type)
