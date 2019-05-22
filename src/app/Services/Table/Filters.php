@@ -48,7 +48,6 @@ class Filters
                     });
                 });
             });
-
         $this->filters = true;
 
         return $this;
@@ -86,8 +85,8 @@ class Filters
                 ->each(function ($interval, $table) {
                     collect($interval)
                         ->each(function ($value, $column) use ($table) {
-                            $this->setMinLimit($table, $column, (object) $value)
-                                ->setMaxLimit($table, $column, (object) $value);
+                            $this->setMinLimit($table, $column, $value)
+                                ->setMaxLimit($table, $column, $value);
                         });
                 });
         });
@@ -104,18 +103,21 @@ class Filters
 
     private function setMinLimit($table, $column, $value)
     {
-        if ($value->min === null) {
+        if ($value->get('min') === null) {
             return $this;
         }
 
-        $dateFormat = $value->dateFormat
+        $dateFormat = $value->get('dateFormat')
             ?? config('enso.config.dateFormat');
 
-        $min = $dateFormat
-            ? $this->formatDate($value->min, $dateFormat)
-            : $value->min;
+        $dbDateFormat = $value->get('dbDateFormat');
 
+        $min = $dateFormat || $dbDateFormat
+            ? $this->formatDate(
+                $value->get('min'), $dateFormat, $dbDateFormat
+            ) : $value->get('min');
         $this->query->where($table.'.'.$column, '>=', $min);
+
         $this->filters = true;
 
         return $this;
@@ -123,36 +125,42 @@ class Filters
 
     private function setMaxLimit($table, $column, $value)
     {
-        if ($value->max === null) {
+        if ($value->get('max') === null) {
             return $this;
         }
 
-        $dateFormat = $value->dateFormat
+        $dateFormat = $value->get('dateFormat')
             ?? config('enso.config.dateFormat');
 
-        $max = $dateFormat
-            ? $this->formatDate($value->max, $dateFormat)
-            : $value->max;
+        $dbDateFormat = $value->get('dbDateFormat');
+
+        $max = $dateFormat || $dbDateFormat
+            ? $this->formatDate(
+                $value->get('max'), $dateFormat, $dbDateFormat
+            ) : $value->get('max');
 
         $this->query->where($table.'.'.$column, '<=', $max);
+
         $this->filters = true;
 
         return $this;
     }
 
-    private function formatDate(string $date, $dateFormat)
+    private function formatDate(string $date, $dateFormat, $dbDateFormat)
     {
         $date = $dateFormat
             ? Carbon::createFromFormat($dateFormat, $date)
             : new Carbon($date);
 
-        return $date->format(config('enso.tables.dbDateFormat'));
+        return $dbDateFormat
+            ? $date->format($dbDateFormat)
+            : $date;
     }
 
     private function parse($type)
     {
         return is_string($this->request->get($type))
-            ? json_decode($this->request->get($type))
-            : (object) $this->request->get($type);
+            ? new Obj(json_decode($this->request->get($type), true))
+            : $this->request->get($type);
     }
 }
