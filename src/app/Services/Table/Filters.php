@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\app\Services\Table;
 
 use Carbon\Carbon;
+use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Filters
 {
