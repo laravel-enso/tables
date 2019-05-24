@@ -23,6 +23,7 @@ class Structure
             ->debounce()
             ->method()
             ->selectable()
+            ->preview()
             ->comparisonOperator()
             ->fullInfoRecordLimit()
             ->responsive()
@@ -78,6 +79,15 @@ class Structure
     {
         if (! $this->template->has('selectable')) {
             $this->template->set('selectable', false);
+        }
+
+        return $this;
+    }
+
+    private function preview()
+    {
+        if (! $this->template->has('preview')) {
+            $this->template->set('preview', false);
         }
 
         return $this;
