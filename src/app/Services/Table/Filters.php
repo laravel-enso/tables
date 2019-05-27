@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\app\Services\Table;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Filters
@@ -64,7 +65,7 @@ class Filters
             collect($this->parse('filters'))
                 ->each(function ($filters, $table) use ($query) {
                     collect($filters)->each(function ($value, $column) use ($table, $query) {
-                        if ($value !== null && $value !== '' && $value !== []) {
+                        if ($this->filterIsValid($value)) {
                             $query->whereIn($table.'.'.$column, (array) $value);
                             $this->filters = true;
                         }
@@ -100,6 +101,13 @@ class Filters
         if ($this->request->has('params')) {
             $this->filters = true;
         }
+    }
+
+    private function filterIsValid($value)
+    {
+        return $value !== null
+            && $value !== ''
+            && ! ($value instanceof Collection && $value->isEmpty());
     }
 
     private function setMinLimit($table, $column, $value)

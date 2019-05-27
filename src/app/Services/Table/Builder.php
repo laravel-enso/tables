@@ -324,12 +324,10 @@ class Builder
             return $this->count();
         }
 
-        if (! Cache::has('table:'.$this->request->get('name'))) {
-            Cache::put(
-                'table:'.$this->request->get('name'),
-                $this->count(),
-                now()->addHours(1)
-            );
+        $cacheKey = 'table:'.$this->query->getModel()->getTable();
+
+        if (! Cache::has($cacheKey)) {
+            Cache::put($cacheKey, $this->count(), now()->addHours(1));
         }
 
         return (int) Cache::get(

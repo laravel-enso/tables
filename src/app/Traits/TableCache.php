@@ -20,6 +20,6 @@ trait TableCache
 
     public function resetTableCache()
     {
-        Cache::forget('table:'.Str::camel($this->getTable()));
+        Cache::forget('table:'.$this->getTable());
     }
 }
