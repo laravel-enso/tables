@@ -330,9 +330,7 @@ class Builder
             Cache::put($cacheKey, $this->count(), now()->addHours(1));
         }
 
-        return (int) Cache::get(
-            'table:'.$this->request->get('name')
-        );
+        return (int) Cache::get($cacheKey);
     }
 
     private function count()
