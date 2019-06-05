@@ -31,6 +31,8 @@ class Excel
     public function __construct(string $class, array $request, User $user, $dataExport = null)
     {
         $this->user = $user;
+        auth()->onceUsingId($this->user->id);
+
         $this->dataExport = $dataExport;
         $this->request = new Obj($request);
         $this->fetcher = new Fetcher($class, $request);
