@@ -66,7 +66,7 @@ class Filters
                 ->each(function ($filters, $table) use ($query) {
                     collect($filters)->each(function ($value, $column) use ($table, $query) {
                         if ($this->filterIsValid($value)) {
-                            $query->whereIn($table.'.'.$column, (array) $value);
+                            $query->whereIn($table.'.'.$column, $value);
                             $this->filters = true;
                         }
                     });
