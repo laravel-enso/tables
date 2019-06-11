@@ -62,11 +62,15 @@ class Filters
         }
 
         $this->query->where(function ($query) {
-            collect($this->parse('filters'))
+            $this->parse('filters')
                 ->each(function ($filters, $table) use ($query) {
-                    collect($filters)->each(function ($value, $column) use ($table, $query) {
+                    $filters->each(function ($value, $column) use ($table, $query) {
                         if ($this->filterIsValid($value)) {
-                            $query->whereIn($table.'.'.$column, $value);
+                            if ($value instanceof Collection) {
+                                $value = $value->toArray();
+                            }
+
+                            $query->whereIn($table.'.'.$column, (array) $value);
                             $this->filters = true;
                         }
                     });
@@ -83,7 +87,7 @@ class Filters
         }
 
         $this->query->where(function () {
-            collect($this->parse('intervals'))
+            $this->parse('intervals')
                 ->each(function ($interval, $table) {
                     collect($interval)
                         ->each(function ($value, $column) use ($table) {
