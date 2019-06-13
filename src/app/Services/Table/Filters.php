@@ -57,7 +57,7 @@ class Filters
 
     private function setFilters()
     {
-        if (! $this->request->has('filters')) {
+        if (! $this->request->filled('filters')) {
             return $this;
         }
 
@@ -82,7 +82,7 @@ class Filters
 
     private function setIntervals()
     {
-        if (! $this->request->has('intervals')) {
+        if (! $this->request->filled('intervals')) {
             return $this;
         }
 
@@ -102,7 +102,7 @@ class Filters
 
     private function checkParams()
     {
-        if ($this->request->has('params')) {
+        if ($this->request->filled('params')) {
             $this->filters = true;
         }
     }
