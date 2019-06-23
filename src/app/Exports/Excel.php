@@ -31,8 +31,6 @@ class Excel
     public function __construct(string $class, array $request, User $user, $dataExport = null)
     {
         $this->user = $user;
-        auth()->onceUsingId($this->user->id);
-
         $this->dataExport = $dataExport;
         $this->request = new Obj($request);
         $this->fetcher = new Fetcher($class, $request);
@@ -50,7 +48,7 @@ class Excel
         return $this;
     }
 
-    public function process()
+    private function process()
     {
         $this->fetcher->next();
 
@@ -71,18 +69,25 @@ class Excel
         return $this;
     }
 
-    public function start()
+    private function start()
     {
         auth()->onceUsingId($this->user->id);
-        app()->setLocale($this->user->preferences()->global->lang);
-        optional($this->dataExport)->startProcessing();
+
+        if ($this->dataExport) {
+            app()->setLocale(
+                $this->user->preferences()->global->lang
+            );
+
+            $this->dataExport->startProcessing();
+        }
+
         $this->sheetCount = 1;
         $this->writer->addRow($this->header());
 
         return $this;
     }
 
-    public function closeWriter()
+    private function closeWriter()
     {
         $this->writer->close();
 
@@ -105,7 +110,7 @@ class Excel
         return $this;
     }
 
-    public function finalize()
+    private function finalize()
     {
         if (! $this->dataExport) {
             return;
@@ -121,7 +126,7 @@ class Excel
         return $this;
     }
 
-    public function notify()
+    private function notify()
     {
         $this->user->notify((new ExportDoneNotification(
             $this->filePath(),
