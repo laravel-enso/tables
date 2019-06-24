@@ -71,8 +71,6 @@ class Excel
 
     private function start()
     {
-        auth()->onceUsingId($this->user->id);
-
         if ($this->dataExport) {
             app()->setLocale(
                 $this->user->preferences()->global->lang
