@@ -187,7 +187,9 @@ class Builder
         $this->total = $this->columns
             ->reduce(function ($total, $column) {
                 if ($column->get('meta')->get('total')) {
-                    $total[$column->get('name')] = $this->query->sum($column->get('data'));
+                    $total[$column->get('name')] = $column->get('meta')->get('cents')
+                        ? $this->query->sum($column->get('data')) / 100
+                        : $this->query->sum($column->get('data'));
                 }
 
                 return $total;

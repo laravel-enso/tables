@@ -11,6 +11,6 @@ class Column
     const Meta = [
         'searchable', 'sortable', 'sort:ASC', 'sort:DESC', 'translatable',
         'boolean', 'slot', 'rogue', 'total', 'date', 'icon', 'clickable',
-        'customTotal', 'notExportable', 'nullLast',
+        'customTotal', 'notExportable', 'nullLast', 'cents',
     ];
 }
