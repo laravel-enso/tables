@@ -120,15 +120,18 @@ class Filters
             return $this;
         }
 
-        $dateFormat = $value->get('dateFormat')
-            ?? config('enso.config.dateFormat');
-
         $dbDateFormat = $value->get('dbDateFormat');
 
-        $min = $dateFormat || $dbDateFormat
+        if ($dbDateFormat) {
+            $dateFormat = $value->get('dateFormat')
+                ?? config('enso.config.dateFormat');
+        }
+
+        $min = $dbDateFormat
             ? $this->formatDate(
                 $value->get('min'), $dateFormat, $dbDateFormat
             ) : $value->get('min');
+
         $this->query->where($table.'.'.$column, '>=', $min);
 
         $this->filters = true;
@@ -142,12 +145,14 @@ class Filters
             return $this;
         }
 
-        $dateFormat = $value->get('dateFormat')
-            ?? config('enso.config.dateFormat');
-
         $dbDateFormat = $value->get('dbDateFormat');
 
-        $max = $dateFormat || $dbDateFormat
+        if ($dbDateFormat) {
+            $dateFormat = $value->get('dateFormat')
+                ?? config('enso.config.dateFormat');
+        }
+
+        $max = $dbDateFormat
             ? $this->formatDate(
                 $value->get('max'), $dateFormat, $dbDateFormat
             ) : $value->get('max');
