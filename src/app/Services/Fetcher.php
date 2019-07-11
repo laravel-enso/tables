@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\app\Services;
 
+use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Fetcher
@@ -13,7 +14,7 @@ class Fetcher
 
     public function __construct(string $class, array $request)
     {
-        $this->builder = (new $class($request))
+        $this->builder = App::makeWith($class, ['request' => $request])
             ->fetcher();
 
         $this->request = new Obj($request);

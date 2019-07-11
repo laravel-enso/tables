@@ -2,10 +2,12 @@
 
 namespace LaravelEnso\Tables\app\Traits;
 
+use Illuminate\Support\Facades\App;
+
 trait Init
 {
     public function __invoke()
     {
-        return (new $this->tableClass())->init();
+        return App::make($this->tableClass)->init();
     }
 }
