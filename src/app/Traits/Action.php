@@ -11,8 +11,8 @@ trait Action
     {
         App::makeWith(
             $this->actionClass, [
-                'class'=>$this->tableClass,
-                'request' => $request->all()
+                'class' => $this->tableClass,
+                'request' => $request->all(),
             ])->handle();
     }
 }
