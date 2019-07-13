@@ -53,7 +53,7 @@ class Filters
                         }
                     });
                 });
-            });
+        });
 
         $this->filters = true;
 
