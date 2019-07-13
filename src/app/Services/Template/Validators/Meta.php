@@ -23,9 +23,9 @@ class Meta
         }
 
         if (Str::contains($column->get('name'), '.')
-            && ($attributes->contains('searchable') || $attributes->contains('sortable'))) {
+            && ($attributes->contains('sortable'))) {
             throw new TemplateException(__(
-                'Nested columns do not support "searchable" nor "sortable": ":column"',
+                'Nested columns do not support "sortable": ":column"',
                 ['column' => $column->get('name')]
             ));
         }

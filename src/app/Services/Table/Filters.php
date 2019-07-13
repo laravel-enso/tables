@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\app\Services\Table;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
@@ -37,22 +38,47 @@ class Filters
             return $this;
         }
 
-        collect(explode(' ', $this->request->get('meta')->get('search')))
-            ->each(function ($arg) {
-                $this->query->where(function ($query) use ($arg) {
-                    $this->columns->each(function ($column) use ($query, $arg) {
+        $this->query->where(function ($query) {
+            collect(explode(' ', $this->request->get('meta')->get('search')))
+                ->each(function ($argument) use ($query) {
+                    $this->columns->each(function ($column) use ($query, $argument) {
                         if ($column->get('meta')->get('searchable')) {
-                            $query->orWhere(
-                                $column->get('data'),
-                                $this->request->get('meta')->get('comparisonOperator'), '%'.$arg.'%'
-                            );
+                            return $this->isNested($column->get('name'))
+                                ? $this->whereHasRelation($query, $column->get('data'), $argument)
+                                : $query->orWhere(
+                                    $column->get('data'),
+                                    $this->request->get('meta')->get('comparisonOperator'),
+                                    '%'.$argument.'%'
+                                );
                         }
                     });
                 });
             });
+
         $this->filters = true;
 
         return $this;
+    }
+
+    private function whereHasRelation($query, $attribute, $argument)
+    {
+        if (! $this->isNested($attribute)) {
+            $query->where(
+                $attribute,
+                $this->request->get('meta')->get('comparisonOperator'),
+                '%'.$argument.'%'
+            );
+
+            return;
+        }
+
+        $attributes = collect(explode('.', $attribute));
+
+        $query->orWhere(function ($query) use ($attributes, $argument) {
+            $query->whereHas($attributes->shift(), function ($query) use ($attributes, $argument) {
+                $this->whereHasRelation($query, $attributes->implode('.'), $argument);
+            });
+        });
     }
 
     private function setFilters()
@@ -180,5 +206,10 @@ class Filters
         return is_string($this->request->get($type))
             ? new Obj(json_decode($this->request->get($type), true))
             : $this->request->get($type);
+    }
+
+    private function isNested($attribute)
+    {
+        return Str::contains($attribute, '.');
     }
 }

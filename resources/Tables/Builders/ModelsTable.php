@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tabels\Builders;
+namespace App\Tables\Builders;
 
 use App\Model;
 use LaravelEnso\Tables\app\Services\Table;
