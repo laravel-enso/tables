@@ -11,7 +11,7 @@ trait Data
     {
         return App::makeWith(
             $this->tableClass,
-            ['request' => $request->all()
+            ['request' => $request->all(),
         ])->data();
     }
 }
