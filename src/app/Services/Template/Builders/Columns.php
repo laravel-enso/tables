@@ -92,6 +92,10 @@ class Columns
             $this->meta->set('translatable', true);
         }
 
+        if ($meta->has('cents')) {
+            $this->meta->set('cents', true);
+        }
+
         if ($column->has('enum')) {
             $this->meta->set('enum', true);
         }

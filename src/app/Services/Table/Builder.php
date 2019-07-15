@@ -8,6 +8,7 @@ use LaravelEnso\Tables\app\Exceptions\QueryException;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use LaravelEnso\Tables\app\Services\Table\Computors\Date;
 use LaravelEnso\Tables\app\Services\Table\Computors\Enum;
+use LaravelEnso\Tables\app\Services\Table\Computors\Cents;
 use LaravelEnso\Tables\app\Services\Table\Computors\OptimalChunk;
 use LaravelEnso\Tables\app\Services\Table\Computors\Translatable;
 
@@ -97,6 +98,7 @@ class Builder
                 ->computeEnum()
                 ->computeDate()
                 ->computeTranslatable()
+                ->computeCents()
                 ->flatten();
         }
     }
@@ -243,6 +245,10 @@ class Builder
             Enum::columns($this->columns);
         }
 
+        if ($this->meta->get('cents')) {
+            Cents::columns($this->columns);
+        }
+
         if ($this->meta->get('date')) {
             Date::columns($this->columns);
         }
@@ -260,7 +266,7 @@ class Builder
     {
         if ($this->meta->get('enum')) {
             $this->data = $this->data->map(function ($row) {
-                return Enum::compute($row, $this->columns);
+                return Enum::compute($row);
             });
         }
 
@@ -271,7 +277,7 @@ class Builder
     {
         if ($this->meta->get('date')) {
             $this->data = $this->data->map(function ($row) {
-                return Date::compute($row, $this->columns);
+                return Date::compute($row);
             });
         }
 
@@ -283,6 +289,17 @@ class Builder
         if ($this->fetchMode && $this->meta->get('translatable')) {
             $this->data = $this->data->map(function ($row) {
                 return Translatable::compute($row);
+            });
+        }
+
+        return $this;
+    }
+
+    private function computeCents()
+    {
+        if ($this->meta->get('cents')) {
+            $this->data = $this->data->map(function ($row) {
+                return Cents::compute($row);
             });
         }
 

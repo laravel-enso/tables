@@ -107,6 +107,7 @@ class Structure
         $this->meta->set('date', false);
         $this->meta->set('translatable', false);
         $this->meta->set('enum', false);
+        $this->meta->set('cents', false);
         $this->meta->set('money', false);
     }
 
