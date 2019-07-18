@@ -38,9 +38,9 @@ class Filters
             return $this;
         }
 
-        $this->query->where(function ($query) {
-            collect(explode(' ', $this->request->get('meta')->get('search')))
-                ->each(function ($argument) use ($query) {
+        collect(explode(' ', $this->request->get('meta')->get('search')))
+            ->each(function ($argument) {
+                $this->query->where(function ($query) use ($argument) {
                     $this->columns->each(function ($column) use ($query, $argument) {
                         if ($column->get('meta')->get('searchable')) {
                             return $this->isNested($column->get('name'))
@@ -53,7 +53,7 @@ class Filters
                         }
                     });
                 });
-        });
+            });
 
         $this->filters = true;
 
