@@ -2,7 +2,6 @@
 
 namespace Services\Template\Builders;
 
-use DB;
 use Schema;
 use Mockery;
 use Faker\Factory;

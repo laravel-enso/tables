@@ -2,7 +2,6 @@
 
 namespace Services\Template\Builders;
 
-use Route;
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Template\Builders\Columns;

@@ -41,8 +41,8 @@ class BuilderTest extends TestCase
     {
         $response = $this->requestResponse();
 
-        $this->assertCount(TestModel::count(), $response["data"]);
-        $this->assertEquals(TestModel::count(), $response["count"]);
+        $this->assertCount(BuilderTestModel::count(), $response["data"]);
+        $this->assertEquals(BuilderTestModel::count(), $response["count"]);
 
         $this->assertTrue(
             $response["data"]->pluck('name')
@@ -91,7 +91,7 @@ class BuilderTest extends TestCase
 
         $response = $this->requestResponse([
             "columns" => [
-                'is_active' => ['name' => 'is_active', 'enum' => TestEnum::class]
+                'is_active' => ['name' => 'is_active', 'enum' => BuilderTestEnum::class]
             ],
             'meta' => [
                 'enum' => true
@@ -129,7 +129,7 @@ class BuilderTest extends TestCase
         ]);
 
         $this->assertEquals(
-            TestModel::find($response["data"][0]["dtRowId"])->price / 100.0,
+            BuilderTestModel::find($response["data"][0]["dtRowId"])->price / 100.0,
             $response["data"][0]["price"]
         );
     }
@@ -175,7 +175,7 @@ class BuilderTest extends TestCase
         ]);
 
         $this->assertEquals(
-            TestModel::orderBy("id", "desc")->first()->id,
+            BuilderTestModel::orderBy("id", "desc")->first()->id,
             $response["data"][0]["dtRowId"]
         );
     }
@@ -239,7 +239,7 @@ class BuilderTest extends TestCase
         ]);
 
         $this->assertEquals(
-            TestModel::all()->sum("id"),
+            BuilderTestModel::all()->sum("id"),
             $response["total"]['id']
         );
     }
@@ -248,11 +248,11 @@ class BuilderTest extends TestCase
     {
         $params['columns'] = $params['columns'] ?? [];
         $params['meta'] = $params['meta'] ?? [];
-        $params['meta']['length'] = $params['meta']['length'] ?? TestModel::count();
+        $params['meta']['length'] = $params['meta']['length'] ?? BuilderTestModel::count();
 
         $this->builder = new Builder(
             new Obj($params),
-            TestModel::selectRaw($select)
+            BuilderTestModel::selectRaw($select)
         );
 
         if ($withFetch)
@@ -263,7 +263,7 @@ class BuilderTest extends TestCase
 
     private function createTestModel()
     {
-        return TestModel::create([
+        return BuilderTestModel::create([
             'name' => $this->faker->name,
             'is_active' => $this->faker->boolean,
             'price' => $this->faker->numberBetween(1000, 10000),
@@ -272,7 +272,7 @@ class BuilderTest extends TestCase
 
     private function createTestModelTable()
     {
-        Schema::create('test_models', function ($table) {
+        Schema::create('builder_test_models', function ($table) {
             $table->increments('id');
             $table->string('name')->nullable();
             $table->boolean('is_active')->nullable();
@@ -283,7 +283,8 @@ class BuilderTest extends TestCase
 
 }
 
-class TestModel extends Model
+
+class BuilderTestModel extends Model
 {
     protected $fillable = ['name', 'is_active', 'price'];
 
@@ -295,7 +296,7 @@ class TestModel extends Model
     }
 }
 
-class TestEnum extends Enum
+class BuilderTestEnum extends Enum
 {
     public const Active = 1;
     public const DeActive = 0;
