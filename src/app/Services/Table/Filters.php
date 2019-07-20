@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use Illuminate\Database\Eloquent\Builder;
 
 class Filters
 {
@@ -14,11 +15,11 @@ class Filters
     private $columns;
     private $filters;
 
-    public function __construct($request, $query, $columns)
+    public function __construct(Obj $request, Builder $query)
     {
         $this->request = $request;
         $this->query = $query;
-        $this->columns = $columns;
+        $this->columns = $request->get('columns');
         $this->filters = false;
     }
 

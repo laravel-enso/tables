@@ -129,8 +129,7 @@ class Builder
     {
         $this->filters = (new Filters(
             $this->request,
-            $this->query,
-            $this->columns
+            $this->query
         ))->handle();
 
         return $this;
