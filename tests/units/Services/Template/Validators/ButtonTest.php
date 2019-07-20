@@ -11,110 +11,113 @@ use LaravelEnso\Tables\app\Services\Template\Validators\Buttons;
 
 class ButtonTest extends TestCase
 {
+    private $validator;
+    private $template;
+
+    protected function setUp() :void
+    {
+        parent::setUp();
+
+        // $this->withoutExceptionHandling();
+
+        $this->template = new Obj(['buttons' => [$this->mockedButton()]]);
+    }
 
     /** @test */
-    public function cannot_validate_without_mandatory_attribute()
+    public function cannot_validate_without_mandatory_attributes()
     {
-        $this->validate(
-            [
-                'buttons' => [
-                    []
-                ],
-            ],
-            false
-        );
+        $this->template->get('buttons')->first()->forget('type');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('The following attributes are mandatory for custom buttons: "type", "icon", "class"');
+
+        $this->validate();
     }
 
 
     /** @test */
     public function cannot_validate_with_wrong_attribute()
     {
-        $this->validate(
-            $this->basicTemplate([
-                'wrong_attribute' => 'r',
-            ]),
-            false
-        );
-    }
+        $this->template->get('buttons')->first()->set('wrong_attribute', 'wrong');
 
-    /** @test */
-    public function cannot_validate_with_wrong_format()
-    {
-        $this->validate(
-            $this->basicTemplate([
-                [
-                    'action' => true,
-                ]
-            ]),
-            false
-        );
+        $this->expectException(TemplateException::class);
+        
+        $this->expectExceptionMessage('The following optional attributes are allowed for custom buttons: "routeSuffix", "action", "fullRoute", "label", "method", "confirmation", "event", "message", "params", "postEvent", "tooltip"');
 
-        $this->validate(
-            $this->basicTemplate([
-                [
-                    'action' => 'ajax',
-                    'fullRoute' => '/'
-                ]
-            ]),
-            false
-        );
+        $this->validate();
     }
 
     /** @test */
     public function cannot_validate_with_wrong_action()
     {
-        $this->validate(
-            $this->basicTemplate([
-                [
-                    'action' => 'WRONG_ACTION',
-                    'fullRoute' => '/'
-                ]
-            ]),
-            false
-        );
+        $this->template->get('buttons')->first()->set('action', true);
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Whenever you set an action for a button you need to provide the fullRoute or routeSuffix');
+
+        $this->validate();
+    }
+    
+    /** @test */
+    public function cannot_validate_action_with_missing_method()
+    {
+        $button = $this->template->get('buttons')->first();
+
+        $button->set('action', 'ajax');
+        $button->set('fullRoute', '/');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Whenever you set an ajax action for a button you need to provide the method aswell');
+
+        $this->validate();
     }
 
     /** @test */
     public function cannot_validate_with_wrong_route()
     {
-        $this->validate(
-            $this->basicTemplate([
-                [
-                    'action' => 'ajax',
-                    'fullRoute' => '/',
-                    'method' => 'post'
-                ]
-            ]),
-            false
-        );
+        $button = $this->template->get('buttons')->first();
+
+        $button->set('action', 'ajax');
+        $button->set('fullRoute', '/');
+        $button->set('method', 'post');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Button route does not exist: "/"');
+
+        $this->validate();
     }
 
 
     /** @test */
     public function cannot_validate_with_wrong_method()
     {
-        $this->validate(
-            $this->basicTemplate([
-                [
-                    'action' => 'ajax',
-                    'fullRoute' => $this->createRoute(),
-                    'method' => 'WRONG_METHOD'
-                ]
-            ]),
-            false
-        );
+        $button = $this->template->get('buttons')->first();
+
+        $button->set('action', 'ajax');
+        $button->set('fullRoute', $this->createRoute());
+        $button->set('method', 'WRONG_METHOD');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Method is incorrect: "WRONG_METHOD"');
+
+        $this->validate();
     }
 
     /** @test */
     public function cannot_validate_with_wrong_button_type()
     {
-        $this->validate(
-            $this->basicTemplate([
-                'UNKNOWN_TYPE',
-            ]),
-            false
-        );
+        $this->template->set('buttons', new Obj(['UNKNOWN_TYPE']));
 
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Unknown Button(s) Found: "UNKNOWN_TYPE"');
+
+        $this->validate();
     }
 
     /** @test */
@@ -122,54 +125,32 @@ class ButtonTest extends TestCase
     {
         $this->createRoute();
 
-        $this->validate(
-            $this->basicTemplate([
-                [
-                    'method' => 'GET',
-                    'action' => 'ajax',
-                    'fullRoute' => $this->createRoute()
-                ],
-            ]),
-            true
-        );
-    }
+        $button = $this->template->get('buttons')->first();
 
-    private function basicTemplate($buttons = [], $routePrefix = '')
-    {
-        if (!isset($buttons[0]))
-            $buttons = [$buttons];
+        $button->set('action', 'ajax');
+        $button->set('fullRoute', $this->createRoute());
+        $button->set('method', 'GET');
 
-        $mandatoryAttributes = collect(Attributes::Mandatory)->flip()->map(function () {
-            return new Obj([]);
-        });
-
-        $columns = collect($buttons)->map(function ($col) use ($mandatoryAttributes) {
-            return new Obj($mandatoryAttributes->merge($col));
-        });
-
-        return [
-            "buttons" => $columns,
-            'routePrefix' => $routePrefix
-        ];
-    }
-
-    private function validate(array $template, bool $isValid)
-    {
-        $validator = new Buttons(
-            new Obj($template)
-        );
-
-        try {
-            $validator->validate();
-
-            if (!$isValid)
-                $this->fail('should throw TemplateException');
-        } catch (TemplateException $e) {
-            if ($isValid)
-                $this->fail('should not throw TemplateException' . PHP_EOL . $e);
-        }
+        $this->validate();
 
         $this->assertTrue(true);
+
+    }
+
+    private function mockedButton()
+    {
+        return collect(Attributes::Mandatory)->reduce(function ($button, $attribute) {
+            $button->set($attribute, new Obj());
+
+            return $button;
+        }, new Obj());
+    }
+
+    private function validate()
+    {
+        $this->validator = new Buttons($this->template);
+
+        $this->validator->validate();
     }
 
     private function createRoute()

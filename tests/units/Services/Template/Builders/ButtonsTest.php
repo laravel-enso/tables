@@ -2,9 +2,9 @@
 
 namespace Services\Template\Builders;
 
-use App\User;
-use Mockery;
 use Route;
+use Mockery;
+use App\User;
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Template\Builders\Buttons;
@@ -12,119 +12,119 @@ use LaravelEnso\Tables\app\Services\Template\Builders\Buttons;
 class ButtonsTest extends TestCase
 {
     private $meta;
-
     private $template;
 
     protected function setUp() :void
     {
         parent::setUp();
 
-        $this->meta = new Obj([]);
-    }
+        // $this->withoutExceptionHandling();
 
+        $this->meta = new Obj([]);
+
+        $this->template = new Obj([
+            'auth' => false,
+            'buttons' => [],
+        ]);
+    }
 
     /** @test */
     public function can_build_with_type()
     {
-        $this->template = $this->basicTemplate([
-            [
-                'type'=>'row',
-            ]
-        ]);
+        $this->template->get('buttons')->push(new Obj(['type' => 'row']));
 
         $this->build();
 
-        $this->assertEquals(1, $this->template['buttons']['row']->count());
-        $this->assertEquals(0, $this->template['buttons']['global']->count());
+        $this->assertEquals(1, $this->template->get('buttons')->get('row')->count());
+
+        $this->assertEquals(0, $this->template->get('buttons')->get('global')->count());
+
+        $this->assertTrue($this->template->get('actions'));
     }
-
-    /** @test */
-    public function when_there_is_row_type_then_should_set_actions_on_template()
-    {
-        $this->template = $this->basicTemplate([
-            [
-                'type'=>'row',
-            ]
-        ]);
-
-        $this->build();
-
-        $this->assertTrue($this->template['actions']);
-    }
-
 
     /** @test */
     public function cannot_build_when_user_cannot_access_to_route()
     {
         $user = Mockery::mock(User::class)->makePartial();
-        $user->shouldReceive('cannot')->andReturn(true);
+
         $this->actingAs($user);
 
-        $this->template = $this->basicTemplate([
-            [
+        $this->template->get('buttons')->push(new Obj([
                 'action' => '',
                 'type' => 'row',
                 'fullRoute' => 'test',
-            ],
-            'create'
-        ], true);
-        
+        ]));
+
+        $this->template->get('buttons')->push('create');
+
+        $this->template->set('auth', true);
+
+        $user->shouldReceive('cannot')->andReturn(true);
+
         $this->build();
 
-        $this->assertEmpty($this->template['buttons']['global']);
-        $this->assertEmpty($this->template['buttons']['row']);
+        $this->assertEmpty($this->template->get('buttons')->get('global'));
+
+        $this->assertEmpty($this->template->get('buttons')->get('row'));
     }
 
     /** @test */
     public function can_build_with_route()
     {
         Route::any('test')->name('test');
+
         Route::getRoutes()->refreshNameLookups();
 
-        $this->template = $this->basicTemplate([
-            [
-                'action' => 'ajax',
-                'type' => 'row',
-                'fullRoute' => 'test',
-            ]
-        ]);
+        $this->template->get('buttons')->push(new Obj([
+            'action' => 'ajax',
+            'type' => 'row',
+            'fullRoute' => 'test',
+        ]));
 
         $this->build();
 
-        $this->assertEquals('/test?dtRowId', $this->template['buttons']['row'][0]['path']);
+        $this->assertEquals(
+            '/test?dtRowId',
+            $this->template->get('buttons')
+                ->get('row')
+                ->first()
+                ->get('path')
+        );
     }
 
     /** @test */
-    public function can_build_with_predefined_button()
+    public function can_build_with_predefined_buttons()
     {
-        $this->template = $this->basicTemplate([
-            'create',
-        ]);
+        $this->template->set('buttons', collect(['create', 'show']));
 
         $this->build();
 
-        $this->assertEquals(config('enso.tables.buttons.global.create.label'), $this->template['buttons']['global'][0]['label']);
-    }
+        $this->assertEquals(
+            (new Obj(config('enso.tables.buttons.global.create')))->except('routeSuffix'),
+            $this->template->get('buttons')->get('global')->first()->except('route')
+        );
 
+        $this->assertEquals(
+            (new Obj(config('enso.tables.buttons.row.show')))->except('routeSuffix'),
+            $this->template->get('buttons')->get('row')->first()->except('route')
+        );
 
-    private function basicTemplate($buttons = [], $auth = false)
-    {
-        $template = [
-            'auth' => $auth,
-            'buttons' => $buttons,
-        ];
-        return new Obj($template);
+        $this->assertEquals(
+            '.'.config('enso.tables.buttons.global.create.routeSuffix'),
+            $this->template->get('buttons')->get('global')->first()->get('route')
+        );
+
+        $this->assertEquals(
+            '.'.config('enso.tables.buttons.row.show.routeSuffix'),
+            $this->template->get('buttons')->get('row')->first()->get('route')
+        );
     }
 
     private function build(): void
     {
-        $structure = new Buttons(
+        (new Buttons(
             $this->template,
             $this->meta
-        );
-
-        $structure->build();
+        ))->build();
     }
-
 }
-

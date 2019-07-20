@@ -10,108 +10,129 @@ use LaravelEnso\Tables\app\Services\Template\Validators\Structure;
 
 class StructureTest extends TestCase
 {
+    private $validator;
+    private $template;
+
+    protected function setUp() :void
+    {
+        parent::setUp();
+
+        // $this->withoutExceptionHandling();
+
+        $this->template = new Obj($this->mockedTemplate());
+    }
 
     /** @test */
     public function cannot_validate_without_mandatory_attribute()
     {
-        $this->validate(
-            [
-                'routePrefix' => 'r',
-            ],
-            false
-        );
+        $this->template->forget('routePrefix');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Mandatory Attribute(s) Missing: "routePrefix"');
+
+        $this->validate();
     }
 
     /** @test */
     public function cannot_validate_with_wrong_attribute()
     {
-        $this->validate(
-            $this->basicTemplate([
-                'wrong_attribute' => 'r',
-            ]),
-            false
-        );
+        $this->template->set('wrong_attributes', 'wrong');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Unknown Attribute(s) Found: "wrong_attributes"');
+
+        $this->validate();
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_format()
+    public function cannot_validate_with_wrong_length_menu_format()
     {
-        $this->validate(
-            $this->basicTemplate([
-                'lengthMenu' => 'NOT_ARRAY',
-            ]),
-            false
-        );
+        $this->template->set('lengthMenu', 'string');
 
-        $this->validate(
-            $this->basicTemplate([
-                'debounce' => 'NOT_NUMBER',
-            ]),
-            false
-        );
+        $this->expectException(TemplateException::class);
 
-        $this->validate(
-            $this->basicTemplate([
-                'method' => 'NOT_METHOD',
-            ]),
-            false
-        );
+        $this->expectExceptionMessage('"lengthMenu" attribute must be an array');
 
-        $this->validate(
-            $this->basicTemplate([
-                'selectable' => 'NOT_BOOL',
-            ]),
-            false
-        );
-
-        $this->validate(
-            $this->basicTemplate([
-                'comparisonOperator' => 'NOT_LIKE',
-            ]),
-            false
-        );
+        $this->validate();
     }
+    
+    /** @test */
+    public function cannot_validate_with_non_numeric_debounce()
+    {
+        $this->template->set('debounce', 'string');
 
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('"debounce" attribute must be an integer');
+
+        $this->validate();
+    }
+    
+    /** @test */
+    public function cannot_validate_with_wrong_method()
+    {
+        $this->template->set('method', 'patch');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('"method" attribute can be either "GET" or "POST"');
+
+        $this->validate();
+    }
+    
+    /** @test */
+    public function cannot_validate_with_non_boolean_selectable()
+    {
+        $this->template->set('selectable', 'string');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('"selectable" attribute must be a boolean');
+
+        $this->validate();
+    }
+    
+    /** @test */
+    public function cannot_validate_with_wrong_comparison_operator()
+    {
+        $this->template->set('comparisonOperator', 'I_DONT_LIKE');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('"comparisonOperator" attribute can be either "LIKE" or "ILIKE"');
+
+        $this->validate();
+    }
+    
     /** @test */
     public function can_validate()
     {
-        $this->validate(
-            $this->basicTemplate([
-                'lengthMenu' => new Obj([]),
-                'debounce' => 10,
-                'method' => 'POST',
-                'selectable' => true,
-                'comparisonOperator' => 'LIKE',
-                'name' => 'name',
-            ]),
-            true
-        );
-
-    }
-
-    private function basicTemplate($template = [])
-    {
-        $baseTemplate = array_flip(Attributes::Mandatory);
-        return array_merge($baseTemplate, $template);
-    }
-
-    private function validate(array $template, bool $isValid)
-    {
-        $validator = new Structure(
-            new Obj($template)
-        );
-
-        try {
-            $validator->validate();
-
-            if (!$isValid)
-                $this->fail('should throw TemplateException');
-        } catch (TemplateException $e) {
-            if ($isValid)
-                $this->fail('should not throw TemplateException' . PHP_EOL . $e);
-        }
+        $this->validate();
 
         $this->assertTrue(true);
+
     }
 
+    private function validate()
+    {
+        $this->validator = new Structure($this->template);
+
+        $this->validator->validate();
+    }
+
+    private function mockedTemplate()
+    {
+        return new Obj([
+            'lengthMenu' => new Obj([]),
+            'debounce' => 10,
+            'method' => 'POST',
+            'selectable' => true,
+            'comparisonOperator' => 'LIKE',
+            'name' => 'name',
+            'columns' => [],
+            'routePrefix' => 'prefix',
+        ]);
+    }
 }

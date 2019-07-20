@@ -10,129 +10,95 @@ use LaravelEnso\Tables\app\Services\Template\Validators\Columns;
 
 class ColumnTest extends TestCase
 {
+    private $validator;
+    private $template;
 
-    /** @test */
-    public function cannot_validate_without_mandatory_attribute()
+    protected function setUp() :void
     {
-        $this->validate(
-            [
-                'columns' => [
-                    'label' => new Obj(['r']),
-                    'name' => ['r'],
-                ]
-            ],
-            false
-        );
-    }
+        parent::setUp();
 
-    /** @test */
-    public function cannot_validate_with_wrong_attribute()
-    {
-        $this->validate(
-            $this->basicTemplate([
-                'wrong_attribute' => 'r',
-            ]),
-            false
-        );
-    }
+        // $this->withoutExceptionHandling();
 
-    /** @test */
-    public function cannot_validate_with_wrong_enum()
-    {
-        $this->validate(
-            $this->basicTemplate([
-                'enum' => 'af',
-            ]),
-            false
-        );
-    }
-
-    /** @test */
-    public function cannot_validate_with_wrong_format()
-    {
-        $this->validate(
-            $this->basicTemplate([
-                'lengthMenu' => 'NOT_ARRAY',
-            ]),
-            false
-        );
-
-        $this->validate(
-            $this->basicTemplate([
-                'debounce' => 'NOT_NUMBER',
-            ]),
-            false
-        );
-
-        $this->validate(
-            $this->basicTemplate([
-                'method' => 'NOT_METHOD',
-            ]),
-            false
-        );
-
-        $this->validate(
-            $this->basicTemplate([
-                'selectable' => 'NOT_BOOL',
-            ]),
-            false
-        );
-
-        $this->validate(
-            $this->basicTemplate([
-                'comparisonOperator' => 'NOT_LIKE',
-            ]),
-            false
-        );
+        $this->template = new Obj(['columns' => [$this->mockedColumn()]]);
     }
 
     /** @test */
     public function can_validate()
     {
-        $this->validate(
-            $this->basicTemplate([
-                'tooltip' => 'test'
-            ]),
-            true
-        );
-
-    }
-
-    private function basicTemplate($columns = [])
-    {
-        if (!isset($columns[0]))
-            $columns = [$columns];
-
-        $mandatoryAttributes = collect(Attributes::Mandatory)->flip()->map(function(){
-            return new Obj([]);
-        });
-
-        $columns = collect($columns)->map(function($col) use($mandatoryAttributes) {
-            return new Obj($mandatoryAttributes->merge($col));
-        });
-
-        return [
-            "columns" => $columns
-        ];
-    }
-
-    private function validate(array $template, bool $isValid)
-    {
-        $validator = new Columns(
-            new Obj($template)
-        );
-
-        try {
-            $validator->validate();
-
-            if (!$isValid)
-                $this->fail('should throw TemplateException');
-        } catch (TemplateException $e) {
-            if ($isValid)
-                $this->fail('should not throw TemplateException' . PHP_EOL . $e);
-        }
+        $this->validate();
 
         $this->assertTrue(true);
     }
 
+    /** @test */
+    public function cannot_validate_with_missing_mandatory_attribute()
+    {
+        $this->template->get('columns')->first()->forget('label');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Mandatory column attribute(s) missing: "label"');
+
+        $this->validate();
+    }
+
+    /** @test */
+    public function cannot_validate_with_wrong_attribute()
+    {
+        $this->template->get('columns')->first()->set('wrong_attribute', 'wrong');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Unknown Column Attribute(s) Found: "wrong_attribute"');
+
+        $this->validate();
+    }
+
+    /** @test */
+    public function cannot_validate_with_wrong_enum()
+    {
+        $this->template->get('columns')->first()->set('enum', 'MissingEnum');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Provided enum does not exist: "MissingEnum"');
+
+        $this->validate();
+    }
+
+    /** @test */
+    public function can_validate_meta()
+    {
+        $this->template->get('columns')->first()->set('meta', new Obj(['sortable']));
+
+        $this->validate();
+
+        $this->assertTrue(true);
+    }
+    
+    /** @test */
+    public function cannot_validate_meta_with_wrong_attributes()
+    {
+        $this->template->get('columns')->first()->set('meta', new Obj(['wrong_attribute']));
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Unknown Meta Parameter(s): "wrong_attribute"');
+
+        $this->validate();
+    }
+
+    private function mockedColumn()
+    {
+        return collect(Attributes::Mandatory)->flip()->map(function () {
+            return new Obj([]);
+        });
+    }
+
+    private function validate()
+    {
+        $this->validator = new Columns($this->template);
+
+        $this->validator->validate();
+    }
 }

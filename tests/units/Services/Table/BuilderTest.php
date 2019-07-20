@@ -15,12 +15,12 @@ use LaravelEnso\Tables\app\Exceptions\QueryException;
 
 class BuilderTest extends TestCase
 {
-
     private $testModel;
-
     private $faker;
-
     private $builder;
+    private $params;
+    private $select;
+    private $fetchMode;
 
     public function setUp(): void
     {
@@ -30,10 +30,13 @@ class BuilderTest extends TestCase
 
         $this->faker = Factory::create();
 
+        $this->params = ['columns' => [], 'meta' => ['length' => 10]];
+        $this->select = 'id as dtRowId, name, is_active, created_at, price';
+        $this->fetchMode = false;
+
         $this->createTestModelTable();
 
         $this->testModel = $this->createTestModel();
-        $this->createTestModel();
     }
 
     /** @test */
@@ -41,224 +44,274 @@ class BuilderTest extends TestCase
     {
         $response = $this->requestResponse();
 
-        $this->assertCount(BuilderTestModel::count(), $response["data"]);
-        $this->assertEquals(BuilderTestModel::count(), $response["count"]);
+        $this->assertCount(BuilderTestModel::count(), $response->get('data'));
+        $this->assertEquals(BuilderTestModel::count(), $response->get('count'));
 
         $this->assertTrue(
-            $response["data"]->pluck('name')
-                ->contains($this->testModel->name)
+            $response->get('data')->first()
+                ->diff($this->testModel->toArray())
+                ->isEmpty()
         );
     }
 
     /** @test */
     public function cannot_get_data_without_dtRowId()
     {
+        $this->select = 'id';
+
         $this->expectException(QueryException::class);
 
-        $this->requestResponse([], 'id');
+        $this->requestResponse();
     }
 
     /** @test */
     public function can_get_data_with_appends()
     {
-        $response = $this->requestResponse([
-            "appends" => [
-                "append"
-            ]
-        ]);
+        $this->params['appends'] = ['custom'];
 
-        $this->assertEquals('appended', $response["data"][0]["append"]['append']);
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            'name',
+            $response->get('data')->first()
+                ->get('custom')
+                ->get('relation')
+        );
     }
 
     /** @test */
     public function can_get_data_with_flatten()
     {
-        $response = $this->requestResponse([
-            'flatten' => true,
-            "appends" => [
-                "append"
-            ]
-        ]);
+        $this->params['flatten'] = true;
+        $this->params['appends'] = ['custom'];
 
-        $this->assertEquals('appended', $response["data"][0]["append.append"]);
+        $response = $this->requestResponse();
+
+        $this->assertEquals('name', $response->get('data')->first()->get('custom.relation'));
     }
 
     /** @test */
     public function can_get_data_with_enum()
     {
-        $this->testModel->is_active = 1;
-        $this->testModel->save();
+        $this->testModel->update(['is_active' => true]);
 
-        $response = $this->requestResponse([
-            "columns" => [
-                'is_active' => ['name' => 'is_active', 'enum' => BuilderTestEnum::class]
-            ],
-            'meta' => [
-                'enum' => true
-            ]
-        ]);
+        $this->params['columns']['is_active'] = ['name' => 'is_active', 'enum' => BuilderTestEnum::class];
 
-        $this->assertEquals('Active', $response["data"][0]["is_active"]);
+        $this->params['meta']['enum'] = true;
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            BuilderTestEnum::get($this->testModel->is_active),
+            $response->get('data')->first()->get('is_active')
+        );
     }
 
     /** @test */
     public function can_get_data_with_date()
     {
-        $response = $this->requestResponse([
-            "columns" => [
-                'created_at' => ['name' => 'created_at', 'dateFormat' => 'Y-m-d', 'meta' => ['date' => true]]
-            ],
-            'meta' => [
-                'date' => true
-            ]
-        ]);
+        $this->params['columns']['created_at'] = [
+            'name' => 'created_at',
+            'dateFormat' => 'Y-m-d',
+            'meta' => ['date' => true],
+        ];
 
-        $this->assertEquals($this->testModel->created_at->format('Y-m-d'), $response["data"][0]["created_at"]);
+        $this->params['meta']['date'] = true;
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            $this->testModel->created_at->format('Y-m-d'),
+            $response->get('data')->first()->get('created_at')
+        );
     }
 
     /** @test */
     public function can_get_data_with_cent()
     {
-        $response = $this->requestResponse([
-            "columns" => [
-                'price' => ['name' => 'price', 'meta' => ['cents' => true]]
-            ],
-            'meta' => [
-                'cents' => true
-            ]
-        ]);
+        $this->params['columns']['price'] = ['name' => 'price', 'meta' => ['cents' => true]];
+
+        $this->params['meta']['cents'] = true;
+
+        $response = $this->requestResponse();
 
         $this->assertEquals(
-            BuilderTestModel::find($response["data"][0]["dtRowId"])->price / 100.0,
-            $response["data"][0]["price"]
+            $this->testModel->price / 100,
+            $response->get('data')->first()->get('price')
         );
     }
 
     /** @test */
     public function can_get_data_with_translatable()
     {
-        App::setLocale('test');
-        app('translator')->setLoaded([
-            '*' => [
-                'test' => [
-                    'test' => [
-                        'test' => 'this is test'
-                    ]
-                ]
-            ]
-        ]);
-        $this->testModel->name = 'test.test';
-        $this->testModel->save();
+        App::make('translator')->addJsonPath(__DIR__.'/lang');
 
-        $response = $this->requestResponse([
-            "columns" => [
-                'name' => ['name' => 'name', 'meta' => ['translatable' => true]]
-            ],
-            'meta' => [
-                'translatable' => true
-            ]
-        ], 'id as dtRowId,name', true);
+        App::setLocale('lang');
 
-        $this->assertEquals('this is test', $response["data"][0]['name']);
+        $this->testModel->update(['name' => 'should translate']);
+
+        $this->params['columns']['name'] = [
+            'name' => 'name',
+            'meta' => ['translatable' => true],
+        ];
+
+        $this->params['meta']['translatable'] = true;
+
+        $this->fetchMode = true;
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals('translation', $response['data'][0]['name']);
     }
 
     /** @test */
     public function can_get_data_with_sort()
     {
-        $response = $this->requestResponse([
-            "columns" => [
-                "id" => ["data" => "id", "meta" => ["sortable" => true, "sort" => "DESC"]]
-            ],
-            'meta' => [
-                'sort' => true,
-            ]
-        ]);
+        $this->createTestModel();
+
+        $this->params['columns']['id'] = [
+            'data' => 'id',
+            'meta' => ['sortable' => true, 'sort' => 'DESC'],
+        ];
+
+        $this->params['meta']['sort'] = true;
+
+        $response = $this->requestResponse();
 
         $this->assertEquals(
-            BuilderTestModel::orderBy("id", "desc")->first()->id,
-            $response["data"][0]["dtRowId"]
+            BuilderTestModel::orderByDesc('id')->first()->id,
+            $response->get('data')->first()->get('dtRowId')
         );
     }
 
     /** @test */
     public function can_get_data_with_sort_null_last()
     {
-        $this->testModel->name = null;
-        $this->testModel->save();
+        $this->secondModel = $this->createTestModel();
 
-        $response = $this->requestResponse([
-            "columns" => [
-                "name" => ["data" => "name", "meta" => ["sortable" => true, "sort" => "ASC", "nullLast" => true]]
-            ],
-            'meta' => [
-                'sort' => true,
-            ]
-        ]);
+        $this->testModel->update(['name' => null]);
 
-        $this->assertNotNull($response["data"][0]["name"]);
+        $this->params['columns']['name'] = [
+            'data' => 'name',
+            'meta' => ['sortable' => true, 'sort' => 'ASC', 'nullLast' => true],
+        ];
+
+        $this->params['meta']['sort'] = true;
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            $this->secondModel->name,
+            $response->get('data')->first()->get('name')
+        );
     }
 
     /** @test */
     public function can_get_data_with_cache()
     {
         Cache::shouldReceive('get')
-            ->andReturn(-10)
+            ->andReturn(12)
             ->shouldReceive('has')
             ->andReturn(true);
 
-        $response = $this->requestResponse([
-            'cache' => true
-        ]);
+        $this->params['cache'] = true;
 
-        $this->assertEquals(-10, $response["count"]);
+        $response = $this->requestResponse();
+
+        $this->assertEquals(12, $response->get('count'));
     }
 
     /** @test */
     public function can_get_data_with_limit()
     {
-        $response = $this->requestResponse([
-            'meta' => [
-                'length' => 0,
-            ]
-        ]);
+        $this->params['meta']['length'] = 0;
 
-        $this->assertCount(0, $response["data"]);
+        $response = $this->requestResponse();
+
+        $this->assertCount(0, $response['data']);
     }
-
 
     /** @test */
     public function can_get_data_with_total()
     {
-        $response = $this->requestResponse([
-            "columns" => [
-                "id" => ['name' => 'id', "data" => "id", "meta" => ['total' => true]]
-            ],
-            'meta' => [
-                'total' => true,
-            ]
-        ]);
+        $this->createTestModel();
+
+        $this->params['columns']['price'] = [
+            'name' => 'price',
+            'data' => 'price',
+            'meta' => ['total' => true],
+        ];
+
+        $this->params['meta']['total'] = true;
+
+        $response = $this->requestResponse();
 
         $this->assertEquals(
-            BuilderTestModel::all()->sum("id"),
-            $response["total"]['id']
+            BuilderTestModel::sum('price'),
+            $response->get('total')->get('price')
         );
     }
 
-    private function requestResponse(array $params = [], $select = 'id as dtRowId,name,is_active,created_at,price', $withFetch = false)
+    public function can_use_full_info_records_limit()
     {
-        $params['columns'] = $params['columns'] ?? [];
-        $params['meta'] = $params['meta'] ?? [];
-        $params['meta']['length'] = $params['meta']['length'] ?? BuilderTestModel::count();
+        $this->createTestModel();
 
+        $this->params['meta']['fullInfoRecordLimit'] = 1;
+        $this->params['meta']['length'] = 1;
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            BuilderTestModel::sum('price'),
+            $response->get('total')->get('price')
+        );
+    }
+
+    /** @test */
+    public function can_use_full_info_record_limit()
+    {
+        $limit = 1;
+
+        $this->createTestModel();
+
+        $this->testModel->update(['name' => 'User']);
+
+        $this->params = [
+            'columns' => [
+                'name' => [
+                    'name' => 'name',
+                    'data' => 'name',
+                    'meta' => ['searchable' => true]
+                ],
+            ],
+            'meta' => [
+                'search' => $this->testModel->name,
+                'comparisonOperator' => 'LIKE',
+                'fullInfoRecordLimit' => $limit,
+                'length' => $limit,
+            ]
+        ];
+
+        $response = $this->requestResponse();
+
+        $this->assertFalse($response->get('fullRecordInfo'));
+        $this->assertCount(1, $response->get('data'));
+        $this->assertEquals(2, $response->get('count'));
+        $this->assertEquals(2, $response->get('filtered'));
+    }
+
+    private function requestResponse()
+    {
         $this->builder = new Builder(
-            new Obj($params),
-            BuilderTestModel::selectRaw($select)
+            new Obj($this->params),
+            BuilderTestModel::selectRaw($this->select)
         );
 
-        if ($withFetch)
+        if ($this->fetchMode) {
             $this->builder->fetch();
+        }
 
-        return collect($this->builder->data());
+        return new Obj($this->builder->data());
     }
 
     private function createTestModel()
@@ -280,24 +333,24 @@ class BuilderTest extends TestCase
             $table->timestamps();
         });
     }
-
 }
-
 
 class BuilderTestModel extends Model
 {
-    protected $fillable = ['name', 'is_active', 'price'];
+    protected $fillable = ['name', 'price', 'is_active'];
 
-    public function getAppendAttribute()
+    protected $casts = ['is_active' => 'boolean'];
+
+    public function getCustomAttribute()
     {
         return [
-            'append' => 'appended'
+            'relation' => 'name'
         ];
     }
 }
 
 class BuilderTestEnum extends Enum
 {
+    public const Inactive = 0;
     public const Active = 1;
-    public const DeActive = 0;
 }

@@ -5,67 +5,76 @@ namespace Services\Template\Validators;
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Exceptions\TemplateException;
-use LaravelEnso\Tables\app\Services\Template\Validators\Meta;
+use LaravelEnso\Tables\app\Attributes\Column as Attributes;
+use LaravelEnso\Tables\app\Services\Template\Validators\Columns;
 
 class MetaTest extends TestCase
 {
-    /** @test */
-    public function cannot_validate_with_wrong_attribute()
+    private $validator;
+    private $template;
+
+    protected function setUp() :void
     {
-        $this->validate(
-            [
-                'meta' => [
-                    'wrong_attribute' => 'r'
-                ],
-            ],
-            false
-        );
+        parent::setUp();
+
+        // $this->withoutExceptionHandling();
+
+        $this->template = new Obj(['columns' => [$this->mockedColumn()]]);
+    }
+
+    /** @test */
+    public function can_validate_meta()
+    {
+        $this->template->get('columns')->first()->set('meta', new Obj(['sortable']));
+
+        $this->validate();
+
+        $this->assertTrue(true);
+    }
+
+    /** @test */
+    public function cannot_validate_meta_with_wrong_attributes()
+    {
+        $this->template->get('columns')->first()->set('meta', new Obj(['wrong_attribute']));
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Unknown Meta Parameter(s): "wrong_attribute"');
+
+        $this->validate();
     }
 
     /** @test */
     public function cannot_validate_nested_column_with_sortable()
     {
-        $this->validate(
-            [
-                'name' => 'parent.child',
-                'meta' => [
-                    'sortable'
-                ]
-            ],
-            false
-        );
+        $this->template->get('columns')->push(new Obj([
+            'label' => 'child',
+            'name' => 'parent.child',
+            'data' => 'parent.child',
+            'meta' => [
+                'sortable'
+            ]
+        ]));
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Nested columns do not support "sortable": "parent.child"');
+
+        $this->validate();
     }
 
-    /** @test */
-    public function can_validate()
+
+    private function mockedColumn()
     {
-        $this->validate(
-            [
-                'name' => 'column',
-                'meta' => [
-                    'sortable'
-                ]
-            ],
-            true
-        );
-
+        return collect(Attributes::Mandatory)->flip()->map(function () {
+            return new Obj([]);
+        });
     }
 
-
-    private function validate(array $column, bool $isValid)
+    private function validate()
     {
-        try {
-            Meta::validate(new Obj($column));
+        $this->validator = new Columns($this->template);
 
-            if (!$isValid)
-                $this->fail('should throw TemplateException');
-        } catch (TemplateException $e) {
-            if ($isValid)
-                $this->fail('should not throw TemplateException' . PHP_EOL . $e);
-        }
-
-        $this->assertTrue(true);
-
+        $this->validator->validate();
     }
-
 }

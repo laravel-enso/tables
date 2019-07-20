@@ -10,19 +10,28 @@ use LaravelEnso\Tables\app\Services\Template\Validators\Controls;
 
 class ControlTest extends TestCase
 {
+    private $validator;
+    private $template;
 
+    protected function setUp() :void
+    {
+        parent::setUp();
+
+        // $this->withoutExceptionHandling();
+
+        $this->template = new Obj(['controls' => []]);
+    }
 
     /** @test */
     public function cannot_validate_with_wrong_button_type()
     {
-        $this->validate(
-            [
-                'controls' => [
-                    'WRONG_CONTROL'
-                ],
-            ],
-            false
-        );
+        $this->template->get('controls')->push('WRONG_CONTROL');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Unknown control(s) Found: "WRONG_CONTROL"');
+        
+        $this->validate();
 
     }
 
@@ -31,34 +40,18 @@ class ControlTest extends TestCase
     {
         $this->createRoute();
 
-        $this->validate(
-            [
-                'controls' => [
-                    'columns'
-                ],
-            ],
-            true
-        );
-    }
+        $this->template->get('controls')->push('columns');
 
-
-    private function validate(array $template, bool $isValid)
-    {
-        $validator = new Controls(
-            new Obj($template)
-        );
-
-        try {
-            $validator->validate();
-
-            if (!$isValid)
-                $this->fail('should throw TemplateException');
-        } catch (TemplateException $e) {
-            if ($isValid)
-                $this->fail('should not throw TemplateException' . PHP_EOL . $e);
-        }
+        $this->validate();
 
         $this->assertTrue(true);
+    }
+
+    private function validate()
+    {
+        $this->validator = new Controls($this->template);
+
+        $this->validator->validate();
     }
 
     private function createRoute()

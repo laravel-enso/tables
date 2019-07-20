@@ -10,55 +10,51 @@ use LaravelEnso\Tables\app\Services\Template\Validators\Route;
 
 class RouteTest extends TestCase
 {
+    private $validator;
+    private $template;
+
+    protected function setUp() :void
+    {
+        parent::setUp();
+
+        // $this->withoutExceptionHandling();
+
+        $this->template = new Obj(collect(Attributes::Mandatory)->flip());
+    }
 
     /** @test */
     public function cannot_validate_with_wrong_route()
     {
-        $this->validate(
-            [
-                'routePrefix' => 'r',
-                'dataRouteSuffix' => 'd'
-            ],
-            false
-        );
+        $this->template->set('routePrefix', 'routePrefix');
+        $this->template->set('dataRouteSuffix', 'dataRouteSuffix');
+
+        $this->expectException(TemplateException::class);
+
+        $this->expectExceptionMessage('Read route does not exist: "routePrefix.dataRouteSuffix"');
+
+        $this->validate();
     }
 
 
     /** @test */
     public function can_validate()
     {
-        \Route::any('ROUTE_TEST')->name('route.test');
+        \Route::any('route')->name('route.test');
         \Route::getRoutes()->refreshNameLookups();
 
-        $this->validate(
-            $this->basicTemplate([
-                'routePrefix' => 'route',
-                'dataRouteSuffix' => 'test'
-            ]),
-            true
-        );
+        $this->template->set('routePrefix', 'route');
+        $this->template->set('dataRouteSuffix', 'test');
+
+        $this->validate();
+
+        $this->assertTrue(true);
 
     }
 
-    private function basicTemplate($template = [])
+    private function validate()
     {
-        $baseTemplate = array_flip(Attributes::Mandatory);
-        return array_merge($baseTemplate, $template);
+        $this->validator = new Route($this->template);
+
+        $this->validator->validate();
     }
-
-    private function validate(array $template, bool $isValid)
-    {
-        $validator = new Route(
-            new Obj($template)
-        );
-
-        if (!$isValid) {
-            $this->expectException(TemplateException::class);
-        } else {
-            $this->assertTrue(true);
-        }
-
-        $validator->validate();
-    }
-
 }
