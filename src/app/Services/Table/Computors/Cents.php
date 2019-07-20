@@ -9,7 +9,7 @@ class Cents
     public static function compute($row)
     {
         foreach (self::$columns as $column) {
-            $row[$column->get('name')] = $row[$column->get('name')] / 100;
+            $row[$column->get('name')] /= 100;
         }
 
         return $row;
