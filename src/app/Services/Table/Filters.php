@@ -184,7 +184,7 @@ class Filters
                 $value->get('max'), $dateFormat, $dbDateFormat
             ) : $value->get('max');
 
-        $this->query->where($table.'.'.$column, '<=', $max);
+        $this->query->where($table.'.'.$column, '<', $max);
 
         $this->filters = true;
 
