@@ -75,7 +75,7 @@ class ColumnTest extends TestCase
 
         $this->assertTrue(true);
     }
-    
+
     /** @test */
     public function cannot_validate_meta_with_wrong_attributes()
     {

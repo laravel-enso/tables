@@ -30,9 +30,8 @@ class ControlTest extends TestCase
         $this->expectException(TemplateException::class);
 
         $this->expectExceptionMessage('Unknown control(s) Found: "WRONG_CONTROL"');
-        
-        $this->validate();
 
+        $this->validate();
     }
 
     /** @test */
@@ -61,5 +60,4 @@ class ControlTest extends TestCase
 
         return 'test.create';
     }
-
 }

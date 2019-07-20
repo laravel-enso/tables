@@ -5,7 +5,6 @@ namespace Services\Template\Validators;
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Exceptions\TemplateException;
-use LaravelEnso\Tables\app\Attributes\Structure as Attributes;
 use LaravelEnso\Tables\app\Services\Template\Validators\Structure;
 
 class StructureTest extends TestCase
@@ -57,7 +56,7 @@ class StructureTest extends TestCase
 
         $this->validate();
     }
-    
+
     /** @test */
     public function cannot_validate_with_non_numeric_debounce()
     {
@@ -69,7 +68,7 @@ class StructureTest extends TestCase
 
         $this->validate();
     }
-    
+
     /** @test */
     public function cannot_validate_with_wrong_method()
     {
@@ -81,7 +80,7 @@ class StructureTest extends TestCase
 
         $this->validate();
     }
-    
+
     /** @test */
     public function cannot_validate_with_non_boolean_selectable()
     {
@@ -93,7 +92,7 @@ class StructureTest extends TestCase
 
         $this->validate();
     }
-    
+
     /** @test */
     public function cannot_validate_with_wrong_comparison_operator()
     {
@@ -105,14 +104,13 @@ class StructureTest extends TestCase
 
         $this->validate();
     }
-    
+
     /** @test */
     public function can_validate()
     {
         $this->validate();
 
         $this->assertTrue(true);
-
     }
 
     private function validate()

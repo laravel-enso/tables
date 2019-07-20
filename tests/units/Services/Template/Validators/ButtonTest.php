@@ -35,14 +35,13 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-
     /** @test */
     public function cannot_validate_with_wrong_attribute()
     {
         $this->template->get('buttons')->first()->set('wrong_attribute', 'wrong');
 
         $this->expectException(TemplateException::class);
-        
+
         $this->expectExceptionMessage('The following optional attributes are allowed for custom buttons: "routeSuffix", "action", "fullRoute", "label", "method", "confirmation", "event", "message", "params", "postEvent", "tooltip"');
 
         $this->validate();
@@ -59,7 +58,7 @@ class ButtonTest extends TestCase
 
         $this->validate();
     }
-    
+
     /** @test */
     public function cannot_validate_action_with_missing_method()
     {
@@ -90,7 +89,6 @@ class ButtonTest extends TestCase
 
         $this->validate();
     }
-
 
     /** @test */
     public function cannot_validate_with_wrong_method()
@@ -134,7 +132,6 @@ class ButtonTest extends TestCase
         $this->validate();
 
         $this->assertTrue(true);
-
     }
 
     private function mockedButton()
@@ -160,5 +157,4 @@ class ButtonTest extends TestCase
 
         return 'test.create';
     }
-
 }
