@@ -143,7 +143,7 @@ class FilterTest extends TestCase
     }
 
 
-    private function requestResponse(array $params = [], $select = 'id as dtRowId,name,created_at')
+    private function requestResponse(array $params = [])
     {
         $params['columns'] = $params['columns'] ?? [];
         $params['meta'] = $params['meta'] ?? [];

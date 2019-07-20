@@ -76,9 +76,9 @@ class StructureTest extends TestCase
 
     private function createRoute($name = 'prefix.suffix', $path = '/test'): \Illuminate\Routing\Route
     {
-        $r=  Route::any($path)->name($name);
+        $route = Route::any($path)->name($name);
         Route::getRoutes()->refreshNameLookups();
-        return $r;
+        return $route;
     }
 
     private function build(): void

@@ -68,8 +68,7 @@ class ButtonsTest extends TestCase
             ],
             'create'
         ], true);
-
-
+        
         $this->build();
 
         $this->assertEmpty($this->template['buttons']['global']);

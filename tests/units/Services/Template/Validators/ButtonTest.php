@@ -139,7 +139,7 @@ class ButtonTest extends TestCase
         if (!isset($buttons[0]))
             $buttons = [$buttons];
 
-        $mandatoryAttributes = collect(Attributes::Mandatory)->flip()->map(function ($m) {
+        $mandatoryAttributes = collect(Attributes::Mandatory)->flip()->map(function () {
             return new Obj([]);
         });
 

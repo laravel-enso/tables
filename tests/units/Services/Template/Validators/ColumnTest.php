@@ -103,7 +103,7 @@ class ColumnTest extends TestCase
         if (!isset($columns[0]))
             $columns = [$columns];
 
-        $mandatoryAttributes = collect(Attributes::Mandatory)->flip()->map(function($m){
+        $mandatoryAttributes = collect(Attributes::Mandatory)->flip()->map(function(){
             return new Obj([]);
         });
 

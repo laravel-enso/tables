@@ -55,7 +55,7 @@ class BuilderTest extends TestCase
     {
         $this->expectException(QueryException::class);
 
-        $response = $this->requestResponse([], 'id');
+        $this->requestResponse([], 'id');
     }
 
     /** @test */

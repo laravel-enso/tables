@@ -52,10 +52,11 @@ class RouteTest extends TestCase
             new Obj($template)
         );
 
-        if (!$isValid)
+        if (!$isValid) {
             $this->expectException(TemplateException::class);
-        else
+        } else {
             $this->assertTrue(true);
+        }
 
         $validator->validate();
     }
