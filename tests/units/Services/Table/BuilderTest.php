@@ -252,21 +252,6 @@ class BuilderTest extends TestCase
         );
     }
 
-    public function can_use_full_info_records_limit()
-    {
-        $this->createTestModel();
-
-        $this->params['meta']['fullInfoRecordLimit'] = 1;
-        $this->params['meta']['length'] = 1;
-
-        $response = $this->requestResponse();
-
-        $this->assertEquals(
-            BuilderTestModel::sum('price'),
-            $response->get('total')->get('price')
-        );
-    }
-
     /** @test */
     public function can_use_full_info_record_limit()
     {
