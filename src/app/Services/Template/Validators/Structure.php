@@ -85,5 +85,15 @@ class Structure
             && ! collect(['LIKE', 'ILIKE'])->contains($this->template->get('comparisonOperator'))) {
             throw new TemplateException(__('"comparisonOperator" attribute can be either "LIKE" or "ILIKE"'));
         }
+
+        if ($this->template->has('searchMode')
+            && ! collect(['full', 'startsWith', 'endsWith'])->contains($this->template->get('searchMode'))) {
+            throw new TemplateException(__('"searchMode" attribute can be one of "full", "startsWith" or "endsWith"'));
+        }
+
+        if ($this->template->has('searchModes')
+            && ! $this->template->get('searchModes') instanceof Obj) {
+                throw new TemplateException(__('"searchModes" attribute must be an associative array'));
+            }
     }
 }

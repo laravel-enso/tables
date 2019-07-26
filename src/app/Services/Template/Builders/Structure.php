@@ -25,6 +25,7 @@ class Structure
             ->selectable()
             ->preview()
             ->comparisonOperator()
+            ->searchMode()
             ->fullInfoRecordLimit()
             ->responsive()
             ->defaults();
@@ -33,9 +34,8 @@ class Structure
     private function readPath()
     {
         $route = $this->template->get('routePrefix').'.'.(
-            $this->template->has('dataRouteSuffix')
-                ? $this->template->get('dataRouteSuffix')
-                : config('enso.tables.dataRouteSuffix')
+            $this->template->get('dataRouteSuffix')
+                ?? config('enso.tables.dataRouteSuffix')
         );
 
         $this->template->set('readPath', route($route, [], false));
@@ -46,8 +46,7 @@ class Structure
     private function lengthMenu()
     {
         if (! $this->template->has('lengthMenu')) {
-            $options = config('enso.tables.lengthMenu');
-            $this->template->set('lengthMenu', $options);
+            $this->template->set('lengthMenu', config('enso.tables.lengthMenu'));
         }
 
         $this->meta->set(
@@ -114,8 +113,8 @@ class Structure
     private function pathSegment()
     {
         $segment = collect(
-                explode('.', $this->template->get('routePrefix'))
-            )->last();
+            explode('.', $this->template->get('routePrefix'))
+        )->last();
 
         return Str::singular($segment);
     }
@@ -124,12 +123,28 @@ class Structure
     {
         $this->meta->set(
             'comparisonOperator',
-            $this->template->has('comparisonOperator')
-                ? $this->template->get('comparisonOperator')
-                : config('enso.tables.comparisonOperator')
+            $this->template->get('comparisonOperator')
+                ?? config('enso.tables.comparisonOperator')
         );
 
         $this->template->forget('comparisonOperator');
+
+        return $this;
+    }
+
+    private function searchMode()
+    {
+        $this->meta->set(
+            'searchMode',
+            $this->template->get('searchMode')
+                ?? config('enso.tables.searchMode')
+        );
+
+        if (! $this->template->has('searchModes')) {
+            $this->template->set('searchModes', config('enso.tables.searchModes'));
+        }
+
+        $this->template->forget('searchMode');
 
         return $this;
     }

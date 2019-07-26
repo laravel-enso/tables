@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Database\Eloquent\Builder;
+use LaravelEnso\Tables\app\Exceptions\QueryException;
 
 class Filters
 {
@@ -49,7 +50,7 @@ class Filters
                                 : $query->orWhere(
                                     $column->get('data'),
                                     $this->request->get('meta')->get('comparisonOperator'),
-                                    '%'.$argument.'%'
+                                    $this->wildcards($argument)
                                 );
                         }
                     });
@@ -80,6 +81,20 @@ class Filters
                 $this->whereHasRelation($query, $attributes->implode('.'), $argument);
             });
         });
+    }
+
+    private function wildcards($argument)
+    {
+        switch ($this->request->get('meta')->get('searchMode')) {
+            case 'full':
+                return '%'.$argument.'%';
+            case 'startsWith':
+                return $argument.'%';
+            case 'endsWith':
+                return '%'.$argument;
+            default:
+                throw new QueryException(__('Unknown search mode'));
+        }
     }
 
     private function setFilters()
