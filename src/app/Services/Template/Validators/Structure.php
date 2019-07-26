@@ -93,7 +93,7 @@ class Structure
 
         if ($this->template->has('searchModes')
             && ! $this->template->get('searchModes') instanceof Obj) {
-                throw new TemplateException(__('"searchModes" attribute must be an associative array'));
-            }
+            throw new TemplateException(__('"searchModes" attribute must be an associative array'));
+        }
     }
 }
