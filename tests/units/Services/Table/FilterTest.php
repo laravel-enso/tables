@@ -79,7 +79,7 @@ class FilterTest extends TestCase
 
         $this->assertCount(0, $response);
     }
-    
+
     /** @test */
     public function can_use_full_search()
     {
@@ -109,7 +109,7 @@ class FilterTest extends TestCase
 
         $this->assertCount(0, $response);
     }
-    
+
     /** @test */
     public function can_use_starts_with_search()
     {
@@ -133,7 +133,7 @@ class FilterTest extends TestCase
             $this->testModel->name
         );
     }
-    
+
     /** @test */
     public function can_use_ends_with_search()
     {
@@ -207,7 +207,8 @@ class FilterTest extends TestCase
 
         $this->params['meta'] = [
             'search' => $this->testModel->relation->name,
-            'comparisonOperator' => 'LIKE'
+            'comparisonOperator' => 'LIKE',
+            'searchMode' => 'full',
         ];
 
         $response = $this->requestResponse();
