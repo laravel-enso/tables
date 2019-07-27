@@ -60,7 +60,7 @@ class Filters
 
         return $this;
     }
-    
+
     private function searchArguments()
     {
         return $this->request->get('meta')->get('searchMode') === 'full'
