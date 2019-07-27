@@ -40,26 +40,32 @@ class Filters
             return $this;
         }
 
-        collect(explode(' ', $this->request->get('meta')->get('search')))
-            ->each(function ($argument) {
-                $this->query->where(function ($query) use ($argument) {
-                    $this->columns->each(function ($column) use ($query, $argument) {
-                        if ($column->get('meta')->get('searchable')) {
-                            return $this->isNested($column->get('name'))
-                                ? $this->whereHasRelation($query, $column->get('data'), $argument)
-                                : $query->orWhere(
-                                    $column->get('data'),
-                                    $this->request->get('meta')->get('comparisonOperator'),
-                                    $this->wildcards($argument)
-                                );
-                        }
-                    });
+        $this->searchArguments()->each(function ($argument) {
+            $this->query->where(function ($query) use ($argument) {
+                $this->columns->each(function ($column) use ($query, $argument) {
+                    if ($column->get('meta')->get('searchable')) {
+                        return $this->isNested($column->get('name'))
+                            ? $this->whereHasRelation($query, $column->get('data'), $argument)
+                            : $query->orWhere(
+                                $column->get('data'),
+                                $this->request->get('meta')->get('comparisonOperator'),
+                                $this->wildcards($argument)
+                            );
+                    }
                 });
             });
+        });
 
         $this->filters = true;
 
         return $this;
+    }
+    
+    private function searchArguments()
+    {
+        return $this->request->get('meta')->get('searchMode') === 'full'
+            ? collect(explode(' ', $this->request->get('meta')->get('search')))
+            : collect($this->request->get('meta')->get('search'));
     }
 
     private function whereHasRelation($query, $attribute, $argument)
@@ -68,7 +74,7 @@ class Filters
             $query->where(
                 $attribute,
                 $this->request->get('meta')->get('comparisonOperator'),
-                '%'.$argument.'%'
+                $this->wildcards($argument),
             );
 
             return;

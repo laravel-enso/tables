@@ -87,7 +87,10 @@ class BuilderTest extends TestCase
 
         $response = $this->requestResponse();
 
-        $this->assertEquals('name', $response->get('data')->first()->get('custom.relation'));
+        $this->assertEquals(
+            'name',
+            $response->get('data')->first()->get('custom.relation')
+        );
     }
 
     /** @test */
@@ -95,7 +98,10 @@ class BuilderTest extends TestCase
     {
         $this->testModel->update(['is_active' => true]);
 
-        $this->params['columns']['is_active'] = ['name' => 'is_active', 'enum' => BuilderTestEnum::class];
+        $this->params['columns']['is_active'] = [
+            'name' => 'is_active',
+            'enum' => BuilderTestEnum::class
+        ];
 
         $this->params['meta']['enum'] = true;
 
@@ -129,7 +135,10 @@ class BuilderTest extends TestCase
     /** @test */
     public function can_get_data_with_cent()
     {
-        $this->params['columns']['price'] = ['name' => 'price', 'meta' => ['cents' => true]];
+        $this->params['columns']['price'] = [
+            'name' => 'price',
+            'meta' => ['cents' => true]
+        ];
 
         $this->params['meta']['cents'] = true;
 
@@ -274,6 +283,7 @@ class BuilderTest extends TestCase
                 'comparisonOperator' => 'LIKE',
                 'fullInfoRecordLimit' => $limit,
                 'length' => $limit,
+                'searchMode' => 'full',
             ]
         ];
 

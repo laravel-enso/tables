@@ -61,6 +61,91 @@ class FilterTest extends TestCase
         $this->params['meta'] = [
             'search' => $this->testModel->name,
             'comparisonOperator' => 'LIKE',
+            'searchMode' => 'full',
+        ];
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(1, $response);
+
+        $this->assertEquals(
+            $response->first()->name,
+            $this->testModel->name
+        );
+
+        $this->params['meta']['search'] = $this->testModel->name.'-';
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(0, $response);
+    }
+    
+    /** @test */
+    public function can_use_full_search()
+    {
+        $this->params['columns']['name'] = [
+            'data' => 'name',
+            'meta' => ['searchable' => true]
+        ];
+
+        $this->params['meta'] = [
+            'search' => substr($this->testModel->name, 1, strlen($this->testModel->name) - 2),
+            'comparisonOperator' => 'LIKE',
+            'searchMode' => 'full',
+        ];
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(1, $response);
+
+        $this->assertEquals(
+            $response->first()->name,
+            $this->testModel->name
+        );
+
+        $this->params['meta']['search'] = $this->testModel->name.'-';
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(0, $response);
+    }
+    
+    /** @test */
+    public function can_use_starts_with_search()
+    {
+        $this->params['columns']['name'] = [
+            'data' => 'name',
+            'meta' => ['searchable' => true]
+        ];
+
+        $this->params['meta'] = [
+            'search' => collect(explode(' ', $this->testModel->name))->first(),
+            'comparisonOperator' => 'LIKE',
+            'searchMode' => 'startsWith',
+        ];
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(1, $response);
+
+        $this->assertEquals(
+            $response->first()->name,
+            $this->testModel->name
+        );
+    }
+    
+    /** @test */
+    public function can_use_ends_with_search()
+    {
+        $this->params['columns']['name'] = [
+            'data' => 'name',
+            'meta' => ['searchable' => true]
+        ];
+
+        $this->params['meta'] = [
+            'search' => collect(explode(' ', $this->testModel->name))->last(),
+            'comparisonOperator' => 'LIKE',
+            'searchMode' => 'endsWith',
         ];
 
         $response = $this->requestResponse();
@@ -98,6 +183,7 @@ class FilterTest extends TestCase
         $this->params['meta'] = [
             'search' => $this->testModel->name.' '.$this->testModel->appellative,
             'comparisonOperator' => 'LIKE',
+            'searchMode' => 'full',
         ];
 
         $response = $this->requestResponse();
