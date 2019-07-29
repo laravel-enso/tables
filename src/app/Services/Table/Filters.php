@@ -74,7 +74,7 @@ class Filters
             $query->where(
                 $attribute,
                 $this->request->get('meta')->get('comparisonOperator'),
-                $this->wildcards($argument),
+                $this->wildcards($argument)
             );
 
             return;
