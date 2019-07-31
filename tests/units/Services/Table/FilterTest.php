@@ -253,9 +253,9 @@ class FilterTest extends TestCase
     {
         $this->params['intervals']['filter_test_models']['created_at'] = [
             'dbDateFormat' => 'Y-m-d',
-            'dateFormat' => 'Y-m-d H:i:s',
-            'min' => $this->testModel->created_at->subDays(1),
-            'max' => $this->testModel->created_at->addDays(1),
+            'dateFormat' => 'Y-m-d',
+            'min' => $this->testModel->created_at->subDays(1)->format('Y-m-d'),
+            'max' => $this->testModel->created_at->addDays(1)->format('Y-m-d'),
         ];
 
         $response = $this->requestResponse();
@@ -269,9 +269,9 @@ class FilterTest extends TestCase
 
         $this->params['intervals']['filter_test_models']['created_at'] = [
             'dbDateFormat' => 'Y-m-d',
-            'dateFormat' => 'Y-m-d H:i:s',
-            'min' => $this->testModel->created_at->subDays(2),
-            'max' => $this->testModel->created_at->subDays(1),
+            'dateFormat' => 'Y-m-d',
+            'min' => $this->testModel->created_at->subDays(2)->format('Y-m-d'),
+            'max' => $this->testModel->created_at->subDays(1)->format('Y-m-d'),
         ];
 
         $response = $this->requestResponse();
