@@ -176,9 +176,9 @@ class Filters
         }
 
         $min = $dbDateFormat
-            ? $this->formatDate(
-                $value->get('min'), $dateFormat, $dbDateFormat
-            ) : $value->get('min');
+            ? Carbon::createFromFormat($dateFormat, $value->get('min'))
+                ->format($dbDateFormat)
+            : $value->get('min');
 
         $this->query->where($table.'.'.$column, '>=', $min);
 
@@ -201,26 +201,15 @@ class Filters
         }
 
         $max = $dbDateFormat
-            ? $this->formatDate(
-                $value->get('max'), $dateFormat, $dbDateFormat
-            ) : $value->get('max');
+            ? Carbon::createFromFormat($dateFormat, $value->get('max'))
+                ->format($dbDateFormat)
+            : $value->get('max');
 
         $this->query->where($table.'.'.$column, '<', $max);
 
         $this->filters = true;
 
         return $this;
-    }
-
-    private function formatDate(string $date, $dateFormat, $dbDateFormat)
-    {
-        $date = $dateFormat
-            ? Carbon::createFromFormat($dateFormat, $date)
-            : new Carbon($date);
-
-        return $dbDateFormat
-            ? $date->format($dbDateFormat)
-            : $date;
     }
 
     private function parse($type)
