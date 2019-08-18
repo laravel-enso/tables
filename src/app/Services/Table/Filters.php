@@ -117,19 +117,18 @@ class Filters
         }
 
         $this->query->where(function ($query) {
-            $this->parse('filters')
-                ->each(function ($filters, $table) use ($query) {
-                    $filters->each(function ($value, $column) use ($table, $query) {
-                        if ($this->filterIsValid($value)) {
-                            if ($value instanceof Collection) {
-                                $value = $value->toArray();
-                            }
-
-                            $query->whereIn($table.'.'.$column, (array) $value);
-                            $this->filters = true;
+            $this->parse('filters')->each(function ($filters, $table) use ($query) {
+                $filters->each(function ($value, $column) use ($table, $query) {
+                    if ($this->filterIsValid($value)) {
+                        if ($value instanceof Collection) {
+                            $value = $value->toArray();
                         }
-                    });
+
+                        $query->whereIn($table.'.'.$column, (array) $value);
+                        $this->filters = true;
+                    }
                 });
+            });
         });
 
         return $this;
@@ -142,14 +141,13 @@ class Filters
         }
 
         $this->query->where(function () {
-            $this->parse('intervals')
-                ->each(function ($interval, $table) {
-                    collect($interval)
-                        ->each(function ($value, $column) use ($table) {
-                            $this->setMinLimit($table, $column, $value)
-                                ->setMaxLimit($table, $column, $value);
-                        });
-                });
+            $this->parse('intervals')->each(function ($interval, $table) {
+                collect($interval)
+                    ->each(function ($value, $column) use ($table) {
+                        $this->setMinLimit($table, $column, $value)
+                            ->setMaxLimit($table, $column, $value);
+                    });
+            });
         });
 
         return $this;
