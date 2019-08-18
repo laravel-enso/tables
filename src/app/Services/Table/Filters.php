@@ -42,17 +42,7 @@ class Filters
 
         $this->searchArguments()->each(function ($argument) {
             $this->query->where(function ($query) use ($argument) {
-                $this->columns->each(function ($column) use ($query, $argument) {
-                    if ($column->get('meta')->get('searchable')) {
-                        return $this->isNested($column->get('name'))
-                            ? $this->whereHasRelation($query, $column->get('data'), $argument)
-                            : $query->orWhere(
-                                $column->get('data'),
-                                $this->request->get('meta')->get('comparisonOperator'),
-                                $this->wildcards($argument)
-                            );
-                    }
-                });
+                $this->match($query, $argument);
             });
         });
 
@@ -64,8 +54,25 @@ class Filters
     private function searchArguments()
     {
         return $this->request->get('meta')->get('searchMode') === 'full'
-            ? collect(explode(' ', $this->request->get('meta')->get('search')))
+            ? collect(
+                    explode(' ', $this->request->get('meta')->get('search'))
+                )->filter()
             : collect($this->request->get('meta')->get('search'));
+    }
+
+    private function match($query, $argument)
+    {
+        $this->columns->each(function ($column) use ($query, $argument) {
+            if ($column->get('meta')->get('searchable')) {
+                return $this->isNested($column->get('name'))
+                    ? $this->whereHasRelation($query, $column->get('data'), $argument)
+                    : $query->orWhere(
+                        $column->get('data'),
+                        $this->request->get('meta')->get('comparisonOperator'),
+                        $this->wildcards($argument)
+                    );
+            }
+        });
     }
 
     private function whereHasRelation($query, $attribute, $argument)
