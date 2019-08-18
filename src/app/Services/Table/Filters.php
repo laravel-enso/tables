@@ -26,15 +26,15 @@ class Filters
 
     public function handle()
     {
-        $this->setSearch()
-            ->setFilters()
-            ->setIntervals()
+        $this->search()
+            ->filter()
+            ->applyIntervals()
             ->checkParams();
 
         return $this->filters;
     }
 
-    private function setSearch()
+    private function search()
     {
         if (! $this->request->get('meta')->filled('search')) {
             return $this;
@@ -110,7 +110,7 @@ class Filters
         }
     }
 
-    private function setFilters()
+    private function filter()
     {
         if (! $this->request->filled('filters')) {
             return $this;
@@ -135,7 +135,7 @@ class Filters
         return $this;
     }
 
-    private function setIntervals()
+    private function applyIntervals()
     {
         if (! $this->request->filled('intervals')) {
             return $this;
