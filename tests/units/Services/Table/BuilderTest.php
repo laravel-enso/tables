@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Helpers\app\Classes\Enum;
 use LaravelEnso\Tables\app\Services\Table\Builder;
-use LaravelEnso\Tables\app\Exceptions\QueryException;
 
 class BuilderTest extends TestCase
 {
@@ -52,16 +51,6 @@ class BuilderTest extends TestCase
                 ->diff($this->testModel->toArray())
                 ->isEmpty()
         );
-    }
-
-    /** @test */
-    public function cannot_get_data_without_dtRowId()
-    {
-        $this->select = 'id';
-
-        $this->expectException(QueryException::class);
-
-        $this->requestResponse();
     }
 
     /** @test */
