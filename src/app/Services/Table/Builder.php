@@ -4,7 +4,6 @@ namespace LaravelEnso\Tables\app\Services\Table;
 
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\QueryException;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use LaravelEnso\Tables\app\Services\Table\Computors\Date;
 use LaravelEnso\Tables\app\Services\Table\Computors\Enum;
@@ -107,12 +106,6 @@ class Builder
     {
         if (count($this->data) === 0) {
             return;
-        }
-
-        if (! isset($this->data[0]['dtRowId'])) {
-            throw new QueryException(__(
-                'You have to add in the main query \'id as "dtRowId"\' for the actions to work'
-            ));
         }
     }
 

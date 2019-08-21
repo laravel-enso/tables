@@ -19,6 +19,7 @@ class Structure
     public function build()
     {
         $this->readPath()
+            ->dtRowId()
             ->lengthMenu()
             ->debounce()
             ->method()
@@ -39,6 +40,15 @@ class Structure
         );
 
         $this->template->set('readPath', route($route, [], false));
+
+        return $this;
+    }
+
+    private function dtRowId()
+    {
+        if (! $this->template->has('dtRowId')) {
+            $this->template->set('dtRowId', config('enso.tables.dtRowId'));
+        }
 
         return $this;
     }
