@@ -22,7 +22,7 @@
         "php": ">=7.1.0",
         "laravel/framework": "5.8.*",
         "laravel-enso/helpers": "1.11.*",
-        "box/spout": "2.7.*"
+        "box/spout": "3.0.*"
     },
     "autoload": {
         "psr-4": {

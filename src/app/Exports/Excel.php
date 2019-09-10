@@ -3,14 +3,13 @@
 namespace LaravelEnso\Tables\app\Exports;
 
 use Illuminate\Http\File;
-use Box\Spout\Common\Type;
 use Illuminate\Support\Str;
-use Box\Spout\Writer\WriterFactory;
 use LaravelEnso\Core\app\Models\User;
 use Illuminate\Support\Facades\Storage;
-use Box\Spout\Writer\Style\StyleBuilder;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Fetcher;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use LaravelEnso\Tables\app\Notifications\ExportDoneNotification;
 
 class Excel
@@ -100,7 +99,7 @@ class Excel
             ->setShouldWrapText(false)
             ->build();
 
-        $this->writer = WriterFactory::create(Type::XLSX);
+        $this->writer = WriterEntityFactory::createXLSXWriter();
 
         $this->writer->setDefaultRowStyle($defaultStyle)
             ->openToFile($this->filePath());
@@ -163,10 +162,10 @@ class Excel
 
     private function header()
     {
-        return $this->columns()->pluck('label')
-            ->map(function ($label) {
-                return __($label);
-            })->toArray();
+        return $this->row($this->columns()->pluck('label')
+                ->map(function ($label) {
+                    return __($label);
+                }));
     }
 
     private function columns()
@@ -196,10 +195,15 @@ class Excel
     private function map($data)
     {
         return $data->map(function ($row) {
-            return $this->columns->reduce(function ($mappedRow, $column) use ($row) {
-                return $mappedRow->push($row[$column->get('name')]);
-            }, collect());
+            return $this->row($this->columns->map(function ($column) use ($row) {
+                return $row[$column->get('name')];
+            }));
         })->toArray();
+    }
+
+    private function row($row)
+    {
+        return WriterEntityFactory::createRowFromArray($row->toArray());
     }
 
     private function updateProgress($entries)
