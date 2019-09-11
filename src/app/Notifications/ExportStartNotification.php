@@ -18,12 +18,12 @@ class ExportStartNotification extends Notification implements ShouldQueue
         $this->name = $name;
     }
 
-    public function via($notifiable)
+    public function via()
     {
         return config('enso.tables.export.notifications');
     }
 
-    public function toBroadcast($notifiable)
+    public function toBroadcast()
     {
         return (new BroadcastMessage([
             'level' => 'info',
@@ -33,16 +33,12 @@ class ExportStartNotification extends Notification implements ShouldQueue
         ]))->onQueue($this->queue);
     }
 
-    public function toArray($notifiable)
+    public function toArray()
     {
         return [
             'body' => __('Export started').': '.__($this->name),
             'path' => '#',
             'icon' => 'file-excel',
         ];
-    }
-
-    public function toMail($notifiable)
-    {
     }
 }

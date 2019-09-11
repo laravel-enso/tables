@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\app\Services\Template\Builders;
 
+use Illuminate\Support\Facades\Auth;
 use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Buttons
@@ -99,7 +100,7 @@ class Buttons
             return false;
         }
 
-        return auth()->user()
+        return Auth::user()
             ->cannot('access-route', $route);
     }
 }

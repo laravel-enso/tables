@@ -8,8 +8,8 @@ use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
+use LaravelEnso\Enums\app\Services\Enum;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Helpers\app\Classes\Enum;
 use LaravelEnso\Tables\app\Services\Table\Builder;
 
 class BuilderTest extends TestCase
@@ -30,7 +30,7 @@ class BuilderTest extends TestCase
         $this->faker = Factory::create();
 
         $this->params = ['columns' => [], 'meta' => ['length' => 10]];
-        $this->select = 'id as dtRowId, name, is_active, created_at, price';
+        $this->select = 'id, name, is_active, created_at, price';
         $this->fetchMode = false;
 
         $this->createTestModelTable();
@@ -178,7 +178,7 @@ class BuilderTest extends TestCase
 
         $this->assertEquals(
             BuilderTestModel::orderByDesc('id')->first()->id,
-            $response->get('data')->first()->get('dtRowId')
+            $response->get('data')->first()->get('id')
         );
     }
 

@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\app\Jobs;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Auth;
 use LaravelEnso\Core\app\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -31,7 +32,7 @@ class ExcelExport implements ShouldQueue
 
     public function handle()
     {
-        auth()->onceUsingId($this->user->id);
+        Auth::onceUsingId($this->user->id);
 
         (new Excel(
             $this->tableClass, $this->request, $this->user, $this->dataExport
