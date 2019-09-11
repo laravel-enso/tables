@@ -26,12 +26,12 @@ class ExportDoneNotification extends Notification implements ShouldQueue
         $this->link = optional($this->dataExport)->temporaryLink();
     }
 
-    public function via($notifiable)
+    public function via()
     {
         return array_merge(['mail'], config('enso.tables.export.notifications'));
     }
 
-    public function toBroadcast($notifiable)
+    public function toBroadcast()
     {
         return (new BroadcastMessage([
             'level' => 'success',
@@ -62,7 +62,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
         return $mail;
     }
 
-    public function toArray($notifiable)
+    public function toArray()
     {
         return [
             'body' => $this->link
