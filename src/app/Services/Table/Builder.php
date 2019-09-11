@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\app\Services\Table;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
@@ -306,7 +307,7 @@ class Builder
 
         $this->data = collect($this->data)
             ->map(function ($record) {
-                return array_dot($record);
+                return Arr::dot($record);
             });
     }
 
