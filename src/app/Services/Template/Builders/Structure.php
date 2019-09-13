@@ -104,8 +104,11 @@ class Structure
 
     private function defaults()
     {
+        if (! $this->template->has('model')) {
+            $this->template->set('model', $this->model());
+        }
+
         $this->template->set('labels', config('enso.tables.labels'));
-        $this->template->set('pathSegment', $this->pathSegment());
         $this->meta->set('start', 0);
         $this->meta->set('search', '');
         $this->meta->set('loading', false);
@@ -120,7 +123,7 @@ class Structure
         $this->meta->set('money', false);
     }
 
-    private function pathSegment()
+    private function model()
     {
         $segment = collect(
             explode('.', $this->template->get('routePrefix'))
