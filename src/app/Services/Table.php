@@ -18,7 +18,8 @@ abstract class Table
 
     abstract public function query();
 
-    protected function afterCount(QueryBuilder $query) {
+    protected function afterCount(QueryBuilder $query)
+    {
         return $query;
     }
 
