@@ -16,6 +16,7 @@ class Builder
 {
     private $request;
     private $query;
+    private $filteredQuery;
     private $filters;
     private $count;
     private $filtered;
@@ -27,7 +28,7 @@ class Builder
     private $statics;
     private $fetchMode;
 
-    public function __construct(Obj $request, QueryBuilder $query)
+    public function __construct(Obj $request, QueryBuilder $query, QueryBuilder $filteredQuery)
     {
         $this->request = $request;
         $this->computeMeta();
@@ -35,6 +36,7 @@ class Builder
         $this->computeColumns();
         $this->columns = $this->request->get('columns');
         $this->query = $query;
+        $this->filteredQuery = $filteredQuery;
         $this->total = collect();
         $this->statics = false;
         $this->fetchMode = false;
@@ -84,6 +86,7 @@ class Builder
     {
         $this->initStatics()
             ->setCount()
+            ->afterCount()
             ->filter()
             ->setDetailedInfo()
             ->countFiltered()
@@ -115,6 +118,13 @@ class Builder
         if (! $this->fetchMode) {
             $this->filtered = $this->count = $this->cachedCount();
         }
+
+        return $this;
+    }
+
+    private function afterCount()
+    {
+        $this->query = $this->filteredQuery;
 
         return $this;
     }

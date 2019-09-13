@@ -288,6 +288,7 @@ class BuilderTest extends TestCase
     {
         $this->builder = new Builder(
             new Obj($this->params),
+            BuilderTestModel::selectRaw($this->select),
             BuilderTestModel::selectRaw($this->select)
         );
 

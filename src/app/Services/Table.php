@@ -4,6 +4,7 @@ namespace LaravelEnso\Tables\app\Services;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Table\Builder;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
 abstract class Table
 {
@@ -16,6 +17,10 @@ abstract class Table
     }
 
     abstract public function query();
+
+    protected function afterCount(QueryBuilder $query) {
+        return $query;
+    }
 
     public function request()
     {
@@ -47,7 +52,9 @@ abstract class Table
     private function builder()
     {
         return new Builder(
-            $this->request, $this->query()
+            $this->request,
+            $this->query(),
+            $this->afterCount($this->query())
         );
     }
 }

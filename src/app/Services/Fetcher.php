@@ -14,8 +14,7 @@ class Fetcher
 
     public function __construct(string $class, array $request)
     {
-        $this->builder = App::makeWith($class, ['request' => $request])
-            ->fetcher();
+        $this->builder = App::make($class, ['request' => $request])->fetcher();
 
         $this->request = new Obj($request);
     }
