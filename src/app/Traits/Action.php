@@ -9,10 +9,9 @@ trait Action
 {
     public function __invoke(Request $request)
     {
-        App::makeWith(
-            $this->actionClass, [
-                'class' => $this->tableClass,
-                'request' => $request->all(),
-            ])->handle();
+        App::make($this->actionClass, [
+            'class' => $this->tableClass,
+            'request' => $request->all(),
+        ])->handle();
     }
 }

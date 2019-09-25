@@ -92,7 +92,7 @@ class Columns
             $this->meta->set('translatable', true);
         }
 
-        if ($meta->has('cents')) {
+        if ($meta->get('cents')) {
             $this->meta->set('cents', true);
         }
 

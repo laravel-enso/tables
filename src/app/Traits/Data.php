@@ -9,7 +9,7 @@ trait Data
 {
     public function __invoke(Request $request)
     {
-        return App::makeWith(
+        return App::make(
             $this->tableClass,
             ['request' => $request->all(),
         ])->data();
