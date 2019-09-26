@@ -33,7 +33,7 @@ class TemplateCache
     public function load()
     {
         if (! config('enso.tables.template_cache')) {
-            return null;
+            return;
         }
 
         return $this->cache()->get($this->cacheKey());

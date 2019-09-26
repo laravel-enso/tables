@@ -19,13 +19,13 @@ class TemplateCacheClear extends Command
                 ->flush();
 
             $this->info('table cache tags ('
-                . implode(',', config('enso.tables.cache_tags'))
+                .implode(',', config('enso.tables.cache_tags'))
                 .') cleared');
 
             return;
         }
 
-        if($this->confirm("Your cache driver doesn't support tags, therefore we should flush the whole cache")) {
+        if ($this->confirm("Your cache driver doesn't support tags, therefore we should flush the whole cache")) {
             Cache::flush();
             $this->info('table cache cleared');
 

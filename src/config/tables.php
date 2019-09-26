@@ -21,7 +21,7 @@ return [
     | we can avoid collisions.
     */
 
-    'cache_prefix' =>  'enso:tables',
+    'cache_prefix' => 'enso:tables',
 
     /*
     |--------------------------------------------------------------------------
@@ -31,7 +31,7 @@ return [
     | if cache driver didn't support tags, we would ignore tags
     */
 
-    'cache_tags' =>  ['enso:tables'],
+    'cache_tags' => ['enso:tables'],
 
     /*
     |--------------------------------------------------------------------------
