@@ -3,6 +3,38 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | Template Cache
+    |--------------------------------------------------------------------------
+    | This flag enables caching template or not. if the cache is enabled for invalid it
+    | you should run table:clear command
+    | Values: 'true/false'
+    */
+
+    'template_cache' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Prefix
+    |--------------------------------------------------------------------------
+    |
+    | we'll specify a value to get prefixed to all our keys so
+    | we can avoid collisions.
+    */
+
+    'cache_prefix' =>  'enso:tables',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Tag
+    |--------------------------------------------------------------------------
+    | we'll specify tags to cache all data with that tag
+    | if cache driver didn't support tags, we would ignore tags
+    */
+
+    'cache_tags' =>  ['enso:tables'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Validations
     |--------------------------------------------------------------------------
     | This flag sets whether validations are also executed in production

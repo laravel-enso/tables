@@ -30,7 +30,9 @@ abstract class Table
 
     public function init()
     {
-        return (new Template($this->templatePath()))->get();
+        return (new TemplateCache(
+            new Template($this->templatePath())
+        ))->get();
     }
 
     public function data()

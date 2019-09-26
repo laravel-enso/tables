@@ -9,22 +9,29 @@ use LaravelEnso\Tables\app\Services\Template\Validator;
 
 class Template
 {
-    private $template;
     private $meta;
+    private $filename;
 
     public function __construct(string $filename)
     {
-        $this->template = $this->template($filename);
+        $this->filename = $filename;
         $this->meta = new Obj();
+    }
+
+    public function filename()
+    {
+        return $this->filename;
     }
 
     public function get()
     {
-        (new Builder($this->template, $this->meta))
+        $template = $this->template($this->filename);
+
+        (new Builder($template, $this->meta))
             ->run();
 
         return [
-            'template' => $this->template,
+            'template' => $template,
             'meta' => $this->meta,
             'apiVersion' => config('enso.tables.apiVersion'),
         ];

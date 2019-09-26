@@ -346,7 +346,8 @@ class Builder
             return $this->count();
         }
 
-        $cacheKey = 'table:'.$this->query->getModel()->getTable();
+        $cacheKey = config('enso.table.cache_prefix')
+            .$this->query->getModel()->getTable();
 
         if (! Cache::has($cacheKey)) {
             Cache::put($cacheKey, $this->count(), now()->addHours(1));

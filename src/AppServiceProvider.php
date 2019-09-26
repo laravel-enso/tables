@@ -3,11 +3,14 @@
 namespace LaravelEnso\Tables;
 
 use Illuminate\Support\ServiceProvider;
+use LaravelEnso\Tables\app\Commands\TemplateCacheClear;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        $this->commands(TemplateCacheClear::class);
+
         $this->load()
             ->publish();
     }
