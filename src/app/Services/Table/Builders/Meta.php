@@ -5,9 +5,8 @@ namespace LaravelEnso\Tables\app\Services\Table\Builders;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
-use LaravelEnso\Tables\app\Contracts\AfterCount;
-use LaravelEnso\Tables\app\Services\Table\Filters;
 use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Filters\Filters;
 
 class Meta
 {
@@ -45,7 +44,6 @@ class Meta
     private function run()
     {
         $this->setCount()
-            ->afterCount()
             ->filter()
             ->setDetailedInfo()
             ->countFiltered()
@@ -59,20 +57,12 @@ class Meta
         return $this;
     }
 
-    private function afterCount()
-    {
-        $this->query = $this->table instanceof AfterCount
-            ? $this->table->afterCount($this->table->query())
-            : $this->table->query();
-
-        return $this;
-    }
-
     private function filter()
     {
         $this->filters = (new Filters(
             $this->request,
-            $this->query
+            $this->query,
+            $this->table
         ))->handle();
 
         return $this;
@@ -81,8 +71,8 @@ class Meta
     private function setDetailedInfo()
     {
         $this->fullRecordInfo = $this->request->meta()->get('forceInfo')
-            || (! $this->filters
-                || $this->count <= $this->request->meta()->get('fullInfoRecordLimit'));
+            || $this->count <= $this->request->meta()->get('fullInfoRecordLimit')
+            || ! $this->filters;
 
         return $this;
     }

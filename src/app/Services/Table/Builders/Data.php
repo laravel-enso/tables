@@ -4,9 +4,8 @@ namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use Illuminate\Support\Arr;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Contracts\AfterCount;
-use LaravelEnso\Tables\app\Services\Table\Filters;
 use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Filters\Filters;
 use LaravelEnso\Tables\app\Services\Table\Computors\Computors;
 
 class Data
@@ -25,6 +24,7 @@ class Data
         $this->request = $request;
         $this->meta = $request->meta();
         $this->columns = $request->columns();
+        $this->query = $this->table->query();
         $this->filters = false;
     }
 
@@ -37,8 +37,7 @@ class Data
 
     private function run()
     {
-        $this->query()
-            ->filter()
+        $this->filter()
             ->sort()
             ->limit()
             ->setData();
@@ -51,20 +50,12 @@ class Data
         }
     }
 
-    private function query()
-    {
-        $this->query = $this->table instanceof AfterCount
-            ? $this->table->afterCount($this->table->query())
-            : $this->table->query();
-
-        return $this;
-    }
-
     private function filter()
     {
         $this->filters = (new Filters(
             $this->request,
-            $this->query
+            $this->query,
+            $this->table
         ))->handle();
 
         return $this;
