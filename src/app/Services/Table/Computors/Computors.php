@@ -13,14 +13,9 @@ class Computors
 
     public static function columns($columns, $meta, $fetchMode)
     {
-        $meta->filter()->keys()->each(function ($meta) use ($fetchMode, $columns) {
-            if ($meta === 'translatable' && ! $fetchMode) {
-                return;
-            }
-
-            if (isset(self::$computors[$meta])) {
-                self::$computors[$meta]::columns($columns);
-            }
+        self::metaComputors($meta, $fetchMode)
+            ->each(function ($meta) use ($columns) {
+            self::$computors[$meta]::columns($columns);
         });
 
         return $columns;
@@ -28,18 +23,23 @@ class Computors
 
     public static function compute($data, $meta, $fetchMode)
     {
-        $data = $meta->filter()->keys()->reduce(function ($data, $meta) use ($fetchMode) {
-            if ($meta === 'translatable' && ! $fetchMode) {
-                return;
-            }
-
+        $data = self::metaComputors($meta, $fetchMode)
+            ->reduce(function ($data, $meta) {
             return $data->map(function ($row) use ($meta) {
-                return isset(self::$computors[$meta])
-                    ? self::$computors[$meta]::compute($row)
-                    : $row;
+                return self::$computors[$meta]::compute($row);
             });
         }, $data);
 
         return $data;
+    }
+
+    private static function metaComputors($meta, $fetchMode)
+    {
+        return $meta->filter()
+            ->keys()
+            ->intersect(collect(self::$computors)->keys())
+            ->filter(function ($computor) use ($fetchMode) {
+                return $computor !== 'translatable' || $fetchMode;
+            });
     }
 }
