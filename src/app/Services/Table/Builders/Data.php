@@ -13,19 +13,13 @@ class Data
     private $table;
     private $request;
     private $query;
-    private $filters;
     private $data;
-    private $columns;
-    private $meta;
 
     public function __construct(Table $table, Request $request)
     {
         $this->table = $table;
         $this->request = $request;
-        $this->meta = $request->meta();
-        $this->columns = $request->columns();
         $this->query = $this->table->query();
-        $this->filters = false;
     }
 
     public function data()
@@ -52,7 +46,7 @@ class Data
 
     private function filter()
     {
-        $this->filters = (new Filters(
+        (new Filters(
             $this->request,
             $this->query,
             $this->table
@@ -63,11 +57,11 @@ class Data
 
     private function sort()
     {
-        if (! $this->meta->get('sort')) {
+        if (! $this->request->meta()->get('sort')) {
             return $this;
         }
 
-        $this->columns->each(function ($column) {
+        $this->request->columns()->each(function ($column) {
             if ($column->get('meta')->get('sortable') && $column->get('meta')->get('sort')) {
                 $column->get('meta')->get('nullLast')
                     ? $this->query->orderByRaw($this->rawSort($column))
@@ -89,8 +83,8 @@ class Data
 
     private function limit()
     {
-        $this->query->skip($this->meta->get('start'))
-            ->take($this->meta->get('length'));
+        $this->query->skip($this->request->meta()->get('start'))
+            ->take($this->request->meta()->get('length'));
 
         return $this;
     }
@@ -125,7 +119,7 @@ class Data
     private function computes()
     {
         $this->data = Computors::compute(
-            $this->data, $this->meta, $this->request->fetchMode()
+            $this->data, $this->request->meta(), $this->request->fetchMode()
         );
 
         return $this;
