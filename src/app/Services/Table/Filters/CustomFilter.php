@@ -13,6 +13,7 @@ class CustomFilter
     private $query;
     private $filters;
     private $table;
+
     public function __construct(Request $request, Builder $query, Table $table)
     {
         $this->table = $table;
