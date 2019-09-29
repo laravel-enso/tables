@@ -83,7 +83,7 @@ class Interval
                 ?? config('enso.config.dateFormat');
 
             return Carbon::createFromFormat($dateFormat, $value->get($bound))
-                ->format($dbDateFormat) ;
+                ->format($dbDateFormat);
         }
 
         return $value->get($bound);

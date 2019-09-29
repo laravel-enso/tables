@@ -94,7 +94,6 @@ class Search
         }
     }
 
-
     private function isNested($attribute)
     {
         return Str::contains($attribute, '.');

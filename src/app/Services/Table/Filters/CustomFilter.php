@@ -31,7 +31,7 @@ class CustomFilter
 
     private function customFilter()
     {
-        if($this->table instanceof TableCustomFilter) {
+        if ($this->table instanceof TableCustomFilter) {
             $this->query = $this->table->filter($this->query);
             $this->filters = true;
         }

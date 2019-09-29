@@ -26,6 +26,7 @@ class Filter
 
         return $this->filters;
     }
+
     private function filter()
     {
         if (! $this->request->filled('filters')) {
