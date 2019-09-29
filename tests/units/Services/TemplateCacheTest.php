@@ -65,8 +65,6 @@ class TemplateDummy extends Template
 
     public function __construct(string $filename)
     {
-        parent::__construct($filename);
-
         self::$cache = true;
     }
 
@@ -76,5 +74,10 @@ class TemplateDummy extends Template
             'template' => new Obj(['template_cache' => self::$cache]),
             'test_key' => true
         ];
+    }
+
+    public function filename()
+    {
+        return 'test';
     }
 }

@@ -12,9 +12,11 @@ class Template
 {
     private $template;
     private $meta;
+    private $table;
 
     public function __construct(Table $table)
     {
+        $this->table = $table;
         $this->template = $this->template($table->templatePath());
         $this->meta = new Obj();
     }
@@ -29,6 +31,11 @@ class Template
             'meta' => $this->meta,
             'apiVersion' => config('enso.tables.apiVersion'),
         ];
+    }
+
+    public function filename()
+    {
+        return $this->table->templatePath();
     }
 
     private function template($filename)
