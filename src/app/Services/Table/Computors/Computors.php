@@ -15,8 +15,8 @@ class Computors
     {
         self::metaComputors($meta, $fetchMode)
             ->each(function ($meta) use ($columns) {
-            self::$computors[$meta]::columns($columns);
-        });
+                self::$computors[$meta]::columns($columns);
+            });
 
         return $columns;
     }
@@ -25,10 +25,10 @@ class Computors
     {
         $data = self::metaComputors($meta, $fetchMode)
             ->reduce(function ($data, $meta) {
-            return $data->map(function ($row) use ($meta) {
-                return self::$computors[$meta]::compute($row);
-            });
-        }, $data);
+                return $data->map(function ($row) use ($meta) {
+                    return self::$computors[$meta]::compute($row);
+                });
+            }, $data);
 
         return $data;
     }
