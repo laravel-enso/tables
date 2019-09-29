@@ -8,17 +8,17 @@ use Illuminate\Cache\TaggableStore;
 
 class TemplateCache
 {
-    private $template;
+    private $table;
 
-    public function __construct(Template $template)
+    public function __construct(\LaravelEnso\Tables\app\Contracts\Table $table)
     {
-        $this->template = $template;
+        $this->table = $table;
     }
 
     public function get()
     {
         return $this->load()
-            ?: $this->store($this->template->get());
+            ?: $this->store((new Template($this->table))->get());
     }
 
     public function store($template)
@@ -43,7 +43,7 @@ class TemplateCache
     private function cacheKey(): string
     {
         return config('enso.tables.cache_prefix')
-            .':'.Str::slug($this->template->filename());
+            .':'.Str::slug($this->table->templatePath());
     }
 
     private function cache()

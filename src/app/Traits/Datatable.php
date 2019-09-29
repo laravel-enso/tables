@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Traits;
 
 use App;
 use Illuminate\Http\Request;
-use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Services\TemplateCache;
 use LaravelEnso\Tables\app\Services\Table\Request as TableRequest;
 use LaravelEnso\Tables\app\Services\Table\Builders\Data as DataBuilder;
 use LaravelEnso\Tables\app\Services\Table\Builders\Meta as MetaBuilder;
@@ -13,7 +13,7 @@ trait Datatable
 {
     public function init()
     {
-        return (new Template(new $this->tableClass()))
+        return (new TemplateCache(new $this->tableClass()))
             ->get();
     }
 

@@ -28,9 +28,8 @@ abstract class Table implements TableData
     /** @deprecated */
     public function init()
     {
-        return (new TemplateCache(
-            new Template($this)
-        ))->get();
+        return (new TemplateCache($this))
+            ->get();
     }
 
     /** @deprecated */

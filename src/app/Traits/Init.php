@@ -11,7 +11,7 @@ trait Init
     public function __invoke()
     {
         return (new TemplateCache(
-            new Template(App::make($this->tableClass))
+            App::make($this->tableClass)
         ))->get();
     }
 }

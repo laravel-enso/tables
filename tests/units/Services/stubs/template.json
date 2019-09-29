@@ -1,0 +1,10 @@
+{
+    "routePrefix": "test_tables",
+    "buttons": [],
+    "columns": [{
+        "label": "",
+        "name": "test_name",
+        "data": ""
+    }],
+    "template_cache": true
+}

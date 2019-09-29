@@ -2,22 +2,29 @@
 
 namespace Services\Template\Builders;
 
+use Str;
 use Cache;
+use Route;
 use Config;
 use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\TemplateCache;
 
 class TemplateCacheTest extends TestCase
 {
     private $templateCache;
 
+    private $table;
+
     protected function setUp() :void
     {
         parent::setUp();
 
-        $this->templateCache = (new TemplateCache(new TemplateDummy('test')));
+        Route::any('route')->name('test_tables.tableData');
+        Route::getRoutes()->refreshNameLookups();
+
+        $this->table = new TableDummy();
+        $this->templateCache = (new TemplateCache($this->table));
 
         Config::set('enso.tables.cache_prefix', 'prefix');
         Config::set('enso.tables.cache_tags', 'tag');
@@ -27,7 +34,7 @@ class TemplateCacheTest extends TestCase
     /** @test */
     public function can_get_template()
     {
-        $this->assertArrayHasKey('test_key', $this->templateCache->get());
+        $this->assertTemplate($this->templateCache->get());
     }
 
     /** @test */
@@ -35,7 +42,7 @@ class TemplateCacheTest extends TestCase
     {
         $this->templateCache->get();
 
-        $this->assertArrayHasKey('test_key', Cache::tags(['tag'])->get('prefix:test'));
+        $this->assertTemplate(Cache::tags(['tag'])->get($this->cacheKey()));
     }
 
     /** @test */
@@ -45,39 +52,50 @@ class TemplateCacheTest extends TestCase
 
         $this->templateCache->get();
 
-        $this->assertNull(Cache::tags(['tag'])->get('prefix:test'));
+        $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
     }
 
     /** @test */
     public function cannot_store_template_with_template_disabled_cache()
     {
-        TemplateDummy::$cache = false;
+        TableDummy::$cache = false;
 
         $this->templateCache->get();
 
-        $this->assertNull(Cache::tags(['tag'])->get('prefix:test'));
+        $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
+    }
+
+    private function assertTemplate($result)
+    {
+        $this->assertEquals('test_name',
+            $result['template']->get('columns')->first()->get('name'));
+    }
+
+    private function cacheKey(): string
+    {
+        return 'prefix:'.Str::slug($this->table->templatePath());
     }
 }
 
-class TemplateDummy extends Template
+class TableDummy implements Table
 {
     public static $cache = true;
 
-    public function __construct(string $filename)
+    public function __construct()
     {
         self::$cache = true;
     }
 
-    public function get()
+    public function query()
     {
-        return [
-            'template' => new Obj(['template_cache' => self::$cache]),
-            'test_key' => true
-        ];
+        return null;
     }
 
-    public function filename()
+    public function templatePath()
     {
-        return 'test';
+        if (self::$cache) {
+            return __DIR__.'/stubs/template.json';
+        }
+        return __DIR__.'/stubs/template_without_cache.json';
     }
 }
