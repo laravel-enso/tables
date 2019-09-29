@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\app\Services;
 
+use Str;
 use Cache;
 use Illuminate\Cache\TaggableStore;
 
@@ -42,7 +43,7 @@ class TemplateCache
     private function cacheKey(): string
     {
         return config('enso.tables.cache_prefix')
-            .':'.$this->template->filename();
+            .':'.Str::slug($this->template->filename());
     }
 
     private function cache()

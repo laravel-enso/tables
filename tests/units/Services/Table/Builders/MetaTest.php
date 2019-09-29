@@ -52,7 +52,7 @@ class MetaTest extends TestCase
 
         $response = $this->requestResponse();
 
-        $this->assertEquals(1, Cache::get('table:test_models'));
+        $this->assertEquals(1, Cache::get('enso:tables:test_models'));
     }
 
     /** @test */

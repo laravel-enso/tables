@@ -111,7 +111,8 @@ class Meta
             return $this->count();
         }
 
-        $cacheKey = 'table:'.$this->query->getModel()->getTable();
+        $cacheKey = config('enso.tables.cache_prefix')
+            .':'.$this->query->getModel()->getTable();
 
         return Cache::remember($cacheKey, now()->addHour(), function () {
             return $this->count();
