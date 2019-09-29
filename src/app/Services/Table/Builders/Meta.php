@@ -96,7 +96,6 @@ class Meta
         return $this;
     }
 
-
     private function setTotal()
     {
         $this->request->columns()
