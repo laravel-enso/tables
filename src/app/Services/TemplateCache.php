@@ -5,12 +5,13 @@ namespace LaravelEnso\Tables\app\Services;
 use Str;
 use Cache;
 use Illuminate\Cache\TaggableStore;
+use \LaravelEnso\Tables\app\Contracts\Table;
 
 class TemplateCache
 {
     private $table;
 
-    public function __construct(\LaravelEnso\Tables\app\Contracts\Table $table)
+    public function __construct(Table $table)
     {
         $this->table = $table;
     }
