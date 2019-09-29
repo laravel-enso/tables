@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\app\Services;
 use Str;
 use Cache;
 use Illuminate\Cache\TaggableStore;
-use \LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Contracts\Table;
 
 class TemplateCache
 {
