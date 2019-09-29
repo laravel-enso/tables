@@ -22,15 +22,8 @@ class Filter
 
     public function handle()
     {
-        $this->filter();
-
-        return $this->filters;
-    }
-
-    private function filter()
-    {
         if (! $this->request->filled('filters')) {
-            return $this;
+            return $this->filters;
         }
 
         $this->query->where(function ($query) {
@@ -48,7 +41,7 @@ class Filter
             });
         });
 
-        return $this;
+        return $this->filters;
     }
 
     private function filterIsValid($value)

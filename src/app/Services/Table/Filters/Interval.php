@@ -22,15 +22,8 @@ class Interval
 
     public function handle()
     {
-        $this->applyIntervals();
-
-        return $this->filters;
-    }
-
-    private function applyIntervals()
-    {
         if (! $this->request->filled('intervals')) {
-            return $this;
+            return $this->filters;
         }
 
         $this->query->where(function () {
@@ -43,7 +36,7 @@ class Interval
             });
         });
 
-        return $this;
+        return $this->filters;
     }
 
     private function setMinLimit($table, $column, $value)
