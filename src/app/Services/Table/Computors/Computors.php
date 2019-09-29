@@ -14,7 +14,7 @@ class Computors
     public static function columns($columns, $meta, $fetchMode)
     {
         $meta->filter()->keys()->each(function ($meta) use ($fetchMode, $columns) {
-            if ($meta == 'translatable' && ! $fetchMode) {
+            if ($meta === 'translatable' && ! $fetchMode) {
                 return;
             }
 
@@ -29,7 +29,7 @@ class Computors
     public static function compute($data, $meta, $fetchMode)
     {
         $data = $meta->filter()->keys()->reduce(function ($data, $meta) use ($fetchMode) {
-            if ($meta == 'translatable' && ! $fetchMode) {
+            if ($meta === 'translatable' && ! $fetchMode) {
                 return;
             }
 
