@@ -30,7 +30,11 @@ class Meta
 
     public function data()
     {
-        $this->run();
+        $this->setCount()
+            ->filter()
+            ->setDetailedInfo()
+            ->countFiltered()
+            ->setTotal();
 
         return [
             'count' => $this->count,
@@ -39,15 +43,6 @@ class Meta
             'fullRecordInfo' => $this->fullRecordInfo,
             'filters' => $this->filters,
         ];
-    }
-
-    private function run()
-    {
-        $this->setCount()
-            ->filter()
-            ->setDetailedInfo()
-            ->countFiltered()
-            ->setTotal();
     }
 
     private function setCount()
