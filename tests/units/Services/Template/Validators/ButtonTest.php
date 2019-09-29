@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Template\Validators;
+namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Route;
 use Tests\TestCase;

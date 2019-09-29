@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Template\Builders;
+namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
 use Tests\TestCase;
 use Illuminate\Support\Str;

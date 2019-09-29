@@ -11,7 +11,7 @@ abstract class Action
 
     public function __construct(string $class, array $request)
     {
-        $this->fetcher = $this->fetcher = new Fetcher($class, $request);
+        $this->fetcher = new Fetcher($class, $request);
         $this->request = new Obj($request);
     }
 

@@ -2,60 +2,53 @@
 
 namespace LaravelEnso\Tables\app\Services;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Table\Builder;
+use LaravelEnso\Tables\app\Contracts\AfterCount;
+use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Contracts\Table as TableData;
+use LaravelEnso\Tables\app\Services\Table\Builders\Data;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use LaravelEnso\Tables\app\Services\Table\Builders\Export;
 
-abstract class Table
+abstract class Table implements TableData
 {
     protected $request;
     protected $templatePath;
 
-    public function __construct(array $request = [])
+    public function __construct(Request $request)
     {
-        $this->request = new Obj(json_decode(json_encode($request), true));
+        $this->request = $request;
     }
 
     abstract public function query();
 
-    protected function afterCount(QueryBuilder $query)
-    {
-        return $query;
-    }
-
+    /** @deprecated */
     public function request()
     {
         return $this->request;
     }
 
+    /** @deprecated */
     public function init()
     {
         return (new Template($this->templatePath()))->get();
     }
 
+    /** @deprecated */
     public function data()
     {
-        return $this->builder()
+        return (new Data($this, new Request($this->request->toArray())))
             ->data();
     }
 
+    /** @deprecated */
     public function fetcher()
     {
-        return $this->builder()
+        return (new Export($this, new Request($this->request->toArray())))
             ->fetcher();
     }
 
     public function templatePath()
     {
         return $this->templatePath;
-    }
-
-    private function builder()
-    {
-        return new Builder(
-            $this->request,
-            $this->query(),
-            $this->afterCount($this->query())
-        );
     }
 }

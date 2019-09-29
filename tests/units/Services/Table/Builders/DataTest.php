@@ -1,25 +1,22 @@
 <?php
 
-namespace Services\Table;
+namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use App;
 use Faker\Factory;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
 use LaravelEnso\Enums\app\Services\Enum;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Table\Builder;
+use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Builders\Data;
 
-class BuilderTest extends TestCase
+class DataTest extends TestCase
 {
     private $testModel;
     private $faker;
     private $builder;
     private $params;
     private $select;
-    private $fetchMode;
 
     public function setUp(): void
     {
@@ -31,9 +28,8 @@ class BuilderTest extends TestCase
 
         $this->params = ['columns' => [], 'meta' => ['length' => 10]];
         $this->select = 'id, name, is_active, created_at, price';
-        $this->fetchMode = false;
 
-        $this->createTestModelTable();
+        TestModel::createTable();
 
         $this->testModel = $this->createTestModel();
     }
@@ -43,11 +39,10 @@ class BuilderTest extends TestCase
     {
         $response = $this->requestResponse();
 
-        $this->assertCount(BuilderTestModel::count(), $response->get('data'));
-        $this->assertEquals(BuilderTestModel::count(), $response->get('count'));
+        $this->assertCount(TestModel::count(), $response);
 
         $this->assertTrue(
-            $response->get('data')->first()
+            $response->first()
                 ->diff($this->testModel->toArray())
                 ->isEmpty()
         );
@@ -62,7 +57,7 @@ class BuilderTest extends TestCase
 
         $this->assertEquals(
             'name',
-            $response->get('data')->first()
+            $response->first()
                 ->get('custom')
                 ->get('relation')
         );
@@ -78,7 +73,7 @@ class BuilderTest extends TestCase
 
         $this->assertEquals(
             'name',
-            $response->get('data')->first()->get('custom.relation')
+            $response->first()->get('custom.relation')
         );
     }
 
@@ -89,7 +84,8 @@ class BuilderTest extends TestCase
 
         $this->params['columns']['is_active'] = [
             'name' => 'is_active',
-            'enum' => BuilderTestEnum::class
+            'enum' => BuilderTestEnum::class,
+            'meta' => []
         ];
 
         $this->params['meta']['enum'] = true;
@@ -98,7 +94,7 @@ class BuilderTest extends TestCase
 
         $this->assertEquals(
             BuilderTestEnum::get($this->testModel->is_active),
-            $response->get('data')->first()->get('is_active')
+            $response->first()->get('is_active')
         );
     }
 
@@ -117,7 +113,7 @@ class BuilderTest extends TestCase
 
         $this->assertEquals(
             $this->testModel->created_at->format('Y-m-d'),
-            $response->get('data')->first()->get('created_at')
+            $response->first()->get('created_at')
         );
     }
 
@@ -135,31 +131,8 @@ class BuilderTest extends TestCase
 
         $this->assertEquals(
             $this->testModel->price / 100,
-            $response->get('data')->first()->get('price')
+            $response->first()->get('price')
         );
-    }
-
-    /** @test */
-    public function can_get_data_with_translatable()
-    {
-        App::make('translator')->addJsonPath(__DIR__.'/lang');
-
-        App::setLocale('lang');
-
-        $this->testModel->update(['name' => 'should translate']);
-
-        $this->params['columns']['name'] = [
-            'name' => 'name',
-            'meta' => ['translatable' => true],
-        ];
-
-        $this->params['meta']['translatable'] = true;
-
-        $this->fetchMode = true;
-
-        $response = $this->requestResponse();
-
-        $this->assertEquals('translation', $response['data'][0]['name']);
     }
 
     /** @test */
@@ -177,15 +150,15 @@ class BuilderTest extends TestCase
         $response = $this->requestResponse();
 
         $this->assertEquals(
-            BuilderTestModel::orderByDesc('id')->first()->id,
-            $response->get('data')->first()->get('id')
+            TestModel::orderByDesc('id')->first()->id,
+            $response->first()->get('id')
         );
     }
 
     /** @test */
     public function can_get_data_with_sort_null_last()
     {
-        $this->secondModel = $this->createTestModel();
+        $secondModel = $this->createTestModel();
 
         $this->testModel->update(['name' => null]);
 
@@ -199,24 +172,9 @@ class BuilderTest extends TestCase
         $response = $this->requestResponse();
 
         $this->assertEquals(
-            $this->secondModel->name,
-            $response->get('data')->first()->get('name')
+            $secondModel->name,
+            $response->first()->get('name')
         );
-    }
-
-    /** @test */
-    public function can_get_data_with_cache()
-    {
-        Cache::shouldReceive('get')
-            ->andReturn(12)
-            ->shouldReceive('has')
-            ->andReturn(true);
-
-        $this->params['cache'] = true;
-
-        $response = $this->requestResponse();
-
-        $this->assertEquals(12, $response->get('count'));
     }
 
     /** @test */
@@ -226,28 +184,7 @@ class BuilderTest extends TestCase
 
         $response = $this->requestResponse();
 
-        $this->assertCount(0, $response['data']);
-    }
-
-    /** @test */
-    public function can_get_data_with_total()
-    {
-        $this->createTestModel();
-
-        $this->params['columns']['price'] = [
-            'name' => 'price',
-            'data' => 'price',
-            'meta' => ['total' => true],
-        ];
-
-        $this->params['meta']['total'] = true;
-
-        $response = $this->requestResponse();
-
-        $this->assertEquals(
-            BuilderTestModel::sum('price'),
-            $response->get('total')->get('price')
-        );
+        $this->assertCount(0, $response);
     }
 
     /** @test */
@@ -278,60 +215,28 @@ class BuilderTest extends TestCase
 
         $response = $this->requestResponse();
 
-        $this->assertFalse($response->get('fullRecordInfo'));
-        $this->assertCount(1, $response->get('data'));
-        $this->assertEquals(2, $response->get('count'));
-        $this->assertEquals(2, $response->get('filtered'));
+        $this->assertCount(1, $response);
     }
 
     private function requestResponse()
     {
-        $this->builder = new Builder(
-            new Obj($this->params),
-            BuilderTestModel::selectRaw($this->select),
-            BuilderTestModel::selectRaw($this->select)
+        $this->builder = new Data(
+            new TestTable($this->select),
+            new Request($this->params)
         );
-
-        if ($this->fetchMode) {
-            $this->builder->fetch();
-        }
 
         return new Obj($this->builder->data());
     }
 
     private function createTestModel()
     {
-        return BuilderTestModel::create([
+        return TestModel::create([
             'name' => $this->faker->name,
             'is_active' => $this->faker->boolean,
             'price' => $this->faker->numberBetween(1000, 10000),
         ]);
     }
 
-    private function createTestModelTable()
-    {
-        Schema::create('builder_test_models', function ($table) {
-            $table->increments('id');
-            $table->string('name')->nullable();
-            $table->boolean('is_active')->nullable();
-            $table->integer('price')->nullable();
-            $table->timestamps();
-        });
-    }
-}
-
-class BuilderTestModel extends Model
-{
-    protected $fillable = ['name', 'price', 'is_active'];
-
-    protected $casts = ['is_active' => 'boolean'];
-
-    public function getCustomAttribute()
-    {
-        return [
-            'relation' => 'name'
-        ];
-    }
 }
 
 class BuilderTestEnum extends Enum

@@ -16,7 +16,7 @@ class Filters
     private $columns;
     private $filters;
 
-    public function __construct(Obj $request, Builder $query)
+    public function __construct(Request $request, Builder $query)
     {
         $this->request = $request;
         $this->query = $query;

@@ -4,6 +4,8 @@ namespace LaravelEnso\Tables\app\Services;
 
 use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Builders\Export;
 
 class Fetcher
 {
@@ -14,7 +16,12 @@ class Fetcher
 
     public function __construct(string $class, array $request)
     {
-        $this->builder = App::make($class, ['request' => $request])->fetcher();
+        $request = new Request($request, true);
+
+        $this->builder = (new Export(
+            App::make($class, ['request' => $request]),
+            $request
+        ))->fetcher();
 
         $this->request = new Obj($request);
     }

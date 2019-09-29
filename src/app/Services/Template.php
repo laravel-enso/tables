@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\app\Services;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Helpers\app\Classes\JsonParser;
 use LaravelEnso\Tables\app\Services\Template\Builder;
 use LaravelEnso\Tables\app\Services\Template\Validator;
@@ -12,9 +13,9 @@ class Template
     private $template;
     private $meta;
 
-    public function __construct(string $filename)
+    public function __construct(Table $table)
     {
-        $this->template = $this->template($filename);
+        $this->template = $this->template($table->templatePath());
         $this->meta = new Obj();
     }
 

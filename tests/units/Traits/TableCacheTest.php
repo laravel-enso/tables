@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Traits;
+namespace LaravelEnso\Tables\Tests\units\Traits;
 
 use Cache;
 use Schema;

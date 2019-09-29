@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Table;
+namespace LaravelEnso\Tables\Tests\units\Services\Table;
 
 use Faker\Factory;
 use Tests\TestCase;
@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Table\Filters;
+use LaravelEnso\Tables\app\Services\Table\Request;
 
 class FilterTest extends TestCase
 {
@@ -303,7 +304,7 @@ class FilterTest extends TestCase
     private function requestResponse()
     {
         (new Filters(
-            new Obj($this->params),
+            new Request($this->params),
             $this->query
         ))->handle();
 

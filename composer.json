@@ -26,7 +26,8 @@
     },
     "autoload": {
         "psr-4": {
-            "LaravelEnso\\Tables\\": "src/"
+            "LaravelEnso\\Tables\\": "src/",
+            "LaravelEnso\\Tables\\Tests\\": "tests/"
         }
     },
     "extra": {
