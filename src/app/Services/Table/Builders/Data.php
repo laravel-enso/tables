@@ -24,13 +24,6 @@ class Data
 
     public function data()
     {
-        $this->run();
-
-        return $this->data;
-    }
-
-    private function run()
-    {
         $this->filter()
             ->sort()
             ->limit()
@@ -42,6 +35,8 @@ class Data
                 ->computes()
                 ->flatten();
         }
+
+        return $this->data;
     }
 
     private function filter()
