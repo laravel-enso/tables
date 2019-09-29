@@ -2,11 +2,9 @@
 
 namespace LaravelEnso\Tables\app\Services;
 
-use LaravelEnso\Tables\app\Contracts\AfterCount;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Contracts\Table as TableData;
 use LaravelEnso\Tables\app\Services\Table\Builders\Data;
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use LaravelEnso\Tables\app\Services\Table\Builders\Export;
 
 abstract class Table implements TableData

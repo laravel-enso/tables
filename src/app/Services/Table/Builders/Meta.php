@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
 use LaravelEnso\Tables\app\Contracts\AfterCount;
-use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Filters;
+use LaravelEnso\Tables\app\Services\Table\Request;
 
 class Meta
 {
@@ -124,7 +124,7 @@ class Meta
 
         $cacheKey = 'table:'.$this->query->getModel()->getTable();
 
-        return Cache::remember($cacheKey, now()->addHour(), function() {
+        return Cache::remember($cacheKey, now()->addHour(), function () {
             return $this->count();
         });
     }

@@ -34,7 +34,6 @@ class Request
         return $this->fetchMode;
     }
 
-
     public function __call($method, $args)
     {
         return $this->request->$method(...$args);
