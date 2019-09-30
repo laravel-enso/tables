@@ -204,10 +204,8 @@ class SearchTest extends TestCase
 
     private function requestResponse()
     {
-        (new Search(
-            new Request($this->params),
-            $this->query
-        ))->handle();
+        (new Search())
+            ->filter(new Request($this->params), $this->query, new DummyTable());
 
         return $this->query->get();
     }

@@ -4,8 +4,8 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
 use Faker\Factory;
 use Tests\TestCase;
-use LaravelEnso\Tables\app\Services\Table\Filters\Filter;
 use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Filters\Filter;
 
 class FilterTest extends TestCase
 {
@@ -55,10 +55,8 @@ class FilterTest extends TestCase
 
     private function requestResponse()
     {
-        (new Filter(
-            new Request($this->params),
-            $this->query
-        ))->handle();
+        (new Filter())
+            ->filter(new Request($this->params), $this->query, new DummyTable());
 
         return $this->query->get();
     }

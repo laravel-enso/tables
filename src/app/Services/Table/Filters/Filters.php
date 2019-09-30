@@ -6,8 +6,9 @@ use App;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Table\Request;
+use \LaravelEnso\Tables\app\Contracts\Filter AS TableFilter;
 
-class Filters
+class Filters implements TableFilter
 {
     private static $filters = [
         Filter::class,
@@ -20,11 +21,13 @@ class Filters
     private $query;
     private $table;
 
-    public function __construct(Request $request, Builder $query, Table $table)
+    public function filter(Request $request, Builder $query, Table $table): bool
     {
         $this->table = $table;
         $this->request = $request;
         $this->query = $query;
+
+        return $this->handle();
     }
 
     public static function setFilters($filters)
@@ -36,16 +39,16 @@ class Filters
     {
         return collect(self::$filters)
             ->reduce(function ($isFiltered, $class) {
-                return $this->filter($class) || $isFiltered;
+                return $this->makeFilter($class) || $isFiltered;
             }, false);
     }
 
-    private function filter($class)
+    private function makeFilter($class)
     {
-        return App::make($class, [
-            'request' => $this->request,
-            'query' => $this->query,
-            'table' => $this->table,
-        ])->handle();
+        return App::make($class)->filter(
+            $this->request,
+            $this->query,
+            $this->table
+        );
     }
 }

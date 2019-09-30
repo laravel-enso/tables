@@ -4,25 +4,28 @@ namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Contracts\Filter;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
 
-class CustomFilter
+class CustomFilter implements Filter
 {
     private $request;
     private $query;
     private $filters;
     private $table;
 
-    public function __construct(Request $request, Builder $query, Table $table)
+    public function filter(Request $request, Builder $query, Table $table): bool
     {
         $this->table = $table;
         $this->request = $request;
         $this->query = $query;
         $this->filters = false;
+
+        return $this->handle();
     }
 
-    public function handle()
+    private function handle()
     {
         $this->customFilter()
             ->checkParams();

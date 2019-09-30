@@ -4,23 +4,27 @@ namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Exceptions\QueryException;
+use LaravelEnso\Tables\app\Contracts\Filter;
 
-class Search
+class Search implements Filter
 {
     private $request;
     private $query;
     private $columns;
 
-    public function __construct(Request $request, Builder $query)
+    public function filter(Request $request, Builder $query, Table $table): bool
     {
         $this->request = $request;
         $this->query = $query;
         $this->columns = $request->get('columns');
+
+        return $this->handle();
     }
 
-    public function handle()
+    private function handle()
     {
         if (! $this->request->get('meta')->filled('search')) {
             return false;

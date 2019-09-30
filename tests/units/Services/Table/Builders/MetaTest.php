@@ -50,7 +50,7 @@ class MetaTest extends TestCase
     {
         $this->params['cache'] = true;
 
-        $response = $this->requestResponse();
+        $this->requestResponse();
 
         $this->assertEquals(1, Cache::get('enso:tables:test_models'));
     }

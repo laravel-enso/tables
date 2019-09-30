@@ -5,22 +5,26 @@ namespace LaravelEnso\Tables\app\Services\Table\Filters;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Database\Eloquent\Builder;
+use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Table\Request;
+use \LaravelEnso\Tables\app\Contracts\Filter As FilterTable;
 
-class Filter
+class Filter implements FilterTable
 {
     private $request;
     private $query;
     private $filters;
 
-    public function __construct(Request $request, Builder $query)
+    public function filter(Request $request, Builder $query, Table $table): bool
     {
         $this->request = $request;
         $this->query = $query;
         $this->filters = false;
+
+        return $this->handle();
     }
 
-    public function handle()
+    private function handle()
     {
         if (! $this->request->filled('filters')) {
             return $this->filters;

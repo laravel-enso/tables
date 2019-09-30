@@ -54,11 +54,11 @@ class Meta
 
     private function filter()
     {
-        $this->filters = (new Filters(
+        $this->filters = (new Filters())->filter(
             $this->request,
             $this->query,
             $this->table
-        ))->handle();
+        );
 
         return $this;
     }

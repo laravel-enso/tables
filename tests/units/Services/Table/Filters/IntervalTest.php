@@ -91,10 +91,8 @@ class IntervalTest extends TestCase
 
     private function requestResponse()
     {
-        (new Interval(
-            new Request($this->params),
-            $this->query
-        ))->handle();
+        (new Interval())
+            ->filter(new Request($this->params), $this->query, new DummyTable());
 
         return $this->query->get();
     }

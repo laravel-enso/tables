@@ -41,11 +41,11 @@ class Data
 
     private function filter()
     {
-        (new Filters(
+        (new Filters())->filter(
             $this->request,
             $this->query,
             $this->table
-        ))->handle();
+        );
 
         return $this;
     }
