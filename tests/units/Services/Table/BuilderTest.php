@@ -30,7 +30,7 @@ class BuilderTest extends TestCase
         $this->faker = Factory::create();
 
         $this->params = ['columns' => [], 'meta' => ['length' => 10]];
-        $this->select = 'id, name, is_active, created_at, price';
+        $this->select = 'id, name, is_active, created_at, price, color';
         $this->fetchMode = false;
 
         $this->createTestModelTable();
@@ -85,20 +85,20 @@ class BuilderTest extends TestCase
     /** @test */
     public function can_get_data_with_enum()
     {
-        $this->testModel->update(['is_active' => 1]);
+        $this->testModel->update(['color' => 2]);
 
-        $this->params['columns']['is_active'] = [
-            'name' => 'is_active',
+        $this->params['columns']['color'] = [
+            'name' => 'color',
             'enum' => BuilderTestEnum::class
         ];
 
-        $this->params['meta']['enum'] = 1;
+        $this->params['meta']['enum'] = 2;
 
         $response = $this->requestResponse();
 
         $this->assertEquals(
-            BuilderTestEnum::get($this->testModel->is_active),
-            $response->get('data')->first()->get('is_active')
+            BuilderTestEnum::get($this->testModel->color),
+            $response->get('data')->first()->get('color')
         );
     }
 
@@ -303,6 +303,7 @@ class BuilderTest extends TestCase
     {
         return BuilderTestModel::create([
             'name' => $this->faker->name,
+            'color' => BuilderTestEnum::keys()->random(),
             'is_active' => $this->faker->boolean,
             'price' => $this->faker->numberBetween(1000, 10000),
         ]);
@@ -313,6 +314,7 @@ class BuilderTest extends TestCase
         Schema::create('builder_test_models', function ($table) {
             $table->increments('id');
             $table->string('name')->nullable();
+            $table->tinyInteger('color')->nullable();
             $table->boolean('is_active')->nullable();
             $table->integer('price')->nullable();
             $table->timestamps();
@@ -322,7 +324,9 @@ class BuilderTest extends TestCase
 
 class BuilderTestModel extends Model
 {
-    protected $fillable = ['name', 'price', 'is_active'];
+    protected $fillable = ['name', 'price', 'color', 'is_active'];
+
+    protected $casts = ['is_active' => 'boolean'];
 
     public function getCustomAttribute()
     {
@@ -334,6 +338,6 @@ class BuilderTestModel extends Model
 
 class BuilderTestEnum extends Enum
 {
-    public const Inactive = 0;
-    public const Active = 1;
+    public const Red = 1;
+    public const Green = 2;
 }
