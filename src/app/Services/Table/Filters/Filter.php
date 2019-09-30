@@ -7,7 +7,7 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Table\Request;
-use LaravelEnso\Tables\app\Contracts\Filter As FilterTable;
+use LaravelEnso\Tables\app\Contracts\Filter as FilterTable;
 
 class Filter implements FilterTable
 {
