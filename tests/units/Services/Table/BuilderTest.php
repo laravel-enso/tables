@@ -85,14 +85,14 @@ class BuilderTest extends TestCase
     /** @test */
     public function can_get_data_with_enum()
     {
-        $this->testModel->update(['is_active' => true]);
+        $this->testModel->update(['is_active' => 1]);
 
         $this->params['columns']['is_active'] = [
             'name' => 'is_active',
             'enum' => BuilderTestEnum::class
         ];
 
-        $this->params['meta']['enum'] = true;
+        $this->params['meta']['enum'] = 1;
 
         $response = $this->requestResponse();
 
@@ -323,8 +323,6 @@ class BuilderTest extends TestCase
 class BuilderTestModel extends Model
 {
     protected $fillable = ['name', 'price', 'is_active'];
-
-    protected $casts = ['is_active' => 'boolean'];
 
     public function getCustomAttribute()
     {
