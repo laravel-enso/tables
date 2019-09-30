@@ -6,7 +6,7 @@ use App;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Table\Request;
-use \LaravelEnso\Tables\app\Contracts\Filter AS TableFilter;
+use LaravelEnso\Tables\app\Contracts\Filter AS TableFilter;
 
 class Filters implements TableFilter
 {

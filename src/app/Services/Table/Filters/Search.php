@@ -5,9 +5,9 @@ namespace LaravelEnso\Tables\app\Services\Table\Filters;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Contracts\Filter;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Exceptions\QueryException;
-use LaravelEnso\Tables\app\Contracts\Filter;
 
 class Search implements Filter
 {
