@@ -8,9 +8,9 @@ use Illuminate\Cache\TaggableStore;
 
 class TemplateCacheClear extends Command
 {
-    protected $signature = 'enso:table:clear';
+    protected $signature = 'enso:tables:clear';
 
-    protected $description = 'Clear cached templates';
+    protected $description = 'Clear cached table templates';
 
     public function handle()
     {
@@ -18,7 +18,7 @@ class TemplateCacheClear extends Command
             Cache::tags(config('enso.tables.cache_tags'))
                 ->flush();
 
-            $this->info('table cache tags ('
+            $this->info('Table cache tags ('
                 .implode(',', config('enso.tables.cache_tags'))
                 .') cleared');
 
@@ -27,11 +27,11 @@ class TemplateCacheClear extends Command
 
         if ($this->confirm("Your cache driver doesn't support tags, therefore we should flush the whole cache")) {
             Cache::flush();
-            $this->info('table cache cleared');
+            $this->info('Application cache cleared');
 
             return;
         }
 
-        $this->warn('cache clear ignored');
+        $this->warn('Table cached templates were not cleared');
     }
 }
