@@ -3,13 +3,13 @@
 namespace LaravelEnso\Tables\app\Traits;
 
 use Illuminate\Support\Facades\App;
-use LaravelEnso\Tables\app\Services\TemplateCache;
+use LaravelEnso\Tables\app\Services\TemplateLoader;
 
 trait Init
 {
     public function __invoke()
     {
-        return (new TemplateCache(
+        return (new TemplateLoader(
             App::make($this->tableClass)
         ))->get();
     }

@@ -67,8 +67,7 @@ class Buttons
 
         if (collect(self::PathActions)->contains($button->get('action'))) {
             $button->set(
-                'path',
-                 route($route, [$type === 'row' ? 'dtRowId' : null], false)
+                'path', route($route, [$type === 'row' ? 'dtRowId' : null], false)
             );
 
             return false;

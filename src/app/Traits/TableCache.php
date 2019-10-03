@@ -19,7 +19,8 @@ trait TableCache
 
     public function resetTableCache()
     {
-        Cache::forget(config('enso.tables.cache_prefix')
-            .':'.$this->getTable());
+        Cache::forget(
+            config('enso.tables.cache.prefix').':'.$this->getTable()
+        );
     }
 }

@@ -3,7 +3,8 @@
 namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\TemplateException;
+use Illuminate\Support\Facades\Route as RouteFacade;
+use LaravelEnso\Tables\app\Exceptions\RouteException;
 
 class Route
 {
@@ -20,11 +21,8 @@ class Route
 
     public function validate()
     {
-        if (! \Route::has($this->readRoute)) {
-            throw new TemplateException(__(
-                'Read route does not exist: ":route"',
-                ['route' => $this->readRoute]
-            ));
+        if (! RouteFacade::has($this->readRoute)) {
+            throw RouteException::notFound($this->readRoute);
         }
     }
 }

@@ -43,8 +43,7 @@ class Fetcher
 
     public function next()
     {
-        $this->data = $this->builder
-            ->fetch($this->page++);
+        $this->data = $this->builder->fetch($this->page++);
     }
 
     public function valid()

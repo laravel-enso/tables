@@ -9,9 +9,12 @@ trait Action
 {
     public function __invoke(Request $request)
     {
+        $request = new TableRequest($request->all());
+        $table = App::make($this->tableClass, ['request' => $request]);
+
         App::make($this->actionClass, [
-            'class' => $this->tableClass,
-            'request' => $request->all(),
+            'table' => $table,
+            'request' => $request,
         ])->handle();
     }
 }

@@ -1,42 +1,30 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Filters;
+namespace LaravelEnso\Tables\app\Services\Table\Builders\Filters;
 
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Contracts\Filter;
-use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Exceptions\QueryException;
 
-class Search implements Filter
+class Search extends BaseFilter
 {
-    private $request;
-    private $query;
-    private $columns;
-
-    public function filter(Request $request, Builder $query, Table $table): bool
+    public function handle(): bool
     {
-        $this->request = $request;
-        $this->query = $query;
-        $this->columns = $request->get('columns');
-
-        return $this->handle();
-    }
-
-    private function handle()
-    {
-        if (! $this->request->get('meta')->filled('search')) {
-            return false;
+        if ($this->request->get('meta')->filled('search')) {
+            $this->filter();
         }
 
+        return $this->filters;
+    }
+
+    private function filter()
+    {
         $this->searchArguments()->each(function ($argument) {
             $this->query->where(function ($query) use ($argument) {
                 $this->match($query, $argument);
             });
         });
 
-        return true;
+        $this->filters = true;
     }
 
     private function searchArguments()
@@ -50,7 +38,7 @@ class Search implements Filter
 
     private function match($query, $argument)
     {
-        $this->columns->each(function ($column) use ($query, $argument) {
+        $this->request->get('columns')->each(function ($column) use ($query, $argument) {
             if ($column->get('meta')->get('searchable')) {
                 return $this->isNested($column->get('name'))
                     ? $this->whereHasRelation($query, $column->get('data'), $argument)
@@ -94,7 +82,7 @@ class Search implements Filter
             case 'endsWith':
                 return '%'.$argument;
             default:
-                throw new QueryException(__('Unknown search mode'));
+                throw QueryException::unknownSearchMode();
         }
     }
 

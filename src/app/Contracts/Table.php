@@ -2,9 +2,11 @@
 
 namespace LaravelEnso\Tables\app\Contracts;
 
+use Illuminate\Database\Eloquent\Builder;
+
 interface Table
 {
-    public function query();
+    public function query(): Builder;
 
-    public function templatePath();
+    public function templatePath(): string;
 }

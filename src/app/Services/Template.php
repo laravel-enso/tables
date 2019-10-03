@@ -12,17 +12,22 @@ class Template
 {
     private $template;
     private $meta;
+    private $ready;
 
     public function __construct(Table $table)
     {
         $this->template = $this->template($table->templatePath());
         $this->meta = new Obj();
+        $this->ready = false;
     }
 
     public function get()
     {
-        (new Builder($this->template, $this->meta))
-            ->run();
+        if (! $this->ready) {
+            (new Builder($this->template, $this->meta))->handle();
+
+            $this->ready = true;
+        }
 
         return [
             'template' => $this->template,
@@ -31,16 +36,21 @@ class Template
         ];
     }
 
+    public function shouldCache()
+    {
+        return $this->template->has('templateCache')
+            ? $this->template->get('templateCache')
+            : config('enso.tables.cache.template');
+    }
+
     private function template($filename)
     {
         $template = new Obj(
-            (new JsonParser($filename))
-                ->array()
+            (new JsonParser($filename))->array()
         );
 
         if ($this->needsValidation()) {
-            (new Validator($template))
-            ->run();
+            (new Validator($template))->run();
         }
 
         return $template;

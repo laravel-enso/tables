@@ -34,7 +34,7 @@ class ExportTest extends TestCase
     }
 
     /** @test */
-    public function can_get_data_with_translatable()
+    public function can_get_export_data_with_translatable()
     {
         App::make('translator')->addJsonPath(__DIR__.'/lang');
 

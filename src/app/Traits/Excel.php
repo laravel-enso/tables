@@ -10,9 +10,7 @@ trait Excel
     public function __invoke(Request $request)
     {
         (new Service(
-            $request->user(),
-            $request->all(),
-            $this->tableClass
+            $request->user(), $this->tableClass, $request->all()
         ))->handle();
     }
 }

@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 use Faker\Factory;
 use Tests\TestCase;
 use LaravelEnso\Tables\app\Services\Table\Request;
-use LaravelEnso\Tables\app\Services\Table\Filters\Search;
+use LaravelEnso\Tables\app\Services\Table\Builders\Filters\Search;
 
 class SearchTest extends TestCase
 {
@@ -204,8 +204,7 @@ class SearchTest extends TestCase
 
     private function requestResponse()
     {
-        (new Search())
-            ->filter(new Request($this->params), $this->query, new DummyTable());
+        (new Search(new Request($this->params), $this->query))->handle();
 
         return $this->query->get();
     }

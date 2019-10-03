@@ -8,7 +8,14 @@ class Date
 {
     private static $columns;
 
-    public static function compute($row)
+    public static function columns($columns)
+    {
+        self::$columns = $columns->filter(function ($column) {
+            return $column->get('meta')->get('date');
+        });
+    }
+
+    public static function handle($row)
     {
         foreach (self::$columns as $column) {
             $row[$column->get('name')] = $row[$column->get('name')] !== null
@@ -25,12 +32,5 @@ class Date
         return $column->has('dateFormat')
             ? $column->get('dateFormat')
             : config('enso.tables.dateFormat');
-    }
-
-    public static function columns($columns)
-    {
-        self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->get('date');
-        });
     }
 }

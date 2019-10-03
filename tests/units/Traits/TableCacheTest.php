@@ -3,8 +3,8 @@
 namespace LaravelEnso\Tables\Tests\units\Traits;
 
 use Cache;
-use Schema;
 use Config;
+use Schema;
 use Faker\Factory;
 use Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +20,7 @@ class TableCacheTest extends TestCase
         parent::setUp();
 
         // $this->withoutExceptionHandling();
-        Config::set('enso.tables.cache_prefix', 'prefix');
+        Config::set('enso.tables.cache.prefix', 'prefix');
 
         $this->faker = Factory::create();
 

@@ -20,12 +20,16 @@ class ExcelExport implements ShouldQueue
     private $tableClass;
     private $dataExport;
 
-    public function __construct(User $user, array $request, string $tableClass, $dataExport = null)
+    public $timeout;
+    public $queue;
+
+    public function __construct(User $user, string $tableClass, array $request, $dataExport = null)
     {
         $this->user = $user;
-        $this->request = $request;
         $this->tableClass = $tableClass;
+        $this->request = $request;
         $this->dataExport = $dataExport;
+
         $this->timeout = config('enso.tables.export.timeout');
         $this->queue = config('enso.tables.queues.exports');
     }

@@ -34,10 +34,9 @@ class Structure
 
     private function readPath()
     {
-        $route = $this->template->get('routePrefix').'.'.(
-            $this->template->get('dataRouteSuffix')
-                ?? config('enso.tables.dataRouteSuffix')
-        );
+        $route = $this->template->get('routePrefix').'.'
+            .($this->template->get('dataRouteSuffix')
+                ?? config('enso.tables.dataRouteSuffix'));
 
         $this->template->set('readPath', route($route, [], false));
 

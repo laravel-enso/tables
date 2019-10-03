@@ -4,5 +4,5 @@ namespace LaravelEnso\Tables\app\Contracts;
 
 interface RawTotal
 {
-    public function rawTotal($column);
+    public function rawTotal($column): string;
 }

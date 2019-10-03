@@ -16,28 +16,26 @@ class Excel
     private $tableClass;
     private $dataExport;
 
-    public function __construct($user, array $request, $tableClass)
+    public function __construct($user, string $tableClass, array $request)
     {
         $this->user = $user;
-        $this->request = $request;
         $this->tableClass = $tableClass;
+        $this->request = $request;
         $this->dataExport = null;
     }
 
     public function handle()
     {
-        $this->checkIfAlreadyRunning()
+        $this->checkAlreadyRunning()
             ->notifyStart()
             ->createDataExport()
             ->dispatch();
     }
 
-    private function checkIfAlreadyRunning()
+    private function checkAlreadyRunning()
     {
         if ($this->dataExportRunning()) {
-            throw new ExportException(
-                __('An export job is already running for the same table')
-            );
+            throw ExportException::alreadyRunning();
         }
 
         return $this;
@@ -70,8 +68,8 @@ class Excel
     {
         ExcelExport::dispatch(
             $this->user,
-            $this->request,
             $this->tableClass,
+            $this->request,
             $this->dataExport
         );
     }

@@ -7,6 +7,8 @@ use Cache;
 use Route;
 use Config;
 use Tests\TestCase;
+use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\TemplateCache;
 
@@ -26,9 +28,9 @@ class TemplateCacheTest extends TestCase
         $this->table = new TableDummy();
         $this->templateCache = (new TemplateCache($this->table));
 
-        Config::set('enso.tables.cache_prefix', 'prefix');
-        Config::set('enso.tables.cache_tags', 'tag');
-        Config::set('enso.tables.template_cache', true);
+        Config::set('enso.tables.cache.prefix', 'prefix');
+        Config::set('enso.tables.cache.tag', 'tag');
+        Config::set('enso.tables.cache.template', true);
     }
 
     /** @test */
@@ -48,7 +50,7 @@ class TemplateCacheTest extends TestCase
     /** @test */
     public function cannot_store_template_with_disabled_cache()
     {
-        Config::set('enso.tables.template_cache', false);
+        Config::set('enso.tables.cache.template', false);
 
         $this->templateCache->get();
 
@@ -86,12 +88,12 @@ class TableDummy implements Table
         self::$cache = true;
     }
 
-    public function query()
+    public function query(): Builder
     {
-        return null;
+        return App::make(Builder::class);
     }
 
-    public function templatePath()
+    public function templatePath(): string
     {
         if (self::$cache) {
             return __DIR__.'/stubs/template.json';

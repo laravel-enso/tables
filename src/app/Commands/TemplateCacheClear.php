@@ -15,12 +15,8 @@ class TemplateCacheClear extends Command
     public function handle()
     {
         if (Cache::getStore() instanceof TaggableStore) {
-            Cache::tags(config('enso.tables.cache_tags'))
-                ->flush();
-
-            $this->info('Table cache tags ('
-                .implode(',', config('enso.tables.cache_tags'))
-                .') cleared');
+            Cache::tags(config('enso.tables.cache.tag'))->flush();
+            $this->info('Enso table cached templates cleared');
 
             return;
         }
@@ -32,6 +28,6 @@ class TemplateCacheClear extends Command
             return;
         }
 
-        $this->warn('Table cached templates were not cleared');
+        $this->warn('Enso Table cached templates were not cleared');
     }
 }

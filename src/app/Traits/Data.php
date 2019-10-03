@@ -13,10 +13,9 @@ trait Data
     public function __invoke(Request $request)
     {
         $request = new TableRequest($request->all());
-
         $table = App::make($this->tableClass, ['request' => $request]);
 
-        return ['data' => (new DataBuilder($table, $request))->data()] +
-            (new MetaBuilder($table, $request))->data();
+        return ['data' => (new DataBuilder($table, $request))->data()]
+            + (new MetaBuilder($table, $request))->data();
     }
 }

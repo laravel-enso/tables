@@ -28,7 +28,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
 
     public function via()
     {
-        return array_merge(['mail'], config('enso.tables.export.notifications'));
+        return config('enso.tables.export.notifications');
     }
 
     public function toBroadcast()

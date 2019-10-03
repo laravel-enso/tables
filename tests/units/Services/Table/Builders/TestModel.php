@@ -7,15 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class TestModel extends Model
 {
-    protected $fillable = ['name', 'price', 'is_active'];
+    protected $fillable = ['name', 'price', 'is_active', 'color'];
 
     protected $casts = ['is_active' => 'boolean'];
 
     public function getCustomAttribute()
     {
-        return [
-            'relation' => 'name'
-        ];
+        return ['relation' => 'name'];
     }
 
 
@@ -26,6 +24,7 @@ class TestModel extends Model
             $table->string('name')->nullable();
             $table->boolean('is_active')->nullable();
             $table->integer('price')->nullable();
+            $table->integer('color')->nullable();
             $table->timestamps();
         });
     }

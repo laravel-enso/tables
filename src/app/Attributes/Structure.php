@@ -4,11 +4,11 @@ namespace LaravelEnso\Tables\app\Attributes;
 
 class Structure
 {
-    const Mandatory = ['routePrefix', 'columns'];
+    const Mandatory = ['routePrefix', 'columns', 'buttons'];
 
     const Optional = [
         'dtRowId', 'name', 'dataRouteSuffix', 'crtNo', 'appends', 'controls', 'buttons', 'lengthMenu',
         'auth', 'debounce', 'method', 'selectable', 'comparisonOperator', 'fullInfoRecordLimit',
-        'cache', 'template_cache', 'flatten', 'responsive', 'preview', 'searchModes', 'searchMode', 'model',
+        'countCache', 'templateCache', 'flatten', 'responsive', 'preview', 'searchModes', 'searchMode', 'model',
     ];
 }

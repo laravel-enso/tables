@@ -8,15 +8,15 @@ use LaravelEnso\Tables\app\Services\Table\Computors\Computors;
 class Request
 {
     private $request;
-    private $columns;
     private $fetchMode;
 
     public function __construct(array $request = [], $fetchMode = false)
     {
-        $this->fetchMode = $fetchMode;
-        $this->request = new Obj(json_decode(json_encode($request)));
+        $this->setRequest($request);
         $this->setMeta();
         $this->setColumns();
+
+        $this->fetchMode = $fetchMode;
     }
 
     public function meta()
@@ -26,7 +26,7 @@ class Request
 
     public function columns()
     {
-        return $this->columns;
+        return $this->request->get('columns');
     }
 
     public function fetchMode()
@@ -36,14 +36,18 @@ class Request
 
     public function __call($method, $args)
     {
-        return $this->request->$method(...$args);
+        return $this->request->{$method}(...$args);
+    }
+
+    private function setRequest($request)
+    {
+        $this->request = new Obj(json_decode(json_encode($request)));
     }
 
     private function setMeta()
     {
         $this->request->set(
-            'meta',
-            new Obj($this->array($this->request->get('meta')))
+            'meta', new Obj($this->array($this->request->get('meta')))
         );
     }
 
@@ -51,17 +55,13 @@ class Request
     {
         $this->request->set(
             'columns',
-            $this->request->get('columns', collect([]))
+            $this->request->get('columns', collect())
                 ->map(function ($column) {
                     return new Obj($this->array($column));
                 })
         );
 
-        $this->columns = Computors::columns(
-            $this->request->get('columns'),
-            $this->request->get('meta'),
-            $this->fetchMode
-        );
+        Computors::columns($this);
     }
 
     private function array($arg)

@@ -1,35 +1,23 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Filters;
+namespace LaravelEnso\Tables\app\Services\Table\Builders\Filters;
 
 use Carbon\Carbon;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Contracts\Filter;
-use LaravelEnso\Tables\app\Services\Table\Request;
 
-class Interval implements Filter
+class Interval extends BaseFilter
 {
-    private $request;
-    private $query;
-    private $filters;
-
-    public function filter(Request $request, Builder $query, Table $table): bool
+    public function handle(): bool
     {
-        $this->request = $request;
-        $this->query = $query;
-        $this->filters = false;
-
-        return $this->handle();
-    }
-
-    private function handle()
-    {
-        if (! $this->request->filled('intervals')) {
-            return $this->filters;
+        if ($this->request->filled('intervals')) {
+            $this->filter();
         }
 
+        return $this->filters;
+    }
+
+    private function filter()
+    {
         $this->query->where(function () {
             $this->parse('intervals')->each(function ($interval, $table) {
                 collect($interval)
@@ -39,8 +27,6 @@ class Interval implements Filter
                     });
             });
         });
-
-        return $this->filters;
     }
 
     private function setMinLimit($table, $column, $value)

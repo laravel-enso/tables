@@ -6,7 +6,14 @@ class Enum
 {
     private static $columns;
 
-    public static function compute($row)
+    public static function columns($columns)
+    {
+        self::$columns = $columns->filter(function ($column) {
+            return $column->has('enum');
+        });
+    }
+
+    public static function handle($row)
     {
         foreach (self::$columns as $column) {
             $class = $column->get('enum');
@@ -18,12 +25,5 @@ class Enum
         }
 
         return $row;
-    }
-
-    public static function columns($columns)
-    {
-        self::$columns = $columns->filter(function ($column) {
-            return $column->has('enum');
-        });
     }
 }

@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\TemplateException;
+use LaravelEnso\Tables\app\Exceptions\ButtonException;
 use LaravelEnso\Tables\app\Attributes\Button as Attributes;
 
 class Buttons
@@ -35,7 +35,7 @@ class Buttons
         });
 
         if ($formattedWrong->isNotEmpty()) {
-            throw new TemplateException(__('The buttons array may contain only strings and objects.'));
+            throw ButtonException::wrongFormat();
         }
 
         return $this;
@@ -48,10 +48,7 @@ class Buttons
         })->diff($this->defaults->keys());
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(
-                'Unknown Button(s) Found: ":button"',
-                ['button' => $diff->implode('", "')]
-            ));
+            throw ButtonException::undefined($diff->implode('", "'));
         }
 
         return $this;
@@ -87,10 +84,7 @@ class Buttons
             ->isNotEmpty();
 
         if ($formattedWrong) {
-            throw new TemplateException(__(
-                'The following attributes are mandatory for custom buttons: ":attr"',
-                ['attr' => collect(Attributes::Mandatory)->implode('", "')]
-            ));
+            throw ButtonException::missingAttributes();
         }
 
         return $this;
@@ -104,10 +98,7 @@ class Buttons
             ->isNotEmpty();
 
         if ($formattedWrong) {
-            throw new TemplateException(__(
-                'The following optional attributes are allowed for custom buttons: ":button"',
-                ['button' => collect(Attributes::Optional)->implode('", "')]
-            ));
+            throw ButtonException::unknownAttributes();
         }
 
         return $this;
@@ -117,15 +108,11 @@ class Buttons
     {
         if ($button->has('action')) {
             if (! $button->has('fullRoute') && ! $button->has('routeSuffix')) {
-                throw new TemplateException(__(
-                    'Whenever you set an action for a button you need to provide the fullRoute or routeSuffix'
-                ));
+                throw ButtonException::missingRoute();
             }
 
             if ($button->get('action') === 'ajax' && ! $button->has('method')) {
-                throw new TemplateException(__(
-                    'Whenever you set an ajax action for a button you need to provide the method aswell'
-                ));
+                throw ButtonException::missingMethod();
             }
         }
 
@@ -138,10 +125,7 @@ class Buttons
             && ! collect(Attributes::Actions)->contains($button->get('action'));
 
         if ($formattedWrong) {
-            throw new TemplateException(__(
-                'The following actions are allowed for custom buttons: ":actions"',
-                ['actions' => collect(Attributes::Actions)->implode('", "')]
-            ));
+            throw ButtonException::wrongAction();
         }
 
         return $this;
@@ -157,10 +141,7 @@ class Buttons
                 : $route;
 
         if ($route !== null && ! Route::has($route)) {
-            throw new TemplateException(__(
-                'Button route does not exist: ":route"',
-                ['route' => $route]
-            ));
+            throw ButtonException::routeNotFound($route);
         }
 
         return $this;
@@ -173,10 +154,7 @@ class Buttons
         }
 
         if (! collect(Attributes::Methods)->contains($button->get('method'))) {
-            throw new TemplateException(__(
-                'Method is incorrect: ":method"',
-                ['method' => $button->get('method')]
-            ));
+            throw ButtonException::invalidMethod($button->get('method'));
         }
 
         return $this;

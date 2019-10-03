@@ -15,7 +15,6 @@ use LaravelEnso\Tables\app\Notifications\ExportDoneNotification;
 class Excel
 {
     private const Extension = 'xlsx';
-    private const SheetSize = 1000000;
 
     private $request;
     private $user;
@@ -222,7 +221,7 @@ class Excel
 
     private function needsNewSheet()
     {
-        return $this->dataExport->entries / self::SheetSize
+        return $this->dataExport->entries / config('enso.tables.export.sheetLimit')
             >= $this->sheetCount;
     }
 }

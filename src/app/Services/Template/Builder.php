@@ -20,28 +20,18 @@ class Builder
         $this->meta = $meta;
     }
 
-    public function run()
+    public function handle()
     {
-        (new Structure($this->template, $this->meta))
-            ->build();
+        (new Structure($this->template, $this->meta))->build();
 
-        (new Columns($this->template, $this->meta))
-            ->build();
+        (new Columns($this->template, $this->meta))->build();
 
-        (new Buttons($this->template, $this->meta))
-            ->build();
+        (new Buttons($this->template, $this->meta))->build();
 
-        (new Style($this->template))
-            ->build();
+        (new Style($this->template))->build();
 
-        (new Controls($this->template))
-            ->build();
+        (new Controls($this->template))->build();
 
-        $this->cleanUp();
-    }
-
-    private function cleanUp()
-    {
         $this->template->forget(['dataRouteSuffix', 'routePrefix']);
     }
 }

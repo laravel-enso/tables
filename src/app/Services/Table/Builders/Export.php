@@ -20,9 +20,7 @@ class Export
     public function fetcher()
     {
         $this->request->meta()
-            ->set(
-                'length', OptimalChunk::get($this->count())
-            );
+            ->set('length', OptimalChunk::get($this->count()));
 
         return $this;
     }

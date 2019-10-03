@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
 use LaravelEnso\Tables\app\Services\Table\Request;
-use LaravelEnso\Tables\app\Services\Table\Filters\Filters;
+use LaravelEnso\Tables\app\Services\Table\Filters\CustomFilter;
 
 class Meta
 {
@@ -30,11 +30,7 @@ class Meta
 
     public function data()
     {
-        $this->setCount()
-            ->filter()
-            ->setDetailedInfo()
-            ->countFiltered()
-            ->setTotal();
+        $this->build();
 
         return [
             'count' => $this->count,
@@ -43,6 +39,20 @@ class Meta
             'fullRecordInfo' => $this->fullRecordInfo,
             'filters' => $this->filters,
         ];
+    }
+
+    public function count()
+    {
+        return $this->query->count();
+    }
+
+    private function build()
+    {
+        $this->setCount()
+            ->filter()
+            ->setDetailedInfo()
+            ->countFiltered()
+            ->setTotal();
     }
 
     private function setCount()
@@ -54,11 +64,9 @@ class Meta
 
     private function filter()
     {
-        $this->filters = (new Filters())->filter(
-            $this->request,
-            $this->query,
-            $this->table
-        );
+        $this->filters = (new Filters($this->request, $this->query))
+            ->custom($this->table instanceof CustomFilter)
+            ->handle();
 
         return $this;
     }
@@ -86,8 +94,7 @@ class Meta
         $this->request->columns()
             ->filter(function ($column) {
                 return $column->get('meta')->get('total');
-            })
-            ->each(function ($column) {
+            })->each(function ($column) {
                 $this->total[$column->get('name')] = $this->table instanceof RawTotal
                     ? $this->table->rawTotal($column)
                     : $this->query->sum($column->get('data'));
@@ -106,16 +113,11 @@ class Meta
             return $this->count();
         }
 
-        $cacheKey = config('enso.tables.cache_prefix')
+        $cacheKey = config('enso.tables.cache.prefix')
             .':'.$this->query->getModel()->getTable();
 
         return Cache::remember($cacheKey, now()->addHour(), function () {
             return $this->count();
         });
-    }
-
-    public function count()
-    {
-        return $this->query->count();
     }
 }

@@ -4,11 +4,11 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
 use Faker\Factory;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Schema;
 use LaravelEnso\Enums\app\Services\Enum;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Builders\Data;
+use LaravelEnso\Tables\Tests\units\Services\Table\Builders\TestModel;
 
 class DataTest extends TestCase
 {
@@ -27,7 +27,7 @@ class DataTest extends TestCase
         $this->faker = Factory::create();
 
         $this->params = ['columns' => [], 'meta' => ['length' => 10]];
-        $this->select = 'id, name, is_active, created_at, price';
+        $this->select = 'id, name, is_active, created_at, price, color';
 
         TestModel::createTable();
 
@@ -40,7 +40,8 @@ class DataTest extends TestCase
         $response = $this->requestResponse();
 
         $this->assertCount(TestModel::count(), $response);
-
+        \Log::info($response->first());
+        \Log::info($this->testModel->toArray());
         $this->assertTrue(
             $response->first()
                 ->diff($this->testModel->toArray())
@@ -80,10 +81,10 @@ class DataTest extends TestCase
     /** @test */
     public function can_get_data_with_enum()
     {
-        $this->testModel->update(['is_active' => true]);
+        $this->testModel->update(['color' => BuilderTestEnum::Blue]);
 
-        $this->params['columns']['is_active'] = [
-            'name' => 'is_active',
+        $this->params['columns']['color'] = [
+            'name' => 'color',
             'enum' => BuilderTestEnum::class,
             'meta' => []
         ];
@@ -93,8 +94,8 @@ class DataTest extends TestCase
         $response = $this->requestResponse();
 
         $this->assertEquals(
-            BuilderTestEnum::get($this->testModel->is_active),
-            $response->first()->get('is_active')
+            BuilderTestEnum::get($this->testModel->color),
+            $response->first()->get('color')
         );
     }
 
@@ -234,6 +235,7 @@ class DataTest extends TestCase
             'name' => $this->faker->name,
             'is_active' => $this->faker->boolean,
             'price' => $this->faker->numberBetween(1000, 10000),
+            'color' => BuilderTestEnum::Red,
         ]);
     }
 
@@ -241,6 +243,6 @@ class DataTest extends TestCase
 
 class BuilderTestEnum extends Enum
 {
-    public const Inactive = 0;
-    public const Active = 1;
+    public const Red = 1;
+    public const Blue = 2;
 }

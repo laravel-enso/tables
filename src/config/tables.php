@@ -3,35 +3,33 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Template Cache
+    | Caching
     |--------------------------------------------------------------------------
-    | This flag enables caching template or not. if the cache is enabled for invalid it
-    | you should run table:clear command
-    | Values: 'true/false'
-    */
-
-    'template_cache' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cache Prefix
-    |--------------------------------------------------------------------------
+    | Here are all the settings that control the way that table uses caching.
+    | The settings can be overriden in each table template.
     |
-    | we'll specify a value to get prefixed to all our keys so
-    | we can avoid collisions.
+    | Template caching will improve the overall table speed. If you are using
+    | it in production make sure that you run `php artisan tables:clear`
+    | on each deployment to invalidate the old templates.
+    |
+    | Values: 'never/always/production/local/yourEnv...'
+    |
+    | Entry count caching can considerably speed up big tables and should be
+    | used only in conjunction with the TableCache trait on the base model.
+    | The trait invalidates the cache on model creation / deletion.
+    |
+    | Values: true/false
+    |
+    | Prefix is used for avoiding collisions and the tag is used for
+    | drivers that support tags, otherwise being ignored
     */
 
-    'cache_prefix' => 'enso:tables',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cache Tag
-    |--------------------------------------------------------------------------
-    | we'll specify tags to cache all data with that tag
-    | if cache driver didn't support tags, we would ignore tags
-    */
-
-    'cache_tags' => ['enso:tables'],
+    'cache' => [
+        'template' => true,
+        'count' => true, //TODO will check that the table uses the trait
+        'prefix' => 'enso:tables',
+        'tag' => 'enso:tables',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -193,14 +191,16 @@ return [
     | Export Settings
     |--------------------------------------------------------------------------
     | Path where the temporary files are stored within storage/app folder; timeout
-    | limit for jobs; notification options; Note: email notification
-    | will be used in non Enso environments.
+    | limit for jobs; entry limit for each sheet; push notification channels.
+    | Note: while using Enso the users will receive a download link by email,
+    | while in non Enso environments the whole export file will be emailed.
      */
 
     'export' => [
         'path' => 'exports',
         'timeout' => 60 * 60,
-        'notifications' => ['broadcast', 'database'],
+        'sheetLimit' => 1000000,
+        'notifications' => ['email', 'broadcast', 'database'],
     ],
 
     /*

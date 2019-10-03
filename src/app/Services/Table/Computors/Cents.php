@@ -6,19 +6,19 @@ class Cents
 {
     private static $columns;
 
-    public static function compute($row)
+    public static function columns($columns)
+    {
+        self::$columns = $columns->filter(function ($column) {
+            return $column->get('meta')->has('cents');
+        });
+    }
+
+    public static function handle($row)
     {
         foreach (self::$columns as $column) {
             $row[$column->get('name')] /= 100;
         }
 
         return $row;
-    }
-
-    public static function columns($columns)
-    {
-        self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->has('cents');
-        });
     }
 }

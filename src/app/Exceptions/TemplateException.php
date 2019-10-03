@@ -3,7 +3,63 @@
 namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
+use Doctrine\Common\Annotations\Annotation\Attributes;
 
 class TemplateException extends EnsoException
 {
+    public static function missingAttributes($attrs)
+    {
+        return new static(__(
+            'Mandatory Attribute(s) Missing: ":attrs"',
+            ['attrs' => $attrs]
+        ));
+    }
+
+    public static function unknownAttributes($attrs)
+    {
+        return new static(__(
+            'Unknown Attribute(s) Found: ":attrs"',
+            ['attrs' => $attrs]
+        ));
+    }
+
+    public static function invalidLengthMenu()
+    {
+        return new static(__('"lengthMenu" attribute must be an array'));
+    }
+
+    public static function invalidAppends()
+    {
+        return new static(__('"appends" attribute must be an array'));
+    }
+
+    public static function invalidDebounce()
+    {
+        return new static(__('"debounce" attribute must be an integer'));
+    }
+
+    public static function invalidMethod()
+    {
+        return new static(__('"method" attribute can be either "GET" or "POST"'));
+    }
+    
+    public static function invalidSelectable()
+    {
+        return new static(__('"selectable" attribute must be a boolean'));
+    }
+
+    public static function invalidComparisonOperator()
+    {
+        return new static(__('"comparisonOperator" attribute can be either "LIKE" or "ILIKE"'));
+    }
+
+    public static function invalidSearchMode()
+    {
+        return new static(__('"searchMode" attribute can be one of "full", "startsWith" or "endsWith"'));
+    }
+
+    public static function invalidSearchModes()
+    {
+        return new static(__('"searchModes" attribute must be an associative array'));
+    }
 }

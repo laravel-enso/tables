@@ -23,9 +23,8 @@ class Columns
                 $this->computeMeta($column)
                     ->computeDefaultSort($column)
                     ->updateDefaults($column);
-                $columns->push($column);
 
-                return $columns;
+                return $columns->push($column);
             }, collect());
 
         $this->template->set('columns', $columns);
@@ -39,9 +38,7 @@ class Columns
 
         $meta = collect(Attributes::Meta)
             ->reduce(function ($meta, $attribute) use ($column) {
-                $meta->set($attribute, $column->get('meta')->contains($attribute));
-
-                return $meta;
+                return $meta->set($attribute, $column->get('meta')->contains($attribute));
             }, new Obj);
 
         $meta->set('visible', true);
@@ -55,21 +52,24 @@ class Columns
     {
         $meta = $column->get('meta');
 
-        if ($meta->get('sort:ASC')) {
-            $meta->set('sort', 'ASC');
-        } elseif ($meta->get('sort:DESC')) {
-            $meta->set('sort', 'DESC');
-        }
-
-        if ($meta->has('sort')) {
-            $this->meta->set('sort', $meta->get('sort'));
-        } else {
-            $meta->set('sort', null);
-        }
+        $meta->set('sort', $this->defaultSort($meta));
 
         $meta->forget(['sort:ASC', 'sort:DESC']);
 
         return $this;
+    }
+
+    private function defaultSort($meta)
+    {
+        if ($meta->get('sort:ASC')) {
+            return 'ASC';
+        }
+
+        if ($meta->get('sort:DESC')) {
+            return 'DESC';
+        }
+
+        return $meta->get('sort');
     }
 
     private function updateDefaults($column)

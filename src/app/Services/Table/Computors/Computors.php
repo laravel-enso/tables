@@ -2,44 +2,44 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Computors;
 
+use Illuminate\Support\Collection;
+use LaravelEnso\Tables\app\Services\Table\Request;
+
 class Computors
 {
     private static $computors = [
         'enum' => Enum::class,
         'cents' => Cents::class,
         'date' => Date::class,
-        'translatable' => Translatable::class,
+        'translatable' => Translatator::class,
     ];
 
-    public static function columns($columns, $meta, $fetchMode)
+    public static function handle(Request $request, Collection $data)
     {
-        self::metaComputors($meta, $fetchMode)
-            ->each(function ($meta) use ($columns) {
-                self::$computors[$meta]::columns($columns);
-            });
-
-        return $columns;
-    }
-
-    public static function compute($data, $meta, $fetchMode)
-    {
-        $data = self::metaComputors($meta, $fetchMode)
+        $data = self::computors($request)
             ->reduce(function ($data, $meta) {
                 return $data->map(function ($row) use ($meta) {
-                    return self::$computors[$meta]::compute($row);
+                    return self::$computors[$meta]::handle($row);
                 });
             }, $data);
 
         return $data;
     }
 
-    private static function metaComputors($meta, $fetchMode)
+    public static function columns(Request $request)
     {
-        return $meta->filter()
-            ->keys()
+        self::computors($request)
+            ->each(function ($meta) use ($request) {
+                self::$computors[$meta]::columns($request->get('columns'));
+            });
+    }
+
+    private static function computors(Request $request)
+    {
+        return $request->meta()->filter()->keys()
             ->intersect(collect(self::$computors)->keys())
-            ->filter(function ($computor) use ($fetchMode) {
-                return $computor !== 'translatable' || $fetchMode;
+            ->filter(function ($computor) use ($request) {
+                return $computor !== 'translatable' || $request->fetchMode();
             });
     }
 }
