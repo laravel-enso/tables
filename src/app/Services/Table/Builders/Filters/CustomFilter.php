@@ -16,7 +16,7 @@ class CustomFilter extends BaseFilter
     {
         if ($this->request->filled('params')) {
             $this->query = $this->table->filter(
-                $this->query, $this->request->get('params')
+                $this->query, $this->request
             );
 
             $this->filters = true;
