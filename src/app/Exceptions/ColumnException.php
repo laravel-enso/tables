@@ -22,14 +22,14 @@ class ColumnException extends EnsoException
         ));
     }
 
-    public static function unknownAtributes($attrs)
+    public static function unknownAttributes($attrs)
     {
         return new static(__(
             'Unknown Column Attribute(s) Found: ":attrs"',
             ['attrs' => $attrs]
         ));
     }
-    
+
     public static function enumNotFound($enum)
     {
         return new static(__(
@@ -37,7 +37,7 @@ class ColumnException extends EnsoException
             ['enum' => $enum]
         ));
     }
-    
+
     public static function invalidTooltip($column)
     {
         return new static(__(

@@ -8,7 +8,6 @@ use LaravelEnso\Enums\app\Services\Enum;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Builders\Data;
-use LaravelEnso\Tables\Tests\units\Services\Table\Builders\TestModel;
 
 class DataTest extends TestCase
 {

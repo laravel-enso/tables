@@ -16,7 +16,7 @@ class Template
 
     public function __construct(Table $table)
     {
-        $this->template = $this->template($table->templatePath());
+        $this->template = $this->parse($table->templatePath());
         $this->meta = new Obj();
         $this->ready = false;
     }
@@ -36,14 +36,12 @@ class Template
         ];
     }
 
-    public function shouldCache()
+    public function template()
     {
-        return $this->template->has('templateCache')
-            ? $this->template->get('templateCache')
-            : config('enso.tables.cache.template');
+        return $this->template;
     }
 
-    private function template($filename)
+    private function parse($filename)
     {
         $template = new Obj(
             (new JsonParser($filename))->array()

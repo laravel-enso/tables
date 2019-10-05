@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\TemplateException;
+use LaravelEnso\Tables\app\Exceptions\RouteException;
 use LaravelEnso\Tables\app\Attributes\Structure as Attributes;
 use LaravelEnso\Tables\app\Services\Template\Validators\Route;
 
@@ -28,9 +28,9 @@ class RouteTest extends TestCase
         $this->template->set('routePrefix', 'routePrefix');
         $this->template->set('dataRouteSuffix', 'dataRouteSuffix');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(RouteException::class);
 
-        $this->expectExceptionMessage('Read route does not exist: "routePrefix.dataRouteSuffix"');
+        $this->expectExceptionMessage(RouteException::notFound('routePrefix.dataRouteSuffix')->getMessage());
 
         $this->validate();
     }

@@ -30,7 +30,7 @@ class ButtonTest extends TestCase
 
         $this->expectException(ButtonException::class);
 
-        $this->expectExceptionMessage(ButtonException::missingAttributes());
+        $this->expectExceptionMessage(ButtonException::missingAttributes()->getMessage());
 
         $this->validate();
     }
@@ -54,7 +54,7 @@ class ButtonTest extends TestCase
 
         $this->expectException(ButtonException::class);
 
-        $this->expectExceptionMessage('Whenever you set an action for a button you need to provide the fullRoute or routeSuffix');
+        $this->expectExceptionMessage(ButtonException::missingRoute()->getMessage());
 
         $this->validate();
     }
@@ -69,7 +69,7 @@ class ButtonTest extends TestCase
 
         $this->expectException(ButtonException::class);
 
-        $this->expectExceptionMessage('Whenever you set an ajax action for a button you need to provide the method aswell');
+        $this->expectExceptionMessage(ButtonException::missingMethod()->getMessage());
 
         $this->validate();
     }
@@ -85,7 +85,7 @@ class ButtonTest extends TestCase
 
         $this->expectException(ButtonException::class);
 
-        $this->expectExceptionMessage('Button route does not exist: "/"');
+        $this->expectExceptionMessage(ButtonException::routeNotFound('/')->getMessage());
 
         $this->validate();
     }
@@ -101,7 +101,7 @@ class ButtonTest extends TestCase
 
         $this->expectException(ButtonException::class);
 
-        $this->expectExceptionMessage('Method is incorrect: "WRONG_METHOD"');
+        $this->expectExceptionMessage(ButtonException::invalidMethod('WRONG_METHOD')->getMessage());
 
         $this->validate();
     }
@@ -113,7 +113,7 @@ class ButtonTest extends TestCase
 
         $this->expectException(ButtonException::class);
 
-        $this->expectExceptionMessage('Unknown Button(s) Found: "UNKNOWN_TYPE"');
+        $this->expectExceptionMessage(ButtonException::undefined('UNKNOWN_TYPE')->getMessage());
 
         $this->validate();
     }

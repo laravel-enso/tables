@@ -28,7 +28,7 @@ class StructureTest extends TestCase
 
         $this->expectException(TemplateException::class);
 
-        $this->expectExceptionMessage('Mandatory Attribute(s) Missing: "routePrefix"');
+        $this->expectExceptionMessage(TemplateException::missingAttributes('routePrefix')->getMessage());
 
         $this->validate();
     }
@@ -40,7 +40,7 @@ class StructureTest extends TestCase
 
         $this->expectException(TemplateException::class);
 
-        $this->expectExceptionMessage('Unknown Attribute(s) Found: "wrong_attributes"');
+        $this->expectExceptionMessage(TemplateException::unknownAttributes('wrong_attributes')->getMessage());
 
         $this->validate();
     }
@@ -52,7 +52,7 @@ class StructureTest extends TestCase
 
         $this->expectException(TemplateException::class);
 
-        $this->expectExceptionMessage('"lengthMenu" attribute must be an array');
+        $this->expectExceptionMessage(TemplateException::invalidLengthMenu()->getMessage());
 
         $this->validate();
     }
@@ -64,7 +64,7 @@ class StructureTest extends TestCase
 
         $this->expectException(TemplateException::class);
 
-        $this->expectExceptionMessage('"debounce" attribute must be an integer');
+        $this->expectExceptionMessage(TemplateException::invalidDebounce()->getMessage());
 
         $this->validate();
     }
@@ -76,7 +76,7 @@ class StructureTest extends TestCase
 
         $this->expectException(TemplateException::class);
 
-        $this->expectExceptionMessage('"method" attribute can be either "GET" or "POST"');
+        $this->expectExceptionMessage(TemplateException::invalidMethod()->getMessage());
 
         $this->validate();
     }
@@ -88,7 +88,7 @@ class StructureTest extends TestCase
 
         $this->expectException(TemplateException::class);
 
-        $this->expectExceptionMessage('"selectable" attribute must be a boolean');
+        $this->expectExceptionMessage(TemplateException::invalidSelectable()->getMessage());
 
         $this->validate();
     }
@@ -100,7 +100,7 @@ class StructureTest extends TestCase
 
         $this->expectException(TemplateException::class);
 
-        $this->expectExceptionMessage('"comparisonOperator" attribute can be either "LIKE" or "ILIKE"');
+        $this->expectExceptionMessage(TemplateException::invalidComparisonOperator()->getMessage());
 
         $this->validate();
     }
@@ -130,6 +130,7 @@ class StructureTest extends TestCase
             'comparisonOperator' => 'LIKE',
             'name' => 'name',
             'columns' => [],
+            'buttons'=> [],
             'routePrefix' => 'prefix',
         ]);
     }

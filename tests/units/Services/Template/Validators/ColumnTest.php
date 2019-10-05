@@ -4,7 +4,8 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\TemplateException;
+use LaravelEnso\Tables\app\Exceptions\MetaException;
+use LaravelEnso\Tables\app\Exceptions\ColumnException;
 use LaravelEnso\Tables\app\Attributes\Column as Attributes;
 use LaravelEnso\Tables\app\Services\Template\Validators\Columns;
 
@@ -35,9 +36,9 @@ class ColumnTest extends TestCase
     {
         $this->template->get('columns')->first()->forget('label');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(ColumnException::class);
 
-        $this->expectExceptionMessage('Mandatory column attribute(s) missing: "label"');
+        $this->expectExceptionMessage(ColumnException::missingAttributes('label')->getMessage());
 
         $this->validate();
     }
@@ -47,9 +48,9 @@ class ColumnTest extends TestCase
     {
         $this->template->get('columns')->first()->set('wrong_attribute', 'wrong');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(ColumnException::class);
 
-        $this->expectExceptionMessage('Unknown Column Attribute(s) Found: "wrong_attribute"');
+        $this->expectExceptionMessage(ColumnException::unknownAttributes('wrong_attribute')->getMessage());
 
         $this->validate();
     }
@@ -59,9 +60,9 @@ class ColumnTest extends TestCase
     {
         $this->template->get('columns')->first()->set('enum', 'MissingEnum');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(ColumnException::class);
 
-        $this->expectExceptionMessage('Provided enum does not exist: "MissingEnum"');
+        $this->expectExceptionMessage(ColumnException::enumNotFound('MissingEnum')->getMessage());
 
         $this->validate();
     }
@@ -81,9 +82,9 @@ class ColumnTest extends TestCase
     {
         $this->template->get('columns')->first()->set('meta', new Obj(['wrong_attribute']));
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(MetaException::class);
 
-        $this->expectExceptionMessage('Unknown Meta Parameter(s): "wrong_attribute"');
+        $this->expectExceptionMessage(MetaException::unknownAttributes('wrong_attribute')->getMessage());
 
         $this->validate();
     }

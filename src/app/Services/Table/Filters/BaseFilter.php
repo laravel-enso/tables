@@ -1,11 +1,12 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Builders\Filters;
+namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Contracts\Filter as TableFilter;
 
-abstract class BaseFilter
+abstract class BaseFilter implements TableFilter
 {
     protected $request;
     protected $query;

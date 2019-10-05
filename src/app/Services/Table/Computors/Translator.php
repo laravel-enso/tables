@@ -2,7 +2,7 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Computors;
 
-class Translatator
+class Translator
 {
     public static $columns;
 

@@ -2,11 +2,10 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use App;
+use Config;
 use Faker\Factory;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Builders\Meta;
@@ -46,9 +45,19 @@ class MetaTest extends TestCase
     }
 
     /** @test */
-    public function can_get_data_with_cache()
+    public function cannot_get_data_cache_count()
     {
-        $this->params['cache'] = true;
+        $this->params['cacheCount'] = false;
+
+        $this->requestResponse();
+
+        $this->assertFalse(Cache::has('enso:tables:test_models'));
+    }
+
+    /** @test */
+    public function can_get_data_with_cache_when_table_cache_trait_used()
+    {
+        Config::set('enso.tables.cache.count', true);
 
         $this->requestResponse();
 

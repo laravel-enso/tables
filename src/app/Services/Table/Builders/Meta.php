@@ -2,11 +2,12 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
+use ReflectionClass;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Traits\TableCache;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
 use LaravelEnso\Tables\app\Services\Table\Request;
-use LaravelEnso\Tables\app\Services\Table\Filters\CustomFilter;
 
 class Meta
 {
@@ -65,7 +66,7 @@ class Meta
     private function filter()
     {
         $this->filters = (new Filters($this->request, $this->query))
-            ->custom($this->table instanceof CustomFilter)
+            ->custom($this->table)
             ->handle();
 
         return $this;
@@ -109,15 +110,31 @@ class Meta
 
     private function cachedCount()
     {
-        if (! json_decode($this->request->get('cache'))) {
-            return $this->count();
+        return $this->shouldCache()
+            ? Cache::remember($this->cacheKey(), now()->addHour(), function () {
+                return $this->count();
+            }) : $this->count();
+
+    }
+
+    private function cacheKey()
+    {
+        return config('enso.tables.cache.prefix')
+            .':'.$this->query->getModel()->getTable();
+    }
+
+    private function shouldCache()
+    {
+        if($this->request->has('cacheCount')) {
+            return json_decode($this->request->get('cacheCount'));
         }
 
-        $cacheKey = config('enso.tables.cache.prefix')
-            .':'.$this->query->getModel()->getTable();
+        if(config('enso.tables.cache.count')) {
+            $reflection = new ReflectionClass($this->query->getModel());
 
-        return Cache::remember($cacheKey, now()->addHour(), function () {
-            return $this->count();
-        });
+            return collect($reflection->getTraits())->has(TableCache::class);
+        }
+
+        return false;
     }
 }

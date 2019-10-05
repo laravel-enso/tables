@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Builders\Filters;
+namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Carbon\Carbon;
 use LaravelEnso\Helpers\app\Classes\Obj;

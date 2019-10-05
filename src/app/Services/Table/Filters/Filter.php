@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Builders\Filters;
+namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\app\Classes\Obj;

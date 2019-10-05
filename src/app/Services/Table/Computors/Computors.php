@@ -11,7 +11,7 @@ class Computors
         'enum' => Enum::class,
         'cents' => Cents::class,
         'date' => Date::class,
-        'translatable' => Translatator::class,
+        'translatable' => Translator::class,
     ];
 
     public static function handle(Request $request, Collection $data)

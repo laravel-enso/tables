@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 use Faker\Factory;
 use Tests\TestCase;
 use LaravelEnso\Tables\app\Services\Table\Request;
-use LaravelEnso\Tables\app\Services\Table\Builders\Filters\Search;
+use LaravelEnso\Tables\app\Services\Table\Filters\Search;
 
 class SearchTest extends TestCase
 {

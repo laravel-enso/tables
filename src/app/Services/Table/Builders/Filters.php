@@ -3,11 +3,12 @@
 namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use Illuminate\Support\Facades\App;
-use LaravelEnso\Tables\app\Services\Table\Builders\Filters\Filter;
-use LaravelEnso\Tables\app\Services\Table\Builders\Filters\Search;
-use LaravelEnso\Tables\app\Services\Table\Builders\Filters\Interval;
-use LaravelEnso\Tables\app\Services\Table\Builders\Filters\BaseFilter;
-use LaravelEnso\Tables\app\Services\Table\Builders\Filters\CustomFilter;
+ use LaravelEnso\Tables\app\Services\Table\Filters\Filter;
+use LaravelEnso\Tables\app\Services\Table\Filters\Search;
+use LaravelEnso\Tables\app\Services\Table\Filters\Interval;
+use LaravelEnso\Tables\app\Services\Table\Filters\BaseFilter;
+use LaravelEnso\Tables\app\Services\Table\Filters\CustomFilter;
+use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
 
 class Filters extends BaseFilter
 {
@@ -32,9 +33,11 @@ class Filters extends BaseFilter
             }, false);
     }
 
-    public function custom($state)
+    public function custom($table)
     {
-        $this->custom = $state;
+        $this->custom = $table instanceof TableCustomFilter
+        ? $table
+        : null;
 
         return $this;
     }
@@ -54,6 +57,7 @@ class Filters extends BaseFilter
         return App::make($filter, [
             'request' => $this->request,
             'query' => $this->query,
+            'custom' => $this->custom,
         ])->handle();
     }
 }

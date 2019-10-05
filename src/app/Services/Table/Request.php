@@ -12,11 +12,11 @@ class Request
 
     public function __construct(array $request = [], $fetchMode = false)
     {
+        $this->fetchMode = $fetchMode;
+
         $this->setRequest($request);
         $this->setMeta();
         $this->setColumns();
-
-        $this->fetchMode = $fetchMode;
     }
 
     public function meta()
@@ -32,6 +32,11 @@ class Request
     public function fetchMode()
     {
         return $this->fetchMode;
+    }
+
+    public function params()
+    {
+        return new Obj(json_decode($this->request->get('params')));
     }
 
     public function __call($method, $args)

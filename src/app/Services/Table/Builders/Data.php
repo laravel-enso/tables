@@ -47,7 +47,7 @@ class Data
     private function filter()
     {
         (new Filters($this->request, $this->query))
-            ->custom($this->table instanceof CustomFilter)
+            ->custom($this->table)
             ->handle();
 
         return $this;

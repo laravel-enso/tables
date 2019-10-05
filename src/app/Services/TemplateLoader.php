@@ -10,6 +10,7 @@ use LaravelEnso\Tables\app\Contracts\Table;
 class TemplateLoader
 {
     private $table;
+    private $template;
 
     public function __construct(Table $table)
     {
@@ -22,13 +23,28 @@ class TemplateLoader
             return $this->cache()->get($this->cacheKey());
         }
 
-        $template = new Template($this->table);
+        $this->template = new Template($this->table);
 
-        if ($template->shouldCache()) {
-            $this->cache()->put($this->cacheKey(), $template->get());
+        if ($this->shouldCache()) {
+            $this->cache()->put($this->cacheKey(), $this->template->get());
         }
 
-        return $template->get();
+        return $this->template->get();
+    }
+
+    private function shouldCache()
+    {
+        $type = $this->template()->get('templateCache',
+            config('enso.tables.cache.template'));
+
+        switch ($type) {
+            case 'never':
+                return false;
+            case 'always':
+                return true;
+            default :
+                return app()->environment($type);
+        }
     }
 
     private function cacheKey(): string
@@ -44,5 +60,10 @@ class TemplateLoader
         return Cache::getStore() instanceof TaggableStore
             ? Cache::tags(config('enso.tables.cache.tag'))
             : Cache::store();
+    }
+
+    private function template()
+    {
+        return $this->template->template();
     }
 }

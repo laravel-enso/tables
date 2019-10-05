@@ -4,9 +4,12 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
+use LaravelEnso\Tables\app\Traits\TableCache;
 
 class TestModel extends Model
 {
+    use TableCache;
+
     protected $fillable = ['name', 'price', 'is_active', 'color'];
 
     protected $casts = ['is_active' => 'boolean'];

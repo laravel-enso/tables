@@ -5,7 +5,6 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 use App;
 use Faker\Factory;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Schema;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Builders\Export;
 
