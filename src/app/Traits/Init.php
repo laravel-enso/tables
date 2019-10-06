@@ -14,6 +14,6 @@ trait Init
         $request = new TableRequest($request->all());
         $table = App::make($this->tableClass, ['request' => $request]);
 
-        return (new TemplateLoader($table))->get();
+        return TemplateLoader::load($table)->handle();
     }
 }

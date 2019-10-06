@@ -7,6 +7,9 @@ use Faker\Factory;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use Illuminate\Database\Eloquent\Builder;
+use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Builders\Meta;
 
@@ -17,6 +20,7 @@ class MetaTest extends TestCase
     private $builder;
     private $params;
     private $select;
+    private $template;
     private $fetchMode;
 
     public function setUp(): void
@@ -28,6 +32,7 @@ class MetaTest extends TestCase
         $this->faker = Factory::create();
 
         $this->params = ['columns' => [], 'meta' => ['length' => 10]];
+        $this->template = collect();
         $this->select = 'id, name, is_active, created_at, price';
         $this->fetchMode = false;
 
@@ -47,7 +52,7 @@ class MetaTest extends TestCase
     /** @test */
     public function cannot_get_data_cache_count()
     {
-        $this->params['cacheCount'] = false;
+        $this->template->put('countCache', false);
 
         $this->requestResponse();
 
@@ -133,7 +138,8 @@ class MetaTest extends TestCase
     {
         $this->builder = new Meta(
             new TestTable($this->select),
-            new Request($this->params)
+            new Request($this->params),
+            $this->template()
         );
 
         return new Obj($this->builder->data());
@@ -147,6 +153,22 @@ class MetaTest extends TestCase
             'price' => $this->faker->numberBetween(1000, 10000),
         ]);
     }
+
+    private function template() {
+        return (new Template(new DummyTable()))->load([
+            'meta' => null,
+            'template' => $this->template
+        ]);
+    }
 }
 
+class DummyTable implements Table {
+    public function query(): Builder
+    {
+    }
+
+    public function templatePath(): string
+    {
+    }
+}
 

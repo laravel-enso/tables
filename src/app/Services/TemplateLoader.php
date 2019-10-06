@@ -12,29 +12,39 @@ class TemplateLoader
     private $table;
     private $template;
 
-    public function __construct(Table $table)
+    public static function load(Table $table)
     {
-        $this->table = $table;
+        return (new self($table))->template();
     }
 
-    public function get()
+    private function __construct(Table $table)
     {
-        if ($this->cache()->has($this->cacheKey())) {
-            return $this->cache()->get($this->cacheKey());
+        $this->table = $table;
+        $this->template = new Template($table);
+        $this->loadCache();
+    }
+
+    private function template()
+    {
+        return $this->template;
+    }
+
+    private function loadCache()
+    {
+        if ($cache = $this->cache()->get($this->cacheKey())) {
+            return $this->template->load($cache);
         }
 
-        $this->template = new Template($this->table);
+        $this->template->build();
 
         if ($this->shouldCache()) {
-            $this->cache()->put($this->cacheKey(), $this->template->get());
+            $this->cache()->put($this->cacheKey(), $this->template->handle());
         }
-
-        return $this->template->get();
     }
 
     private function shouldCache()
     {
-        $type = $this->template()->get('templateCache',
+        $type = $this->template->get('templateCache',
             config('enso.tables.cache.template'));
 
         switch ($type) {
@@ -60,10 +70,5 @@ class TemplateLoader
         return Cache::getStore() instanceof TaggableStore
             ? Cache::tags(config('enso.tables.cache.tag'))
             : Cache::store();
-    }
-
-    private function template()
-    {
-        return $this->template->template();
     }
 }

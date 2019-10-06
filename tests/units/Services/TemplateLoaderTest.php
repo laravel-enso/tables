@@ -15,8 +15,6 @@ use LaravelEnso\Tables\app\Services\TemplateLoader;
 
 class TemplateLoaderTest extends TestCase
 {
-    private $templateCache;
-
     private $table;
 
     protected function setUp() :void
@@ -27,8 +25,6 @@ class TemplateLoaderTest extends TestCase
         Route::getRoutes()->refreshNameLookups();
 
         $this->table = new TableDummy();
-        $this->templateCache = (new TemplateLoader($this->table));
-
 
         Config::set('enso.tables.cache.prefix', 'prefix');
         Config::set('enso.tables.cache.tag', 'tag');
@@ -38,7 +34,7 @@ class TemplateLoaderTest extends TestCase
     /** @test */
     public function can_get_template()
     {
-        $this->assertTemplate($this->templateCache->get());
+        $this->assertTemplate(TemplateLoader::load($this->table)->handle());
     }
 
     /** @test */
@@ -46,7 +42,7 @@ class TemplateLoaderTest extends TestCase
     {
         TableDummy::cache('always');
 
-        $this->templateCache->get();
+        TemplateLoader::load($this->table)->handle();
 
         $this->assertTemplate(Cache::tags(['tag'])->get($this->cacheKey()));
     }
@@ -57,7 +53,7 @@ class TemplateLoaderTest extends TestCase
         Config::set('enso.tables.cache.template', 'never');
         TableDummy::cache(null);
 
-        $this->templateCache->get();
+        TemplateLoader::load($this->table)->handle();
 
         $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
     }
@@ -68,7 +64,7 @@ class TemplateLoaderTest extends TestCase
         Config::set('enso.tables.cache.template', 'always');
         TableDummy::cache('never');
 
-        $this->templateCache->get();
+        TemplateLoader::load($this->table)->handle();
 
         $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
     }
@@ -78,7 +74,7 @@ class TemplateLoaderTest extends TestCase
         Config::set('enso.tables.cache.template', app()->environment());
         TableDummy::cache(null);
 
-        $this->templateCache->get();
+        TemplateLoader::load($this->table)->handle();
 
         $this->assertTemplate(Cache::tags(['tag'])->get($this->cacheKey()));
     }

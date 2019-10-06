@@ -1,9 +1,9 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Builders;
+namespace LaravelEnso\Tables\app\Services\Table;
 
 use Illuminate\Support\Facades\App;
- use LaravelEnso\Tables\app\Services\Table\Filters\Filter;
+use LaravelEnso\Tables\app\Services\Table\Filters\Filter;
 use LaravelEnso\Tables\app\Services\Table\Filters\Search;
 use LaravelEnso\Tables\app\Services\Table\Filters\Interval;
 use LaravelEnso\Tables\app\Services\Table\Filters\BaseFilter;

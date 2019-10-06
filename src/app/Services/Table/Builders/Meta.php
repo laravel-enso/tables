@@ -6,8 +6,10 @@ use ReflectionClass;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Traits\TableCache;
+use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
 use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Filters;
 
 class Meta
 {
@@ -19,11 +21,13 @@ class Meta
     private $filtered;
     private $total;
     private $fullRecordInfo;
+    private $template;
 
-    public function __construct(Table $table, Request $request)
+    public function __construct(Table $table, Request $request,Template $template)
     {
         $this->table = $table;
         $this->request = $request;
+        $this->template = $template;
         $this->query = $table->query();
         $this->total = collect();
         $this->filters = false;
@@ -125,8 +129,8 @@ class Meta
 
     private function shouldCache()
     {
-        if($this->request->has('cacheCount')) {
-            return json_decode($this->request->get('cacheCount'));
+        if ($this->template->has('countCache')) {
+            return $this->template->get('countCache');
         }
 
         if(config('enso.tables.cache.count')) {
