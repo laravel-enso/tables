@@ -169,7 +169,7 @@ class Filters
 
     private function setMinLimit($table, $column, $value)
     {
-        if ($value->get('min') === null) {
+        if (! $value->get('min')) {
             return $this;
         }
 
@@ -194,7 +194,7 @@ class Filters
 
     private function setMaxLimit($table, $column, $value)
     {
-        if ($value->get('max') === null) {
+        if (! $value->get('max')) {
             return $this;
         }
 

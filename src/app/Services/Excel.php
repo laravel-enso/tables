@@ -34,7 +34,7 @@ class Excel
 
     private function checkIfAlreadyRunning()
     {
-        if ($this->dataExportRunning()) {
+        if ($this->isEnso() && $this->alreadyRunning()) {
             throw new ExportException(
                 __('An export job is already running for the same table')
             );
@@ -83,16 +83,14 @@ class Excel
         );
     }
 
-    private function dataExportRunning()
+    private function alreadyRunning()
     {
-        return $this->isEnso()
-            ? DataExport::whereName(str_replace('_', ' ', $this->type()))
-                ->whereCreatedBy($this->user->id)
-                ->where('status', '<', IOStatuses::Finalized)
-                ->where('created_at', '>', now()->subSeconds(
-                    config('enso.tables.export.timeout')
-                    ))->first() !== null
-            : false;
+        return DataExport::whereName(str_replace('_', ' ', $this->type()))
+            ->whereCreatedBy($this->user->id)
+            ->where('status', '<', IOStatuses::Finalized)
+            ->where('created_at', '>', now()->subSeconds(
+                config('enso.tables.export.timeout')
+            ))->exists();
     }
 
     private function isEnso()
