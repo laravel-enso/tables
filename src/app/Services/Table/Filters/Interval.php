@@ -31,7 +31,7 @@ class Interval extends BaseFilter
 
     private function setMinLimit($table, $column, $value)
     {
-        if ($value->get('min') === null) {
+        if (! $value->get('min')) {
             return $this;
         }
 
@@ -45,7 +45,7 @@ class Interval extends BaseFilter
 
     private function setMaxLimit($table, $column, $value)
     {
-        if ($value->get('max') === null) {
+        if (! $value->get('max')) {
             return $this;
         }
 
