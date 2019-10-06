@@ -52,7 +52,7 @@ class TemplateLoader
                 return false;
             case 'always':
                 return true;
-            default :
+            default:
                 return app()->environment($type);
         }
     }

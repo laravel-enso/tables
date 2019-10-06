@@ -4,8 +4,8 @@ namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use Illuminate\Support\Arr;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Filters;
+use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Computors\Computors;
 
 class Data

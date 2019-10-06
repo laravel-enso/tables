@@ -10,7 +10,7 @@ class CustomFilter extends BaseFilter
 {
     private $custom;
 
-    public function __construct(Request $request, Builder $query,TableCustomFilter $custom)
+    public function __construct(Request $request, Builder $query, TableCustomFilter $custom)
     {
         parent::__construct($request, $query);
 

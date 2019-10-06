@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
-use Doctrine\Common\Annotations\Annotation\Attributes;
 
 class MetaException extends EnsoException
 {
@@ -14,7 +13,7 @@ class MetaException extends EnsoException
             ['attrs' => $attrs]
         ));
     }
-    
+
     public static function unsupported($column)
     {
         return new static(__(

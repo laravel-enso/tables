@@ -34,7 +34,6 @@ class Sort
                     );
             }
         });
-
     }
 
     private function rawSort($column)
