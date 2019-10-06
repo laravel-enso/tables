@@ -17,10 +17,12 @@ class Fetcher
     public function __construct(string $class, array $request)
     {
         $request = new Request($request, true);
+        $table = App::make($class, ['request' => $request]);
 
         $this->builder = (new Export(
-            App::make($class, ['request' => $request]),
-            $request
+            $table,
+            $request,
+            TemplateLoader::load($table)
         ))->fetcher();
 
         $this->request = new Obj($request);
