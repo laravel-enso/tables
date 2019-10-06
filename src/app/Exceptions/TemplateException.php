@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
-use Doctrine\Common\Annotations\Annotation\Attributes;
 
 class TemplateException extends EnsoException
 {
@@ -42,7 +41,7 @@ class TemplateException extends EnsoException
     {
         return new static(__('"method" attribute can be either "GET" or "POST"'));
     }
-    
+
     public static function invalidSelectable()
     {
         return new static(__('"selectable" attribute must be a boolean'));

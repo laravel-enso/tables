@@ -5,11 +5,11 @@ namespace LaravelEnso\Tables\app\Services\Table\Builders;
 use ReflectionClass;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Traits\TableCache;
 use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Traits\TableCache;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
-use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Filters;
+use LaravelEnso\Tables\app\Services\Table\Request;
 
 class Meta
 {
@@ -23,7 +23,7 @@ class Meta
     private $fullRecordInfo;
     private $template;
 
-    public function __construct(Table $table, Request $request,Template $template)
+    public function __construct(Table $table, Request $request, Template $template)
     {
         $this->table = $table;
         $this->request = $request;
@@ -118,7 +118,6 @@ class Meta
             ? Cache::remember($this->cacheKey(), now()->addHour(), function () {
                 return $this->count();
             }) : $this->count();
-
     }
 
     private function cacheKey()
@@ -133,7 +132,7 @@ class Meta
             return $this->template->get('countCache');
         }
 
-        if(config('enso.tables.cache.count')) {
+        if (config('enso.tables.cache.count')) {
             $reflection = new ReflectionClass($this->query->getModel());
 
             return collect($reflection->getTraits())->has(TableCache::class);

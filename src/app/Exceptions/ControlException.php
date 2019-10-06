@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
-use Doctrine\Common\Annotations\Annotation\Attributes;
 
 class ControlException extends EnsoException
 {
@@ -11,7 +10,7 @@ class ControlException extends EnsoException
     {
         return new static(__('The controls array may contain only strings.'));
     }
-    
+
     public static function undefined($controls)
     {
         return new static(__(
