@@ -38,7 +38,7 @@ class Search extends BaseFilter
 
     private function match($query, $argument)
     {
-        $this->request->get('columns')->each(function ($column) use ($query, $argument) {
+        $this->request->columns()->each(function ($column) use ($query, $argument) {
             if ($column->get('meta')->get('searchable')) {
                 return $this->isNested($column->get('name'))
                     ? $this->whereHasRelation($query, $column->get('data'), $argument)

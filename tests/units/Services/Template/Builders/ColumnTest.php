@@ -50,10 +50,7 @@ class ColumnTest extends TestCase
 
             $this->assertEquals(
                 $expected['value'],
-                $this->template->get('columns')
-                    ->first()
-                    ->get('meta')
-                    ->get($expected['key'])
+                $this->template->get('columns')->first()->get('meta')->get($expected['key'])
             );
     }
 

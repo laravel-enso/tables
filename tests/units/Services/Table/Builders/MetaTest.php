@@ -2,10 +2,12 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use Config;
 use Faker\Factory;
 use Tests\TestCase;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
@@ -15,13 +17,11 @@ use LaravelEnso\Tables\app\Services\Table\Builders\Meta;
 
 class MetaTest extends TestCase
 {
-    private $testModel;
     private $faker;
-    private $builder;
-    private $params;
-    private $select;
+    private $testModel;
+    private $table;
+    private $request;
     private $template;
-    private $fetchMode;
 
     public function setUp(): void
     {
@@ -31,10 +31,23 @@ class MetaTest extends TestCase
 
         $this->faker = Factory::create();
 
-        $this->params = ['columns' => [], 'meta' => ['length' => 10]];
-        $this->template = collect();
-        $this->select = 'id, name, is_active, created_at, price';
-        $this->fetchMode = false;
+        Route::any('route')->name('testTables.tableData');
+        Route::getRoutes()->refreshNameLookups();
+
+        $this->request = new Request(['columns' => [], 'meta' => ['length' => 10]]);
+
+        $this->table = (new TestTable())->select(
+            'id, name, is_active, created_at, price, color'
+        );
+
+        $this->template = (new Template($this->table))->load([
+            'template' => new Obj([
+                'routePrefix' => 'testTables',
+                'buttons' => [],
+                'columns' => []
+            ]),
+            'meta' => new Obj(),
+        ]);
 
         TestModel::createTable();
 
@@ -56,7 +69,7 @@ class MetaTest extends TestCase
 
         $this->requestResponse();
 
-        $this->assertFalse(Cache::has('enso:tables:test_models'));
+        $this->assertFalse(Cache::has('enso:tables:testModels'));
     }
 
     /** @test */
@@ -72,7 +85,7 @@ class MetaTest extends TestCase
     /** @test */
     public function can_get_data_with_limit()
     {
-        $this->params['meta']['length'] = 0;
+        $this->request->meta()->put('length', 0);
 
         $response = $this->requestResponse();
 
@@ -85,13 +98,13 @@ class MetaTest extends TestCase
     {
         $this->createTestModel();
 
-        $this->params['columns']['price'] = [
+        $this->template->columns()->push(new Obj([
             'name' => 'price',
             'data' => 'price',
-            'meta' => ['total' => true],
-        ];
+            'meta' => ['total'],
+        ]));
 
-        $this->params['meta']['total'] = true;
+        $this->template->meta()->put('total', true);
 
         $response = $this->requestResponse();
 
@@ -110,22 +123,18 @@ class MetaTest extends TestCase
 
         $this->testModel->update(['name' => 'User']);
 
-        $this->params = [
-            'columns' => [
-                'name' => [
-                    'name' => 'name',
-                    'data' => 'name',
-                    'meta' => ['searchable' => true]
-                ],
-            ],
-            'meta' => [
-                'search' => $this->testModel->name,
-                'comparisonOperator' => 'LIKE',
-                'fullInfoRecordLimit' => $limit,
-                'length' => $limit,
-                'searchMode' => 'full',
-            ]
-        ];
+        $this->template->columns()->push(new Obj([
+            'name' => 'name',
+            'data' => 'name',
+            'meta' => ['searchable' => true]
+        ]));
+
+        $this->template->set('comparisonOperator', 'LIKE');
+
+        $this->request->meta()->set('search', $this->testModel->name)
+            ->set('fullInfoRecordLimit', $limit)
+            ->set('length', $limit)
+            ->set('searchMode', 'full');
 
         $response = $this->requestResponse();
 
@@ -136,13 +145,11 @@ class MetaTest extends TestCase
 
     private function requestResponse()
     {
-        $this->builder = new Meta(
-            new TestTable($this->select),
-            new Request($this->params),
-            $this->template()
+        $builder = new Meta(
+            $this->table, $this->request, $this->template
         );
 
-        return new Obj($this->builder->data());
+        return new Obj($builder->data());
     }
 
     private function createTestModel()
@@ -152,23 +159,6 @@ class MetaTest extends TestCase
             'is_active' => $this->faker->boolean,
             'price' => $this->faker->numberBetween(1000, 10000),
         ]);
-    }
-
-    private function template() {
-        return (new Template(new DummyTable()))->load([
-            'meta' => null,
-            'template' => $this->template
-        ]);
-    }
-}
-
-class DummyTable implements Table {
-    public function query(): Builder
-    {
-    }
-
-    public function templatePath(): string
-    {
     }
 }
 

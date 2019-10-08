@@ -11,9 +11,12 @@ trait Init
 {
     public function __invoke(Request $request)
     {
-        $request = new TableRequest($request->all());
-        $table = App::make($this->tableClass, ['request' => $request]);
+        $table = App::make($this->tableClass, [
+            'request' => new TableRequest($request->all())
+        ]);
 
-        return TemplateLoader::load($table)->handle();
+        $template = (new TemplateLoader($table))->handle();
+
+        return $template->data();
     }
 }

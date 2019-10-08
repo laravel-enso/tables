@@ -36,7 +36,7 @@ class ExcelExport implements ShouldQueue
 
     public function handle()
     {
-        Auth::onceUsingId($this->user->id);
+        Auth::onceUsingId($this->user->id); // implement AuthenticatesOnExport
 
         (new Excel(
             $this->tableClass, $this->request, $this->user, $this->dataExport

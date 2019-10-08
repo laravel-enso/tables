@@ -9,7 +9,7 @@ class Translator
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->has('translatable');
+            return $column->get('meta')->contains('translatable');
         });
     }
 

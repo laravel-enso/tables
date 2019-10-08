@@ -37,8 +37,10 @@ class AppServiceProvider extends ServiceProvider
         ], 'enso-config');
 
         $this->publishes([
-            __DIR__.'/../resources' => app_path(),
-        ], 'tables-classes');
+            __DIR__.'/../stubs/Tables/Actions/CustomAction.stub' => app_path('Tables/Actions/CustomAction.php'),
+            __DIR__.'/../stubs/Tables/Builders/ModelTable.stub' => app_path('Tables/Builders/ModelTable.php'),
+            __DIR__.'/../stubs/Tables/Templates/template.stub' => app_path('Tables/Templates/template.json'),
+        ], 'tables-resources');
 
         $this->publishes([
             __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/tables'),

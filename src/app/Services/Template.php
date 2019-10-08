@@ -2,7 +2,7 @@
 
 namespace LaravelEnso\Tables\app\Services;
 
-use BadMethodCallException;
+use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Helpers\app\Classes\JsonParser;
@@ -11,10 +11,8 @@ use LaravelEnso\Tables\app\Services\Template\Validator;
 
 class Template
 {
-    private const ProxiedMethods = ['get', 'has'];
-
-    private $template;
     private $table;
+    private $template;
     private $meta;
     private $ready;
 
@@ -25,15 +23,23 @@ class Template
         $this->ready = false;
     }
 
-    public function handle()
+    public function data()
     {
-        $this->build();
-
         return [
             'template' => $this->template,
             'meta' => $this->meta,
             'apiVersion' => config('enso.tables.apiVersion'),
         ];
+    }
+
+    public function columns()
+    {
+        return $this->template->get('columns');
+    }
+
+    public function meta()
+    {
+        return $this->meta;
     }
 
     public function build()
@@ -48,21 +54,16 @@ class Template
 
     public function load($cache)
     {
-        [
-            'meta' => $this->meta,
-            'template' => $this->template
-        ] = $cache;
+        ['meta' => $this->meta, 'template' => $this->template] = $cache;
+
+        $this->ready = true;
 
         return $this;
     }
 
     public function __call($method, $args)
     {
-        if (collect(self::ProxiedMethods)->contains($method)) {
-            return $this->template->{$method}(...$args);
-        }
-
-        throw new BadMethodCallException('Method '.static::class.'::'.$method.'() not found');
+        return $this->template->{$method}(...$args);
     }
 
     private function parse($filename)
@@ -80,7 +81,8 @@ class Template
 
     private function needsValidation()
     {
-        return ! app()->environment('production')
-            || config('enso.tables.validations') === 'always';
+        return collect([App::environment(), 'always'])->contains(
+            config('enso.tables.validations')
+        );
     }
 }

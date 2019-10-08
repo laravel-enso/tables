@@ -19,7 +19,6 @@ class TestModel extends Model
         return ['relation' => 'name'];
     }
 
-
     public static function createTable()
     {
         Schema::create('test_models', function ($table) {

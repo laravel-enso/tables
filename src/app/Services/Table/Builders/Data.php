@@ -4,21 +4,24 @@ namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use Illuminate\Support\Arr;
 use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Services\Table\Filters;
 use LaravelEnso\Tables\app\Services\Table\Request;
-use LaravelEnso\Tables\app\Services\Table\Computors\Computors;
+use LaravelEnso\Tables\app\Services\Table\Computors;
 
 class Data
 {
     private $table;
+    private $template;
     private $request;
     private $query;
     private $data;
 
-    public function __construct(Table $table, Request $request)
+    public function __construct(Table $table, Request $request, Template $template)
     {
         $this->table = $table;
         $this->request = $request;
+        $this->template = $template;
         $this->query = $this->table->query();
     }
 
@@ -55,7 +58,9 @@ class Data
 
     private function sort()
     {
-        (new Sort($this->request, $this->query))->handle();
+        if ($this->request->meta()->get('sort')) {
+            (new Sort($this->request, $this->query))->handle();
+        }
 
         return $this;
     }
@@ -77,9 +82,9 @@ class Data
 
     private function setAppends()
     {
-        if ($this->request->has('appends')) {
+        if ($this->template->has('appends')) {
             $this->data->each->setAppends(
-                $this->request->get('appends')->toArray()
+                $this->template->get('appends')->toArray()
             );
         }
 
@@ -95,7 +100,7 @@ class Data
 
     private function compute()
     {
-        $this->data = Computors::handle($this->request, $this->data);
+        $this->data = Computors::handle($this->template, $this->data);
 
         return $this;
     }

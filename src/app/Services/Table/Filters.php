@@ -12,7 +12,7 @@ use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
 
 class Filters extends BaseFilter
 {
-    private $custom;
+    private $customFilterTable;
 
     private static $defaultFilters = [
         Filter::class,
@@ -27,7 +27,7 @@ class Filters extends BaseFilter
     public function handle(): bool
     {
         return collect(self::$defaultFilters)
-            ->merge($this->custom ? self::$customFilters : null)
+            ->merge($this->customFilterTable ? self::$customFilters : null)
             ->reduce(function ($isFiltered, $filter) {
                 return $this->filter($filter) || $isFiltered;
             }, false);
@@ -35,9 +35,9 @@ class Filters extends BaseFilter
 
     public function custom($table)
     {
-        $this->custom = $table instanceof TableCustomFilter
-        ? $table
-        : null;
+        $this->customFilterTable = $table instanceof TableCustomFilter
+            ? $table
+            : null;
 
         return $this;
     }
@@ -57,7 +57,7 @@ class Filters extends BaseFilter
         return App::make($filter, [
             'request' => $this->request,
             'query' => $this->query,
-            'custom' => $this->custom,
+            'table' => $this->customFilterTable,
         ])->handle();
     }
 }

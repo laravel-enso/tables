@@ -2,18 +2,16 @@
 
 namespace LaravelEnso\Tables\app\Services\Table;
 
+use BadMethodCallException;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Table\Computors\Computors;
+use LaravelEnso\Tables\app\Services\Table\Computors;
 
 class Request
 {
     private $request;
-    private $fetchMode;
 
-    public function __construct(array $request = [], $fetchMode = false)
+    public function __construct(array $request = [])
     {
-        $this->fetchMode = $fetchMode;
-
         $this->setRequest($request);
         $this->setMeta();
         $this->setColumns();
@@ -27,11 +25,6 @@ class Request
     public function columns()
     {
         return $this->request->get('columns');
-    }
-
-    public function fetchMode()
-    {
-        return $this->fetchMode;
     }
 
     public function params()
@@ -58,15 +51,12 @@ class Request
 
     private function setColumns()
     {
-        $this->request->set(
-            'columns',
-            $this->request->get('columns', collect())
-                ->map(function ($column) {
-                    return new Obj($this->array($column));
-                })
-        );
+        $columns = $this->request->get('columns', collect())
+            ->map(function ($column) {
+                return new Obj($this->array($column));
+            });
 
-        Computors::columns($this);
+        $this->request->set('columns', $columns);
     }
 
     private function array($arg)

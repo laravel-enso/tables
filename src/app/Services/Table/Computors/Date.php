@@ -11,7 +11,7 @@ class Date
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->get('date');
+            return $column->get('meta')->contains('date');
         });
     }
 

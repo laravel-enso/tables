@@ -2,7 +2,9 @@
 
 namespace LaravelEnso\Tables\app\Contracts;
 
+use LaravelEnso\Helpers\app\Classes\Obj;
+
 interface RawTotal
 {
-    public function rawTotal($column): string;
+    public function rawTotal(Obj $column): string;
 }

@@ -18,13 +18,6 @@ class Sort
 
     public function handle()
     {
-        if ($this->request->meta()->get('sort')) {
-            $this->sort();
-        }
-    }
-
-    private function sort()
-    {
         $this->request->columns()->each(function ($column) {
             if ($column->get('meta')->get('sortable') && $column->get('meta')->get('sort')) {
                 $column->get('meta')->get('nullLast')
@@ -34,6 +27,7 @@ class Sort
                     );
             }
         });
+
     }
 
     private function rawSort($column)

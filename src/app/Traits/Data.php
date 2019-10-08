@@ -14,10 +14,10 @@ trait Data
     public function __invoke(Request $request)
     {
         $request = new TableRequest($request->all());
-        $table = App::make($this->tableClass, ['request' => $request]);
-        $template = TemplateLoader::load($table);
+        $table = App::make($this->tableClass, compact($request));
+        $template = (new TemplateLoader($table))->handle();
 
-        return ['data' => (new DataBuilder($table, $request))->data()]
+        return ['data' => (new DataBuilder($table, $request, $template))->data()]
             + (new MetaBuilder($table, $request, $template))->data();
     }
 }

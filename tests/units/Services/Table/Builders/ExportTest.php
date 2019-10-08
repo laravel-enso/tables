@@ -5,6 +5,9 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 use App;
 use Faker\Factory;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Route;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Builders\Export;
 
@@ -13,8 +16,7 @@ class ExportTest extends TestCase
     private $testModel;
     private $faker;
     private $builder;
-    private $params;
-    private $select;
+    private $request;
 
     public function setUp(): void
     {
@@ -24,12 +26,27 @@ class ExportTest extends TestCase
 
         $this->faker = Factory::create();
 
-        $this->params = ['columns' => [], 'meta' => ['length' => 10]];
-        $this->select = 'id, name, is_active, created_at, price';
+        Route::any('route')->name('testTables.tableData');
+        Route::getRoutes()->refreshNameLookups();
 
         TestModel::createTable();
 
         $this->testModel = $this->createTestModel();
+
+        $this->request = new Request(['columns' => [], 'meta' => ['length' => 10]]);
+
+        $this->table = (new TestTable())->select(
+            'id, name, is_active, created_at, price'
+        );
+
+        $this->template = (new Template($this->table))->load([
+            'template' => new Obj([
+                'routePrefix' => 'testTables',
+                'buttons' => [],
+                'columns' => []
+            ]),
+            'meta' => new Obj(),
+        ]);
     }
 
     /** @test */
@@ -41,12 +58,13 @@ class ExportTest extends TestCase
 
         $this->testModel->update(['name' => 'should translate']);
 
-        $this->params['columns']['name'] = [
-            'name' => 'name',
-            'meta' => ['translatable' => true],
-        ];
+        $this->template->meta()->set('translatable', true);
 
-        $this->params['meta']['translatable'] = true;
+        $this->template->columns()->push(new Obj([
+            'name' => 'name',
+            'data' => 'name',
+            'meta' => ['translatable'],
+        ]));
 
         $response = $this->requestResponse();
 
@@ -56,8 +74,7 @@ class ExportTest extends TestCase
     private function requestResponse()
     {
         $this->builder = new Export(
-            new TestTable($this->select),
-            new Request($this->params, true)
+            $this->table, $this->request, $this->template
         );
 
         return $this->builder->fetch();

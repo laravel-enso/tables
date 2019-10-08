@@ -12,33 +12,33 @@ class TemplateLoader
     private $table;
     private $template;
 
-    public static function load(Table $table)
-    {
-        return (new self($table))->template();
-    }
-
-    private function __construct(Table $table)
+    public function __construct(Table $table)
     {
         $this->table = $table;
         $this->template = new Template($table);
-        $this->loadCache();
     }
 
-    private function template()
+    public function handle()
     {
+        $this->load();
+
         return $this->template;
     }
 
-    private function loadCache()
+    private function load()
     {
-        if ($cache = $this->cache()->get($this->cacheKey())) {
-            return $this->template->load($cache);
+        if ($this->cache()->has($this->cacheKey())) {
+            $this->template->load(
+                $this->cache()->get($this->cacheKey())
+            );
+
+            return;
         }
 
         $this->template->build();
 
         if ($this->shouldCache()) {
-            $this->cache()->put($this->cacheKey(), $this->template->handle());
+            $this->cache()->put($this->cacheKey(), $this->template->data());
         }
     }
 

@@ -173,7 +173,7 @@ class Excel
             return $this->columns;
         }
 
-        $this->columns = $this->request->get('columns')
+        $this->columns = $this->request->columns()
             ->reduce(function ($columns, $column) {
                 $column = is_string($column)
                     ? new Obj(json_decode($column))

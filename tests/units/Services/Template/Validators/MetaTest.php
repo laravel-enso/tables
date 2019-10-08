@@ -51,9 +51,7 @@ class MetaTest extends TestCase
             'label' => 'child',
             'name' => 'parent.child',
             'data' => 'parent.child',
-            'meta' => [
-                'sortable'
-            ]
+            'meta' => ['sortable']
         ]));
 
         $this->expectException(MetaException::class);

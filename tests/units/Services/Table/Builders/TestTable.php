@@ -9,9 +9,11 @@ class TestTable implements Table {
 
     private $select;
 
-    public function __construct($select)
+    public function select($select)
     {
         $this->select = $select;
+
+        return $this;
     }
 
     public function query(): Builder
@@ -21,6 +23,6 @@ class TestTable implements Table {
 
     public function templatePath(): string
     {
-        return '';
+        return __DIR__.'/../../stubs/template.json';
     }
 }

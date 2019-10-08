@@ -96,15 +96,15 @@ class Meta
 
     private function setTotal()
     {
-        $this->request->columns()
+        $this->template->columns()
             ->filter(function ($column) {
-                return $column->get('meta')->get('total');
+                return $column->get('meta')->has('total');
             })->each(function ($column) {
                 $this->total[$column->get('name')] = $this->table instanceof RawTotal
                     ? $this->table->rawTotal($column)
                     : $this->query->sum($column->get('data'));
 
-                if ($column->get('meta')->get('cents')) {
+                if ($column->get('meta')->contains('cents')) {
                     $this->total[$column->get('name')] /= 100;
                 }
             });

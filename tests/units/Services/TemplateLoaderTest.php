@@ -2,15 +2,16 @@
 
 namespace Services\Template\Builders;
 
-use File;
-use Cache;
-use Route;
 use Config;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Services\TemplateLoader;
 
 class TemplateLoaderTest extends TestCase
@@ -21,7 +22,7 @@ class TemplateLoaderTest extends TestCase
     {
         parent::setUp();
 
-        Route::any('route')->name('test_tables.tableData');
+        Route::any('route')->name('testTables.tableData');
         Route::getRoutes()->refreshNameLookups();
 
         $this->table = new TableDummy();
@@ -34,7 +35,7 @@ class TemplateLoaderTest extends TestCase
     /** @test */
     public function can_get_template()
     {
-        $this->assertTemplate(TemplateLoader::load($this->table)->handle());
+        $this->assertTemplate((new TemplateLoader($this->table))->handle());
     }
 
     /** @test */
@@ -42,9 +43,13 @@ class TemplateLoaderTest extends TestCase
     {
         TableDummy::cache('always');
 
-        TemplateLoader::load($this->table)->handle();
+        (new TemplateLoader($this->table))->handle();
 
-        $this->assertTemplate(Cache::tags(['tag'])->get($this->cacheKey()));
+        $template = (new Template($this->table))->load(
+            Cache::tags(['tag'])->get($this->cacheKey())
+        );
+
+        $this->assertTemplate($template);
     }
 
     /** @test */
@@ -53,7 +58,7 @@ class TemplateLoaderTest extends TestCase
         Config::set('enso.tables.cache.template', 'never');
         TableDummy::cache(null);
 
-        TemplateLoader::load($this->table)->handle();
+        (new TemplateLoader($this->table))->handle();
 
         $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
     }
@@ -64,7 +69,7 @@ class TemplateLoaderTest extends TestCase
         Config::set('enso.tables.cache.template', 'always');
         TableDummy::cache('never');
 
-        TemplateLoader::load($this->table)->handle();
+        (new TemplateLoader($this->table))->handle();
 
         $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
     }
@@ -74,15 +79,20 @@ class TemplateLoaderTest extends TestCase
         Config::set('enso.tables.cache.template', app()->environment());
         TableDummy::cache(null);
 
-        TemplateLoader::load($this->table)->handle();
+        (new TemplateLoader($this->table))->handle();
 
-        $this->assertTemplate(Cache::tags(['tag'])->get($this->cacheKey()));
+        $template = (new Template($this->table))->load(
+            Cache::tags(['tag'])->get($this->cacheKey())
+        );
+        
+        $this->assertTemplate($template);
     }
 
-    private function assertTemplate($result)
+    private function assertTemplate($cache)
     {
-        $this->assertEquals('test_name',
-            $result['template']->get('columns')->first()->get('name'));
+        $this->assertEquals(
+            'name', $cache->get('columns')->first()->get('name')
+        );
     }
 
     private function cacheKey(): string

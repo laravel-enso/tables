@@ -6,25 +6,22 @@ use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Builders\Export;
+use LaravelEnso\Tables\app\Services\Table\Computors;
 
 class Fetcher
 {
     private $request;
-    private $builder;
+    private $fetcher;
     private $data;
     private $page = 0;
 
     public function __construct(string $class, array $request)
     {
-        $request = new Request($request, true);
-        $table = App::make($class, ['request' => $request]);
-
-        $this->builder = (new Export(
-            $table,
-            $request,
-            TemplateLoader::load($table)
-        ))->fetcher();
-
+        $request = new Request($request);
+        $table = App::make($class, compact($request));
+        $template = (new TemplateLoader($table))->handle();
+    
+        $this->fetcher = (new Export($table, $request, $template))->fetcher();
         $this->request = new Obj($request);
     }
 
@@ -45,7 +42,7 @@ class Fetcher
 
     public function next()
     {
-        $this->data = $this->builder->fetch($this->page++);
+        $this->data = $this->fetcher->fetch($this->page++);
     }
 
     public function valid()

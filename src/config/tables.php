@@ -25,7 +25,7 @@ return [
     */
 
     'cache' => [
-        'template' => true,
+        'template' => 'local',
         'count' => true, //TODO will check that the table uses the trait
         'prefix' => 'enso:tables',
         'tag' => 'enso:tables',
