@@ -2,27 +2,21 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Template;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Config;
 use LaravelEnso\Tables\app\Services\Table\Computors\OptimalChunk;
 
 class Export
 {
-    private $request;
-    private $table;
-    private $template;
+    private $config;
 
-    public function __construct(Table $table, Request $request, Template $template)
+    public function __construct(Config $config)
     {
-        $this->request = $request;
-        $this->table = $table;
-        $this->template = $template;
+        $this->config = $config;
     }
 
     public function fetcher()
     {
-        $this->request->meta()
+        $this->config->meta()
             ->set('length', OptimalChunk::get($this->count()));
 
         return $this;
@@ -30,9 +24,9 @@ class Export
 
     public function fetch($page = 0)
     {
-        $this->request->meta()->set(
+        $this->config->meta()->set(
             'start',
-            $this->request->meta()->get('length') * $page
+            $this->config->meta()->get('length') * $page
         );
 
         return $this->data();
@@ -40,13 +34,13 @@ class Export
 
     private function count()
     {
-        return (new Meta($this->table, $this->request, $this->template))
+        return (new Meta($this->config))
             ->count();
     }
 
     private function data()
     {
-        return (new Data($this->table, $this->request))
+        return (new Data($this->config))
             ->data();
     }
 }

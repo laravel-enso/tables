@@ -9,7 +9,7 @@ class Interval extends BaseFilter
 {
     public function handle(): bool
     {
-        if ($this->request->filled('intervals')) {
+        if ($this->config->filled('intervals')) {
             $this->filter();
         }
 
@@ -70,12 +70,5 @@ class Interval extends BaseFilter
         }
 
         return $value->get($bound);
-    }
-
-    private function parse($type)
-    {
-        return is_string($this->request->get($type))
-            ? new Obj(json_decode($this->request->get($type), true))
-            : $this->request->get($type);
     }
 }

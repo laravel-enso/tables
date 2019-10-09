@@ -5,7 +5,9 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 use App;
 use Faker\Factory;
 use Tests\TestCase;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Services\Table\Config;
 use LaravelEnso\Tables\app\Services\Table\Builders\Export;
 
 class ExportTest extends TestCase
@@ -56,8 +58,7 @@ class ExportTest extends TestCase
     private function requestResponse()
     {
         $this->builder = new Export(
-            new TestTable($this->select),
-            new Request($this->params, true)
+            (new Config($this->params, true))->setTemplate($this->template())
         );
 
         return $this->builder->fetch();
@@ -69,6 +70,14 @@ class ExportTest extends TestCase
             'name' => $this->faker->name,
             'is_active' => $this->faker->boolean,
             'price' => $this->faker->numberBetween(1000, 10000),
+        ]);
+    }
+
+    private function template()
+    {
+        return (new Template(new TestTable($this->select)))->load([
+            'template' => new Obj($this->params),
+            'meta' => new Obj($this->params['meta']),
         ]);
     }
 }

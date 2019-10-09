@@ -4,7 +4,9 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
 use Faker\Factory;
 use Tests\TestCase;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Services\Table\Config;
 use LaravelEnso\Tables\app\Services\Table\Filters\Search;
 
 class SearchTest extends TestCase
@@ -204,7 +206,10 @@ class SearchTest extends TestCase
 
     private function requestResponse()
     {
-        (new Search(new Request($this->params), $this->query))->handle();
+        (new Search(
+            (new Config($this->params))->setTemplate($this->template()),
+            $this->query)
+        )->handle();
 
         return $this->query->get();
     }
@@ -222,6 +227,14 @@ class SearchTest extends TestCase
         return RelationalModel::create([
             'name' => $this->faker->word,
             'parent_id' => $this->testModel->id,
+        ]);
+    }
+
+    private function template()
+    {
+        return (new Template(new DummyTable()))->load([
+            'meta' => new Obj($this->params['meta']),
+            'template' => new Obj($this->params),
         ]);
     }
 }

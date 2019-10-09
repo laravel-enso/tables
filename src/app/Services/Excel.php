@@ -12,15 +12,15 @@ use LaravelEnso\Tables\app\Notifications\ExportStartNotification;
 class Excel
 {
     private $user;
-    private $request;
+    private $config;
     private $tableClass;
     private $dataExport;
 
-    public function __construct($user, string $tableClass, array $request)
+    public function __construct($user, string $tableClass, array $config)
     {
         $this->user = $user;
         $this->tableClass = $tableClass;
-        $this->request = $request;
+        $this->config = $config;
         $this->dataExport = null;
     }
 
@@ -69,7 +69,7 @@ class Excel
         ExcelExport::dispatch(
             $this->user,
             $this->tableClass,
-            $this->request,
+            $this->config,
             $this->dataExport
         );
     }
@@ -77,7 +77,7 @@ class Excel
     private function type()
     {
         return Str::title(
-            Str::snake($this->request['name'])
+            Str::snake($this->config['name'])
         );
     }
 

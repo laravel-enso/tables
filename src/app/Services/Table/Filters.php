@@ -12,8 +12,6 @@ use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
 
 class Filters extends BaseFilter
 {
-    private $custom;
-
     private static $defaultFilters = [
         Filter::class,
         Interval::class,
@@ -27,19 +25,15 @@ class Filters extends BaseFilter
     public function handle(): bool
     {
         return collect(self::$defaultFilters)
-            ->merge($this->custom ? self::$customFilters : null)
+            ->merge($this->custom() ? self::$customFilters : null)
             ->reduce(function ($isFiltered, $filter) {
                 return $this->filter($filter) || $isFiltered;
             }, false);
     }
 
-    public function custom($table)
+    private function custom()
     {
-        $this->custom = $table instanceof TableCustomFilter
-        ? $table
-        : null;
-
-        return $this;
+        return $this->config->table() instanceof TableCustomFilter;
     }
 
     public static function filters($filters)
@@ -55,9 +49,8 @@ class Filters extends BaseFilter
     private function filter($filter)
     {
         return App::make($filter, [
-            'request' => $this->request,
+            'config' => $this->config,
             'query' => $this->query,
-            'custom' => $this->custom,
         ])->handle();
     }
 }

@@ -3,29 +3,29 @@
 namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Config;
 
 class Sort
 {
-    private $request;
+    private $config;
     private $query;
 
-    public function __construct(Request $request, Builder $query)
+    public function __construct(Config $config, Builder $query)
     {
-        $this->request = $request;
+        $this->config = $config;
         $this->query = $query;
     }
 
     public function handle()
     {
-        if ($this->request->meta()->get('sort')) {
+        if ($this->config->meta()->get('sort')) {
             $this->sort();
         }
     }
 
     private function sort()
     {
-        $this->request->columns()->each(function ($column) {
+        $this->config->columns()->each(function ($column) {
             if ($column->get('meta')->get('sortable') && $column->get('meta')->get('sort')) {
                 $column->get('meta')->get('nullLast')
                     ? $this->query->orderByRaw($this->rawSort($column))

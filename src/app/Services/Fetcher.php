@@ -3,34 +3,29 @@
 namespace LaravelEnso\Tables\app\Services;
 
 use Illuminate\Support\Facades\App;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Config;
 use LaravelEnso\Tables\app\Services\Table\Builders\Export;
 
 class Fetcher
 {
-    private $request;
+    private $config;
     private $builder;
     private $data;
     private $page = 0;
 
     public function __construct(string $class, array $request)
     {
-        $request = new Request($request, true);
-        $table = App::make($class, ['request' => $request]);
+        $this->config = new Config($request, true);
+        $table = App::make($class, ['config' => $this->config]);
 
         $this->builder = (new Export(
-            $table,
-            $request,
-            TemplateLoader::load($table)
+            $this->config->setTemplate(TemplateLoader::load($table))
         ))->fetcher();
-
-        $this->request = new Obj($request);
     }
 
     public function name()
     {
-        $this->request->get('name');
+        $this->config->get('name');
     }
 
     public function data()
@@ -53,8 +48,8 @@ class Fetcher
         return $this->data->isNotEmpty();
     }
 
-    public function request()
+    public function config()
     {
-        return $this->request;
+        return $this->config;
     }
 }

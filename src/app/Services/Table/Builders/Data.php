@@ -3,23 +3,20 @@
 namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use Illuminate\Support\Arr;
-use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Services\Table\Config;
 use LaravelEnso\Tables\app\Services\Table\Filters;
-use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Computors\Computors;
 
 class Data
 {
-    private $table;
-    private $request;
+    private $config;
     private $query;
     private $data;
 
-    public function __construct(Table $table, Request $request)
+    public function __construct(Config $config)
     {
-        $this->table = $table;
-        $this->request = $request;
-        $this->query = $this->table->query();
+        $this->config = $config;
+        $this->query = $config->table()->query();
     }
 
     public function data()
@@ -46,8 +43,7 @@ class Data
 
     private function filter()
     {
-        (new Filters($this->request, $this->query))
-            ->custom($this->table)
+        (new Filters($this->config, $this->query))
             ->handle();
 
         return $this;
@@ -55,15 +51,15 @@ class Data
 
     private function sort()
     {
-        (new Sort($this->request, $this->query))->handle();
+        (new Sort($this->config, $this->query))->handle();
 
         return $this;
     }
 
     private function limit()
     {
-        $this->query->skip($this->request->meta()->get('start'))
-            ->take($this->request->meta()->get('length'));
+        $this->query->skip($this->config->meta()->get('start'))
+            ->take($this->config->meta()->get('length'));
 
         return $this;
     }
@@ -77,9 +73,9 @@ class Data
 
     private function setAppends()
     {
-        if ($this->request->has('appends')) {
+        if ($this->config->has('appends')) {
             $this->data->each->setAppends(
-                $this->request->get('appends')->toArray()
+                $this->config->get('appends')->toArray()
             );
         }
 
@@ -95,14 +91,14 @@ class Data
 
     private function compute()
     {
-        $this->data = Computors::handle($this->request, $this->data);
+        $this->data = Computors::handle($this->config, $this->data);
 
         return $this;
     }
 
     private function flatten()
     {
-        if ($this->request->get('flatten')) {
+        if ($this->config->get('flatten')) {
             $this->data = collect($this->data)->map(function ($record) {
                 return Arr::dot($record);
             });

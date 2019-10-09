@@ -56,6 +56,21 @@ class Template
         return $this;
     }
 
+    public function table()
+    {
+        return $this->table;
+    }
+
+    public function meta()
+    {
+        return $this->meta;
+    }
+
+    public function column($index)
+    {
+        return $this->template->get('columns')->get($index);
+    }
+
     public function __call($method, $args)
     {
         if (collect(self::ProxiedMethods)->contains($method)) {

@@ -16,7 +16,7 @@ class Excel
 {
     private const Extension = 'xlsx';
 
-    private $request;
+    private $config;
     private $user;
     private $dataExport;
     private $fetcher;
@@ -30,8 +30,8 @@ class Excel
     {
         $this->user = $user;
         $this->dataExport = $dataExport;
-        $this->request = new Obj($request);
         $this->fetcher = new Fetcher($class, $request);
+        $this->config = $this->fetcher->config();
     }
 
     public function run()
@@ -154,7 +154,7 @@ class Excel
             ?? $this->filename = preg_replace(
                 '/[^A-Za-z0-9_.-]/',
                 '_',
-                Str::title(Str::snake($this->request->get('name')))
+                Str::title(Str::snake($this->config->get('name')))
                 .'_'.__('Table_Report')
             ).'.'.self::Extension;
     }
@@ -173,7 +173,7 @@ class Excel
             return $this->columns;
         }
 
-        $this->columns = $this->request->get('columns')
+        $this->columns = $this->config->columns()
             ->reduce(function ($columns, $column) {
                 $column = is_string($column)
                     ? new Obj(json_decode($column))

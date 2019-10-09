@@ -4,31 +4,25 @@ namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use ReflectionClass;
 use Illuminate\Support\Facades\Cache;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Traits\TableCache;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
 use LaravelEnso\Tables\app\Services\Table\Filters;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Config;
 
 class Meta
 {
-    private $table;
-    private $request;
+    private $config;
     private $query;
     private $filters;
     private $count;
     private $filtered;
     private $total;
     private $fullRecordInfo;
-    private $template;
 
-    public function __construct(Table $table, Request $request, Template $template)
+    public function __construct(Config $config)
     {
-        $this->table = $table;
-        $this->request = $request;
-        $this->template = $template;
-        $this->query = $table->query();
+        $this->config = $config;
+        $this->query = $config->table()->query();
         $this->total = collect();
         $this->filters = false;
     }
@@ -69,8 +63,7 @@ class Meta
 
     private function filter()
     {
-        $this->filters = (new Filters($this->request, $this->query))
-            ->custom($this->table)
+        $this->filters = (new Filters($this->config, $this->query))
             ->handle();
 
         return $this;
@@ -78,8 +71,8 @@ class Meta
 
     private function setDetailedInfo()
     {
-        $this->fullRecordInfo = $this->request->meta()->get('forceInfo')
-            || $this->count <= $this->request->meta()->get('fullInfoRecordLimit')
+        $this->fullRecordInfo = $this->config->meta()->get('forceInfo')
+            || $this->count <= $this->config->meta()->get('fullInfoRecordLimit')
             || ! $this->filters;
 
         return $this;
@@ -96,12 +89,12 @@ class Meta
 
     private function setTotal()
     {
-        $this->request->columns()
+        $this->config->columns()
             ->filter(function ($column) {
                 return $column->get('meta')->get('total');
             })->each(function ($column) {
-                $this->total[$column->get('name')] = $this->table instanceof RawTotal
-                    ? $this->table->rawTotal($column)
+                $this->total[$column->get('name')] = $this->config->table() instanceof RawTotal
+                    ? $this->config->table()->rawTotal($column)
                     : $this->query->sum($column->get('data'));
 
                 if ($column->get('meta')->get('cents')) {
@@ -128,8 +121,8 @@ class Meta
 
     private function shouldCache()
     {
-        if ($this->template->has('countCache')) {
-            return $this->template->get('countCache');
+        if ($this->config->has('countCache')) {
+            return $this->config->get('countCache');
         }
 
         if (config('enso.tables.cache.count')) {

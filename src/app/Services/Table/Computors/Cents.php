@@ -9,7 +9,7 @@ class Cents
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->has('cents');
+            return $column->get('meta')->get('cents');
         });
     }
 

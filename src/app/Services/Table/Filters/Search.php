@@ -9,7 +9,7 @@ class Search extends BaseFilter
 {
     public function handle(): bool
     {
-        if ($this->request->get('meta')->filled('search')) {
+        if ($this->config->meta()->filled('search')) {
             $this->filter();
         }
 
@@ -29,22 +29,22 @@ class Search extends BaseFilter
 
     private function searchArguments()
     {
-        return $this->request->get('meta')->get('searchMode') === 'full'
+        return $this->config->meta()->get('searchMode') === 'full'
             ? collect(
-                    explode(' ', $this->request->get('meta')->get('search'))
+                    explode(' ', $this->config->meta()->get('search'))
                 )->filter()
-            : collect($this->request->get('meta')->get('search'));
+            : collect($this->config->meta()->get('search'));
     }
 
     private function match($query, $argument)
     {
-        $this->request->get('columns')->each(function ($column) use ($query, $argument) {
+        $this->config->columns()->each(function ($column) use ($query, $argument) {
             if ($column->get('meta')->get('searchable')) {
                 return $this->isNested($column->get('name'))
                     ? $this->whereHasRelation($query, $column->get('data'), $argument)
                     : $query->orWhere(
                         $column->get('data'),
-                        $this->request->get('meta')->get('comparisonOperator'),
+                        $this->config->meta()->get('comparisonOperator'),
                         $this->wildcards($argument)
                     );
             }
@@ -56,7 +56,7 @@ class Search extends BaseFilter
         if (! $this->isNested($attribute)) {
             $query->where(
                 $attribute,
-                $this->request->get('meta')->get('comparisonOperator'),
+                $this->config->meta()->get('comparisonOperator'),
                 $this->wildcards($argument)
             );
 
@@ -74,7 +74,7 @@ class Search extends BaseFilter
 
     private function wildcards($argument)
     {
-        switch ($this->request->get('meta')->get('searchMode')) {
+        switch ($this->config->meta()->get('searchMode')) {
             case 'full':
                 return '%'.$argument.'%';
             case 'startsWith':

@@ -2,15 +2,13 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use Config;
 use Faker\Factory;
 use Tests\TestCase;
+use Config as LaravelConfig;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Template;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Config;
 use LaravelEnso\Tables\app\Services\Table\Builders\Meta;
 
 class MetaTest extends TestCase
@@ -52,7 +50,7 @@ class MetaTest extends TestCase
     /** @test */
     public function cannot_get_data_cache_count()
     {
-        $this->template->put('countCache', false);
+        $this->params['countCache'] = false;
 
         $this->requestResponse();
 
@@ -62,7 +60,7 @@ class MetaTest extends TestCase
     /** @test */
     public function can_get_data_with_cache_when_table_cache_trait_used()
     {
-        Config::set('enso.tables.cache.count', true);
+        LaravelConfig::set('enso.tables.cache.count', true);
 
         $this->requestResponse();
 
@@ -137,9 +135,7 @@ class MetaTest extends TestCase
     private function requestResponse()
     {
         $this->builder = new Meta(
-            new TestTable($this->select),
-            new Request($this->params),
-            $this->template()
+            (new Config($this->params))->setTemplate($this->template())
         );
 
         return new Obj($this->builder->data());
@@ -155,20 +151,9 @@ class MetaTest extends TestCase
     }
 
     private function template() {
-        return (new Template(new DummyTable()))->load([
-            'meta' => null,
-            'template' => $this->template
+        return (new Template(new TestTable($this->select)))->load([
+            'meta' => new Obj($this->params['meta']),
+            'template' => new Obj($this->params),
         ]);
     }
 }
-
-class DummyTable implements Table {
-    public function query(): Builder
-    {
-    }
-
-    public function templatePath(): string
-    {
-    }
-}
-

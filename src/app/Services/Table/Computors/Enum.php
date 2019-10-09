@@ -9,7 +9,7 @@ class Enum
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->has('enum');
+            return $column->get('enum');
         });
     }
 

@@ -4,7 +4,8 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
 use Faker\Factory;
 use Tests\TestCase;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Services\Table\Config;
 use LaravelEnso\Tables\app\Services\Table\Filters\Interval;
 
 class IntervalTest extends TestCase
@@ -91,7 +92,9 @@ class IntervalTest extends TestCase
 
     private function requestResponse()
     {
-        (new Interval(new Request($this->params), $this->query))->handle();
+        (new Interval(
+            (new Config($this->params))->setTemplate(new Template(new DummyTable())),
+            $this->query))->handle();
 
         return $this->query->get();
     }

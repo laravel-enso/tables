@@ -6,7 +6,8 @@ use Faker\Factory;
 use Tests\TestCase;
 use LaravelEnso\Enums\app\Services\Enum;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Services\Table\Config;
 use LaravelEnso\Tables\app\Services\Table\Builders\Data;
 
 class DataTest extends TestCase
@@ -221,8 +222,7 @@ class DataTest extends TestCase
     private function requestResponse()
     {
         $this->builder = new Data(
-            new TestTable($this->select),
-            new Request($this->params)
+            (new Config(collect($this->params)->forget(['flatten','appends'])->toArray()))->setTemplate($this->template())
         );
 
         return new Obj($this->builder->data());
@@ -238,6 +238,13 @@ class DataTest extends TestCase
         ]);
     }
 
+    private function template()
+    {
+        return (new Template(new TestTable($this->select)))->load([
+            'template' => new Obj($this->params),
+            'meta' => new Obj($this->params['meta']),
+        ]);
+    }
 }
 
 class BuilderTestEnum extends Enum

@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\app\Services\Table\Computors;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Table\Config;
 
 class Computors
 {
@@ -14,9 +14,9 @@ class Computors
         'translatable' => Translator::class,
     ];
 
-    public static function handle(Request $request, Collection $data)
+    public static function handle(Config $config, Collection $data)
     {
-        $data = self::computors($request)
+        $data = self::computors($config)
             ->reduce(function ($data, $meta) {
                 return $data->map(function ($row) use ($meta) {
                     return self::$computors[$meta]::handle($row);
@@ -26,20 +26,20 @@ class Computors
         return $data;
     }
 
-    public static function columns(Request $request)
+    public static function columns(Config $config)
     {
-        self::computors($request)
-            ->each(function ($meta) use ($request) {
-                self::$computors[$meta]::columns($request->get('columns'));
+        self::computors($config)
+            ->each(function ($meta) use ($config) {
+                self::$computors[$meta]::columns($config->columns());
             });
     }
 
-    private static function computors(Request $request)
+    private static function computors(Config $config)
     {
-        return $request->meta()->filter()->keys()
+        return $config->meta()->filter()->keys()
             ->intersect(collect(self::$computors)->keys())
-            ->filter(function ($computor) use ($request) {
-                return $computor !== 'translatable' || $request->fetchMode();
+            ->filter(function ($computor) use ($config) {
+                return $computor !== 'translatable' || $config->fetchMode();
             });
     }
 }

@@ -9,7 +9,7 @@ class Filter extends BaseFilter
 {
     public function handle(): bool
     {
-        if ($this->request->filled('filters')) {
+        if ($this->config->filled('filters')) {
             $this->filter();
         }
 
@@ -41,10 +41,4 @@ class Filter extends BaseFilter
             && ! ($value instanceof Collection && $value->isEmpty());
     }
 
-    private function parse($type)
-    {
-        return is_string($this->request->get($type))
-            ? new Obj(json_decode($this->request->get($type), true))
-            : $this->request->get($type);
-    }
 }
