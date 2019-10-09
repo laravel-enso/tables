@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Carbon\Carbon;
-use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Interval extends BaseFilter
 {
@@ -31,7 +30,7 @@ class Interval extends BaseFilter
 
     private function setMinLimit($table, $column, $value)
     {
-        if ($value->get('min') === null || $value->get('min') === "") {
+        if ($value->get('min') === null || $value->get('min') === '') {
             return $this;
         }
 
@@ -45,7 +44,7 @@ class Interval extends BaseFilter
 
     private function setMaxLimit($table, $column, $value)
     {
-        if ($value->get('max') === null || $value->get('max') === "") {
+        if ($value->get('max') === null || $value->get('max') === '') {
             return $this;
         }
 

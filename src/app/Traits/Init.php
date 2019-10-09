@@ -12,7 +12,7 @@ trait Init
     public function __invoke(Request $request)
     {
         $table = App::make($this->tableClass, [
-            'config' => new Config($request->all())
+            'config' => new Config($request->all()),
         ]);
 
         return TemplateLoader::load($table)->handle();

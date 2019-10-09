@@ -6,8 +6,8 @@ use ReflectionClass;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Traits\TableCache;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
-use LaravelEnso\Tables\app\Services\Table\Filters;
 use LaravelEnso\Tables\app\Services\Table\Config;
+use LaravelEnso\Tables\app\Services\Table\Filters;
 
 class Meta
 {

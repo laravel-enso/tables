@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Filter extends BaseFilter
 {
@@ -40,5 +39,4 @@ class Filter extends BaseFilter
             && $value !== ''
             && ! ($value instanceof Collection && $value->isEmpty());
     }
-
 }

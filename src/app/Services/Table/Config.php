@@ -11,7 +11,7 @@ class Config
     private const TemplateProxy = ['appends', 'countCache', 'flatten'];
     private const ColumnMeta = ['visible', 'sort', 'hidden'];
     private const Meta = ['search', 'visible', 'searchMode', 'start', 'length',
-        'translate', 'forceInfo', 'sort'];
+        'translate', 'forceInfo', 'sort', ];
 
     private $request;
     private $fetchMode;
