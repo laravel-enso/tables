@@ -4,22 +4,19 @@ namespace LaravelEnso\Tables\app\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use LaravelEnso\Tables\app\Services\Config;
+use LaravelEnso\Tables\app\Services\Data\Config;
 
 trait Action
 {
-    use ProvidesRequest;
+    use ProvidesData;
 
     public function __invoke(Request $request)
     {
-        $request = new $this->request($request);
-        $table = App::make($this->tableClass, ['request' => $request]);
-        $template = (new TemplateLoader($table))->handle();
-        $config = new Config($request, $template);
+        [$table, $config] = $this->data($request);
 
         App::make($this->actionClass, [
             'table' => $table,
-            'request' => $request,
+            'config' => $config,
         ])->handle();
     }
 }

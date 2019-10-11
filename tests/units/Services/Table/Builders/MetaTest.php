@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use LaravelEnso\Tables\app\Services\Table\Builders\Meta;
+use LaravelEnso\Tables\app\Services\Data\Builders\Meta;
 
 class MetaTest extends TestCase
 {

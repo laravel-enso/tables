@@ -1,15 +1,15 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table;
+namespace LaravelEnso\Tables\app\Services\Data;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Tables\app\Services\Config;
+use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Contracts\ComputesColumns;
 use LaravelEnso\Tables\app\Exceptions\ComputorException;
-use LaravelEnso\Tables\app\Services\Table\Computors\Date;
-use LaravelEnso\Tables\app\Services\Table\Computors\Enum;
-use LaravelEnso\Tables\app\Services\Table\Computors\Cents;
-use LaravelEnso\Tables\app\Services\Table\Computors\Translator;
+use LaravelEnso\Tables\app\Services\Data\Computors\Date;
+use LaravelEnso\Tables\app\Services\Data\Computors\Enum;
+use LaravelEnso\Tables\app\Services\Data\Computors\Cents;
+use LaravelEnso\Tables\app\Services\Data\Computors\Translator;
 
 class Computors
 {

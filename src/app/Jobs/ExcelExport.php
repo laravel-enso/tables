@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use LaravelEnso\Tables\app\Exports\Excel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use LaravelEnso\Tables\app\Services\Config;
+use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\TemplateLoader;
 use LaravelEnso\Tables\app\Contracts\AuthenticatesOnExport;
 

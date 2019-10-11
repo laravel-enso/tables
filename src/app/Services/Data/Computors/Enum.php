@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Computors;
+namespace LaravelEnso\Tables\app\Services\Data\Computors;
 
 use LaravelEnso\Tables\app\Contracts\ComputesColumns;
 

@@ -6,7 +6,7 @@ use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use LaravelEnso\Tables\app\Services\Table\Builders\Data;
+use LaravelEnso\Tables\app\Services\Data\Builders\Data;
 use LaravelEnso\Tables\Tests\units\Services\BuilderTestEnum;
 
 class DataTest extends TestCase

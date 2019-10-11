@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\app\Traits;
 
 use Illuminate\Http\Request;
-use LaravelEnso\Tables\app\Services\Table\Request as TableRequest;
+use LaravelEnso\Tables\app\Services\Data\Request as TableRequest;
 
 trait ProvidesRequest
 {

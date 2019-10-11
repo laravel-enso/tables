@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Filters;
+namespace LaravelEnso\Tables\app\Services\Data\Filters;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
 

@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 use Tests\TestCase;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use LaravelEnso\Tables\app\Services\Table\Filters\Search;
+use LaravelEnso\Tables\app\Services\Data\Filters\Search;
 
 class SearchTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table;
+namespace LaravelEnso\Tables\app\Services\Data;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
 

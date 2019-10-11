@@ -6,11 +6,9 @@ use Illuminate\Http\File;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Storage;
-use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Config;
-use LaravelEnso\Tables\app\Services\Fetcher;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Data\Config;
+use LaravelEnso\Tables\app\Services\Data\Fetcher;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use LaravelEnso\Tables\app\Notifications\ExportDoneNotification;
@@ -59,7 +57,7 @@ class Excel
             }
 
             $this->writer->addRows(
-                $this->map($this->fetcher->data())
+                $this->map($this->fetcher->current())
             );
 
             $this->updateProgress($this->fetcher->chunkSize());

@@ -5,8 +5,9 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 use App;
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Services\Data\Fetcher;
 use LaravelEnso\Tables\Tests\units\Services\Setup;
-use LaravelEnso\Tables\app\Services\Table\Builders\Export;
+use LaravelEnso\Tables\app\Services\Data\Builders\Export;
 
 class ExportTest extends TestCase
 {
@@ -36,8 +37,10 @@ class ExportTest extends TestCase
 
     private function requestResponse()
     {
-        $builder = new Export($this->table, $this->config);
+        $fetcher = new Fetcher($this->table, $this->config);
 
-        return $builder->fetch();
+        $fetcher->next();
+
+        return $fetcher->current();
     }
 }

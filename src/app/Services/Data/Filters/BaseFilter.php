@@ -1,10 +1,10 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Filters;
+namespace LaravelEnso\Tables\app\Services\Data\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Config;
+use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Contracts\Filter;
 
 

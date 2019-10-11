@@ -1,11 +1,9 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Table\Builders;
+namespace LaravelEnso\Tables\app\Services\Data;
 
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Services\Config;
-use LaravelEnso\Tables\app\Services\Template;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\app\Services\Data\Config;
 
 class Sort
 {
