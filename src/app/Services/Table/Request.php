@@ -2,67 +2,65 @@
 
 namespace LaravelEnso\Tables\app\Services\Table;
 
-use BadMethodCallException;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Table\Computors;
 
 class Request
 {
-    private $request;
+    private $columns;
+    private $meta;
+    private $filters;
+    private $intervals;
+    private $params;
 
-    public function __construct(array $request = [])
+    public function __construct($columns, $meta, $filters, $intervals, $params)
     {
-        $this->setRequest($request);
-        $this->setMeta();
-        $this->setColumns();
-    }
-
-    public function meta()
-    {
-        return $this->request->get('meta');
+        $this->columns = new Obj($this->parse($columns));
+        $this->meta = new Obj($this->parse($meta));
+        $this->filters = new Obj($this->parse($filters));
+        $this->intervals = new Obj($this->parse($intervals));
+        $this->params = new Obj($this->parse($params));
     }
 
     public function columns()
     {
-        return $this->request->get('columns');
+        return $this->columns;
+    }
+
+    public function meta()
+    {
+        return $this->meta;
+    }
+
+    public function filters()
+    {
+        return $this->filters;
+    }
+
+    public function intervals()
+    {
+        return $this->intervals;
     }
 
     public function params()
     {
-        return new Obj(json_decode($this->request->get('params')));
+        return $this->params;
     }
 
-    public function __call($method, $args)
+    private function parse($arg)
     {
-        return $this->request->{$method}(...$args);
+        return ! is_array($arg)
+            ? $this->decode($arg)
+            : collect($arg)->map(function($arg) {
+                return $this->decode($arg);
+            })->toArray(); 
     }
 
-    private function setRequest($request)
+    private function decode($arg)
     {
-        $this->request = new Obj(json_decode(json_encode($request)));
-    }
+        $argDecoded = json_decode($arg);
 
-    private function setMeta()
-    {
-        $this->request->set(
-            'meta', new Obj($this->array($this->request->get('meta')))
-        );
-    }
-
-    private function setColumns()
-    {
-        $columns = $this->request->get('columns', collect())
-            ->map(function ($column) {
-                return new Obj($this->array($column));
-            });
-
-        $this->request->set('columns', $columns);
-    }
-
-    private function array($arg)
-    {
-        return is_string($arg)
-            ? json_decode($arg, true)
+        return json_last_error() == JSON_ERROR_NONE
+            ? $argDecoded
             : $arg;
     }
 }

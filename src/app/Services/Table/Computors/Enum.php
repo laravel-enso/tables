@@ -2,14 +2,16 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Computors;
 
-class Enum
+use LaravelEnso\Tables\app\Contracts\ComputesColumns;
+
+class Enum implements ComputesColumns
 {
     private static $columns;
 
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->has('enum');
+            return $column->get('enum');
         });
     }
 

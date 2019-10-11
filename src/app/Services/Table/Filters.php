@@ -3,8 +3,10 @@
 namespace LaravelEnso\Tables\app\Services\Table;
 
 use Illuminate\Support\Facades\App;
+use LaravelEnso\Tables\app\Exceptions\FilterException;
 use LaravelEnso\Tables\app\Services\Table\Filters\Filter;
 use LaravelEnso\Tables\app\Services\Table\Filters\Search;
+use LaravelEnso\Tables\app\Contracts\Filter as TableFilter;
 use LaravelEnso\Tables\app\Services\Table\Filters\Interval;
 use LaravelEnso\Tables\app\Services\Table\Filters\BaseFilter;
 use LaravelEnso\Tables\app\Services\Table\Filters\CustomFilter;
@@ -12,8 +14,6 @@ use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
 
 class Filters extends BaseFilter
 {
-    private $customFilterTable;
-
     private static $defaultFilters = [
         Filter::class,
         Interval::class,
@@ -24,40 +24,65 @@ class Filters extends BaseFilter
         CustomFilter::class,
     ];
 
-    public function handle(): bool
+    public function applies(): bool
     {
         return collect(self::$defaultFilters)
-            ->merge($this->customFilterTable ? self::$customFilters : null)
-            ->reduce(function ($isFiltered, $filter) {
-                return $this->filter($filter) || $isFiltered;
-            }, false);
+            ->merge($this->needsCustomFiltering() ? self::$customFilters : null)
+            ->first(function ($filter) {
+                return $this->filter($filter)->applies();
+            }) !== null;
     }
-
-    public function custom($table)
+    
+    public function handle(): void
     {
-        $this->customFilterTable = $table instanceof TableCustomFilter
-            ? $table
-            : null;
+        collect(self::$defaultFilters)
+            ->each(function($filter) {
+                $this->apply($filter);
+            });
 
-        return $this;
+        if ($this->needsCustomFiltering()) {
+            collect(self::$customFilters)->each(function ($filter) {
+                $this->apply($filter);
+            });
+        }
     }
 
     public static function filters($filters)
     {
         self::$defaultFilters = $filters;
     }
-
+    
     public static function customFilters($filters)
     {
         self::$customFilters = $filters;
     }
 
+    private function apply($filter)
+    {
+        $filter = $this->filter($filter);
+
+        if ($filter->applies()) {
+            $filter->handle();
+        }
+    }
+
     private function filter($filter)
     {
-        return App::make($filter, [
-            'request' => $this->request,
+        $instance = App::make($filter, [
+            'table' => $this->table,
+            'config' => $this->config,
             'query' => $this->query,
-            'table' => $this->customFilterTable,
-        ])->handle();
+        ]);
+
+        if (! $instance instanceof TableFilter) {
+            throw FilterException::invalidClass($filter);
+        }
+
+        return $instance;
+    }
+
+    private function needsCustomFiltering()
+    {
+        return $this->table instanceof TableCustomFilter;
     }
 }

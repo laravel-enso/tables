@@ -3,31 +3,28 @@
 namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Filter extends BaseFilter
 {
-    public function handle(): bool
+    public function applies(): bool
     {
-        if ($this->request->filled('filters')) {
-            $this->filter();
-        }
-
-        return $this->filters;
+        return $this->config->filters()
+            ->first(function($value) {
+                return $this->filterIsValid($value);
+            }) !== null;
     }
 
-    private function filter()
+    public function handle()
     {
         $this->query->where(function ($query) {
-            $this->parse('filters')->each(function ($filters, $table) use ($query) {
+            $this->config->filters()->each(function ($filters, $table) use ($query) {
                 $filters->each(function ($value, $column) use ($table, $query) {
                     if ($this->filterIsValid($value)) {
-                        $query->whereIn(
-                            $table.'.'.$column,
-                            $value instanceof Collection ? $value->toArray() : (array) $value
-                        );
+                        $arrayValue = $value instanceof Collection
+                            ? $value->toArray()
+                            : (array) $value;
 
-                        $this->filters = true;
+                        $query->whereIn($table.'.'.$column, $arrayValue);
                     }
                 });
             });
@@ -39,12 +36,5 @@ class Filter extends BaseFilter
         return $value !== null
             && $value !== ''
             && ! ($value instanceof Collection && $value->isEmpty());
-    }
-
-    private function parse($type)
-    {
-        return is_string($this->request->get($type))
-            ? new Obj(json_decode($this->request->get($type), true))
-            : $this->request->get($type);
     }
 }

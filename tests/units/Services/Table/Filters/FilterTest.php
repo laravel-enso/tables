@@ -2,41 +2,21 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
-use Faker\Factory;
 use Tests\TestCase;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\app\Services\Table\Filters\Filter;
-
 
 class FilterTest extends TestCase
 {
-    private $testModel;
-    private $faker;
-    private $query;
-    private $params;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        // $this->withoutExceptionHandling();
-
-        $this->faker = Factory::create();
-
-        TestModel::createTable();
-        RelationalModel::createTable();
-
-        $this->testModel = $this->createTestModel();
-
-        $this->query = TestModel::select('*');
-
-        $this->createRelationalModel();
-    }
+    use SetUp;
 
     /** @test */
     public function can_use_filters()
     {
-        $this->params['filters']['test_models'] = ['name' => $this->testModel->name];
+        $filters = new Obj(['name' => $this->testModel->name]);
+
+        $this->config->filters()->set('test_models', $filters);
 
         $response = $this->requestResponse();
 
@@ -47,7 +27,7 @@ class FilterTest extends TestCase
             $this->testModel->name
         );
 
-        $this->params['filters']['test_models'] = ['name' => $this->testModel->name.'-'];
+        $filters->set('name', $this->testModel->name.'-');
 
         $response = $this->requestResponse();
 
@@ -56,26 +36,10 @@ class FilterTest extends TestCase
 
     private function requestResponse()
     {
-        (new Filter(
-            new Request($this->params), $this->query
-        ))->handle();
+        $query = $this->table->query();
 
-        return $this->query->get();
-    }
+        (new Filter($this->table, $this->config, $query))->handle();
 
-    private function createTestModel()
-    {
-        return TestModel::create([
-            'appellative' => $this->faker->firstName,
-            'name' => $this->faker->name,
-        ]);
-    }
-
-    private function createRelationalModel()
-    {
-        return RelationalModel::create([
-            'name' => $this->faker->word,
-            'parent_id' => $this->testModel->id,
-        ]);
+        return $query->get();
     }
 }

@@ -7,44 +7,38 @@ use LaravelEnso\Tables\app\Exceptions\QueryException;
 
 class Search extends BaseFilter
 {
-    public function handle(): bool
+    public function applies(): bool
     {
-        if ($this->request->get('meta')->filled('search')) {
-            $this->filter();
-        }
-
-        return $this->filters;
+        return $this->config->meta()->filled('search');
     }
 
-    private function filter()
+    public function handle()
     {
         $this->searchArguments()->each(function ($argument) {
             $this->query->where(function ($query) use ($argument) {
                 $this->match($query, $argument);
             });
         });
-
-        $this->filters = true;
     }
 
     private function searchArguments()
     {
-        return $this->request->get('meta')->get('searchMode') === 'full'
+        return $this->config->meta()->get('searchMode') === 'full'
             ? collect(
-                    explode(' ', $this->request->get('meta')->get('search'))
+                    explode(' ', $this->config->meta()->get('search'))
                 )->filter()
-            : collect($this->request->get('meta')->get('search'));
+            : collect($this->config->meta()->get('search'));
     }
 
     private function match($query, $argument)
     {
-        $this->request->columns()->each(function ($column) use ($query, $argument) {
+        $this->config->columns()->each(function ($column) use ($query, $argument) {
             if ($column->get('meta')->get('searchable')) {
                 return $this->isNested($column->get('name'))
                     ? $this->whereHasRelation($query, $column->get('data'), $argument)
                     : $query->orWhere(
                         $column->get('data'),
-                        $this->request->get('meta')->get('comparisonOperator'),
+                        $this->config->get('comparisonOperator'),
                         $this->wildcards($argument)
                     );
             }
@@ -56,7 +50,7 @@ class Search extends BaseFilter
         if (! $this->isNested($attribute)) {
             $query->where(
                 $attribute,
-                $this->request->get('meta')->get('comparisonOperator'),
+                $this->config->get('comparisonOperator'),
                 $this->wildcards($argument)
             );
 
@@ -74,7 +68,7 @@ class Search extends BaseFilter
 
     private function wildcards($argument)
     {
-        switch ($this->request->get('meta')->get('searchMode')) {
+        switch ($this->config->meta()->get('searchMode')) {
             case 'full':
                 return '%'.$argument.'%';
             case 'startsWith':

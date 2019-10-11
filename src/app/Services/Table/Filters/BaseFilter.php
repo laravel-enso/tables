@@ -3,21 +3,25 @@
 namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Services\Table\Request;
-use LaravelEnso\Tables\app\Contracts\Filter as TableFilter;
+use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Services\Config;
+use LaravelEnso\Tables\app\Contracts\Filter;
 
-abstract class BaseFilter implements TableFilter
+
+abstract class BaseFilter implements Filter
 {
-    protected $request;
+    protected $table;
+    protected $config;
     protected $query;
-    protected $filters;
 
-    public function __construct(Request $request, Builder $query)
+    public function __construct(Table $table, Config $config, Builder $query)
     {
-        $this->request = $request;
+        $this->table = $table;
+        $this->config = $config;
         $this->query = $query;
-        $this->filters = false;
     }
 
-    abstract public function handle(): bool;
+    abstract public function applies(): bool;
+
+    abstract public function handle();
 }

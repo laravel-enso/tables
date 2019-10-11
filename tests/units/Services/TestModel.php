@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
+namespace LaravelEnso\Tables\Tests\units\Services;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;

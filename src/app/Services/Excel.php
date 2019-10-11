@@ -3,24 +3,27 @@
 namespace LaravelEnso\Tables\app\Services;
 
 use Illuminate\Support\Str;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\User;
 use LaravelEnso\IO\app\Enums\IOStatuses;
 use LaravelEnso\Tables\app\Jobs\ExcelExport;
 use LaravelEnso\DataExport\app\Models\DataExport;
+use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Exceptions\ExportException;
 use LaravelEnso\Tables\app\Notifications\ExportStartNotification;
 
 class Excel
 {
     private $user;
-    private $request;
+    private $config;
     private $tableClass;
     private $dataExport;
 
-    public function __construct($user, string $tableClass, array $request)
+    public function __construct(User $user, Config $config, string $tableClass)
     {
         $this->user = $user;
+        $this->config = $config;
         $this->tableClass = $tableClass;
-        $this->request = $request;
         $this->dataExport = null;
     }
 
@@ -68,16 +71,9 @@ class Excel
     {
         ExcelExport::dispatch(
             $this->user,
+            $this->config,
             $this->tableClass,
-            $this->request,
             $this->dataExport
-        );
-    }
-
-    private function type()
-    {
-        return Str::title(
-            Str::snake($this->request['name'])
         );
     }
 
@@ -89,6 +85,13 @@ class Excel
             ->where('created_at', '>', now()->subSeconds(
                 config('enso.tables.export.timeout')
             ))->exists();
+    }
+
+    private function type()
+    {
+        return Str::title(
+            Str::snake($this->config->get('name'))
+        );
     }
 
     private function isEnso()

@@ -2,14 +2,16 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Computors;
 
-class Cents
+use LaravelEnso\Tables\app\Contracts\ComputesColumns;
+
+class Cents implements ComputesColumns
 {
     private static $columns;
 
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->contains('cents');
+            return $column->get('meta')->get('cents');
         });
     }
 

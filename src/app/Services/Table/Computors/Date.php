@@ -3,15 +3,16 @@
 namespace LaravelEnso\Tables\app\Services\Table\Computors;
 
 use Carbon\Carbon;
+use LaravelEnso\Tables\app\Contracts\ComputesColumns;
 
-class Date
+class Date implements ComputesColumns
 {
     private static $columns;
 
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->contains('date');
+            return $column->get('meta')->get('date');
         });
     }
 

@@ -2,53 +2,16 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use Faker\Factory;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Route;
-use LaravelEnso\Enums\app\Services\Enum;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Tables\Tests\units\Services\SetUp;
+use LaravelEnso\Tables\Tests\units\Services\TestModel;
 use LaravelEnso\Tables\app\Services\Table\Builders\Data;
+use LaravelEnso\Tables\Tests\units\Services\BuilderTestEnum;
 
 class DataTest extends TestCase
 {
-    private $testModel;
-    private $faker;
-    private $table;
-    private $template;
-    private $request;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        // $this->withoutExceptionHandling();
-
-        $this->faker = Factory::create();
-
-        Route::any('route')->name('testTables.tableData');
-        Route::getRoutes()->refreshNameLookups();
-
-        $this->request = new Request(['columns' => [], 'meta' => ['length' => 10]]);
-
-        TestModel::createTable();
-
-        $this->testModel = $this->createTestModel();
-
-        $this->table = (new TestTable())->select(
-            'id, name, is_active, created_at, price, color'
-        );
-
-        $this->template = (new Template($this->table))->load([
-            'template' => new Obj([
-                'routePrefix' => 'testTables',
-                'buttons' => [],
-                'columns' => []
-            ]),
-            'meta' => new Obj(),
-        ]);
-    }
+    use SetUp;
 
     /** @test */
     public function can_get_data()
@@ -67,7 +30,7 @@ class DataTest extends TestCase
     /** @test */
     public function can_get_data_with_appends()
     {
-        $this->template->put('appends', new Obj(['custom']));
+        $this->config->get('appends')->push('custom');
 
         $response = $this->requestResponse();
 
@@ -82,9 +45,9 @@ class DataTest extends TestCase
     /** @test */
     public function can_get_data_with_flatten()
     {
-        $this->request->put('flatten', true);
-
-        $this->template->put('appends', new Obj(['custom']));
+        $this->config->get('appends')->push('custom');
+        
+        $this->config->put('flatten', true);
 
         $response = $this->requestResponse();
 
@@ -99,9 +62,9 @@ class DataTest extends TestCase
     {
         $this->testModel->update(['color' => BuilderTestEnum::Blue]);
 
-        $this->template->meta()->set('enum', true);
+        $this->config->meta()->set('enum', true);
 
-        $this->template->columns()->push(new Obj([
+        $this->config->columns()->push(new Obj([
             'name' => 'color',
             'data' => 'color',
             'enum' => BuilderTestEnum::class,
@@ -119,12 +82,12 @@ class DataTest extends TestCase
     /** @test */
     public function can_get_data_with_date()
     {
-        $this->template->meta()->set('date', true);
+        $this->config->meta()->set('date', true);
 
-        $this->template->columns()->push(new Obj([
+        $this->config->columns()->push(new Obj([
             'name' => 'created_at',
             'dateFormat' => 'Y-m-d',
-            'meta' => ['date'],
+            'meta' => ['date' => true],
         ]));
 
         $response = $this->requestResponse();
@@ -138,12 +101,12 @@ class DataTest extends TestCase
     /** @test */
     public function can_get_data_with_cents()
     {
-        $this->template->meta()->set('cents', true);
+        $this->config->meta()->set('cents', true);
 
-        $this->template->columns()->push(new Obj([
+        $this->config->columns()->push(new Obj([
             'name' => 'price',
             'data' => 'price',
-            'meta' => ['cents']
+            'meta' => ['cents' => true]
         ]));
 
         $response = $this->requestResponse();
@@ -159,13 +122,15 @@ class DataTest extends TestCase
     {
         $this->createTestModel();
 
-        $this->request->columns()->push(new Obj([
+        $column = new Obj([
             'name' => 'id',
             'data' => 'id',
             'meta' => ['sortable' => true, 'sort' => 'DESC'],
-        ]));
+        ]);
 
-        $this->request->get('meta')->put('sort', true);
+        $this->config->columns()->push($column);
+
+        $this->config->meta()->put('sort', true);
 
         $response = $this->requestResponse();
 
@@ -182,13 +147,15 @@ class DataTest extends TestCase
 
         $this->testModel->update(['name' => null]);
 
-        $this->request->columns()->push(new Obj([
+        $column = new Obj([
             'name' => 'name',
             'data' => 'name',
             'meta' => ['sortable' => true, 'sort' => 'ASC', 'nullLast' => true],
-        ]));
+        ]);
 
-        $this->request->get('meta')->put('sort', true);
+        $this->config->columns()->push($column);
+
+        $this->config->meta()->put('sort', true);
 
         $response = $this->requestResponse();
 
@@ -201,7 +168,7 @@ class DataTest extends TestCase
     /** @test */
     public function can_get_data_with_limit()
     {
-        $this->request->get('meta')->set('length', 0);
+        $this->config->meta()->set('length', 0);
 
         $response = $this->requestResponse();
 
@@ -215,50 +182,26 @@ class DataTest extends TestCase
 
         $this->createTestModel();
 
-        $this->testModel->update(['name' => 'User']);
-
-        $this->request->columns()->push(new Obj([
+        $this->config->columns()->push(new Obj([
             'name' => 'name',
             'data' => 'name',
             'meta' => ['searchable' => true]
         ]));
 
-        $this->template->set('comparisonOperator', 'LIKE');
+        $this->config->set('comparisonOperator', 'LIKE');
 
-        $this->request->put('meta', new Obj([
-            'search' => $this->testModel->name,
-            'fullInfoRecordLimit' => $limit,
-            'length' => $limit,
-            'searchMode' => 'full',
-        ]));
-
+        $this->config->meta()->set('search', $this->testModel->name)
+            ->set('fullInfoRecordLimit', $limit);
+            
         $response = $this->requestResponse();
 
-        $this->assertCount(1, $response);
+        $this->assertCount($limit, $response);
     }
 
     private function requestResponse()
     {
-        $builder = new Data(
-            $this->table, $this->request, $this->template
-        );
+        $builder = new Data($this->table, $this->config);
 
         return new Obj($builder->data());
     }
-
-    private function createTestModel()
-    {
-        return TestModel::create([
-            'name' => $this->faker->name,
-            'is_active' => $this->faker->boolean,
-            'price' => $this->faker->numberBetween(1000, 10000),
-            'color' => BuilderTestEnum::Red,
-        ]);
-    }
-}
-
-class BuilderTestEnum extends Enum
-{
-    public const Red = 1;
-    public const Blue = 2;
 }

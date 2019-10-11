@@ -3,7 +3,9 @@
 namespace LaravelEnso\Tables\app\Services\Table;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Services\Config;
+use LaravelEnso\Tables\app\Contracts\ComputesColumns;
+use LaravelEnso\Tables\app\Exceptions\ComputorException;
 use LaravelEnso\Tables\app\Services\Table\Computors\Date;
 use LaravelEnso\Tables\app\Services\Table\Computors\Enum;
 use LaravelEnso\Tables\app\Services\Table\Computors\Cents;
@@ -20,26 +22,24 @@ class Computors
         'translatable' => Translator::class,
     ];
 
-    public static function handle(Template $template, Collection $data)
+    public static function handle(Config $config, Collection $data)
     {
-        self::columns($template);
+        self::columns($config);
 
-        $data = self::computors($template)
-            ->reduce(function ($data, $meta) {
-                return $data->map(function ($row) use ($meta) {
-                    return self::$computors[$meta]::handle($row);
-                });
-            }, $data);
+        $data = self::applicable($config)->reduce(function ($data, $computor) {
+            return $data->map(function ($row) use ($computor) {
+                return self::computor($computor)::handle($row);
+            });
+        }, $data);
 
         return $data;
     }
 
-    public static function columns(Template $template)
+    public static function columns(Config $config)
     {
-        self::computors($template)
-            ->each(function ($meta) use ($template) {
-                self::$computors[$meta]::columns($template->columns());
-            });
+        self::applicable($config)->each(function ($computor) use ($config) {
+            self::computor($computor)::columns($config->columns());
+        });
     }
 
     public static function fetchMode()
@@ -47,11 +47,27 @@ class Computors
         self::$fetchMode = true;
     }
 
-    private static function computors(Template $template)
+    public static function computors(array $computors)
     {
-        return $template->meta()->filter()->keys()
+        self::$computors = $computors;
+    }
+
+    private static function computor($computor): ComputesColumns
+    {
+        $computor = new self::$computors[$computor];
+
+        if (! $computor instanceof ComputesColumns) {
+            throw ComputorException::missingInterface();
+        }
+
+        return $computor;
+    }
+
+    private static function applicable(Config $config)
+    {
+        return $config->meta()->filter()->keys()
             ->intersect(collect(self::$computors)->keys())
-            ->filter(function ($computor) use ($template) {
+            ->filter(function ($computor) {
                 return $computor !== 'translatable' || self::$fetchMode;
             });
     }

@@ -4,5 +4,7 @@ namespace LaravelEnso\Tables\app\Contracts;
 
 interface Filter
 {
-    public function handle(): bool;
+    public function applies(): bool;
+
+    public function handle();
 }

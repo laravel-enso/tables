@@ -4,10 +4,13 @@ namespace LaravelEnso\Tables\app\Exports;
 
 use Illuminate\Http\File;
 use Illuminate\Support\Str;
-use LaravelEnso\Core\app\Models\User;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Storage;
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Services\Config;
 use LaravelEnso\Tables\app\Services\Fetcher;
+use LaravelEnso\Tables\app\Services\Table\Request;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use LaravelEnso\Tables\app\Notifications\ExportDoneNotification;
@@ -16,8 +19,8 @@ class Excel
 {
     private const Extension = 'xlsx';
 
-    private $request;
     private $user;
+    private $config;
     private $dataExport;
     private $fetcher;
     private $writer;
@@ -26,12 +29,12 @@ class Excel
     private $filename;
     private $filePath;
 
-    public function __construct(string $class, array $request, User $user, $dataExport = null)
+    public function __construct(User $user, Table $table, Config $config, $dataExport = null)
     {
         $this->user = $user;
+        $this->config = $config;
         $this->dataExport = $dataExport;
-        $this->request = new Obj($request);
-        $this->fetcher = new Fetcher($class, $request);
+        $this->fetcher = new Fetcher($table, $this->config);
     }
 
     public function run()
@@ -78,6 +81,7 @@ class Excel
         }
 
         $this->sheetCount = 1;
+
         $this->writer->addRow($this->header());
 
         return $this;
@@ -154,7 +158,7 @@ class Excel
             ?? $this->filename = preg_replace(
                 '/[^A-Za-z0-9_.-]/',
                 '_',
-                Str::title(Str::snake($this->request->get('name')))
+                Str::title(Str::snake($this->config->get('name')))
                 .'_'.__('Table_Report')
             ).'.'.self::Extension;
     }
@@ -173,19 +177,13 @@ class Excel
             return $this->columns;
         }
 
-        $this->columns = $this->request->columns()
+        $this->columns = $this->config->columns()
             ->reduce(function ($columns, $column) {
-                $column = is_string($column)
-                    ? new Obj(json_decode($column))
-                    : $column;
-
                 $meta = $column->get('meta');
 
-                if ($meta->get('visible') && ! $meta->get('rogue') && ! $meta->get('notExportable')) {
-                    $columns->push($column);
-                }
-
-                return $columns;
+                return $meta->get('visible') && ! $meta->get('rogue') && ! $meta->get('notExportable')
+                    ? $columns->push($column)
+                    : $columns;
             }, collect());
 
         return $this->columns;

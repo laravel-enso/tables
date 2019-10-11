@@ -21,4 +21,11 @@ class MetaException extends EnsoException
             ['column' => $column]
         ));
     }
+    
+    public static function missingInterface()
+    {
+        return new static(__(
+            'To use "rawTotal" the table builder must implement the "RawTotal" interface',
+        ));
+    }
 }

@@ -15,7 +15,6 @@ class TemplateLoader
     public function __construct(Table $table)
     {
         $this->table = $table;
-        $this->template = new Template($table);
     }
 
     public function handle()
@@ -28,17 +27,18 @@ class TemplateLoader
     private function load()
     {
         if ($this->cache()->has($this->cacheKey())) {
-            $this->template->load(
-                $this->cache()->get($this->cacheKey())
-            );
+            $cache = $this->cache()->get($this->cacheKey());
+
+            $this->template = (new Template())
+                ->load($cache['template'], $cache['meta']);
 
             return;
         }
 
-        $this->template->build();
+        $this->template = (new Template())->build($this->table);
 
         if ($this->shouldCache()) {
-            $this->cache()->put($this->cacheKey(), $this->template->data());
+            $this->cache()->put($this->cacheKey(), $this->template->toArray());
         }
     }
 

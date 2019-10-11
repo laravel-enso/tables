@@ -2,6 +2,8 @@
 
 namespace LaravelEnso\Tables\app\Services;
 
+use ReflectionClass;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Contracts\Table;
@@ -11,19 +13,10 @@ use LaravelEnso\Tables\app\Services\Template\Validator;
 
 class Template
 {
-    private $table;
     private $template;
     private $meta;
-    private $ready;
 
-    public function __construct(Table $table)
-    {
-        $this->table = $table;
-        $this->meta = new Obj();
-        $this->ready = false;
-    }
-
-    public function data()
+    public function toArray()
     {
         return [
             'template' => $this->template,
@@ -42,21 +35,25 @@ class Template
         return $this->meta;
     }
 
-    public function build()
+    public function column(string $index)
     {
-        if (! $this->ready) {
-            $this->template = $this->parse($this->table->templatePath());
-            (new Builder($this->template, $this->meta))->handle();
-
-            $this->ready = true;
-        }
+        return $this->columns()[$index];
     }
 
-    public function load($cache)
+    public function build(Table $table)
     {
-        ['meta' => $this->meta, 'template' => $this->template] = $cache;
+        $this->template = $this->template($table);
+        $this->meta = new Obj();
 
-        $this->ready = true;
+        (new Builder($this->template, $this->meta))->handle();
+
+        return $this;
+    }
+
+    public function load(Obj $template, Obj $meta)
+    {
+        $this->template = $template;
+        $this->meta = $meta;
 
         return $this;
     }
@@ -66,10 +63,24 @@ class Template
         return $this->template->{$method}(...$args);
     }
 
-    private function parse($filename)
+    private function template($table)
+    {
+        $template = $this->readJson($table->templatePath());
+
+        if (! $template->has('model')) {
+            $model = (new ReflectionClass($table->query()->getModel()))
+                ->getShortName();
+
+            $template->set('model', Str::lower($model));
+        }
+
+        return $template;
+    }
+
+    private function readJson($path)
     {
         $template = new Obj(
-            (new JsonParser($filename))->array()
+            (new JsonParser($path))->array()
         );
 
         if ($this->needsValidation()) {

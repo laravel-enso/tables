@@ -25,8 +25,8 @@ return [
     */
 
     'cache' => [
-        'template' => 'local',
-        'count' => true, //TODO will check that the table uses the trait
+        'template' => 'production',
+        'count' => true,
         'prefix' => 'enso:tables',
         'tag' => 'enso:tables',
     ],

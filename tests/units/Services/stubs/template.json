@@ -1,11 +1,15 @@
 {
     "routePrefix": "testTables",
     "buttons": [],
+    "appends": [],
     "columns": [
         {
             "label": "",
             "name": "name",
-            "data": ""
+            "data": "name",
+            "meta": [
+                "searchable"
+            ]
         }
     ]
 }

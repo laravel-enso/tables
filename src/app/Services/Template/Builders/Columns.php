@@ -80,7 +80,7 @@ class Columns
             $this->meta->set('searchable', true);
         }
 
-        if ($meta->get('total') || $meta->get('customTotal')) {
+        if ($meta->get('total') || $meta->get('rawTotal') || $meta->get('customTotal')) {
             $this->meta->set('total', true);
         }
 

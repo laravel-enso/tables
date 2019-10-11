@@ -3,28 +3,36 @@
 namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
+use LaravelEnso\Tables\app\Services\Config;
+use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Services\Table\Request;
 
 class Sort
 {
-    private $request;
+    private $config;
     private $query;
 
-    public function __construct(Request $request, Builder $query)
+    public function __construct(Config $config, Builder $query)
     {
-        $this->request = $request;
+        $this->config = $config;
         $this->query = $query;
     }
 
     public function handle()
     {
-        $this->request->columns()->each(function ($column) {
-            if ($column->get('meta')->get('sortable') && $column->get('meta')->get('sort')) {
-                $column->get('meta')->get('nullLast')
-                    ? $this->query->orderByRaw($this->rawSort($column))
-                    : $this->query->orderBy(
-                        $column->get('data'), $column->get('meta')->get('sort')
-                    );
+        $this->config->columns()->each(function ($column, $index) {
+            $meta = $this->config->columns()[$index]->get('meta');
+
+            if ($meta->get('sortable') && $meta->get('sort')) {
+                if ($meta->get('nullLast')) {
+                    $this->query->orderByRaw($this->rawSort($column));
+
+                    return;
+                }
+                
+                $this->query->orderBy(
+                    $column->get('data'), $column->get('meta')->get('sort')
+                );
             }
         });
 

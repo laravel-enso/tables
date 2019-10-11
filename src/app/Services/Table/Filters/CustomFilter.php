@@ -2,33 +2,17 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Services\Table\Request;
-use LaravelEnso\Tables\app\Contracts\CustomFilter as CustomFilterTable;
+use LaravelEnso\Helpers\app\Classes\Obj;
 
 class CustomFilter extends BaseFilter
 {
-    private $table;
-
-    public function __construct(Request $request, Builder $query, CustomFilterTable $table)
+    public function applies(): bool
     {
-        parent::__construct($request, $query);
-
-        $this->table = $table;
+        return $this->table->filterApplies($this->config->params());
     }
 
-    public function handle(): bool
+    public function handle()
     {
-        if ($this->request->filled('params')) {
-            $this->filter();
-        }
-
-        return $this->filters;
-    }
-
-    private function filter()
-    {
-        $this->query = $this->table->filter($this->query);
-        $this->filters = true;
+        $this->table->filter($this->query, $this->config->params());
     }
 }

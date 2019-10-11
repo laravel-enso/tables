@@ -3,56 +3,45 @@
 namespace LaravelEnso\Tables\app\Services\Table\Filters;
 
 use Carbon\Carbon;
-use LaravelEnso\Helpers\app\Classes\Obj;
 
 class Interval extends BaseFilter
 {
-    public function handle(): bool
+    public function applies(): bool
     {
-        if ($this->request->filled('intervals')) {
-            $this->filter();
-        }
+        $empty = collect([null, '']);
 
-        return $this->filters;
+        return $this->config->intervals()->first(function ($interval) use ($empty) {
+            return $interval->first(function ($value) use ($empty) {
+                return ! $empty->contains($value->get('min'))
+                    || ! $empty->contains($value->get('max'));
+            }) !== null;
+        }) !== null;
     }
 
-    private function filter()
+    public function handle()
     {
         $this->query->where(function () {
-            $this->parse('intervals')->each(function ($interval, $table) {
-                collect($interval)
-                    ->each(function ($value, $column) use ($table) {
-                        $this->setMinLimit($table, $column, $value)
-                            ->setMaxLimit($table, $column, $value);
-                    });
+            $this->config->intervals()->each(function ($interval, $table) {
+                collect($interval)->each(function ($value, $column) use ($table) {
+                    $this->setMinLimit($table, $column, $value)
+                        ->setMaxLimit($table, $column, $value);
+                });
             });
         });
     }
 
     private function setMinLimit($table, $column, $value)
     {
-        if (! $value->get('min')) {
-            return $this;
-        }
-
         $this->query->where($table.'.'.$column, '>=',
             $this->value($value, 'min'));
-
-        $this->filters = true;
 
         return $this;
     }
 
     private function setMaxLimit($table, $column, $value)
     {
-        if (! $value->get('max')) {
-            return $this;
-        }
-
         $this->query->where($table.'.'.$column, '<',
             $this->value($value, 'max'));
-
-        $this->filters = true;
 
         return $this;
     }
@@ -70,12 +59,5 @@ class Interval extends BaseFilter
         }
 
         return $value->get($bound);
-    }
-
-    private function parse($type)
-    {
-        return is_string($this->request->get($type))
-            ? new Obj(json_decode($this->request->get($type), true))
-            : $this->request->get($type);
     }
 }

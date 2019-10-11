@@ -2,14 +2,16 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Computors;
 
-class Translator
+use LaravelEnso\Tables\app\Contracts\ComputesColumns;
+
+class Translator implements ComputesColumns
 {
-    public static $columns;
+    private static $columns;
 
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->contains('translatable');
+            return $column->get('meta')->get('translatable');
         });
     }
 

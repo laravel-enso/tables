@@ -23,7 +23,7 @@ class ButtonException extends EnsoException
     public static function missingAttributes()
     {
         return new static(__(
-            'The following attributes are mandatory for custom buttons: ":attrs"',
+            'The following attributes are mandatory for buttons: ":attrs"',
             ['attrs' => collect(Button::Mandatory)->implode('", "')]
         ));
     }
@@ -31,7 +31,7 @@ class ButtonException extends EnsoException
     public static function unknownAttributes()
     {
         return new static(__(
-            'The following optional attributes are allowed for custom buttons: ":attrs"',
+            'The following optional attributes are allowed for buttons: ":attrs"',
             ['attrs' => collect(Button::Optional)->implode('", "')]
         ));
     }
@@ -53,7 +53,7 @@ class ButtonException extends EnsoException
     public static function wrongAction()
     {
         return new static(__(
-            'The following actions are allowed for custom buttons: ":actions"',
+            'The following actions are allowed for buttons: ":actions"',
             ['actions' => collect(Button::Actions)->implode('", "')]
         ));
     }

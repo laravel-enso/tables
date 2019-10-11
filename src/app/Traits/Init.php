@@ -9,14 +9,16 @@ use LaravelEnso\Tables\app\Services\Table\Request as TableRequest;
 
 trait Init
 {
+    use ProvidesRequest;
+
     public function __invoke(Request $request)
     {
         $table = App::make($this->tableClass, [
-            'request' => new TableRequest($request->all())
+            'request' => $this->request($request),
         ]);
 
         $template = (new TemplateLoader($table))->handle();
 
-        return $template->data();
+        return $template->toArray();
     }
 }

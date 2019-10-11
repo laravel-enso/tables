@@ -4,35 +4,25 @@ namespace LaravelEnso\Tables\app\Services\Table\Builders;
 
 use Illuminate\Support\Arr;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Template;
+use LaravelEnso\Tables\app\Services\Config;
 use LaravelEnso\Tables\app\Services\Table\Filters;
-use LaravelEnso\Tables\app\Services\Table\Request;
 use LaravelEnso\Tables\app\Services\Table\Computors;
 
 class Data
 {
+    private $config;
     private $table;
-    private $template;
-    private $request;
     private $query;
     private $data;
 
-    public function __construct(Table $table, Request $request, Template $template)
+    public function __construct(Table $table, Config $config)
     {
         $this->table = $table;
-        $this->request = $request;
-        $this->template = $template;
+        $this->config = $config;
         $this->query = $this->table->query();
     }
 
-    public function data()
-    {
-        $this->build();
-
-        return $this->data;
-    }
-
-    private function build()
+    public function build()
     {
         $this->filter()
             ->sort()
@@ -45,21 +35,35 @@ class Data
                 ->compute()
                 ->flatten();
         }
+
+        return $this;
+    }
+
+    public function toArray()
+    {
+        return ['data' => $this->data()];
+    }
+
+    public function data()
+    {
+        $this->build();
+
+        return $this->data;
     }
 
     private function filter()
     {
-        (new Filters($this->request, $this->query))
-            ->custom($this->table)
-            ->handle();
+        (new Filters(
+            $this->table, $this->config, $this->query
+        ))->handle();
 
         return $this;
     }
 
     private function sort()
     {
-        if ($this->request->meta()->get('sort')) {
-            (new Sort($this->request, $this->query))->handle();
+        if ($this->config->meta()->get('sort')) {
+            (new Sort($this->config, $this->query))->handle();
         }
 
         return $this;
@@ -67,8 +71,8 @@ class Data
 
     private function limit()
     {
-        $this->query->skip($this->request->meta()->get('start'))
-            ->take($this->request->meta()->get('length'));
+        $this->query->skip($this->config->meta()->get('start'))
+            ->take($this->config->meta()->get('length'));
 
         return $this;
     }
@@ -82,9 +86,9 @@ class Data
 
     private function setAppends()
     {
-        if ($this->template->has('appends')) {
+        if ($this->config->filled('appends')) {
             $this->data->each->setAppends(
-                $this->template->get('appends')->toArray()
+                $this->config->get('appends')->toArray()
             );
         }
 
@@ -100,14 +104,14 @@ class Data
 
     private function compute()
     {
-        $this->data = Computors::handle($this->template, $this->data);
+        $this->data = Computors::handle($this->config, $this->data);
 
         return $this;
     }
 
     private function flatten()
     {
-        if ($this->request->get('flatten')) {
+        if ($this->config->get('flatten')) {
             $this->data = collect($this->data)->map(function ($record) {
                 return Arr::dot($record);
             });

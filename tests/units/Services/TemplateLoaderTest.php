@@ -1,11 +1,8 @@
 <?php
 
-namespace Services\Template\Builders;
-
 use Config;
 use Tests\TestCase;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Services\TemplateLoader;
+use LaravelEnso\Tables\Tests\units\Services\TestModel;
 
 class TemplateLoaderTest extends TestCase
 {
@@ -45,9 +43,9 @@ class TemplateLoaderTest extends TestCase
 
         (new TemplateLoader($this->table))->handle();
 
-        $template = (new Template($this->table))->load(
-            Cache::tags(['tag'])->get($this->cacheKey())
-        );
+        $cache = Cache::tags(['tag'])->get($this->cacheKey());
+
+        $template = (new Template())->load($cache['template'], $cache['meta']);
 
         $this->assertTemplate($template);
     }
@@ -81,9 +79,9 @@ class TemplateLoaderTest extends TestCase
 
         (new TemplateLoader($this->table))->handle();
 
-        $template = (new Template($this->table))->load(
-            Cache::tags(['tag'])->get($this->cacheKey())
-        );
+        $cache = Cache::tags(['tag'])->get($this->cacheKey());
+
+        $template = (new Template())->load($cache['template'], $cache['meta']);
         
         $this->assertTemplate($template);
     }
@@ -115,7 +113,7 @@ class TableDummy implements Table
 
     public function query(): Builder
     {
-        return App::make(Builder::class);
+        return TestModel::query();
     }
 
     public static function cache($type)

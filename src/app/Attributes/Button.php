@@ -4,14 +4,14 @@ namespace LaravelEnso\Tables\app\Attributes;
 
 class Button
 {
-    const Mandatory = ['type', 'icon', 'class'];
+    const Mandatory = ['class', 'icon', 'type'];
 
     const Optional = [
-        'routeSuffix', 'action', 'fullRoute', 'label', 'method', 'confirmation',
-        'event', 'message', 'params', 'postEvent', 'tooltip',
+        'action', 'confirmation', 'event', 'fullRoute', 'label',  'message',
+        'method', 'params', 'postEvent', 'routeSuffix', 'tooltip',
     ];
 
-    const Actions = ['router', 'href', 'ajax', 'export'];
+    const Actions = ['ajax', 'export', 'href', 'router'];
 
-    const Methods = ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'];
+    const Methods = ['DELETE', 'GET', 'PATCH', 'POST', 'PUT'];
 }

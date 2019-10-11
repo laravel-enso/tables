@@ -2,42 +2,24 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
-use Faker\Factory;
 use Tests\TestCase;
-use LaravelEnso\Tables\app\Services\Table\Request;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\app\Services\Table\Filters\Interval;
 
 class IntervalTest extends TestCase
 {
-    private $testModel;
-    private $faker;
-    private $query;
-    private $params;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        // $this->withoutExceptionHandling();
-
-        $this->faker = Factory::create();
-
-        TestModel::createTable();
-        RelationalModel::createTable();
-
-        $this->testModel = $this->createTestModel();
-        $this->createRelationalModel();
-
-        $this->query = TestModel::select('*');
-    }
+    use SetUp;
 
     /** @test */
     public function can_use_interval()
     {
-        $this->params['intervals']['test_models']['id'] = [
+        $intervals = new Obj(['id' => [
             'min' => $this->testModel->id - 1,
             'max' => $this->testModel->id + 1,
-        ];
+        ]]);
+
+        $this->config->intervals()->set('test_models', $intervals);
 
         $response = $this->requestResponse();
 
@@ -48,10 +30,9 @@ class IntervalTest extends TestCase
             $response->first()->name
         );
 
-        $this->params['intervals']['test_models']['id'] = [
-            'min' => $this->testModel->id - 1,
-            'max' => $this->testModel->id - 2,
-        ];
+        $intervals->get('id')
+            ->set('min', $this->testModel->id - 2)
+            ->set('max', $this->testModel->id - 1);
 
         $response = $this->requestResponse();
 
@@ -61,12 +42,14 @@ class IntervalTest extends TestCase
     /** @test */
     public function can_use_date_interval()
     {
-        $this->params['intervals']['test_models']['created_at'] = [
+        $intervals = new Obj(['created_at' => [
             'dbDateFormat' => 'Y-m-d',
             'dateFormat' => 'Y-m-d',
             'min' => $this->testModel->created_at->subDays(1)->format('Y-m-d'),
             'max' => $this->testModel->created_at->addDays(1)->format('Y-m-d'),
-        ];
+        ]]);
+
+        $this->config->intervals()->set('test_models', $intervals);
 
         $response = $this->requestResponse();
 
@@ -77,12 +60,9 @@ class IntervalTest extends TestCase
             $response->first()->name
         );
 
-        $this->params['intervals']['test_models']['created_at'] = [
-            'dbDateFormat' => 'Y-m-d',
-            'dateFormat' => 'Y-m-d',
-            'min' => $this->testModel->created_at->subDays(2)->format('Y-m-d'),
-            'max' => $this->testModel->created_at->subDays(1)->format('Y-m-d'),
-        ];
+        $intervals->get('created_at')
+            ->set('min', $this->testModel->created_at->subDays(2)->format('Y-m-d'))
+            ->set('max', $this->testModel->created_at->subDays(1)->format('Y-m-d'));
 
         $response = $this->requestResponse();
 
@@ -91,24 +71,10 @@ class IntervalTest extends TestCase
 
     private function requestResponse()
     {
-        (new Interval(new Request($this->params), $this->query))->handle();
+        $query = $this->table->query();
 
-        return $this->query->get();
-    }
+        (new Interval($this->table, $this->config, $query))->handle();
 
-    private function createTestModel()
-    {
-        return TestModel::create([
-            'appellative' => $this->faker->firstName,
-            'name' => $this->faker->name,
-        ]);
-    }
-
-    private function createRelationalModel()
-    {
-        return RelationalModel::create([
-            'name' => $this->faker->word,
-            'parent_id' => $this->testModel->id,
-        ]);
+        return $query->get();
     }
 }
