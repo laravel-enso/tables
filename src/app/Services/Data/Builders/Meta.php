@@ -3,15 +3,13 @@
 namespace LaravelEnso\Tables\app\Services\Data\Builders;
 
 use ReflectionClass;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Traits\TableCache;
-use LaravelEnso\Tables\app\Contracts\RawTotal;
 use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\Data\Filters;
-use LaravelEnso\Tables\app\Exceptions\MetaException;
 use LaravelEnso\Tables\app\Exceptions\CacheException;
+use LaravelEnso\Tables\app\Services\Data\Builders\Total;
 
 class Meta
 {
@@ -103,33 +101,13 @@ class Meta
 
     private function setTotal()
     {
-        $this->config->columns()
-            ->filter(function ($column) {
-                return $column->get('meta')->get('total')
-                    || $column->get('meta')->get('customTotal')
-                    || $column->get('meta')->get('rawTotal');
-            })->each(function ($column) {
-                $this->total[$column->get('name')] = $column->get('meta')->get('rawTotal')
-                    ? $this->rawTotal($column)
-                    : $this->query->sum($column->get('data'));
-
-                if ($column->get('meta')->get('cents')) {
-                    $this->total[$column->get('name')] /= 100;
-                }
-            });
-
-        return $this;
-    }
-
-    private function rawTotal($column)
-    {
-        if (! $this->table instanceof RawTotal) {
-            throw MetaException::missingInterface();
+        if ($this->config->meta()->get('total')) {
+            $this->total = (new Total(
+                $this->table, $this->config, $this->query
+            ))->handle();
         }
 
-        return (clone $this->query)->select(
-            DB::raw("{$this->table->rawTotal($column)} as {$column->get('name')}")
-        )->first()->{$column->get('name')};
+        return $this;
     }
 
     private function cachedCount()

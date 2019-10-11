@@ -10,14 +10,14 @@ use LaravelEnso\Tables\app\Services\Data\Computors;
 class Config
 {
     private const TemplateProxy = [
-        'appends', 'comparisonOperator', 'countCache', 'flatten', 'fullInfoRecordLimit', 'name'
+        'appends', 'comparisonOperator', 'countCache', 'flatten', 'fullInfoRecordLimit', 'name',
     ];
-
-    private const RequestColumnMeta = ['visible', 'sort', 'hidden'];
 
     private const RequestMeta = [
         'search', 'visible', 'searchMode', 'start', 'length', 'translate', 'forceInfo', 'sort'
     ];
+
+    private const RequestColumnMeta = ['visible', 'sort', 'hidden'];
 
     private $request;
     private $template;

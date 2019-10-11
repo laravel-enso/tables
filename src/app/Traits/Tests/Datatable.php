@@ -16,16 +16,11 @@ trait Datatable
         $init = $this->get(route($this->permissionGroup.'.initTable', [], false));
 
         $init->assertStatus(200)
-            ->assertJsonStructure(['template']);
+            ->assertJsonStructure(['template', 'meta', 'apiVersion']);
 
-        $meta = '{"start":0,"length":10,"sort":false,"total":false,"enum":false,"date":false,"translatable": false,"actions":true,"forceInfo":false}';
-
-        $params = json_decode($init->getContent(), true) + [
-            'columns' => [[
-                'name' => 'id',
-                'meta' => ['sortable'],
-            ]],
-            'meta' => $meta,
+        $params = [
+            'columns' => [],
+            'meta' => '{"start":0,"length":10,"sort":false,"search": "","forceInfo":false,"searchMode":"full"}'
         ];
 
         $this->get(route($this->permissionGroup.'.tableData', $params, false))
