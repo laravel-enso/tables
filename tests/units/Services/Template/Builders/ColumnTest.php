@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Template\Builders;
+namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
 use Tests\TestCase;
 use Illuminate\Support\Str;
@@ -50,10 +50,7 @@ class ColumnTest extends TestCase
 
             $this->assertEquals(
                 $expected['value'],
-                $this->template->get('columns')
-                    ->first()
-                    ->get('meta')
-                    ->get($expected['key'])
+                $this->template->get('columns')->first()->get('meta')->get($expected['key'])
             );
     }
 

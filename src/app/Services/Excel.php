@@ -3,8 +3,10 @@
 namespace LaravelEnso\Tables\app\Services;
 
 use Illuminate\Support\Str;
+use Illuminate\Foundation\Auth\User;
 use LaravelEnso\IO\app\Enums\IOStatuses;
 use LaravelEnso\Tables\app\Jobs\ExcelExport;
+use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\DataExport\app\Models\DataExport;
 use LaravelEnso\Tables\app\Exceptions\ExportException;
 use LaravelEnso\Tables\app\Notifications\ExportStartNotification;
@@ -12,32 +14,30 @@ use LaravelEnso\Tables\app\Notifications\ExportStartNotification;
 class Excel
 {
     private $user;
-    private $request;
+    private $config;
     private $tableClass;
     private $dataExport;
 
-    public function __construct($user, array $request, $tableClass)
+    public function __construct(User $user, Config $config, string $tableClass)
     {
         $this->user = $user;
-        $this->request = $request;
+        $this->config = $config;
         $this->tableClass = $tableClass;
         $this->dataExport = null;
     }
 
     public function handle()
     {
-        $this->checkIfAlreadyRunning()
+        $this->checkAlreadyRunning()
             ->notifyStart()
             ->createDataExport()
             ->dispatch();
     }
 
-    private function checkIfAlreadyRunning()
+    private function checkAlreadyRunning()
     {
         if ($this->isEnso() && $this->alreadyRunning()) {
-            throw new ExportException(
-                __('An export job is already running for the same table')
-            );
+            throw ExportException::alreadyRunning();
         }
 
         return $this;
@@ -70,16 +70,9 @@ class Excel
     {
         ExcelExport::dispatch(
             $this->user,
-            $this->request,
+            $this->config,
             $this->tableClass,
             $this->dataExport
-        );
-    }
-
-    private function type()
-    {
-        return Str::title(
-            Str::snake($this->request['name'])
         );
     }
 
@@ -91,6 +84,13 @@ class Excel
             ->where('created_at', '>', now()->subSeconds(
                 config('enso.tables.export.timeout')
             ))->exists();
+    }
+
+    private function type()
+    {
+        return Str::title(
+            Str::snake($this->config->get('name'))
+        );
     }
 
     private function isEnso()

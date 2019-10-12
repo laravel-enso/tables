@@ -7,12 +7,16 @@ use LaravelEnso\Tables\app\Services\Excel as Service;
 
 trait Excel
 {
+    use ProvidesData;
+
     public function __invoke(Request $request)
     {
+        $user = $request->user();
+
+        ['config' => $config] = $this->data($request);
+
         (new Service(
-            $request->user(),
-            $request->all(),
-            $this->tableClass
+            $user, $config, $this->tableClass
         ))->handle();
     }
 }

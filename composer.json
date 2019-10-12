@@ -29,6 +29,11 @@
             "LaravelEnso\\Tables\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "LaravelEnso\\Tables\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [

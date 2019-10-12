@@ -1,0 +1,15 @@
+{
+    "routePrefix": "testTables",
+    "buttons": [],
+    "appends": [],
+    "columns": [
+        {
+            "label": "",
+            "name": "name",
+            "data": "name",
+            "meta": [
+                "searchable"
+            ]
+        }
+    ]
+}

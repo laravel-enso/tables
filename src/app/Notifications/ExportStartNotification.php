@@ -20,7 +20,9 @@ class ExportStartNotification extends Notification implements ShouldQueue
 
     public function via()
     {
-        return config('enso.tables.export.notifications');
+        return collect(config('enso.tables.export.notifications'))
+            ->intersect(['broadcast', 'database'])
+            ->toArray();
     }
 
     public function toBroadcast()

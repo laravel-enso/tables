@@ -2,17 +2,18 @@
 
 namespace LaravelEnso\Tables\app\Services;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Services\Data\Config;
+use LaravelEnso\Tables\app\Services\Data\Fetcher;
 
 abstract class Action
 {
     private $fetcher;
     private $request;
 
-    public function __construct(string $class, array $request)
+    public function __construct(Table $table, Config $config)
     {
-        $this->fetcher = $this->fetcher = new Fetcher($class, $request);
-        $this->request = new Obj($request);
+        $this->fetcher = new Fetcher($table, $config);
     }
 
     abstract public function process(array $row);
@@ -22,7 +23,7 @@ abstract class Action
         $this->fetcher->next();
 
         while ($this->fetcher->valid()) {
-            $this->fetcher->data()->each(function ($row) {
+            $this->fetcher->current()->each(function ($row) {
                 $this->process($row);
             });
 

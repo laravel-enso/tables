@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Template\Builders;
+namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
 use Route;
 use Tests\TestCase;
@@ -23,6 +23,7 @@ class StructureTest extends TestCase
         $this->template = new Obj([
             'routePrefix' => 'prefix',
             'dataRouteSuffix' => 'suffix',
+            'model' => 'test'
         ]);
 
         $this->meta = new Obj([]);

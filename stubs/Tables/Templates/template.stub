@@ -1,0 +1,56 @@
+{
+    "routePrefix": "route.prefix", // required, the main segment of a named route
+    "dataRouteSuffix": "read.suffix", // optional, the data read endpoint suffix that gets appended to the routePrefix param
+    "name": "Table Name", //optional, the title for the table
+    "icon": "list-alt", //optional, expects a font awesome icon class
+    "crtNo": true, // optional, shows the line number
+    "auth": true, //optional, if true, bypasses authentication
+    "countCache": false, //optional, used to cache the total count
+    "templateCache": true, //optional, caches the template at the first parsing
+    "debounce": 100, //optional, the debounce ms limit for reloading table data
+    "lengthMenu": [10, 15, 20, 25, 30], //optional, table pagination options. If given, it overwrites the value from config
+    "method": "POST", //optional, if given overrides the global configuration
+    "appends": ["customAttribute"], // optional, laravel model accessors for custom attributes
+    "selectable": false, //optional, adds checkboxes to first column
+    "comparisonOperator": "LIKE", // optional, sql comparison operator for text search method. If given, it overwrites the value from config
+    "controls": [ "length", "columns", "style", "reload", "reset" ],
+    "buttons": [
+        "show", "create", "edit", "destroy", "download", "exportExcel", // string buttons must match the config
+        {
+            "type": "row", // required, available options row / global
+            "icon": "bell", // required, expects a font awesome icon class
+            "class": "has-text-purple", // required, a CSS styling class
+            "routeSuffix": "custom", // optional, gets appended to the routePrefix param
+            "event": "custom-event", // optional, for custom in-page handling, outside of the table
+            "postEvent": "custom-post-event", //optional, event that is triggered after the completion of the ajax request
+            "action": "router", // optional, available options router / href / export / ajax
+            "fullRoute": "optional.full.route", // optional, if given, is used independently from the routePrefix param
+            "label": "Button Label", // optional, should be given only for global buttons
+            "tooltip": "Tooltip", //optional, should be given only for row buttons
+            "confirmation": false, // optional, if you need a modal confirmation before doing the action
+            "message": "Are you sure?", // optional, if you want to customize the modal message,for the confirmation
+            "method": "GET/PUT/PATCH/POST/DELETE", // optional, should be given if you have action set as ajax
+            "params": {} //optional, object, can be used to pass extra params with a `router` action
+        }
+    ],
+    "columns": [ //required, list of column configurations
+        {
+            "label": "Name", //required, table header column name
+            "data": "table.column", // required, the table and column name
+            "name": "columnAlias", // required, alias from the query builder
+            "meta": ["searchable", "sortable", "sort:ASC", "sort:DESC", "translatable", "boolean", "slot", "rogue", "editable", "total", "customTotal", "date", "icon", "clickable", "notExportable", "nullLast"], //optional
+            "enum": "EnumClass", // optional
+            "dateFormat": "d-m-Y",
+            "tooltip": "My Tooltip Column Detail",
+            "class": "is-custom-class",
+            "align": "right",
+            "money": {
+                "symbol": "$",
+                "decimal": ".",
+                "thousand": ",",
+                "precision": 2,
+                "format": "%s%v"
+            }
+        }
+    ]
+}

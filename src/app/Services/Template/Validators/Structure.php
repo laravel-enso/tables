@@ -28,10 +28,9 @@ class Structure
             ->diff($this->template->keys());
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(
-                'Mandatory Attribute(s) Missing: ":attr"',
-                ['attr' => $diff->implode('", "')]
-            ));
+            throw TemplateException::missingAttributes(
+                $diff->implode('", "')
+            );
         }
 
         return $this;
@@ -45,10 +44,9 @@ class Structure
         $diff = $this->template->keys()->diff($attributes);
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(
-                'Unknown Attribute(s) Found: ":attr"',
-                ['attr' => $diff->implode('", "')]
-            ));
+            throw TemplateException::unknownAttributes(
+                $diff->implode('", "')
+            );
         }
 
         return $this;
@@ -58,42 +56,42 @@ class Structure
     {
         if ($this->template->has('lengthMenu')
             && ! $this->template->get('lengthMenu') instanceof Obj) {
-            throw new TemplateException(__('"lengthMenu" attribute must be an array'));
+            throw TemplateException::invalidLengthMenu();
         }
 
         if ($this->template->has('appends')
             && ! $this->template->get('appends') instanceof Obj) {
-            throw new TemplateException(__('"appends" attribute must be an array'));
+            throw TemplateException::invalidAppends();
         }
 
         if ($this->template->has('debounce')
             && ! is_int($this->template->get('debounce'))) {
-            throw new TemplateException(__('"debounce" attribute must be an integer'));
+            throw TemplateException::invalidDebounce();
         }
 
         if ($this->template->has('method')
             && ! collect(['GET', 'POST'])->contains($this->template->get('method'))) {
-            throw new TemplateException(__('"method" attribute can be either "GET" or "POST"'));
+            throw TemplateException::invalidMethod();
         }
 
         if ($this->template->has('selectable')
             && ! is_bool($this->template->get('selectable'))) {
-            throw new TemplateException(__('"selectable" attribute must be a boolean'));
+            throw TemplateException::invalidSelectable();
         }
 
         if ($this->template->has('comparisonOperator')
             && ! collect(['LIKE', 'ILIKE'])->contains($this->template->get('comparisonOperator'))) {
-            throw new TemplateException(__('"comparisonOperator" attribute can be either "LIKE" or "ILIKE"'));
+            throw TemplateException::invalidComparisonOperator();
         }
 
         if ($this->template->has('searchMode')
             && ! collect(['full', 'startsWith', 'endsWith'])->contains($this->template->get('searchMode'))) {
-            throw new TemplateException(__('"searchMode" attribute can be one of "full", "startsWith" or "endsWith"'));
+            throw TemplateException::invalidSearchMode();
         }
 
         if ($this->template->has('searchModes')
             && ! $this->template->get('searchModes') instanceof Obj) {
-            throw new TemplateException(__('"searchModes" attribute must be an associative array'));
+            throw TemplateException::invalidSearchModes();
         }
     }
 }

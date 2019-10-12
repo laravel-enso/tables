@@ -2,12 +2,22 @@
 
 namespace LaravelEnso\Tables\app\Traits;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use LaravelEnso\Tables\app\Services\TemplateLoader;
 
 trait Init
 {
-    public function __invoke()
+    use ProvidesRequest;
+
+    public function __invoke(Request $request)
     {
-        return App::make($this->tableClass)->init();
+        $table = App::make($this->tableClass, [
+            'request' => $this->request($request),
+        ]);
+
+        $template = (new TemplateLoader($table))->handle();
+
+        return $template->toArray();
     }
 }

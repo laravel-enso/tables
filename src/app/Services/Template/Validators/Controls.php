@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\TemplateException;
+use LaravelEnso\Tables\app\Exceptions\ControlException;
 
 class Controls
 {
@@ -32,7 +32,7 @@ class Controls
             })->isNotEmpty();
 
         if ($formattedWrong) {
-            throw new TemplateException(__('The controls array may contain only strings.'));
+            throw ControlException::invalidFormat();
         }
 
         return $this;
@@ -43,10 +43,9 @@ class Controls
         $diff = $this->controls->diff($this->defaults);
 
         if ($diff->isNotEmpty()) {
-            throw new TemplateException(__(
-                'Unknown control(s) Found: ":controls"',
-                ['controls' => $diff->implode('", "')]
-            ));
+            throw ControlException::undefined(
+                $diff->implode('", "')
+            );
         }
 
         return $this;

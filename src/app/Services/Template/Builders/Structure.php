@@ -34,10 +34,9 @@ class Structure
 
     private function readPath()
     {
-        $route = $this->template->get('routePrefix').'.'.(
-            $this->template->get('dataRouteSuffix')
-                ?? config('enso.tables.dataRouteSuffix')
-        );
+        $route = $this->template->get('routePrefix').'.'
+            .($this->template->get('dataRouteSuffix')
+                ?? config('enso.tables.dataRouteSuffix'));
 
         $this->template->set('readPath', route($route, [], false));
 
@@ -104,8 +103,8 @@ class Structure
 
     private function defaults()
     {
-        if (! $this->template->has('model')) {
-            $this->template->set('model', $this->model());
+        if (! $this->template->has('name')) {
+            $this->template->set('name', Str::plural($this->template->get('model')));
         }
 
         $this->template->set('labels', config('enso.tables.labels'));
@@ -123,24 +122,11 @@ class Structure
         $this->meta->set('money', false);
     }
 
-    private function model()
-    {
-        $segment = collect(
-            explode('.', $this->template->get('routePrefix'))
-        )->last();
-
-        return Str::singular($segment);
-    }
-
     private function comparisonOperator()
     {
-        $this->meta->set(
-            'comparisonOperator',
-            $this->template->get('comparisonOperator')
-                ?? config('enso.tables.comparisonOperator')
-        );
-
-        $this->template->forget('comparisonOperator');
+        if (! $this->template->has('comparisonOperator')) {
+            $this->template->set('comparisonOperator', config('enso.tables.comparisonOperator'));
+        }
 
         return $this;
     }

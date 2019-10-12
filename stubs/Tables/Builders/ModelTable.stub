@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Tables\Builders;
+
+use App\Model;
+use LaravelEnso\Tables\app\Services\Table;
+
+class ModelTable extends Table
+{
+    protected $templatePath = __DIR__.'/../Templates/template.json';
+
+    public function query()
+    {
+        return Model::selectRaw('
+            id, ......
+        ');
+    }
+}

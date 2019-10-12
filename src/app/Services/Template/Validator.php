@@ -20,30 +20,14 @@ class Validator
 
     public function run()
     {
-        (new Structure($this->template))
-            ->validate();
+        (new Structure($this->template))->validate();
 
-        (new Route($this->template))
-            ->validate();
+        (new Route($this->template))->validate();
 
-        $this->validateButtons();
+        (new Buttons($this->template))->validate();
 
-        (new Controls($this->template))
-            ->validate();
+        (new Controls($this->template))->validate();
 
-        (new Columns($this->template))
-            ->validate();
-    }
-
-    private function validateButtons()
-    {
-        if (! $this->template->has('buttons')) {
-            $this->template->buttons = [];
-
-            return;
-        }
-
-        (new Buttons($this->template))
-            ->validate();
+        (new Columns($this->template))->validate();
     }
 }

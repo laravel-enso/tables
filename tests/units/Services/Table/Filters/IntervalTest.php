@@ -1,0 +1,80 @@
+<?php
+
+namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
+
+use Tests\TestCase;
+use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\Tests\units\Services\SetUp;
+use LaravelEnso\Tables\app\Services\Data\Filters\Interval;
+
+class IntervalTest extends TestCase
+{
+    use SetUp;
+
+    /** @test */
+    public function can_use_interval()
+    {
+        $intervals = new Obj(['id' => [
+            'min' => $this->testModel->id - 1,
+            'max' => $this->testModel->id + 1,
+        ]]);
+
+        $this->config->intervals()->set('test_models', $intervals);
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(1, $response);
+
+        $this->assertEquals(
+            $this->testModel->name,
+            $response->first()->name
+        );
+
+        $intervals->get('id')
+            ->set('min', $this->testModel->id - 2)
+            ->set('max', $this->testModel->id - 1);
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(0, $response);
+    }
+
+    /** @test */
+    public function can_use_date_interval()
+    {
+        $intervals = new Obj(['created_at' => [
+            'dbDateFormat' => 'Y-m-d',
+            'dateFormat' => 'Y-m-d',
+            'min' => $this->testModel->created_at->subDays(1)->format('Y-m-d'),
+            'max' => $this->testModel->created_at->addDays(1)->format('Y-m-d'),
+        ]]);
+
+        $this->config->intervals()->set('test_models', $intervals);
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(1, $response);
+
+        $this->assertEquals(
+            $this->testModel->name,
+            $response->first()->name
+        );
+
+        $intervals->get('created_at')
+            ->set('min', $this->testModel->created_at->subDays(2)->format('Y-m-d'))
+            ->set('max', $this->testModel->created_at->subDays(1)->format('Y-m-d'));
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(0, $response);
+    }
+
+    private function requestResponse()
+    {
+        $query = $this->table->query();
+
+        (new Interval($this->table, $this->config, $query))->handle();
+
+        return $query->get();
+    }
+}

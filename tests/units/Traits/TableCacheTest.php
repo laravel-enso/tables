@@ -1,15 +1,16 @@
 <?php
 
-namespace Services\Traits;
+namespace LaravelEnso\Tables\Tests\units\Traits;
 
 use Cache;
+use Config;
 use Schema;
 use Faker\Factory;
 use Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use LaravelEnso\Tables\app\Traits\TableCache;
 
-class ActionTest extends TestCase
+class TableCacheTest extends TestCase
 {
     private $testModel;
     private $faker;
@@ -19,6 +20,7 @@ class ActionTest extends TestCase
         parent::setUp();
 
         // $this->withoutExceptionHandling();
+        Config::set('enso.tables.cache.prefix', 'prefix');
 
         $this->faker = Factory::create();
 
@@ -30,7 +32,7 @@ class ActionTest extends TestCase
     /** @test */
     public function should_forgot_cache_when_model_is_deleted()
     {
-        Cache::shouldReceive('forget')->with('table:test_models');
+        Cache::shouldReceive('forget')->with('prefix:test_models');
 
         $this->testModel->delete();
     }
@@ -38,7 +40,7 @@ class ActionTest extends TestCase
     /** @test */
     public function should_forgot_cache_when_model_is_created()
     {
-        Cache::shouldReceive('forget')->with('table:test_models');
+        Cache::shouldReceive('forget')->with('prefix:test_models');
 
         $this->createTestModel();
     }
