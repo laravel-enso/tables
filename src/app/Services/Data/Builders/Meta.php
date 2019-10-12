@@ -9,7 +9,6 @@ use LaravelEnso\Tables\app\Traits\TableCache;
 use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\Data\Filters;
 use LaravelEnso\Tables\app\Exceptions\CacheException;
-use LaravelEnso\Tables\app\Services\Data\Builders\Total;
 
 class Meta
 {
@@ -128,7 +127,7 @@ class Meta
     {
         $shouldCache = $this->config->has('countCache')
             ? $this->config->get('countCache')
-            : config('enso.tables.cache.count'); 
+            : config('enso.tables.cache.count');
 
         if ($shouldCache) {
             $model = $this->query->getModel();

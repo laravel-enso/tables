@@ -12,7 +12,7 @@ class Config
     ];
 
     private const RequestMeta = [
-        'search', 'visible', 'searchMode', 'start', 'length', 'translate', 'forceInfo', 'sort'
+        'search', 'visible', 'searchMode', 'start', 'length', 'translate', 'forceInfo', 'sort',
     ];
 
     private const RequestColumnMeta = ['visible', 'sort', 'hidden'];

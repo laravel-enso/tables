@@ -21,7 +21,7 @@ class MetaException extends EnsoException
             ['column' => $column]
         ));
     }
-    
+
     public static function missingInterface()
     {
         return new static(__(

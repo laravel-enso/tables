@@ -4,7 +4,6 @@ namespace LaravelEnso\Tables\app\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use LaravelEnso\Tables\app\Services\Data\Config;
 
 trait Action
 {
