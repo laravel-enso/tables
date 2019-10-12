@@ -63,6 +63,5 @@ class Interval extends BaseFilter
                 $value->get('dateFormat') ?? config('enso.config.dateFormat'),
                 $value->get($bound)
             ) : null;
-
     }
 }
