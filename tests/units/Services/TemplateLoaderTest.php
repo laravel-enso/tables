@@ -1,6 +1,5 @@
 <?php
 
-use Config;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
@@ -82,7 +81,7 @@ class TemplateLoaderTest extends TestCase
         $cache = Cache::tags(['tag'])->get($this->cacheKey());
 
         $template = (new Template())->load($cache['template'], $cache['meta']);
-        
+
         $this->assertTemplate($template);
     }
 

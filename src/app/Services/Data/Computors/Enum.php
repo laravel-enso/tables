@@ -19,6 +19,7 @@ class Enum implements ComputesColumns
     {
         foreach (self::$columns as $column) {
             $class = $column->get('enum');
+            print_r((new \ReflectionClass($class))->getExtension());
             $enum = new $class();
 
             if ($row[$column->get('name')] !== null) {

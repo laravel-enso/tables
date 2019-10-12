@@ -69,12 +69,52 @@ class IntervalTest extends TestCase
         $this->assertCount(0, $response);
     }
 
+    /** @test */
+    public function can_use_half_interval()
+    {
+        $intervals = new Obj([
+            'id' => [
+                'min' => $this->testModel->id - 1,
+                'max' => null,
+            ]
+        ]);
+
+        $this->config->intervals()->set('test_models', $intervals);
+
+        $response = $this->requestResponse();
+
+        $this->assertCount(1, $response);
+
+        $this->assertEquals(
+            $this->testModel->name,
+            $response->first()->name
+        );
+    }
+
+    /** @test */
+    public function cannot_use_wrong_intervals()
+    {
+        $intervals = new Obj([
+            'id' => [
+                'min' => null,
+                'max' => null,
+            ]
+        ]);
+
+        $this->config->intervals()->set('test_models', $intervals);
+
+        $this->assertFalse($this->interval()->applies());
+    }
+
     private function requestResponse()
     {
-        $query = $this->table->query();
+        $this->interval()->handle();
 
-        (new Interval($this->table, $this->config, $query))->handle();
+        return $this->query->get();
+    }
 
-        return $query->get();
+    private function interval()
+    {
+        return (new Interval($this->table, $this->config, $this->query));
     }
 }

@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
 use Tests\TestCase;
+use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\app\Services\Data\Filters\Filter;
@@ -34,12 +35,25 @@ class FilterTest extends TestCase
         $this->assertCount(0, $response);
     }
 
+    /** @test */
+    public function cannot_use_wrong_filters()
+    {
+        $filters = new Obj(['name' => null]);
+
+        $this->config->filters()->set('test_models', $filters);
+
+        $this->assertFalse($this->filter()->applies());
+    }
+
     private function requestResponse()
     {
-        $query = $this->table->query();
+        $this->filter()->handle();
 
-        (new Filter($this->table, $this->config, $query))->handle();
+        return $this->query->get();
+    }
 
-        return $query->get();
+    private function filter()
+    {
+        return new Filter($this->table, $this->config, $this->query);
     }
 }

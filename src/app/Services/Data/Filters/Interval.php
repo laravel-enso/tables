@@ -8,12 +8,10 @@ class Interval extends BaseFilter
 {
     public function applies(): bool
     {
-        $empty = collect([null, '']);
-
-        return $this->config->intervals()->first(function ($interval) use ($empty) {
-            return $interval->first(function ($value) use ($empty) {
-                return ! $empty->contains($value->get('min'))
-                    || ! $empty->contains($value->get('max'));
+        return $this->config->intervals()->first(function ($interval) {
+            return $interval->first(function ($value) {
+                return $this->isValid($value->get('min'))
+                    || $this->isValid($value->get('max'));
             }) !== null;
         }) !== null;
     }
@@ -32,16 +30,20 @@ class Interval extends BaseFilter
 
     private function setMinLimit($table, $column, $value)
     {
-        $this->query->where($table.'.'.$column, '>=',
-            $this->value($value, 'min'));
+        if ($this->isValid($value->get('min'))) {
+            $this->query->where($table.'.'.$column, '>=',
+                $this->value($value, 'min'));
+        }
 
         return $this;
     }
 
     private function setMaxLimit($table, $column, $value)
     {
-        $this->query->where($table.'.'.$column, '<',
-            $this->value($value, 'max'));
+        if ($this->isValid($value->get('max'))) {
+            $this->query->where($table.'.'.$column, '<',
+                $this->value($value, 'max'));
+        }
 
         return $this;
     }
@@ -59,5 +61,10 @@ class Interval extends BaseFilter
         }
 
         return $value->get($bound);
+    }
+
+    private function isValid($value)
+    {
+        return ! collect([null, ''])->containsStrict($value);
     }
 }

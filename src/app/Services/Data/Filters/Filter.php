@@ -8,30 +8,31 @@ class Filter extends BaseFilter
 {
     public function applies(): bool
     {
-        return $this->config->filters()
-            ->first(function($value) {
-                return $this->filterIsValid($value);
-            }) !== null;
+        return $this->filters()->isNotEmpty();
     }
 
     public function handle()
     {
         $this->query->where(function ($query) {
-            $this->config->filters()->each(function ($filters, $table) use ($query) {
+            $this->filters()->each(function ($filters, $table) use ($query) {
                 $filters->each(function ($value, $column) use ($table, $query) {
-                    if ($this->filterIsValid($value)) {
-                        $arrayValue = $value instanceof Collection
-                            ? $value->toArray()
-                            : (array) $value;
-
-                        $query->whereIn($table.'.'.$column, $arrayValue);
-                    }
+                    $query->whereIn($table.'.'.$column,
+                        collect($value)->toArray());
                 });
             });
         });
     }
 
-    private function filterIsValid($value)
+    private function filters()
+    {
+        return $this->config->filters()->map(function ($filters) {
+            return $filters->filter(function ($value, $column) {
+                return $this->isValid($value);
+            });
+        })->filter->isNotEmpty();
+    }
+
+    private function isValid($value)
     {
         return $value !== null
             && $value !== ''
