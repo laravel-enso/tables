@@ -3,14 +3,11 @@
 use Config;
 use Tests\TestCase;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Services\TemplateLoader;
-use LaravelEnso\Tables\Tests\units\Services\TestModel;
+use LaravelEnso\Tables\Tests\units\Services\TestTable;
 
 class TemplateLoaderTest extends TestCase
 {
@@ -23,7 +20,7 @@ class TemplateLoaderTest extends TestCase
         Route::any('route')->name('testTables.tableData');
         Route::getRoutes()->refreshNameLookups();
 
-        $this->table = new TableDummy();
+        $this->table = new TestTable();
 
         Config::set('enso.tables.cache.prefix', 'prefix');
         Config::set('enso.tables.cache.tag', 'tag');
@@ -39,7 +36,7 @@ class TemplateLoaderTest extends TestCase
     /** @test */
     public function can_cache_template()
     {
-        TableDummy::cache('always');
+        TestTable::cache('always');
 
         (new TemplateLoader($this->table))->handle();
 
@@ -54,7 +51,7 @@ class TemplateLoaderTest extends TestCase
     public function cannot_cache_template_with_never_cache_config()
     {
         Config::set('enso.tables.cache.template', 'never');
-        TableDummy::cache(null);
+        TestTable::cache(null);
 
         (new TemplateLoader($this->table))->handle();
 
@@ -65,24 +62,25 @@ class TemplateLoaderTest extends TestCase
     public function cannot_cache_template_with_never_template_cache()
     {
         Config::set('enso.tables.cache.template', 'always');
-        TableDummy::cache('never');
+        TestTable::cache('never');
 
         (new TemplateLoader($this->table))->handle();
 
         $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
     }
+
     /** @test */
     public function can_cache_with_environment()
     {
         Config::set('enso.tables.cache.template', app()->environment());
-        TableDummy::cache(null);
+        TestTable::cache(null);
 
         (new TemplateLoader($this->table))->handle();
 
         $cache = Cache::tags(['tag'])->get($this->cacheKey());
 
         $template = (new Template())->load($cache['template'], $cache['meta']);
-        
+
         $this->assertTemplate($template);
     }
 
@@ -99,37 +97,5 @@ class TemplateLoaderTest extends TestCase
         .':'.Str::slug(str_replace(
             ['/', '.'], [' ', ' '], $this->table->templatePath()
         ));
-    }
-}
-
-class TableDummy implements Table
-{
-    private static $path = __DIR__.'/stubs/template.json';
-
-    public function __construct()
-    {
-        self::cache('never');
-    }
-
-    public function query(): Builder
-    {
-        return TestModel::query();
-    }
-
-    public static function cache($type)
-    {
-        $template = collect(json_decode(File::get(self::$path), true));
-        $template->forget('templateCache');
-
-        if ($type !== null) {
-            $template['templateCache'] = $type;
-        }
-
-        File::put(self::$path, $template->toJson(JSON_PRETTY_PRINT));
-    }
-
-    public function templatePath(): string
-    {
-        return self::$path;
     }
 }

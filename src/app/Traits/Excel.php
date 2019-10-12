@@ -13,7 +13,7 @@ trait Excel
     {
         $user = $request->user();
 
-        [$table, $config] = $this->data($request);
+        ['config' => $config] = $this->data($request);
 
         (new Service(
             $user, $config, $this->tableClass
