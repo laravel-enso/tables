@@ -9,7 +9,7 @@ class Filter extends BaseFilter
     public function applies(): bool
     {
         return $this->config->filters()
-            ->first(function($value) {
+            ->first(function ($value) {
                 return $this->filterIsValid($value);
             }) !== null;
     }

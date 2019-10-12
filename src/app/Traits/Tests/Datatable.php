@@ -20,7 +20,7 @@ trait Datatable
 
         $params = [
             'columns' => [],
-            'meta' => '{"start":0,"length":10,"sort":false,"search": "","forceInfo":false,"searchMode":"full"}'
+            'meta' => '{"start":0,"length":10,"sort":false,"search": "","forceInfo":false,"searchMode":"full"}',
         ];
 
         $this->get(route($this->permissionGroup.'.tableData', $params, false))

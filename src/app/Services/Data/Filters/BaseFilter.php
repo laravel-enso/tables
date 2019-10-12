@@ -7,7 +7,6 @@ use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Contracts\Filter;
 use LaravelEnso\Tables\app\Services\Data\Config;
 
-
 abstract class BaseFilter implements Filter
 {
     protected $table;
