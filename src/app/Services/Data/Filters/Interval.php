@@ -43,7 +43,7 @@ class Interval extends BaseFilter
     {
         if ($this->isValid($value->get('max'))) {
             $this->query->where(
-                $table.'.'.$column, '<', $this->value($value, 'max')
+                $table.'.'.$column, '<=', $this->value($value, 'max')
             );
         }
 
