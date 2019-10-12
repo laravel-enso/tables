@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\App;
 use LaravelEnso\Tables\app\Exceptions\FilterException;
 use LaravelEnso\Tables\app\Services\Data\Filters\Filter;
 use LaravelEnso\Tables\app\Services\Data\Filters\Search;
-use LaravelEnso\Tables\app\Contracts\Filter as TableFilter;
 use LaravelEnso\Tables\app\Services\Data\Filters\Interval;
+use LaravelEnso\Tables\app\Contracts\Filter as TableFilter;
 use LaravelEnso\Tables\app\Services\Data\Filters\BaseFilter;
 use LaravelEnso\Tables\app\Services\Data\Filters\CustomFilter;
 use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
@@ -32,11 +32,11 @@ class Filters extends BaseFilter
                 return $this->filter($filter)->applies();
             }) !== null;
     }
-    
+
     public function handle(): void
     {
         collect(self::$defaultFilters)
-            ->each(function($filter) {
+            ->each(function ($filter) {
                 $this->apply($filter);
             });
 
@@ -51,7 +51,7 @@ class Filters extends BaseFilter
     {
         self::$defaultFilters = $filters;
     }
-    
+
     public static function customFilters($filters)
     {
         self::$customFilters = $filters;

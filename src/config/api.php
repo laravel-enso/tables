@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'apiVersion' => '3.1',
+    'apiVersion' => '3.2',
 ];

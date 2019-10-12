@@ -12,7 +12,7 @@ trait Data
 
     public function __invoke(Request $request)
     {
-        [$table, $config] = $this->data($request);
+        ['table' => $table, 'config' => $config] = $this->data($request);
 
         return (new DataBuilder($table, $config))->toArray()
             + (new MetaBuilder($table, $config))->toArray();

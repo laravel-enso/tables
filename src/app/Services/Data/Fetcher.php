@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\app\Services\Data;
 
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\Data\Builders\Data;
 use LaravelEnso\Tables\app\Services\Data\Builders\Meta;
 use LaravelEnso\Tables\app\Services\Data\Computors\OptimalChunk;

@@ -2,8 +2,6 @@
 
 namespace LaravelEnso\Tables\app\Services\Data\Filters;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-
 class CustomFilter extends BaseFilter
 {
     public function applies(): bool

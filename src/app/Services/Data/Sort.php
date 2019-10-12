@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\app\Services\Data;
 
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Services\Data\Config;
 
 class Sort
 {
@@ -27,13 +26,12 @@ class Sort
 
                     return;
                 }
-                
+
                 $this->query->orderBy(
                     $column->get('data'), $column->get('meta')->get('sort')
                 );
             }
         });
-
     }
 
     private function rawSort($column)

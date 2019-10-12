@@ -50,9 +50,9 @@ class Request
     {
         return ! is_array($arg)
             ? $this->decode($arg)
-            : collect($arg)->map(function($arg) {
+            : collect($arg)->map(function ($arg) {
                 return $this->decode($arg);
-            })->toArray(); 
+            })->toArray();
     }
 
     private function decode($arg)

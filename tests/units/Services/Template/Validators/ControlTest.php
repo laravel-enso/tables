@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
-use Route;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Exceptions\ControlException;
 use LaravelEnso\Tables\app\Services\Template\Validators\Controls;

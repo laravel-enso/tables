@@ -19,10 +19,10 @@ class Date implements ComputesColumns
     public static function handle($row)
     {
         foreach (self::$columns as $column) {
-            $row[$column->get('name')] = $row[$column->get('name')] !== null
-                ? Carbon::parse($row[$column->get('name')])
-                    ->format(self::format($column))
-                : $row[$column->get('name')];
+            if ($row[$column->get('name')] !== null) {
+                $row[$column->get('name')] = Carbon::parse($row[$column->get('name')])
+                    ->format(self::format($column));
+            }
         }
 
         return $row;

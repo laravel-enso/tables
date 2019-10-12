@@ -12,11 +12,6 @@ trait Action
 
     public function __invoke(Request $request)
     {
-        [$table, $config] = $this->data($request);
-
-        App::make($this->actionClass, [
-            'table' => $table,
-            'config' => $config,
-        ])->handle();
+        App::make($this->actionClass, $this->data($request))->handle();
     }
 }
