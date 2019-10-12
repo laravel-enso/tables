@@ -17,26 +17,21 @@ class Sort
 
     public function handle()
     {
-        $this->config->columns()->each(function ($column, $index) {
-            $meta = $this->config->columns()[$index]->get('meta');
-
-            if ($meta->get('sortable') && $meta->get('sort')) {
-                if ($meta->get('nullLast')) {
-                    $this->query->orderByRaw($this->rawSort($column));
-
-                    return;
-                }
-
-                $this->query->orderBy(
-                    $column->get('data'), $column->get('meta')->get('sort')
-                );
-            }
-        });
+        $this->config->columns()
+            ->filter(function ($column) {
+                return $column->get('meta')->get('sortable')
+                    && $column->get('meta')->get('sort');
+            })->each(function ($column, $index) {
+                $this->query->orderByRaw($this->rawSort($column));
+            });
     }
 
     private function rawSort($column)
     {
-        return "({$column->get('data')} IS NULL),"
-            ."{$column->get('data')} {$column->get('meta')->get('sort')}";
+        $sort = "{$column->get('data')} {$column->get('meta')->get('sort')}";
+
+        return $column->get('meta')->get('nullLast')
+            ? "({$column->get('data')} IS NULL), ".$sort
+            : $sort;
     }
 }

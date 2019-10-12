@@ -4,8 +4,6 @@ namespace LaravelEnso\Tables\app\Services\Data;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Template;
-use LaravelEnso\Tables\app\Services\Data\Request;
-use LaravelEnso\Tables\app\Services\Data\Computors;
 
 class Config
 {
