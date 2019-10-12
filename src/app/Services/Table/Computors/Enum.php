@@ -2,6 +2,9 @@
 
 namespace LaravelEnso\Tables\app\Services\Table\Computors;
 
+use ReflectionClass;
+use LaravelEnso\Enums\app\Services\Enum as EnsoEnum;
+
 class Enum
 {
     private static $columns;
@@ -23,7 +26,9 @@ class Enum
     public static function columns($columns)
     {
         self::$columns = $columns->filter(function ($column) {
-            return $column->has('enum');
+            return $column->has('enum')
+                && (new ReflectionClass($column->get('enum')))
+                    ->isSubclassOf(EnsoEnum::class);
         });
     }
 }
