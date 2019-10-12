@@ -18,6 +18,6 @@ trait ProvidesData
         $template = (new TemplateLoader($table))->handle();
         $config = new Config($request, $template);
 
-        return [$table, $config];
+        return ['table' => $table, 'config' => $config];
     }
 }

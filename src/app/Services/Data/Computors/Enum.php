@@ -18,12 +18,8 @@ class Enum implements ComputesColumns
     public static function handle($row)
     {
         foreach (self::$columns as $column) {
-            $class = $column->get('enum');
-            $enum = new $class();
-
-            if ($row[$column->get('name')] !== null) {
-                $row[$column->get('name')] = $enum::get($row[$column->get('name')]);
-            }
+            $row[$column->get('name')] = $column
+                ->get('enum')::get($row[$column->get('name')]);
         }
 
         return $row;
