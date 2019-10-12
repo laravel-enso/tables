@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\app\Services\Data;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Contracts\ComputesColumns;
 use LaravelEnso\Tables\app\Exceptions\ComputorException;
 use LaravelEnso\Tables\app\Services\Data\Computors\Date;
