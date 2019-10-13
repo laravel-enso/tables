@@ -4,6 +4,7 @@ namespace LaravelEnso\Tables\app\Services\Data;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use LaravelEnso\Tables\app\Exceptions\FilterException;
 use LaravelEnso\Tables\app\Services\Data\Filters\Filter;
 use LaravelEnso\Tables\app\Services\Data\Filters\Search;
 use LaravelEnso\Tables\app\Services\Data\Filters\Interval;
