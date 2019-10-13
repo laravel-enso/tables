@@ -34,7 +34,7 @@ class Filter extends BaseFilter
 
     private function isValid($value)
     {
-        return ! collect([null, ''])->containsStrict($value);
+        return ! collect([null, ''])->containsStrict($value)
             && (! $value instanceof Collection || $value->isNotEmpty());
     }
 }
