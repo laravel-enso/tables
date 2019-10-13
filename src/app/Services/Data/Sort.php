@@ -22,16 +22,17 @@ class Sort
                 return $column->get('meta')->get('sortable')
                     && $column->get('meta')->get('sort');
             })->each(function ($column, $index) {
-                $this->query->orderByRaw($this->rawSort($column));
+                return $column->get('meta')->get('nullLast')
+                    ? $this->query->orderByRaw($this->rawSort($column))
+                    : $this->query->orderBy(
+                        $column->get('data'), $column->get('meta')->get('sort')
+                    );
             });
     }
 
     private function rawSort($column)
     {
-        $sort = "{$column->get('data')} {$column->get('meta')->get('sort')}";
-
-        return $column->get('meta')->get('nullLast')
-            ? "({$column->get('data')} IS NULL), ".$sort
-            : $sort;
+        return "({$column->get('data')} IS NULL),"
+            ."{$column->get('data')} {$column->get('meta')->get('sort')}";
     }
 }
