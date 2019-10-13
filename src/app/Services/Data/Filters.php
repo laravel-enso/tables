@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\app\Services\Data;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use LaravelEnso\Tables\app\Exceptions\FilterException;
 use LaravelEnso\Tables\app\Services\Data\Filters\Filter;
@@ -26,25 +27,16 @@ class Filters extends BaseFilter
 
     public function applies(): bool
     {
-        return collect(self::$defaultFilters)
-            ->merge($this->needsCustomFiltering() ? self::$customFilters : null)
-            ->first(function ($filter) {
-                return $this->filter($filter)->applies();
-            }) !== null;
+        return $this->applicable()->first(function ($filter) {
+            return $this->filter($filter)->applies();
+        }) !== null;
     }
 
     public function handle(): void
     {
-        collect(self::$defaultFilters)
-            ->each(function ($filter) {
-                $this->apply($filter);
-            });
-
-        if ($this->needsCustomFiltering()) {
-            collect(self::$customFilters)->each(function ($filter) {
-                $this->apply($filter);
-            });
-        }
+        $this->applicable()->each(function ($filter) {
+            $this->apply($filter);
+        });
     }
 
     public static function filters($filters)
@@ -84,5 +76,11 @@ class Filters extends BaseFilter
     private function needsCustomFiltering()
     {
         return $this->table instanceof TableCustomFilter;
+    }
+
+    private function applicable(): Collection
+    {
+        return collect(self::$defaultFilters)
+            ->merge($this->needsCustomFiltering() ? self::$customFilters : null);
     }
 }

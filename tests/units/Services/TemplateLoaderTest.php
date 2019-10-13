@@ -1,6 +1,5 @@
 <?php
 
-use Config;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;

@@ -18,6 +18,7 @@ trait SetUp
     private $testModel;
     private $table;
     private $config;
+    private $query;
 
     protected function setUp(): void
     {
@@ -31,7 +32,7 @@ trait SetUp
         Route::getRoutes()->refreshNameLookups();
 
         TestModel::createTable();
-        
+
         $this->testModel = $this->createTestModel();
 
         $columns = $filters = $intervals = $params = [];
@@ -47,12 +48,14 @@ trait SetUp
             'data' => 'name',
             'meta' => ['searchable' => true],
         ]));
-        
+
         $this->table = new TestTable();
 
         $template = (new Template())->build($this->table);
 
         $this->config = new Config($request, $template);
+
+        $this->query = $this->table->query();
     }
 
     protected function createTestModel()

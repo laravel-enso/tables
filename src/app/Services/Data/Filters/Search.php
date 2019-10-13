@@ -9,7 +9,8 @@ class Search extends BaseFilter
 {
     public function applies(): bool
     {
-        return $this->config->meta()->filled('search');
+        return $this->config->meta()->filled('search')
+            && $this->searchable()->isNotEmpty();
     }
 
     public function handle()
@@ -23,25 +24,23 @@ class Search extends BaseFilter
 
     private function searchArguments()
     {
+        $search = $this->config->meta()->get('search');
+
         return $this->config->meta()->get('searchMode') === 'full'
-            ? collect(
-                    explode(' ', $this->config->meta()->get('search'))
-                )->filter()
-            : collect($this->config->meta()->get('search'));
+            ? collect(explode(' ', $search))->filter()
+            : collect($search);
     }
 
     private function match($query, $argument)
     {
-        $this->config->columns()->each(function ($column) use ($query, $argument) {
-            if ($column->get('meta')->get('searchable')) {
-                return $this->isNested($column->get('name'))
-                    ? $this->whereHasRelation($query, $column->get('data'), $argument)
-                    : $query->orWhere(
-                        $column->get('data'),
-                        $this->config->get('comparisonOperator'),
-                        $this->wildcards($argument)
-                    );
-            }
+        $this->searchable()->each(function ($column) use ($query, $argument) {
+            return $this->isNested($column->get('name'))
+                ? $this->whereHasRelation($query, $column->get('data'), $argument)
+                : $query->orWhere(
+                    $column->get('data'),
+                    $this->config->get('comparisonOperator'),
+                    $this->wildcards($argument)
+                );
         });
     }
 
@@ -78,6 +77,13 @@ class Search extends BaseFilter
             default:
                 throw QueryException::unknownSearchMode();
         }
+    }
+
+    private function searchable()
+    {
+        return $this->config->columns()->filter(function ($column) {
+            return $column->get('meta')->get('searchable');
+        });
     }
 
     private function isNested($attribute)

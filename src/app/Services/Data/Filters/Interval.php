@@ -8,12 +8,10 @@ class Interval extends BaseFilter
 {
     public function applies(): bool
     {
-        $empty = collect([null, '']);
-
-        return $this->config->intervals()->first(function ($interval) use ($empty) {
-            return $interval->first(function ($value) use ($empty) {
-                return ! $empty->contains($value->get('min'))
-                    || ! $empty->contains($value->get('max'));
+        return $this->config->intervals()->first(function ($interval) {
+            return $interval->first(function ($value) {
+                return $this->isValid($value->get('min'))
+                    || $this->isValid($value->get('max'));
             }) !== null;
         }) !== null;
     }
@@ -32,7 +30,7 @@ class Interval extends BaseFilter
 
     private function setMinLimit($table, $column, $value)
     {
-        if ($value->get('min') !== null) {
+        if ($this->isValid($value->get('min'))) {
             $this->query->where(
                 $table.'.'.$column, '>=', $this->value($value, 'min')
             );
@@ -43,7 +41,7 @@ class Interval extends BaseFilter
 
     private function setMaxLimit($table, $column, $value)
     {
-        if ($value->get('max') !== null) {
+        if ($this->isValid($value->get('max'))) {
             $this->query->where(
                 $table.'.'.$column, '<=', $this->value($value, 'max')
             );
@@ -63,5 +61,10 @@ class Interval extends BaseFilter
                 $value->get('dateFormat') ?? config('enso.config.dateFormat'),
                 $value->get($bound)
             ) : null;
+    }
+
+    private function isValid($value)
+    {
+        return ! collect([null, ''])->containsStrict($value);
     }
 }
