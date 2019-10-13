@@ -29,7 +29,7 @@ class Filter extends BaseFilter
             return $filters->filter(function ($value, $column) {
                 return $this->isValid($value);
             });
-        })->filter->isNotEmpty();;
+        })->filter->isNotEmpty();
     }
 
     private function isValid($value)
