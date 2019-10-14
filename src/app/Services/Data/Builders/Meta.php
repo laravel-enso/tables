@@ -5,7 +5,6 @@ namespace LaravelEnso\Tables\app\Services\Data\Builders;
 use ReflectionClass;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Traits\TableCache;
 use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\Data\Filters;
 use LaravelEnso\Tables\app\Exceptions\CacheException;
@@ -132,7 +131,7 @@ class Meta
         if ($shouldCache) {
             $model = $this->query->getModel();
 
-            if (! collect((new ReflectionClass($model))->getTraits())->has(TableCache::class)) {
+            if (! (new ReflectionClass($model))->hasMethod('resetTableCache')) {
                 throw CacheException::missingTrait(get_class($model));
             }
         }
