@@ -71,7 +71,7 @@ class Template
             $model = (new ReflectionClass($table->query()->getModel()))
                 ->getShortName();
 
-            $template->set('model', Str::lower($model));
+            $template->set('model', Str::camel($model));
         }
 
         return $template;
