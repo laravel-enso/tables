@@ -60,8 +60,7 @@ class Meta
 
     private function setCount()
     {
-        $this->count = $this->cachedCount();
-        $this->filtered = null;
+        $this->filtered = $this->count = $this->cachedCount();
 
         return $this;
     }
