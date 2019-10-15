@@ -2,10 +2,8 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use Faker\Factory;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
@@ -51,7 +49,7 @@ class MetaTest extends TestCase
 
         $response = $this->requestResponse();
 
-        $this->assertEquals(null, $response->get('filtered'));
+        $this->assertEquals(1, $response->get('filtered'));
         $this->assertEquals(1, $response->get('count'));
     }
 
@@ -102,7 +100,7 @@ class MetaTest extends TestCase
 
         $this->assertFalse($response->get('fullRecordInfo'));
         $this->assertEquals(2, $response->get('count'));
-        $this->assertEquals(null, $response->get('filtered'));
+        $this->assertEquals(2, $response->get('filtered'));
     }
 
     private function requestResponse()
@@ -112,4 +110,3 @@ class MetaTest extends TestCase
         return new Obj($builder->toArray());
     }
 }
-
