@@ -58,9 +58,15 @@ class Interval extends BaseFilter
 
         return $value->get($bound)
             ? Carbon::createFromFormat(
-                $value->get('dateFormat') ?? config('enso.config.dateFormat'),
-                $value->get($bound)
+                $this->format($value), $value->get($bound)
             ) : null;
+    }
+
+    private function format($value)
+    {
+        return '!'.(
+            $value->get('dateFormat') ?? config('enso.config.dateFormat')
+        );
     }
 
     private function isValid($value)
