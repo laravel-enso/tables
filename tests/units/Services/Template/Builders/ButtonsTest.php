@@ -4,7 +4,6 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
 use Route;
 use Mockery;
-use App\User;
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Template\Builders\Buttons;
@@ -45,7 +44,7 @@ class ButtonsTest extends TestCase
     /** @test */
     public function cannot_build_when_user_cannot_access_to_route()
     {
-        $user = Mockery::mock(User::class)->makePartial();
+        $user = Mockery::mock(config('auth.providers.users.model'))->makePartial();
 
         $this->actingAs($user);
 
