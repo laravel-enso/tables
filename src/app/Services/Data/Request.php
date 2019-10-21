@@ -57,6 +57,10 @@ class Request
 
     private function decode($arg)
     {
+        if (is_array($arg)) {
+            return $arg;
+        }
+
         $argDecoded = json_decode($arg);
 
         return json_last_error() === JSON_ERROR_NONE
