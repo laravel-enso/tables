@@ -4,7 +4,6 @@ namespace LaravelEnso\Tables\app\Exports;
 
 use Illuminate\Http\File;
 use Illuminate\Support\Str;
-use LaravelEnso\Core\app\Models\User;
 use Illuminate\Support\Facades\Storage;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Fetcher;
@@ -27,7 +26,7 @@ class Excel
     private $filename;
     private $filePath;
 
-    public function __construct(string $class, array $request, User $user, $dataExport = null)
+    public function __construct(string $class, array $request, $user, $dataExport = null)
     {
         $this->user = $user;
         $this->dataExport = $dataExport;

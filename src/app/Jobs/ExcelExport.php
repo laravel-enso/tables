@@ -3,8 +3,7 @@
 namespace LaravelEnso\Tables\app\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Auth;
-use LaravelEnso\Core\app\Models\User;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use LaravelEnso\Tables\app\Exports\Excel;
@@ -20,7 +19,7 @@ class ExcelExport implements ShouldQueue
     private $tableClass;
     private $dataExport;
 
-    public function __construct(User $user, array $request, string $tableClass, $dataExport = null)
+    public function __construct($user, array $request, string $tableClass, $dataExport = null)
     {
         $this->user = $user;
         $this->request = $request;
