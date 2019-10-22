@@ -13,8 +13,40 @@ use LaravelEnso\Tables\app\Services\Template\Validator;
 
 class Template
 {
+    private $builder;
+    private $table;
     private $template;
     private $meta;
+
+    public function __construct(Table $table)
+    {
+        $this->table = $table;
+        $this->meta = new Obj();
+    }
+
+    public function load(Obj $template, Obj $meta)
+    {
+        $this->template = $template;
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    public function buildCacheable()
+    {
+        $this->template = $this->template();
+
+        $this->builder()->handleCacheable();
+
+        return $this;
+    }
+    
+    public function buildNonCacheable()
+    {
+        $this->builder()->handleNonCacheable();
+
+        return $this;
+    }
 
     public function toArray()
     {
@@ -40,35 +72,23 @@ class Template
         return $this->columns()[$index];
     }
 
-    public function build(Table $table)
-    {
-        $this->template = $this->template($table);
-        $this->meta = new Obj();
-
-        (new Builder($this->template, $this->meta))->handle();
-
-        return $this;
-    }
-
-    public function load(Obj $template, Obj $meta)
-    {
-        $this->template = $template;
-        $this->meta = $meta;
-
-        return $this;
-    }
-
     public function __call($method, $args)
     {
         return $this->template->{$method}(...$args);
     }
 
-    private function template($table)
+    private function builder()
     {
-        $template = $this->readJson($table->templatePath());
+        return $this->builder
+            ?? $this->builder = new Builder($this->template, $this->meta);
+    }
+
+    private function template()
+    {
+        $template = $this->readJson($this->table->templatePath());
 
         if (! $template->has('model')) {
-            $model = (new ReflectionClass($table->query()->getModel()))
+            $model = (new ReflectionClass($this->table->query()->getModel()))
                 ->getShortName();
 
             $template->set('model', Str::camel($model));

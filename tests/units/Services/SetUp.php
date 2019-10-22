@@ -51,7 +51,8 @@ trait SetUp
 
         $this->table = new TestTable();
 
-        $template = (new Template())->build($this->table);
+        $template = (new Template($this->table))->buildCacheable()
+            ->buildNonCacheable();
 
         $this->config = new Config($request, $template);
 

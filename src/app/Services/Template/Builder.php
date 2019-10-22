@@ -20,17 +20,20 @@ class Builder
         $this->meta = $meta;
     }
 
-    public function handle()
+    public function handleCacheable()
     {
         (new Structure($this->template, $this->meta))->build();
 
         (new Columns($this->template, $this->meta))->build();
 
-        (new Buttons($this->template, $this->meta))->build();
-
         (new Style($this->template))->build();
 
         (new Controls($this->template))->build();
+    }
+
+    public function handleNonCacheable()
+    {
+        (new Buttons($this->template, $this->meta))->build();
 
         $this->template->forget(['dataRouteSuffix', 'routePrefix']);
     }

@@ -41,7 +41,7 @@ class TemplateLoaderTest extends TestCase
 
         $cache = Cache::tags(['tag'])->get($this->cacheKey());
 
-        $template = (new Template())->load($cache['template'], $cache['meta']);
+        $template = (new Template($this->table))->load($cache['template'], $cache['meta']);
 
         $this->assertTemplate($template);
     }
@@ -78,7 +78,7 @@ class TemplateLoaderTest extends TestCase
 
         $cache = Cache::tags(['tag'])->get($this->cacheKey());
 
-        $template = (new Template())->load($cache['template'], $cache['meta']);
+        $template = (new Template($this->table))->load($cache['template'], $cache['meta']);
 
         $this->assertTemplate($template);
     }
