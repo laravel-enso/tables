@@ -2,8 +2,9 @@
     "routePrefix": "route.prefix", // required, the main segment of a named route
     "dataRouteSuffix": "read.suffix", // optional, the data read endpoint suffix that gets appended to the routePrefix param
     "name": "Table Name", //optional, the title for the table
-    "icon": "list-alt", //optional, expects a font awesome icon class
     "crtNo": true, // optional, shows the line number
+    "preview": true,
+    "flatten": false,
     "auth": false, //optional, if true, bypasses authentication
     "debounce": 100, //optional, the debounce ms limit for reloading table data
     "lengthMenu": [10, 15, 20, 25, 30], //optional, table pagination options. If given, it overwrites the value from config
