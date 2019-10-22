@@ -40,7 +40,7 @@ class TemplateLoader
     private function fromCache()
     {
         if (! $this->cache()->has($this->cacheKey())) {
-            return null;
+            return;
         }
 
         $this->cache = $this->cache()->get($this->cacheKey());

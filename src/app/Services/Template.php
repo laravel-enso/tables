@@ -40,7 +40,7 @@ class Template
 
         return $this;
     }
-    
+
     public function buildNonCacheable()
     {
         $this->builder()->handleNonCacheable();
