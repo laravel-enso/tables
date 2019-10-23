@@ -36,7 +36,6 @@ class Total
         $this->config->columns()
             ->filter(function ($column) {
                 return $column->get('meta')->get('total')
-                    || $column->get('meta')->get('customTotal')
                     || $column->get('meta')->get('rawTotal');
             })->each(function ($column) {
                 $this->total[$column->get('name')] = $column->get('meta')->get('rawTotal')
