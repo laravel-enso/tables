@@ -52,9 +52,15 @@ class Columns
     {
         $meta = $column->get('meta');
 
-        $meta->set('sort', $this->defaultSort($meta));
+        $defaultSort = $this->defaultSort($meta);
+
+        $meta->set('sort', $defaultSort);
 
         $meta->forget(['sort:ASC', 'sort:DESC']);
+
+        if ($defaultSort) {
+            $this->meta->set('sort', true);
+        }
 
         return $this;
     }
