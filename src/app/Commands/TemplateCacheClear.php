@@ -3,8 +3,8 @@
 namespace LaravelEnso\Tables\app\Commands;
 
 use Cache;
-use Illuminate\Console\Command;
 use Illuminate\Cache\TaggableStore;
+use Illuminate\Console\Command;
 
 class TemplateCacheClear extends Command
 {

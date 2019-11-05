@@ -3,10 +3,10 @@
 namespace LaravelEnso\Tables\app\Services\Template;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template\Validators\Route;
 use LaravelEnso\Tables\app\Services\Template\Validators\Buttons;
 use LaravelEnso\Tables\app\Services\Template\Validators\Columns;
 use LaravelEnso\Tables\app\Services\Template\Validators\Controls;
+use LaravelEnso\Tables\app\Services\Template\Validators\Route;
 use LaravelEnso\Tables\app\Services\Template\Validators\Structure;
 
 class Validator

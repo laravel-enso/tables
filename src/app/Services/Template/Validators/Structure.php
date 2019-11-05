@@ -3,8 +3,8 @@
 namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\TemplateException;
 use LaravelEnso\Tables\app\Attributes\Structure as Attributes;
+use LaravelEnso\Tables\app\Exceptions\TemplateException;
 
 class Structure
 {

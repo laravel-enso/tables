@@ -4,10 +4,10 @@ namespace LaravelEnso\Tables\app\Services\Data\Builders;
 
 use Illuminate\Support\Arr;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Data\Sort;
+use LaravelEnso\Tables\app\Services\Data\Computors;
 use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\Data\Filters;
-use LaravelEnso\Tables\app\Services\Data\Computors;
+use LaravelEnso\Tables\app\Services\Data\Sort;
 
 class Data
 {

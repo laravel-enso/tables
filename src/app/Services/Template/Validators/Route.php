@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Support\Facades\Route as RouteFacade;
+use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Exceptions\RouteException;
 
 class Route

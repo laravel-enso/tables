@@ -3,16 +3,16 @@
 namespace LaravelEnso\Tables\app\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\App;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use LaravelEnso\Tables\app\Exports\Excel;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Bus\Dispatchable;
-use LaravelEnso\Tables\app\Services\Data\Config;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use LaravelEnso\Tables\app\Contracts\AuthenticatesOnExport;
+use LaravelEnso\Tables\app\Exports\Excel;
+use LaravelEnso\Tables\app\Services\Data\Config;
 
 class ExcelExport implements ShouldQueue
 {

@@ -2,12 +2,12 @@
 
 namespace LaravelEnso\Tables\app\Services\Data\Builders;
 
-use ReflectionClass;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
+use LaravelEnso\Tables\app\Exceptions\CacheException;
 use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\Data\Filters;
-use LaravelEnso\Tables\app\Exceptions\CacheException;
+use ReflectionClass;
 
 class Meta
 {
