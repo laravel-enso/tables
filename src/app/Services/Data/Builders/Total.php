@@ -54,8 +54,10 @@ class Total
             throw MetaException::missingInterface();
         }
 
-        return (clone $this->query)->select(
-            DB::raw("{$this->table->rawTotal($column)} as {$column->get('name')}")
-        )->first()->{$column->get('name')};
+        return optional(
+            (clone $this->query)->select(
+                DB::raw("{$this->table->rawTotal($column)} as {$column->get('name')}")
+            )->first()
+        )->{$column->get('name')} ?? 0;
     }
 }
