@@ -43,9 +43,7 @@ class IntervalTest extends TestCase
     public function can_use_date_interval()
     {
         $intervals = new Obj(['created_at' => [
-            'dbDateFormat' => 'Y-m-d',
-            'dateFormat' => 'Y-m-d',
-            'min' => $this->testModel->created_at->subDays(1)->format('Y-m-d'),
+            'min' => $this->testModel->created_at->subDays(360)->format('Y-m-d'),
             'max' => $this->testModel->created_at->addDays(1)->format('Y-m-d'),
         ]]);
 

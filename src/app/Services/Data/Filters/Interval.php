@@ -21,52 +21,22 @@ class Interval extends BaseFilter
         $this->query->where(function () {
             $this->config->intervals()->each(function ($interval, $table) {
                 collect($interval)->each(function ($value, $column) use ($table) {
-                    $this->setMinLimit($table, $column, $value)
-                        ->setMaxLimit($table, $column, $value);
+                    $this->limit($table, $column, $value, 'min', '>=')
+                        ->limit($table, $column, $value, 'max', '<=');
                 });
             });
         });
     }
 
-    private function setMinLimit($table, $column, $value)
+    private function limit($table, $column, $value, $bound, $operator)
     {
-        if ($this->isValid($value->get('min'))) {
+        if ($this->isValid($value->get($bound))) {
             $this->query->where(
-                $table.'.'.$column, '>=', $this->value($value, 'min')
+                $table.'.'.$column, $operator, $value->get($bound)
             );
         }
 
         return $this;
-    }
-
-    private function setMaxLimit($table, $column, $value)
-    {
-        if ($this->isValid($value->get('max'))) {
-            $this->query->where(
-                $table.'.'.$column, '<=', $this->value($value, 'max')
-            );
-        }
-
-        return $this;
-    }
-
-    private function value($value, $bound)
-    {
-        if (! $value->has('dateFormat')) {
-            return $value->get($bound);
-        }
-
-        return $value->get($bound)
-            ? Carbon::createFromFormat(
-                $this->format($value), $value->get($bound)
-            ) : null;
-    }
-
-    private function format($value)
-    {
-        return '!'.(
-            $value->get('dateFormat') ?? config('enso.config.dateTimeFormat')
-        );
     }
 
     private function isValid($value)
