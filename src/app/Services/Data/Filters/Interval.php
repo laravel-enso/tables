@@ -2,8 +2,6 @@
 
 namespace LaravelEnso\Tables\app\Services\Data\Filters;
 
-use Carbon\Carbon;
-
 class Interval extends BaseFilter
 {
     public function applies(): bool
