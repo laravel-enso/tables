@@ -4,8 +4,8 @@ namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\ButtonException;
 use LaravelEnso\Tables\app\Attributes\Button as Attributes;
+use LaravelEnso\Tables\app\Exceptions\ButtonException;
 
 class Buttons
 {

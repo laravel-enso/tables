@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Tables\app\Exceptions;
 
-use LaravelEnso\Tables\app\Attributes\Button;
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
+use LaravelEnso\Tables\app\Attributes\Button;
 
 class ButtonException extends EnsoException
 {

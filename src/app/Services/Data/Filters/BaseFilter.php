@@ -3,8 +3,8 @@
 namespace LaravelEnso\Tables\app\Services\Data\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Contracts\Filter;
+use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Services\Data\Config;
 
 abstract class BaseFilter implements Filter

@@ -2,16 +2,16 @@
 
 namespace LaravelEnso\Tables\app\Exports;
 
-use Illuminate\Http\File;
-use Illuminate\Support\Str;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Support\Facades\Storage;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Data\Config;
-use LaravelEnso\Tables\app\Services\Data\Fetcher;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Notifications\ExportDoneNotification;
+use LaravelEnso\Tables\app\Services\Data\Config;
+use LaravelEnso\Tables\app\Services\Data\Fetcher;
 
 class Excel
 {

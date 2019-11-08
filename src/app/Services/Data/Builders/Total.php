@@ -2,12 +2,12 @@
 
 namespace LaravelEnso\Tables\app\Services\Data\Builders;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Contracts\Table;
+use Illuminate\Support\Facades\DB;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
-use LaravelEnso\Tables\app\Services\Data\Config;
+use LaravelEnso\Tables\app\Contracts\Table;
 use LaravelEnso\Tables\app\Exceptions\MetaException;
+use LaravelEnso\Tables\app\Services\Data\Config;
 
 class Total
 {

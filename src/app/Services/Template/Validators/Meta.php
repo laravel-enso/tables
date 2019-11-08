@@ -4,8 +4,8 @@ namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\MetaException;
 use LaravelEnso\Tables\app\Attributes\Column as Attributes;
+use LaravelEnso\Tables\app\Exceptions\MetaException;
 
 class Meta
 {

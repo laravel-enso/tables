@@ -3,11 +3,11 @@
 namespace LaravelEnso\Tables\app\Services\Template;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template\Builders\Style;
 use LaravelEnso\Tables\app\Services\Template\Builders\Buttons;
 use LaravelEnso\Tables\app\Services\Template\Builders\Columns;
 use LaravelEnso\Tables\app\Services\Template\Builders\Controls;
 use LaravelEnso\Tables\app\Services\Template\Builders\Structure;
+use LaravelEnso\Tables\app\Services\Template\Builders\Style;
 
 class Builder
 {

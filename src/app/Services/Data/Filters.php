@@ -4,14 +4,14 @@ namespace LaravelEnso\Tables\app\Services\Data;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use LaravelEnso\Tables\app\Exceptions\FilterException;
-use LaravelEnso\Tables\app\Services\Data\Filters\Filter;
-use LaravelEnso\Tables\app\Services\Data\Filters\Search;
-use LaravelEnso\Tables\app\Services\Data\Filters\Interval;
+use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
 use LaravelEnso\Tables\app\Contracts\Filter as TableFilter;
+use LaravelEnso\Tables\app\Exceptions\FilterException;
 use LaravelEnso\Tables\app\Services\Data\Filters\BaseFilter;
 use LaravelEnso\Tables\app\Services\Data\Filters\CustomFilter;
-use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
+use LaravelEnso\Tables\app\Services\Data\Filters\Filter;
+use LaravelEnso\Tables\app\Services\Data\Filters\Interval;
+use LaravelEnso\Tables\app\Services\Data\Filters\Search;
 
 class Filters extends BaseFilter
 {

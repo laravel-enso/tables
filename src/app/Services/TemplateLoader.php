@@ -2,11 +2,11 @@
 
 namespace LaravelEnso\Tables\app\Services;
 
-use Illuminate\Support\Str;
 use Illuminate\Cache\TaggableStore;
 use Illuminate\Support\Facades\Cache;
-use LaravelEnso\Tables\app\Contracts\Table;
+use Illuminate\Support\Str;
 use LaravelEnso\Tables\app\Contracts\DynamicTemplate;
+use LaravelEnso\Tables\app\Contracts\Table;
 
 class TemplateLoader
 {

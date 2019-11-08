@@ -3,9 +3,9 @@
 namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Tables\app\Attributes\Column as Attributes;
 use LaravelEnso\Tables\app\Attributes\Style;
 use LaravelEnso\Tables\app\Exceptions\ColumnException;
-use LaravelEnso\Tables\app\Attributes\Column as Attributes;
 
 class Columns
 {

@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Tables\app\Contracts;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
 use Illuminate\Database\Eloquent\Builder;
+use LaravelEnso\Helpers\app\Classes\Obj;
 
 interface CustomFilter
 {
