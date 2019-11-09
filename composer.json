@@ -22,7 +22,7 @@
         "box/spout": "3.0.*",
         "laravel/framework": "^6.0",
         "laravel-enso/enums": "1.1.*",
-        "laravel-enso/helpers": "1.13.*"
+        "laravel-enso/helpers": "1.14.*"
     },
     "autoload": {
         "psr-4": {
