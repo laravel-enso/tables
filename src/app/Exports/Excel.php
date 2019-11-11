@@ -192,7 +192,10 @@ class Excel
     {
         return $data->map(function ($row) {
             return $this->row($this->columns->map(function ($column) use ($row) {
-                return $row[$column->get('name')];
+                return collect(explode('.', $column->get('name')))
+                    ->reduce(function ($value, $segment) {
+                        return $value[$segment];
+                    }, $row);
             }));
         })->toArray();
     }
