@@ -157,7 +157,7 @@ class Excel
             ?? $this->filename = preg_replace(
                 '/[^A-Za-z0-9_.-]/',
                 '_',
-                Str::title(Str::snake($this->config->get('name')))
+                __(Str::title(Str::snake($this->config->get('name'))))
                 .'_'.__('Table_Report')
             ).'.'.self::Extension;
     }
