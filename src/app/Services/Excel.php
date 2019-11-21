@@ -88,9 +88,9 @@ class Excel
 
     private function type()
     {
-        return Str::title(
+        return __(Str::title(
             Str::snake($this->config->get('name'))
-        );
+        ));
     }
 
     private function isEnso()
