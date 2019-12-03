@@ -17,7 +17,7 @@ class Search extends BaseFilter
     {
         $this->searchArguments()->each(function ($argument) {
             $this->query->where(function ($query) use ($argument) {
-                $this->match($query, $argument);
+                $this->matchArgument($query, $argument);
             });
         });
     }
@@ -31,37 +31,29 @@ class Search extends BaseFilter
             : collect($search);
     }
 
-    private function match($query, $argument)
+    private function matchArgument($query, $argument)
     {
         $this->searchable()->each(function ($column) use ($query, $argument) {
-            return $this->isNested($column->get('name'))
-                ? $this->whereHasRelation($query, $column->get('data'), $argument)
-                : $query->orWhere(
-                    $column->get('data'),
-                    $this->config->get('comparisonOperator'),
-                    $this->wildcards($argument)
-                );
+            $query->orWhere(function ($query) use ($column, $argument) {
+                $this->matchAttribute($query, $column->get('data'), $argument);
+            });
         });
     }
 
-    private function whereHasRelation($query, $attribute, $argument)
+    private function matchAttribute($query, $attribute, $argument)
     {
-        if (! $this->isNested($attribute)) {
-            $query->where(
-                $attribute,
-                $this->config->get('comparisonOperator'),
-                $this->wildcards($argument)
-            );
+        $isNested = $this->isNested($attribute);
 
-            return;
-        }
+        $query->when($isNested, function ($query) use ($attribute, $argument) {
+            $attributes = collect(explode('.', $attribute));
 
-        $attributes = collect(explode('.', $attribute));
-
-        $query->orWhere(function ($query) use ($attributes, $argument) {
             $query->whereHas($attributes->shift(), function ($query) use ($attributes, $argument) {
-                $this->whereHasRelation($query, $attributes->implode('.'), $argument);
+                $this->matchAttribute($query, $attributes->implode('.'), $argument);
             });
+        })->when(! $isNested, function ($query) use ($attribute, $argument) {
+            $query->where(
+                $attribute, $this->config->get('comparisonOperator'), $this->wildcards($argument)
+            );
         });
     }
 
