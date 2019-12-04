@@ -35,14 +35,14 @@ class Search extends BaseFilter
     {
         $this->searchable()->each(function ($column) use ($query, $argument) {
             $query->orWhere(function ($query) use ($column, $argument) {
-                $this->matchAttribute($query, $column->get('data'), $argument);
+                $this->matchAttribute($query, $column->get('data'), $argument, $column->get('name'));
             });
         });
     }
 
-    private function matchAttribute($query, $attribute, $argument)
+    private function matchAttribute($query, $attribute, $argument, $name = null)
     {
-        $isNested = $this->isNested($attribute);
+        $isNested = $this->isNested($name ?? $attribute);
 
         $query->when($isNested, function ($query) use ($attribute, $argument) {
             $attributes = collect(explode('.', $attribute));
