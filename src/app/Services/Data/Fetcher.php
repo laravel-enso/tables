@@ -39,10 +39,11 @@ class Fetcher
     public function next()
     {
         if (! $this->ready) {
-            $this->setOptimalChunk();
+            $this->optimalChunk();
         }
 
-        $this->data = $this->fetch($this->page++);
+        $this->data = $this->fetch($this->page);
+        $this->page++;
     }
 
     public function valid()
@@ -59,7 +60,7 @@ class Fetcher
         return (new Data($this->table, $this->config))->data();
     }
 
-    private function setOptimalChunk()
+    private function optimalChunk()
     {
         $this->config->meta()->set(
             'length', OptimalChunk::get($this->count())

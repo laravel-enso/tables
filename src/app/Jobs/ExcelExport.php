@@ -18,13 +18,13 @@ class ExcelExport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $timeout;
+    public $queue;
+
     private $user;
     private $config;
     private $tableClass;
     private $dataExport;
-
-    public $timeout;
-    public $queue;
 
     public function __construct(User $user, Config $config, string $tableClass, $dataExport = null)
     {

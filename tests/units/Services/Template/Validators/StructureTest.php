@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\TemplateException;
+use LaravelEnso\Tables\app\Exceptions\Template as Exception;
 use LaravelEnso\Tables\app\Services\Template\Validators\Structure;
 
 class StructureTest extends TestCase
@@ -26,9 +26,9 @@ class StructureTest extends TestCase
     {
         $this->template->forget('routePrefix');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(TemplateException::missingAttributes('routePrefix')->getMessage());
+        $this->expectExceptionMessage(Exception::missingAttributes('routePrefix')->getMessage());
 
         $this->validate();
     }
@@ -38,9 +38,9 @@ class StructureTest extends TestCase
     {
         $this->template->set('wrong_attributes', 'wrong');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(TemplateException::unknownAttributes('wrong_attributes')->getMessage());
+        $this->expectExceptionMessage(Exception::unknownAttributes('wrong_attributes')->getMessage());
 
         $this->validate();
     }
@@ -50,9 +50,9 @@ class StructureTest extends TestCase
     {
         $this->template->set('lengthMenu', 'string');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(TemplateException::invalidLengthMenu()->getMessage());
+        $this->expectExceptionMessage(Exception::invalidLengthMenu()->getMessage());
 
         $this->validate();
     }
@@ -62,9 +62,9 @@ class StructureTest extends TestCase
     {
         $this->template->set('debounce', 'string');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(TemplateException::invalidDebounce()->getMessage());
+        $this->expectExceptionMessage(Exception::invalidDebounce()->getMessage());
 
         $this->validate();
     }
@@ -74,9 +74,9 @@ class StructureTest extends TestCase
     {
         $this->template->set('method', 'patch');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(TemplateException::invalidMethod()->getMessage());
+        $this->expectExceptionMessage(Exception::invalidMethod()->getMessage());
 
         $this->validate();
     }
@@ -86,9 +86,9 @@ class StructureTest extends TestCase
     {
         $this->template->set('selectable', 'string');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(TemplateException::invalidSelectable()->getMessage());
+        $this->expectExceptionMessage(Exception::invalidSelectable()->getMessage());
 
         $this->validate();
     }
@@ -98,9 +98,9 @@ class StructureTest extends TestCase
     {
         $this->template->set('comparisonOperator', 'I_DONT_LIKE');
 
-        $this->expectException(TemplateException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(TemplateException::invalidComparisonOperator()->getMessage());
+        $this->expectExceptionMessage(Exception::invalidComparisonOperator()->getMessage());
 
         $this->validate();
     }

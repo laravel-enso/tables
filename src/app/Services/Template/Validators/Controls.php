@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\ControlException;
+use LaravelEnso\Tables\app\Exceptions\Control as Exception;
 
 class Controls
 {
@@ -32,7 +32,7 @@ class Controls
             })->isNotEmpty();
 
         if ($formattedWrong) {
-            throw ControlException::invalidFormat();
+            throw Exception::invalidFormat();
         }
 
         return $this;
@@ -43,7 +43,7 @@ class Controls
         $diff = $this->controls->diff($this->defaults);
 
         if ($diff->isNotEmpty()) {
-            throw ControlException::undefined(
+            throw Exception::undefined(
                 $diff->implode('", "')
             );
         }

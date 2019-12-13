@@ -26,7 +26,7 @@ class Filter extends BaseFilter
     private function filters()
     {
         return $this->config->filters()->map(function ($filters) {
-            return $filters->filter(function ($value, $column) {
+            return $filters->filter(function ($value) {
                 return $this->isValid($value);
             });
         })->filter->isNotEmpty();

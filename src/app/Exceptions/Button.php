@@ -3,9 +3,9 @@
 namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
-use LaravelEnso\Tables\app\Attributes\Button;
+use LaravelEnso\Tables\app\Attributes\Button as ButtonAttributes;
 
-class ButtonException extends EnsoException
+class Button extends EnsoException
 {
     public static function wrongFormat()
     {
@@ -24,7 +24,7 @@ class ButtonException extends EnsoException
     {
         return new static(__(
             'The following attributes are mandatory for buttons: ":attrs"',
-            ['attrs' => collect(Button::Mandatory)->implode('", "')]
+            ['attrs' => collect(ButtonAttributes::Mandatory)->implode('", "')]
         ));
     }
 
@@ -32,7 +32,7 @@ class ButtonException extends EnsoException
     {
         return new static(__(
             'The following optional attributes are allowed for buttons: ":attrs"',
-            ['attrs' => collect(Button::Optional)->implode('", "')]
+            ['attrs' => collect(ButtonAttributes::Optional)->implode('", "')]
         ));
     }
 
@@ -54,7 +54,7 @@ class ButtonException extends EnsoException
     {
         return new static(__(
             'The following actions are allowed for buttons: ":actions"',
-            ['actions' => collect(Button::Actions)->implode('", "')]
+            ['actions' => collect(ButtonAttributes::Actions)->implode('", "')]
         ));
     }
 

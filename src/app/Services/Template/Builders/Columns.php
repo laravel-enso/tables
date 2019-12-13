@@ -33,13 +33,13 @@ class Columns
     private function computeMeta($column)
     {
         if (! $column->has('meta')) {
-            $column->set('meta', new Obj);
+            $column->set('meta', new Obj());
         }
 
         $meta = collect(Attributes::Meta)
             ->reduce(function ($meta, $attribute) use ($column) {
                 return $meta->set($attribute, $column->get('meta')->contains($attribute));
-            }, new Obj);
+            }, new Obj());
 
         $meta->set('visible', true);
         $meta->set('hidden', false);

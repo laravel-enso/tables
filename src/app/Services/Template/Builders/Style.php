@@ -43,6 +43,6 @@ class Style
             return $styles->set(
                 $style, $this->defaultStyle->get('mapping')->get($style)
             );
-        }, new Obj);
+        }, new Obj());
     }
 }

@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\app\Services\Template\Validators;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Attributes\Column as Attributes;
 use LaravelEnso\Tables\app\Attributes\Style;
-use LaravelEnso\Tables\app\Exceptions\ColumnException;
+use LaravelEnso\Tables\app\Exceptions\Column as Exception;
 
 class Columns
 {
@@ -39,7 +39,7 @@ class Columns
                 return ! $column instanceof Obj;
             }) !== null
         ) {
-            throw ColumnException::wrongFormat();
+            throw Exception::wrongFormat();
         }
     }
 
@@ -49,7 +49,7 @@ class Columns
             ->diff($column->keys());
 
         if ($diff->isNotEmpty()) {
-            throw ColumnException::missingAttributes(
+            throw Exception::missingAttributes(
                 $diff->implode('", "')
             );
         }
@@ -65,7 +65,7 @@ class Columns
         $diff = $column->keys()->diff($attributes);
 
         if ($diff->isNotEmpty()) {
-            throw ColumnException::unknownAttributes(
+            throw Exception::unknownAttributes(
                 $diff->implode('", "')
             );
         }
@@ -86,7 +86,7 @@ class Columns
     {
         if ($column->has('enum')) {
             if (! class_exists($column->get('enum'))) {
-                throw ColumnException::enumNotFound(
+                throw Exception::enumNotFound(
                     $column->get('enum')
                 );
             }
@@ -98,7 +98,7 @@ class Columns
     private function checkTooltip($column)
     {
         if (property_exists($column, 'tooltip') && ! is_string($column->tooltip)) {
-            throw ColumnException::invalidTooltip(
+            throw Exception::invalidTooltip(
                 $column->get('name')
             );
         }
@@ -109,7 +109,7 @@ class Columns
     private function checkMoney($column)
     {
         if (property_exists($column, 'money') && ! is_object($column->money)) {
-            throw ColumnException::invalidMoney(
+            throw Exception::invalidMoney(
                 $column->get('name')
             );
         }
@@ -120,7 +120,7 @@ class Columns
     private function checkClass($column)
     {
         if (property_exists($column, 'class') && ! is_string($column->class)) {
-            throw ColumnException::invalidClass(
+            throw Exception::invalidClass(
                 $column->get('name')
             );
         }
@@ -132,7 +132,7 @@ class Columns
     {
         if (property_exists($column, 'align')
             && ! collect(Style::Align)->contains($column->align)) {
-            throw ColumnException::invalidAlign(
+            throw Exception::invalidAlign(
                 $column->get('name')
             );
         }

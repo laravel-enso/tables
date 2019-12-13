@@ -4,5 +4,5 @@ namespace LaravelEnso\Tables\app\Attributes;
 
 class Controls
 {
-    const List = ['columns', 'length', 'reload', 'reset', 'style'];
+    public const List = ['columns', 'length', 'reload', 'reset', 'style'];
 }

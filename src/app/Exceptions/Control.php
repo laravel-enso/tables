@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
 
-class ControlException extends EnsoException
+class Control extends EnsoException
 {
     public static function invalidFormat()
     {

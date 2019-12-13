@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use LaravelEnso\Tables\app\Contracts\RawTotal;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Exceptions\MetaException;
+use LaravelEnso\Tables\app\Exceptions\Meta as Exception;
 use LaravelEnso\Tables\app\Services\Data\Config;
 
 class Total
@@ -51,7 +51,7 @@ class Total
     private function rawTotal($column)
     {
         if (! $this->table instanceof RawTotal) {
-            throw MetaException::missingInterface();
+            throw Exception::missingInterface();
         }
 
         return optional(

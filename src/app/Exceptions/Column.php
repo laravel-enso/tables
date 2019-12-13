@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
 
-class ColumnException extends EnsoException
+class Column extends EnsoException
 {
     public static function wrongFormat()
     {

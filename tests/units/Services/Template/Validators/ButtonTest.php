@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 use Route;
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\ButtonException;
+use LaravelEnso\Tables\app\Exceptions\Button as Exception;
 use LaravelEnso\Tables\app\Attributes\Button as Attributes;
 use LaravelEnso\Tables\app\Services\Template\Validators\Buttons;
 
@@ -28,9 +28,9 @@ class ButtonTest extends TestCase
     {
         $this->template->get('buttons')->first()->forget('type');
 
-        $this->expectException(ButtonException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(ButtonException::missingAttributes()->getMessage());
+        $this->expectExceptionMessage(Exception::missingAttributes()->getMessage());
 
         $this->validate();
     }
@@ -40,9 +40,9 @@ class ButtonTest extends TestCase
     {
         $this->template->get('buttons')->first()->set('wrong_attribute', 'wrong');
 
-        $this->expectException(ButtonException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(ButtonException::unknownAttributes()->getMessage());
+        $this->expectExceptionMessage(Exception::unknownAttributes()->getMessage());
 
         $this->validate();
     }
@@ -52,9 +52,9 @@ class ButtonTest extends TestCase
     {
         $this->template->get('buttons')->first()->set('action', true);
 
-        $this->expectException(ButtonException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(ButtonException::missingRoute()->getMessage());
+        $this->expectExceptionMessage(Exception::missingRoute()->getMessage());
 
         $this->validate();
     }
@@ -67,9 +67,9 @@ class ButtonTest extends TestCase
         $button->set('action', 'ajax');
         $button->set('fullRoute', '/');
 
-        $this->expectException(ButtonException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(ButtonException::missingMethod()->getMessage());
+        $this->expectExceptionMessage(Exception::missingMethod()->getMessage());
 
         $this->validate();
     }
@@ -83,9 +83,9 @@ class ButtonTest extends TestCase
         $button->set('fullRoute', '/');
         $button->set('method', 'post');
 
-        $this->expectException(ButtonException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(ButtonException::routeNotFound('/')->getMessage());
+        $this->expectExceptionMessage(Exception::routeNotFound('/')->getMessage());
 
         $this->validate();
     }
@@ -99,9 +99,9 @@ class ButtonTest extends TestCase
         $button->set('fullRoute', $this->createRoute());
         $button->set('method', 'WRONG_METHOD');
 
-        $this->expectException(ButtonException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(ButtonException::invalidMethod('WRONG_METHOD')->getMessage());
+        $this->expectExceptionMessage(Exception::invalidMethod('WRONG_METHOD')->getMessage());
 
         $this->validate();
     }
@@ -111,9 +111,9 @@ class ButtonTest extends TestCase
     {
         $this->template->set('buttons', new Obj(['UNKNOWN_TYPE']));
 
-        $this->expectException(ButtonException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(ButtonException::undefined('UNKNOWN_TYPE')->getMessage());
+        $this->expectExceptionMessage(Exception::undefined('UNKNOWN_TYPE')->getMessage());
 
         $this->validate();
     }

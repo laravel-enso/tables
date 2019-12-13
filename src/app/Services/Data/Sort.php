@@ -21,7 +21,7 @@ class Sort
             ->filter(function ($column) {
                 return $column->get('meta')->get('sortable')
                     && $column->get('meta')->get('sort');
-            })->each(function ($column, $index) {
+            })->each(function ($column) {
                 return $column->get('meta')->get('nullLast')
                     ? $this->query->orderByRaw($this->rawSort($column))
                     : $this->query->orderBy(
@@ -32,7 +32,6 @@ class Sort
 
     private function rawSort($column)
     {
-        return "({$column->get('data')} IS NULL),"
-            ."{$column->get('data')} {$column->get('meta')->get('sort')}";
+        return "({$column->get('data')} IS NULL), {$column->get('data')} {$column->get('meta')->get('sort')}";
     }
 }

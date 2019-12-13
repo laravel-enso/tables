@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Services\Data\Builders;
 
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Exceptions\CacheException;
+use LaravelEnso\Tables\app\Exceptions\Cache as Exception;
 use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\Data\Filters;
 use ReflectionClass;
@@ -33,9 +33,9 @@ class Meta
     {
         $this->setCount()
             ->filter()
-            ->setDetailedInfo()
+            ->detailedInfo()
             ->countFiltered()
-            ->setTotal();
+            ->total();
 
         return $this;
     }
@@ -71,14 +71,16 @@ class Meta
             $this->table, $this->config, $this->query
         );
 
-        if ($this->filters = $filters->applies()) {
+        $this->filters = $filters->applies();
+
+        if ($this->filters) {
             $filters->handle();
         }
 
         return $this;
     }
 
-    private function setDetailedInfo()
+    private function detailedInfo()
     {
         $this->fullRecordInfo = $this->config->meta()->get('forceInfo')
             || $this->count <= $this->config->meta()->get('fullInfoRecordLimit')
@@ -96,7 +98,7 @@ class Meta
         return $this;
     }
 
-    private function setTotal()
+    private function total()
     {
         if ($this->config->meta()->get('total')) {
             $this->total = (new Total(
@@ -131,7 +133,7 @@ class Meta
             $model = $this->query->getModel();
 
             if (! (new ReflectionClass($model))->hasMethod('resetTableCache')) {
-                throw CacheException::missingTrait(get_class($model));
+                throw Exception::missingTrait(get_class($model));
             }
         }
 

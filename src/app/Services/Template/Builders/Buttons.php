@@ -10,13 +10,11 @@ class Buttons
     private const PathActions = ['href', 'ajax', 'export', 'action'];
 
     private $template;
-    private $meta;
     private $defaults;
 
-    public function __construct(Obj $template, Obj $meta)
+    public function __construct(Obj $template)
     {
         $this->template = $template;
-        $this->meta = $meta;
         $this->defaults = new Obj(config('enso.tables.buttons'));
         $this->template->set('actions', false);
     }

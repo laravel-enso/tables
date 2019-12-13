@@ -31,7 +31,7 @@ class Data
             ->setData();
 
         if ($this->data->isNotEmpty()) {
-            $this->setAppends()
+            $this->appends()
                 ->sanitize()
                 ->compute()
                 ->flatten();
@@ -85,7 +85,7 @@ class Data
         return $this;
     }
 
-    private function setAppends()
+    private function appends()
     {
         if ($this->config->filled('appends')) {
             $this->data->each->setAppends(

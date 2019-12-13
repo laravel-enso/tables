@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
 
-class QueryException extends EnsoException
+class Query extends EnsoException
 {
     public static function unknownSearchMode()
     {

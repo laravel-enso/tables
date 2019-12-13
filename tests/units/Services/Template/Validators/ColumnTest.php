@@ -4,8 +4,8 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\MetaException;
-use LaravelEnso\Tables\app\Exceptions\ColumnException;
+use LaravelEnso\Tables\app\Exceptions\Meta as MetaException;
+use LaravelEnso\Tables\app\Exceptions\Column as ColumnException;
 use LaravelEnso\Tables\app\Attributes\Column as Attributes;
 use LaravelEnso\Tables\app\Services\Template\Validators\Columns;
 

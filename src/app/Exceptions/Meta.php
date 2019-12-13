@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
 
-class MetaException extends EnsoException
+class Meta extends EnsoException
 {
     public static function unknownAttributes($attrs)
     {

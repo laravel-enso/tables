@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Tests\TestCase;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\MetaException;
+use LaravelEnso\Tables\app\Exceptions\Meta as Exception;
 use LaravelEnso\Tables\app\Attributes\Column as Attributes;
 use LaravelEnso\Tables\app\Services\Template\Validators\Columns;
 
@@ -37,9 +37,9 @@ class MetaTest extends TestCase
     {
         $this->template->get('columns')->first()->set('meta', new Obj(['wrong_attribute']));
 
-        $this->expectException(MetaException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(MetaException::unknownAttributes('wrong_attribute')->getMessage());
+        $this->expectExceptionMessage(Exception::unknownAttributes('wrong_attribute')->getMessage());
 
         $this->validate();
     }
@@ -54,9 +54,9 @@ class MetaTest extends TestCase
             'meta' => ['sortable']
         ]));
 
-        $this->expectException(MetaException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(MetaException::unsupported('parent.child')->getMessage());
+        $this->expectExceptionMessage(Exception::unsupported('parent.child')->getMessage());
 
         $this->validate();
     }

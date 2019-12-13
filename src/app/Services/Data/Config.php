@@ -31,6 +31,15 @@ class Config
             ->setColumns();
     }
 
+    public function __call($method, $args)
+    {
+        if (isset($args[0]) && collect(self::TemplateProxy)->contains($args[0])) {
+            return $this->template->{$method}(...$args);
+        }
+
+        return $this->request->{$method}(...$args);
+    }
+
     public function meta()
     {
         return $this->meta;
@@ -64,15 +73,6 @@ class Config
     public function request()
     {
         return $this->request;
-    }
-
-    public function __call($method, $args)
-    {
-        if (isset($args[0]) && collect(self::TemplateProxy)->contains($args[0])) {
-            return $this->template->{$method}(...$args);
-        }
-
-        return $this->request->{$method}(...$args);
     }
 
     private function setMeta()
