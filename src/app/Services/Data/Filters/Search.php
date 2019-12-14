@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\app\Services\Data\Filters;
 
 use Illuminate\Support\Str;
-use LaravelEnso\Tables\app\Exceptions\QueryException;
+use LaravelEnso\Tables\app\Exceptions\Query as Exception;
 
 class Search extends BaseFilter
 {
@@ -67,7 +67,7 @@ class Search extends BaseFilter
             case 'endsWith':
                 return '%'.$argument;
             default:
-                throw QueryException::unknownSearchMode();
+                throw Exception::unknownSearchMode();
         }
     }
 

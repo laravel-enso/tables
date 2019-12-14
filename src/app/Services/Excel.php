@@ -6,7 +6,7 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
 use LaravelEnso\DataExport\app\Models\DataExport;
 use LaravelEnso\IO\app\Enums\IOStatuses;
-use LaravelEnso\Tables\app\Exceptions\ExportException;
+use LaravelEnso\Tables\app\Exceptions\Export as Exception;
 use LaravelEnso\Tables\app\Jobs\ExcelExport;
 use LaravelEnso\Tables\app\Notifications\ExportStartNotification;
 use LaravelEnso\Tables\app\Services\Data\Config;
@@ -37,7 +37,7 @@ class Excel
     private function checkAlreadyRunning()
     {
         if ($this->isEnso() && $this->alreadyRunning()) {
-            throw ExportException::alreadyRunning();
+            throw Exception::alreadyRunning();
         }
 
         return $this;
@@ -46,9 +46,8 @@ class Excel
     private function notifyStart()
     {
         $this->user->notify(
-            (new ExportStartNotification(
-                $this->type().'_'.__('Table_Report'))
-            )->onQueue(config('enso.tables.queues.notifications'))
+            (new ExportStartNotification($this->type().'_'.__('Table_Report')))
+                ->onQueue(config('enso.tables.queues.notifications'))
         );
 
         return $this;

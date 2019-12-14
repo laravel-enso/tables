@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
 
-class TemplateException extends EnsoException
+class Template extends EnsoException
 {
     public static function missingAttributes($attrs)
     {

@@ -4,12 +4,13 @@ namespace LaravelEnso\Tables\app\Exceptions;
 
 use LaravelEnso\Helpers\app\Exceptions\EnsoException;
 
-class ComputorException extends EnsoException
+class Route extends EnsoException
 {
-    public static function missingInterface()
+    public static function notFound($route)
     {
         return new static(__(
-            'Computors must implement the "ComputesColumns" interface',
+            'Read route does not exist: ":route"',
+            ['route' => $route]
         ));
     }
 }

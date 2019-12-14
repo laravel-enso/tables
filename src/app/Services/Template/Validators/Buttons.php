@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\app\Services\Template\Validators;
 use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Attributes\Button as Attributes;
-use LaravelEnso\Tables\app\Exceptions\ButtonException;
+use LaravelEnso\Tables\app\Exceptions\Button as Exception;
 
 class Buttons
 {
@@ -18,7 +18,7 @@ class Buttons
         $this->buttons = $template->get('buttons');
         $this->routePrefix = $template->get('routePrefix');
 
-        $this->setDefaults();
+        $this->defaults();
     }
 
     public function validate()
@@ -35,7 +35,7 @@ class Buttons
         });
 
         if ($formattedWrong->isNotEmpty()) {
-            throw ButtonException::wrongFormat();
+            throw Exception::wrongFormat();
         }
 
         return $this;
@@ -48,7 +48,7 @@ class Buttons
         })->diff($this->defaults->keys());
 
         if ($diff->isNotEmpty()) {
-            throw ButtonException::undefined($diff->implode('", "'));
+            throw Exception::undefined($diff->implode('", "'));
         }
 
         return $this;
@@ -84,7 +84,7 @@ class Buttons
             ->isNotEmpty();
 
         if ($formattedWrong) {
-            throw ButtonException::missingAttributes();
+            throw Exception::missingAttributes();
         }
 
         return $this;
@@ -98,7 +98,7 @@ class Buttons
             ->isNotEmpty();
 
         if ($formattedWrong) {
-            throw ButtonException::unknownAttributes();
+            throw Exception::unknownAttributes();
         }
 
         return $this;
@@ -108,11 +108,11 @@ class Buttons
     {
         if ($button->has('action')) {
             if (! $button->has('fullRoute') && ! $button->has('routeSuffix')) {
-                throw ButtonException::missingRoute();
+                throw Exception::missingRoute();
             }
 
             if ($button->get('action') === 'ajax' && ! $button->has('method')) {
-                throw ButtonException::missingMethod();
+                throw Exception::missingMethod();
             }
         }
 
@@ -125,7 +125,7 @@ class Buttons
             && ! collect(Attributes::Actions)->contains($button->get('action'));
 
         if ($formattedWrong) {
-            throw ButtonException::wrongAction();
+            throw Exception::wrongAction();
         }
 
         return $this;
@@ -141,7 +141,7 @@ class Buttons
                 : $route;
 
         if ($route !== null && ! Route::has($route)) {
-            throw ButtonException::routeNotFound($route);
+            throw Exception::routeNotFound($route);
         }
 
         return $this;
@@ -154,13 +154,13 @@ class Buttons
         }
 
         if (! collect(Attributes::Methods)->contains($button->get('method'))) {
-            throw ButtonException::invalidMethod($button->get('method'));
+            throw Exception::invalidMethod($button->get('method'));
         }
 
         return $this;
     }
 
-    private function setDefaults()
+    private function defaults()
     {
         $this->defaults = (new Obj(config('enso.tables.buttons.global')))
             ->map(function ($button) {

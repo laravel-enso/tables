@@ -48,8 +48,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
         $mail = (new MailMessage())
             ->subject(__(config('app.name')).': '.__('Table Export Notification'))
             ->markdown('laravel-enso/tables::emails.export', [
-                'name' => $notifiable->person->appellative
-                    ?: $notifiable->person->name,
+                'name' => $notifiable->person->appellative ?? $notifiable->person->name,
                 'filename' => __($this->filename),
                 'entries' => optional($this->dataExport)->entries,
                 'link' => $this->link,

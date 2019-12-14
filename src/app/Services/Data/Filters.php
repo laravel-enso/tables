@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use LaravelEnso\Tables\app\Contracts\CustomFilter as TableCustomFilter;
 use LaravelEnso\Tables\app\Contracts\Filter as TableFilter;
-use LaravelEnso\Tables\app\Exceptions\FilterException;
+use LaravelEnso\Tables\app\Exceptions\Filter as Exception;
 use LaravelEnso\Tables\app\Services\Data\Filters\BaseFilter;
 use LaravelEnso\Tables\app\Services\Data\Filters\CustomFilter;
 use LaravelEnso\Tables\app\Services\Data\Filters\Filter;
@@ -67,7 +67,7 @@ class Filters extends BaseFilter
         ]);
 
         if (! $instance instanceof TableFilter) {
-            throw FilterException::invalidClass($filter);
+            throw Exception::invalidClass($filter);
         }
 
         return $instance;

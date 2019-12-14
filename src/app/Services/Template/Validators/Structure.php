@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Services\Template\Validators;
 
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Attributes\Structure as Attributes;
-use LaravelEnso\Tables\app\Exceptions\TemplateException;
+use LaravelEnso\Tables\app\Exceptions\Template as Exception;
 
 class Structure
 {
@@ -28,7 +28,7 @@ class Structure
             ->diff($this->template->keys());
 
         if ($diff->isNotEmpty()) {
-            throw TemplateException::missingAttributes(
+            throw Exception::missingAttributes(
                 $diff->implode('", "')
             );
         }
@@ -44,7 +44,7 @@ class Structure
         $diff = $this->template->keys()->diff($attributes);
 
         if ($diff->isNotEmpty()) {
-            throw TemplateException::unknownAttributes(
+            throw Exception::unknownAttributes(
                 $diff->implode('", "')
             );
         }
@@ -56,42 +56,42 @@ class Structure
     {
         if ($this->template->has('lengthMenu')
             && ! $this->template->get('lengthMenu') instanceof Obj) {
-            throw TemplateException::invalidLengthMenu();
+            throw Exception::invalidLengthMenu();
         }
 
         if ($this->template->has('appends')
             && ! $this->template->get('appends') instanceof Obj) {
-            throw TemplateException::invalidAppends();
+            throw Exception::invalidAppends();
         }
 
         if ($this->template->has('debounce')
             && ! is_int($this->template->get('debounce'))) {
-            throw TemplateException::invalidDebounce();
+            throw Exception::invalidDebounce();
         }
 
         if ($this->template->has('method')
             && ! collect(['GET', 'POST'])->contains($this->template->get('method'))) {
-            throw TemplateException::invalidMethod();
+            throw Exception::invalidMethod();
         }
 
         if ($this->template->has('selectable')
             && ! is_bool($this->template->get('selectable'))) {
-            throw TemplateException::invalidSelectable();
+            throw Exception::invalidSelectable();
         }
 
         if ($this->template->has('comparisonOperator')
             && ! collect(['LIKE', 'ILIKE'])->contains($this->template->get('comparisonOperator'))) {
-            throw TemplateException::invalidComparisonOperator();
+            throw Exception::invalidComparisonOperator();
         }
 
         if ($this->template->has('searchMode')
             && ! collect(['full', 'startsWith', 'endsWith'])->contains($this->template->get('searchMode'))) {
-            throw TemplateException::invalidSearchMode();
+            throw Exception::invalidSearchMode();
         }
 
         if ($this->template->has('searchModes')
             && ! $this->template->get('searchModes') instanceof Obj) {
-            throw TemplateException::invalidSearchModes();
+            throw Exception::invalidSearchModes();
         }
     }
 }

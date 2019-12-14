@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\ControlException;
+use LaravelEnso\Tables\app\Exceptions\Control as Exception;
 use LaravelEnso\Tables\app\Services\Template\Validators\Controls;
 
 class ControlTest extends TestCase
@@ -27,9 +27,9 @@ class ControlTest extends TestCase
     {
         $this->template->get('controls')->push('WRONG_CONTROL');
 
-        $this->expectException(ControlException::class);
+        $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(ControlException::undefined('WRONG_CONTROL')->getMessage());
+        $this->expectExceptionMessage(Exception::undefined('WRONG_CONTROL')->getMessage());
 
         $this->validate();
     }

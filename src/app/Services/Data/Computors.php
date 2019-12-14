@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\app\Services\Data;
 
 use Illuminate\Support\Collection;
 use LaravelEnso\Tables\app\Contracts\ComputesColumns;
-use LaravelEnso\Tables\app\Exceptions\ComputorException;
+use LaravelEnso\Tables\app\Exceptions\Computor as Exception;
 use LaravelEnso\Tables\app\Services\Data\Computors\Cents;
 use LaravelEnso\Tables\app\Services\Data\Computors\Date;
 use LaravelEnso\Tables\app\Services\Data\Computors\Enum;
@@ -53,10 +53,10 @@ class Computors
 
     private static function computor($computor): ComputesColumns
     {
-        $computor = new self::$computors[$computor];
+        $computor = new self::$computors[$computor]();
 
         if (! $computor instanceof ComputesColumns) {
-            throw ComputorException::missingInterface();
+            throw Exception::missingInterface();
         }
 
         return $computor;

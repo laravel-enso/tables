@@ -24,6 +24,11 @@ class Template
         $this->meta = new Obj();
     }
 
+    public function __call($method, $args)
+    {
+        return $this->template->{$method}(...$args);
+    }
+
     public function load(Obj $template, Obj $meta)
     {
         $this->template = $template;
@@ -70,11 +75,6 @@ class Template
     public function column(string $index)
     {
         return $this->columns()[$index];
-    }
-
-    public function __call($method, $args)
-    {
-        return $this->template->{$method}(...$args);
     }
 
     private function builder()

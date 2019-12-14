@@ -33,7 +33,7 @@ class Builder
 
     public function handleNonCacheable()
     {
-        (new Buttons($this->template, $this->meta))->build();
+        (new Buttons($this->template))->build();
 
         $this->template->forget(['dataRouteSuffix', 'routePrefix']);
     }
