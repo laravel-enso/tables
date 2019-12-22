@@ -90,9 +90,9 @@ class Config
     private function setColumns()
     {
         $this->columns = $this->request->columns()
-            ->map(function ($column, $index) {
-                return $this->mergeColumnMeta($this->template->column($index), $column);
-            });
+            ->map(fn($column, $index) => (
+                $this->mergeColumnMeta($this->template->column($index), $column)
+            ));
 
         Computors::columns($this);
     }

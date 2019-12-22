@@ -11,9 +11,7 @@ class Date implements ComputesColumns
 
     public static function columns($columns)
     {
-        self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->get('date');
-        });
+        self::$columns = $columns->filter(fn($column) => $column->get('meta')->get('date'));
     }
 
     public static function handle($row)

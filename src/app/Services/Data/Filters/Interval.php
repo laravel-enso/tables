@@ -6,24 +6,24 @@ class Interval extends BaseFilter
 {
     public function applies(): bool
     {
-        return $this->config->intervals()->first(function ($interval) {
-            return $interval->first(function ($value) {
-                return $this->isValid($value->get('min'))
-                    || $this->isValid($value->get('max'));
-            }) !== null;
-        }) !== null;
+        return $this->config->intervals()->first(fn($interval) => (
+            $interval->first(fn($value) => (
+                $this->isValid($value->get('min'))
+                || $this->isValid($value->get('max'))
+            ))
+        ) !== null) !== null;
     }
 
     public function handle()
     {
-        $this->query->where(function () {
-            $this->config->intervals()->each(function ($interval, $table) {
-                collect($interval)->each(function ($value, $column) use ($table) {
+        $this->query->where(fn() => (
+            $this->config->intervals()->each(fn($interval, $table) => (
+                collect($interval)->each(fn($value, $column) => (
                     $this->limit($table, $column, $value, 'min', '>=')
-                        ->limit($table, $column, $value, 'max', '<=');
-                });
-            });
-        });
+                        ->limit($table, $column, $value, 'max', '<=')
+                ))
+            ))
+        ));
     }
 
     private function limit($table, $column, $value, $bound, $operator)

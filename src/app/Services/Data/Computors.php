@@ -25,20 +25,18 @@ class Computors
     {
         self::columns($config);
 
-        $data = self::applicable($config)->reduce(function ($data, $computor) {
-            return $data->map(function ($row) use ($computor) {
-                return self::computor($computor)::handle($row);
-            });
-        }, $data);
+        $data = self::applicable($config)->reduce(fn($data, $computor) => (
+            $data->map(fn($row) => self::computor($computor)::handle($row))
+        ), $data);
 
         return $data;
     }
 
     public static function columns(Config $config)
     {
-        self::applicable($config)->each(function ($computor) use ($config) {
-            self::computor($computor)::columns($config->columns());
-        });
+        self::applicable($config)->each(fn($computor) => (
+            self::computor($computor)::columns($config->columns())
+        ));
     }
 
     public static function fetchMode()
@@ -66,8 +64,6 @@ class Computors
     {
         return $config->meta()->filter()->keys()
             ->intersect(collect(self::$computors)->keys())
-            ->filter(function ($computor) {
-                return $computor !== 'translatable' || self::$fetchMode;
-            });
+            ->filter(fn($computor) => $computor !== 'translatable' || self::$fetchMode);
     }
 }

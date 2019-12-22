@@ -20,7 +20,7 @@ class Columns
     {
         $this->checkFormat();
 
-        $this->columns->each(function ($column) {
+        $this->columns->each(fn($column) => (
             $this->checkMandatoryAttributes($column)
                 ->checkOptionalAttributes($column)
                 ->checkMeta($column)
@@ -28,16 +28,17 @@ class Columns
                 ->checkTooltip($column)
                 ->checkMoney($column)
                 ->checkClass($column)
-                ->checkAlign($column);
-        });
+                ->checkAlign($column)
+        ));
     }
 
     private function checkFormat()
     {
-        if (! $this->columns instanceof Obj || $this->columns->isEmpty()
-            || $this->columns->first(function ($column) {
-                return ! $column instanceof Obj;
-            }) !== null
+        if (! $this->columns instanceof Obj
+            || $this->columns->isEmpty()
+            || $this->columns->first(fn($column) => (
+                ! $column instanceof Obj
+            )) !== null
         ) {
             throw Exception::wrongFormat();
         }

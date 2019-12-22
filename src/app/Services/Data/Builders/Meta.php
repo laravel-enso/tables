@@ -112,9 +112,8 @@ class Meta
     private function cachedCount()
     {
         return $this->shouldCache()
-            ? Cache::remember($this->cacheKey(), now()->addHour(), function () {
-                return $this->count();
-            }) : $this->count();
+            ? Cache::remember($this->cacheKey(), now()->addHour(), fn() => $this->count())
+            : $this->count();
     }
 
     private function cacheKey()

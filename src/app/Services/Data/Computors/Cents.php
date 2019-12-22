@@ -10,9 +10,7 @@ class Cents implements ComputesColumns
 
     public static function columns($columns)
     {
-        self::$columns = $columns->filter(function ($column) {
-            return $column->get('meta')->get('cents');
-        });
+        self::$columns = $columns->filter(fn($column) => $column->get('meta')->get('cents'));
     }
 
     public static function handle($row)

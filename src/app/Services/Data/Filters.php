@@ -27,16 +27,14 @@ class Filters extends BaseFilter
 
     public function applies(): bool
     {
-        return $this->applicable()->first(function ($filter) {
-            return $this->filter($filter)->applies();
-        }) !== null;
+        return $this->applicable()->first(fn($filter) => (
+            $this->filter($filter)->applies()
+        )) !== null;
     }
 
     public function handle(): void
     {
-        $this->applicable()->each(function ($filter) {
-            $this->apply($filter);
-        });
+        $this->applicable()->each(fn($filter) => $this->apply($filter));
     }
 
     public static function filters($filters)

@@ -30,9 +30,9 @@ class Buttons
 
     private function checkFormat()
     {
-        $formattedWrong = $this->buttons->filter(function ($button) {
-            return ! is_string($button) && ! $button instanceof Obj;
-        });
+        $formattedWrong = $this->buttons->filter(fn($button) => (
+            ! is_string($button) && ! $button instanceof Obj
+        ));
 
         if ($formattedWrong->isNotEmpty()) {
             throw Exception::wrongFormat();
@@ -43,9 +43,8 @@ class Buttons
 
     private function checkDefault()
     {
-        $diff = $this->buttons->filter(function ($button) {
-            return is_string($button);
-        })->diff($this->defaults->keys());
+        $diff = $this->buttons->filter(fn($button) => is_string($button))
+            ->diff($this->defaults->keys());
 
         if ($diff->isNotEmpty()) {
             throw Exception::undefined($diff->implode('", "'));
@@ -56,13 +55,12 @@ class Buttons
 
     private function checkStructure()
     {
-        $this->buttons->each(function ($button) {
-            $button = $button instanceof Obj
-                ? $button
-                : $this->defaults->get($button);
-
-            $this->checkAttributes($button);
-        });
+        $this->buttons
+            ->map(fn($button) => (
+                $button instanceof Obj
+                    ? $button
+                    : $this->defaults->get($button)
+            ))->each(fn($button) => $this->checkAttributes($button));
 
         return $this;
     }
@@ -162,14 +160,12 @@ class Buttons
 
     private function defaults()
     {
-        $this->defaults = (new Obj(config('enso.tables.buttons.global')))
-            ->map(function ($button) {
-                return $button->set('type', 'global');
-            })->merge(
-                (new Obj(config('enso.tables.buttons.row')))
-                    ->map(function ($button) {
-                        return $button->set('type', 'row');
-                    })
-            );
+        $row = (new Obj(config('enso.tables.buttons.row')))
+            ->map(fn($button) => $button->set('type', 'row'));
+
+        $global = (new Obj(config('enso.tables.buttons.global')))
+            ->map(fn($button) => $button->set('type', 'global'));
+
+        $this->defaults = $global->merge($row);
     }
 }

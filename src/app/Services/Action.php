@@ -23,9 +23,8 @@ abstract class Action
         $this->fetcher->next();
 
         while ($this->fetcher->valid()) {
-            $this->fetcher->current()->each(function ($row) {
-                $this->process($row);
-            });
+            $this->fetcher->current()
+                ->each(fn($row) => $this->process($row));
 
             $this->fetcher->next();
         }

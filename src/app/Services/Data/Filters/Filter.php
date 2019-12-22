@@ -13,23 +13,20 @@ class Filter extends BaseFilter
 
     public function handle()
     {
-        $this->query->where(function ($query) {
-            $this->filters()->each(function ($filters, $table) use ($query) {
-                $filters->each(function ($value, $column) use ($table, $query) {
-                    $query->whereIn($table.'.'.$column,
-                        collect($value)->toArray());
-                });
-            });
-        });
+        $this->query->where(fn($query) => (
+           $this->filters()->each(fn($filters, $table) => (
+               $filters->each(fn($value, $column) => (
+                   $query->whereIn($table.'.'.$column, collect($value)->toArray())
+               ))
+           ))
+        ));
     }
 
     private function filters()
     {
-        return $this->config->filters()->map(function ($filters) {
-            return $filters->filter(function ($value) {
-                return $this->isValid($value);
-            });
-        })->filter->isNotEmpty();
+        return $this->config->filters()->map(fn($filters) => (
+            $filters->filter(fn($value) => $this->isValid($value))
+        ))->filter->isNotEmpty();
     }
 
     private function isValid($value)

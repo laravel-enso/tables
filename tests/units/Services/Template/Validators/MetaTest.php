@@ -64,9 +64,9 @@ class MetaTest extends TestCase
 
     private function mockedColumn()
     {
-        return collect(Attributes::Mandatory)->flip()->map(function () {
-            return new Obj([]);
-        });
+        return collect(Attributes::Mandatory)
+            ->flip()
+            ->map(fn() => new Obj());
     }
 
     private function validate()

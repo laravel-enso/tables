@@ -18,16 +18,16 @@ class Sort
     public function handle()
     {
         $this->config->columns()
-            ->filter(function ($column) {
-                return $column->get('meta')->get('sortable')
-                    && $column->get('meta')->get('sort');
-            })->each(function ($column) {
-                return $column->get('meta')->get('nullLast')
+            ->filter(fn($column) => (
+                $column->get('meta')->get('sortable')
+                && $column->get('meta')->get('sort')
+            ))->each(fn($column) => (
+                $column->get('meta')->get('nullLast')
                     ? $this->query->orderByRaw($this->rawSort($column))
                     : $this->query->orderBy(
                         $column->get('data'), $column->get('meta')->get('sort')
-                    );
-            });
+                    )
+            ));
     }
 
     private function rawSort($column)

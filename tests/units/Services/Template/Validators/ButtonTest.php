@@ -136,11 +136,8 @@ class ButtonTest extends TestCase
 
     private function mockedButton()
     {
-        return collect(Attributes::Mandatory)->reduce(function ($button, $attribute) {
-            $button->set($attribute, new Obj());
-
-            return $button;
-        }, new Obj());
+        return collect(Attributes::Mandatory)
+            ->mapWithKeys(fn($attribute) => [$attribute => new Obj()]);
     }
 
     private function validate()

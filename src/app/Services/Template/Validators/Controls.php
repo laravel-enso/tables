@@ -27,9 +27,9 @@ class Controls
     private function checkFormat()
     {
         $formattedWrong = ! $this->controls instanceof Obj
-            || $this->controls->filter(function ($control) {
-                return ! is_string($control);
-            })->isNotEmpty();
+            || $this->controls
+                ->filter(fn($control) => ! is_string($control))
+                ->isNotEmpty();
 
         if ($formattedWrong) {
             throw Exception::invalidFormat();

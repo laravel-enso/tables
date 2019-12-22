@@ -80,7 +80,7 @@ class Template
     private function builder()
     {
         return $this->builder
-            ?? $this->builder = new Builder($this->template, $this->meta);
+            ??= new Builder($this->template, $this->meta);
     }
 
     private function template()

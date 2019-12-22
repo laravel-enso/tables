@@ -113,9 +113,8 @@ class Data
     private function flatten()
     {
         if ($this->config->get('flatten')) {
-            $this->data = collect($this->data)->map(function ($record) {
-                return Arr::dot($record);
-            });
+            $this->data = collect($this->data)
+                ->map(fn($record) => Arr::dot($record));
         }
     }
 }

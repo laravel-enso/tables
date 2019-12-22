@@ -10,9 +10,7 @@ class Enum implements ComputesColumns
 
     public static function columns($columns)
     {
-        self::$columns = $columns->filter(function ($column) {
-            return $column->get('enum');
-        });
+        self::$columns = $columns->filter(fn($column) => $column->get('enum'));
     }
 
     public static function handle($row)

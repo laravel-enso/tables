@@ -37,9 +37,9 @@ class Columns
         }
 
         $meta = collect(Attributes::Meta)
-            ->reduce(function ($meta, $attribute) use ($column) {
-                return $meta->set($attribute, $column->get('meta')->contains($attribute));
-            }, new Obj());
+            ->reduce(fn($meta, $attribute) => (
+                $meta->set($attribute, $column->get('meta')->contains($attribute))
+            ), new Obj());
 
         $meta->set('visible', true);
         $meta->set('hidden', false);

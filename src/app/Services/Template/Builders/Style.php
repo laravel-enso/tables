@@ -30,19 +30,17 @@ class Style
         return $this->defaultStyle->get('default')
             ->intersect($style)
             ->values()
-            ->reduce(function ($style, $param) {
-                return $style->push(
-                    $this->defaultStyle->get('mapping')->get($param)
-                );
-            }, collect())->unique()->implode(' ');
+            ->reduce(fn($style, $param) => (
+                $style->push($this->defaultStyle->get('mapping')->get($param))
+            ), collect())
+            ->unique()
+            ->implode(' ');
     }
 
     private function preset($style)
     {
-        return collect($style)->reduce(function ($styles, $style) {
-            return $styles->set(
-                $style, $this->defaultStyle->get('mapping')->get($style)
-            );
-        }, new Obj());
+        return collect($style)->reduce(fn($styles, $style) => (
+            $styles->set($style, $this->defaultStyle->get('mapping')->get($style))
+        ), new Obj());
     }
 }

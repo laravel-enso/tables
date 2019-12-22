@@ -34,10 +34,10 @@ class Total
     private function compute()
     {
         $this->config->columns()
-            ->filter(function ($column) {
-                return $column->get('meta')->get('total')
-                    || $column->get('meta')->get('rawTotal');
-            })->each(function ($column) {
+            ->filter(fn($column) => (
+                $column->get('meta')->get('total')
+                    || $column->get('meta')->get('rawTotal')
+            ))->each(function ($column) {
                 $this->total[$column->get('name')] = $column->get('meta')->get('rawTotal')
                     ? $this->rawTotal($column)
                     : $this->query->sum($column->get('data'));

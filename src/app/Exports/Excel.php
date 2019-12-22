@@ -138,12 +138,11 @@ class Excel
 
     private function filePath()
     {
-        return $this->filePath
-            ?? $this->filePath = Storage::path(
-                config('enso.tables.export.path')
-                    .DIRECTORY_SEPARATOR
-                    .$this->hashName()
-            );
+        return $this->filePath ??= Storage::path(
+            config('enso.tables.export.path')
+                .DIRECTORY_SEPARATOR
+                .$this->hashName()
+        );
     }
 
     private function hashName()
@@ -153,21 +152,18 @@ class Excel
 
     private function filename()
     {
-        return $this->filename
-            ?? $this->filename = preg_replace(
-                '/[^A-Za-z0-9_.-]/',
-                '_',
-                __(Str::title(Str::snake($this->config->get('name'))))
-                .'_'.__('Table_Report')
-            ).'.'.self::Extension;
+        return $this->filename ??= preg_replace(
+            '/[^A-Za-z0-9_.-]/',
+            '_',
+            __(Str::title(Str::snake($this->config->get('name'))))
+            .'_'.__('Table_Report')
+        ).'.'.self::Extension;
     }
 
     private function header()
     {
         return $this->row($this->columns()->pluck('label')
-                ->map(function ($label) {
-                    return __($label);
-                }));
+                ->map(fn($label) => __($label)));
     }
 
     private function columns()
@@ -190,14 +186,13 @@ class Excel
 
     private function map($data)
     {
-        return $data->map(function ($row) {
-            return $this->row($this->columns->map(function ($column) use ($row) {
-                return collect(explode('.', $column->get('name')))
-                    ->reduce(function ($value, $segment) {
-                        return $value[$segment];
-                    }, $row);
-            }));
-        })->toArray();
+        return $data->map(fn($row) => (
+            $this->row(
+                $this->columns
+                    ->map(fn($column) => collect(explode('.', $column->get('name')))
+                    ->reduce(fn($value, $segment) => $value[$segment], $row))
+            )
+        ))->toArray();
     }
 
     private function row($row)

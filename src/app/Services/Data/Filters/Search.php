@@ -15,11 +15,9 @@ class Search extends BaseFilter
 
     public function handle()
     {
-        $this->searchArguments()->each(function ($argument) {
-            $this->query->where(function ($query) use ($argument) {
-                $this->matchArgument($query, $argument);
-            });
-        });
+        $this->searchArguments()->each(fn($argument) => (
+            $this->query->where(fn($query) => $this->matchArgument($query, $argument))
+        ));
     }
 
     private function searchArguments()
@@ -33,11 +31,7 @@ class Search extends BaseFilter
 
     private function matchArgument($query, $argument)
     {
-        $this->searchable()->each(function ($column) use ($query, $argument) {
-            $query->orWhere(function ($query) use ($column, $argument) {
-                $this->matchAttribute($query, $column->get('data'), $argument, $column->get('name'));
-            });
-        });
+        $this->searchable()->each(fn($column) => $query->orWhere(fn($query) => $this->matchAttribute($query, $column->get('data'), $argument, $column->get('name'))));
     }
 
     private function matchAttribute($query, $attribute, $argument, $name = null)
@@ -47,14 +41,10 @@ class Search extends BaseFilter
         $query->when($isNested, function ($query) use ($attribute, $argument) {
             $attributes = collect(explode('.', $attribute));
 
-            $query->whereHas($attributes->shift(), function ($query) use ($attributes, $argument) {
-                $this->matchAttribute($query, $attributes->implode('.'), $argument);
-            });
-        })->when(! $isNested, function ($query) use ($attribute, $argument) {
-            $query->where(
-                $attribute, $this->config->get('comparisonOperator'), $this->wildcards($argument)
-            );
-        });
+            $query->whereHas($attributes->shift(), fn($query) => $this->matchAttribute($query, $attributes->implode('.'), $argument));
+        })->when(! $isNested, fn($query) => $query->where(
+            $attribute, $this->config->get('comparisonOperator'), $this->wildcards($argument)
+        ));
     }
 
     private function wildcards($argument)
@@ -73,9 +63,7 @@ class Search extends BaseFilter
 
     private function searchable()
     {
-        return $this->config->columns()->filter(function ($column) {
-            return $column->get('meta')->get('searchable');
-        });
+        return $this->config->columns()->filter(fn($column) => $column->get('meta')->get('searchable'));
     }
 
     private function isNested($attribute)
