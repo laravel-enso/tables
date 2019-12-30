@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
 use Tests\TestCase;
-use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\app\Services\Data\Filters\Filter;

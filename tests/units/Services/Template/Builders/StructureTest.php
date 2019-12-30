@@ -29,7 +29,6 @@ class StructureTest extends TestCase
         $this->meta = new Obj([]);
     }
 
-
     /** @test */
     public function can_build_with_route()
     {

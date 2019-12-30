@@ -8,9 +8,6 @@ use LaravelEnso\Helpers\app\Classes\Obj;
 use LaravelEnso\Tables\app\Services\Template;
 use LaravelEnso\Tables\app\Services\Data\Config;
 use LaravelEnso\Tables\app\Services\Data\Request;
-use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use LaravelEnso\Tables\Tests\units\Services\TestTable;
-use LaravelEnso\Tables\Tests\units\Services\BuilderTestEnum;
 
 trait SetUp
 {

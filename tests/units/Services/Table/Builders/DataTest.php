@@ -46,7 +46,7 @@ class DataTest extends TestCase
     public function can_get_data_with_flatten()
     {
         $this->config->get('appends')->push('custom');
-        
+
         $this->config->put('flatten', true);
 
         $response = $this->requestResponse();
@@ -192,7 +192,7 @@ class DataTest extends TestCase
 
         $this->config->meta()->set('search', $this->testModel->name)
             ->set('fullInfoRecordLimit', $limit);
-            
+
         $response = $this->requestResponse();
 
         $this->assertCount($limit, $response);
