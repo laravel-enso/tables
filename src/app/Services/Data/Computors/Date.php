@@ -1,20 +1,21 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data\Computors;
+namespace LaravelEnso\Tables\App\Services\Data\Computors;
 
 use Carbon\Carbon;
-use LaravelEnso\Tables\app\Contracts\ComputesColumns;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Contracts\ComputesColumns;
 
 class Date implements ComputesColumns
 {
-    private static $columns;
+    private static Obj $columns;
 
-    public static function columns($columns)
+    public static function columns($columns): void
     {
-        self::$columns = $columns->filter(fn($column) => $column->get('meta')->get('date'));
+        self::$columns = $columns->filter(fn ($column) => $column->get('meta')->get('date'));
     }
 
-    public static function handle($row)
+    public static function handle($row): array
     {
         foreach (self::$columns as $column) {
             if ($row[$column->get('name')] !== null) {

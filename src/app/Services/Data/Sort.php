@@ -1,13 +1,13 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data;
+namespace LaravelEnso\Tables\App\Services\Data;
 
 use Illuminate\Database\Eloquent\Builder;
 
 class Sort
 {
-    private $config;
-    private $query;
+    private Config $config;
+    private Builder $query;
 
     public function __construct(Config $config, Builder $query)
     {
@@ -15,22 +15,20 @@ class Sort
         $this->query = $query;
     }
 
-    public function handle()
+    public function handle(): void
     {
         $this->config->columns()
-            ->filter(fn($column) => (
-                $column->get('meta')->get('sortable')
+            ->filter(fn ($column) => $column->get('meta')->get('sortable')
                 && $column->get('meta')->get('sort')
-            ))->each(fn($column) => (
-                $column->get('meta')->get('nullLast')
-                    ? $this->query->orderByRaw($this->rawSort($column))
-                    : $this->query->orderBy(
-                        $column->get('data'), $column->get('meta')->get('sort')
-                    )
-            ));
+            )->each(fn ($column) => $column->get('meta')->get('nullLast')
+                ? $this->query->orderByRaw($this->rawSort($column))
+                : $this->query->orderBy(
+                    $column->get('data'), $column->get('meta')->get('sort')
+                )
+            );
     }
 
-    private function rawSort($column)
+    private function rawSort($column): string
     {
         return "({$column->get('data')} IS NULL), {$column->get('data')} {$column->get('meta')->get('sort')}";
     }

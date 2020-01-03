@@ -1,21 +1,22 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Builders;
+namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
-use LaravelEnso\Tables\app\Attributes\Controls as Attributes;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Controls as Attributes;
 
 class Controls
 {
-    private $template;
-    private $defaultControls;
+    private Obj $template;
+    private array $defaultControls;
 
-    public function __construct($template)
+    public function __construct(Obj $template)
     {
         $this->template = $template;
         $this->defaultControls = config('enso.tables.controls');
     }
 
-    public function build()
+    public function build(): void
     {
         if (! $this->template->has('controls')) {
             if ($this->defaultControls) {

@@ -2,11 +2,11 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use App;
-use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Data\Fetcher;
+use Illuminate\Support\Facades\App;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Data\Fetcher;
 use LaravelEnso\Tables\Tests\units\Services\Setup;
+use Tests\TestCase;
 
 class ExportTest extends TestCase
 {

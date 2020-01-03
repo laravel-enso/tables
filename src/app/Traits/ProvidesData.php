@@ -1,11 +1,11 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Traits;
+namespace LaravelEnso\Tables\App\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use LaravelEnso\Tables\app\Services\Data\Config;
-use LaravelEnso\Tables\app\Services\TemplateLoader;
+use LaravelEnso\Tables\App\Services\Data\Config;
+use LaravelEnso\Tables\App\Services\TemplateLoader;
 
 trait ProvidesData
 {

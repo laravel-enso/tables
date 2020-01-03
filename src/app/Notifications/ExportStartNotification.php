@@ -1,11 +1,12 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Notifications;
+namespace LaravelEnso\Tables\App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Collection;
 
 class ExportStartNotification extends Notification implements ShouldQueue
 {
@@ -20,7 +21,7 @@ class ExportStartNotification extends Notification implements ShouldQueue
 
     public function via()
     {
-        return collect(config('enso.tables.export.notifications'))
+        return (new Collection(config('enso.tables.export.notifications')))
             ->intersect(['broadcast', 'database'])
             ->toArray();
     }

@@ -2,10 +2,10 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
-use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Data\Filters\Interval;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
-use LaravelEnso\Tables\app\Services\Data\Filters\Interval;
+use Tests\TestCase;
 
 class IntervalTest extends TestCase
 {

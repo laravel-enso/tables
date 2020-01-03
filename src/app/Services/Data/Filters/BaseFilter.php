@@ -1,17 +1,17 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data\Filters;
+namespace LaravelEnso\Tables\App\Services\Data\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Contracts\Filter;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Data\Config;
+use LaravelEnso\Tables\App\Contracts\Filter;
+use LaravelEnso\Tables\App\Contracts\Table;
+use LaravelEnso\Tables\App\Services\Data\Config;
 
 abstract class BaseFilter implements Filter
 {
-    protected $table;
-    protected $config;
-    protected $query;
+    protected Table $table;
+    protected Config $config;
+    protected Builder $query;
 
     public function __construct(Table $table, Config $config, Builder $query)
     {
@@ -22,5 +22,5 @@ abstract class BaseFilter implements Filter
 
     abstract public function applies(): bool;
 
-    abstract public function handle();
+    abstract public function handle(): void;
 }

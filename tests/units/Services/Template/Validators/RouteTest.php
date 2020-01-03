@@ -2,11 +2,12 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Structure as Attributes;
+use LaravelEnso\Tables\App\Exceptions\Route as Exception;
+use LaravelEnso\Tables\App\Services\Template\Validators\Route;
 use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\Route as Exception;
-use LaravelEnso\Tables\app\Attributes\Structure as Attributes;
-use LaravelEnso\Tables\app\Services\Template\Validators\Route;
 
 class RouteTest extends TestCase
 {
@@ -19,7 +20,7 @@ class RouteTest extends TestCase
 
         // $this->withoutExceptionHandling();
 
-        $this->template = new Obj(collect(Attributes::Mandatory)->flip());
+        $this->template = new Obj((new Collection(Attributes::Mandatory))->flip());
     }
 
     /** @test */

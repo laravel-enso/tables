@@ -1,10 +1,10 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Validators;
+namespace LaravelEnso\Tables\App\Services\Template\Validators;
 
 use Illuminate\Support\Facades\Route as RouteFacade;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\Route as Exception;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Exceptions\Route as Exception;
 
 class Route
 {

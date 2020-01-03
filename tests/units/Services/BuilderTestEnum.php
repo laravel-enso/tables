@@ -2,7 +2,7 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services;
 
-use LaravelEnso\Enums\app\Services\Enum;
+use LaravelEnso\Enums\App\Services\Enum;
 
 class BuilderTestEnum extends Enum
 {

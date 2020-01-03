@@ -1,8 +1,8 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Exceptions;
+namespace LaravelEnso\Tables\App\Exceptions;
 
-use LaravelEnso\Helpers\app\Exceptions\EnsoException;
+use LaravelEnso\Helpers\App\Exceptions\EnsoException;
 
 class Meta extends EnsoException
 {

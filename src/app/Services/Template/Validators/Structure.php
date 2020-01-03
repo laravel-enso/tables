@@ -1,10 +1,11 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Validators;
+namespace LaravelEnso\Tables\App\Services\Template\Validators;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Attributes\Structure as Attributes;
-use LaravelEnso\Tables\app\Exceptions\Template as Exception;
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Structure as Attributes;
+use LaravelEnso\Tables\App\Exceptions\Template as Exception;
 
 class Structure
 {
@@ -24,7 +25,7 @@ class Structure
 
     private function checkMandatoryAttributes()
     {
-        $diff = collect(Attributes::Mandatory)
+        $diff = (new Collection(Attributes::Mandatory))
             ->diff($this->template->keys());
 
         if ($diff->isNotEmpty()) {
@@ -38,7 +39,7 @@ class Structure
 
     private function checkOptionalAttributes()
     {
-        $attributes = collect(Attributes::Mandatory)
+        $attributes = (new Collection(Attributes::Mandatory))
             ->merge(Attributes::Optional);
 
         $diff = $this->template->keys()->diff($attributes);
@@ -70,7 +71,7 @@ class Structure
         }
 
         if ($this->template->has('method')
-            && ! collect(['GET', 'POST'])->contains($this->template->get('method'))) {
+            && ! (new Collection(['GET', 'POST']))->contains($this->template->get('method'))) {
             throw Exception::invalidMethod();
         }
 
@@ -80,12 +81,12 @@ class Structure
         }
 
         if ($this->template->has('comparisonOperator')
-            && ! collect(['LIKE', 'ILIKE'])->contains($this->template->get('comparisonOperator'))) {
+            && ! (new Collection(['LIKE', 'ILIKE']))->contains($this->template->get('comparisonOperator'))) {
             throw Exception::invalidComparisonOperator();
         }
 
         if ($this->template->has('searchMode')
-            && ! collect(['full', 'startsWith', 'endsWith'])->contains($this->template->get('searchMode'))) {
+            && ! (new Collection(['full', 'startsWith', 'endsWith']))->contains($this->template->get('searchMode'))) {
             throw Exception::invalidSearchMode();
         }
 

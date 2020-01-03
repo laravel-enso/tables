@@ -2,12 +2,13 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Button as Attributes;
+use LaravelEnso\Tables\App\Exceptions\Button as Exception;
+use LaravelEnso\Tables\App\Services\Template\Validators\Buttons;
 use Route;
 use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\Button as Exception;
-use LaravelEnso\Tables\app\Attributes\Button as Attributes;
-use LaravelEnso\Tables\app\Services\Template\Validators\Buttons;
 
 class ButtonTest extends TestCase
 {
@@ -136,8 +137,8 @@ class ButtonTest extends TestCase
 
     private function mockedButton()
     {
-        return collect(Attributes::Mandatory)
-            ->mapWithKeys(fn($attribute) => [$attribute => new Obj()]);
+        return (new Collection(Attributes::Mandatory))
+            ->mapWithKeys(fn ($attribute) => [$attribute => new Obj()]);
     }
 
     private function validate()

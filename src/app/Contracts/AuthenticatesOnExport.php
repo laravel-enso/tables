@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Contracts;
+namespace LaravelEnso\Tables\App\Contracts;
 
 interface AuthenticatesOnExport
 {

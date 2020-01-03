@@ -2,12 +2,12 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Data\Builders\Data;
+use LaravelEnso\Tables\Tests\units\Services\BuilderTestEnum;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use LaravelEnso\Tables\app\Services\Data\Builders\Data;
-use LaravelEnso\Tables\Tests\units\Services\BuilderTestEnum;
+use Tests\TestCase;
 
 class DataTest extends TestCase
 {
@@ -46,7 +46,7 @@ class DataTest extends TestCase
     public function can_get_data_with_flatten()
     {
         $this->config->get('appends')->push('custom');
-        
+
         $this->config->put('flatten', true);
 
         $response = $this->requestResponse();
@@ -192,7 +192,7 @@ class DataTest extends TestCase
 
         $this->config->meta()->set('search', $this->testModel->name)
             ->set('fullInfoRecordLimit', $limit);
-            
+
         $response = $this->requestResponse();
 
         $this->assertCount($limit, $response);

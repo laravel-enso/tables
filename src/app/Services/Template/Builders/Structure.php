@@ -1,14 +1,14 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Builders;
+namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
 use Illuminate\Support\Str;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Helpers\App\Classes\Obj;
 
 class Structure
 {
-    private $template;
-    private $meta;
+    private Obj $template;
+    private Obj $meta;
 
     public function __construct(Obj $template, Obj $meta)
     {
@@ -16,7 +16,7 @@ class Structure
         $this->meta = $meta;
     }
 
-    public function build()
+    public function build(): void
     {
         $this->readPath()
             ->dtRowId()
@@ -32,7 +32,7 @@ class Structure
             ->defaults();
     }
 
-    private function readPath()
+    private function readPath(): self
     {
         $route = $this->template->get('routePrefix').'.'
             .($this->template->get('dataRouteSuffix')
@@ -43,7 +43,7 @@ class Structure
         return $this;
     }
 
-    private function dtRowId()
+    private function dtRowId(): self
     {
         if (! $this->template->has('dtRowId')) {
             $this->template->set('dtRowId', config('enso.tables.dtRowId'));
@@ -52,7 +52,7 @@ class Structure
         return $this;
     }
 
-    private function lengthMenu()
+    private function lengthMenu(): self
     {
         if (! $this->template->has('lengthMenu')) {
             $this->template->set('lengthMenu', config('enso.tables.lengthMenu'));
@@ -65,7 +65,7 @@ class Structure
         return $this;
     }
 
-    private function debounce()
+    private function debounce(): self
     {
         if (! $this->template->has('debounce')) {
             $this->template->set('debounce', config('enso.tables.debounce'));
@@ -74,7 +74,7 @@ class Structure
         return $this;
     }
 
-    private function method()
+    private function method(): self
     {
         if (! $this->template->has('method')) {
             $this->template->set('method', config('enso.tables.method'));
@@ -83,7 +83,7 @@ class Structure
         return $this;
     }
 
-    private function selectable()
+    private function selectable(): self
     {
         if (! $this->template->has('selectable')) {
             $this->template->set('selectable', false);
@@ -92,7 +92,7 @@ class Structure
         return $this;
     }
 
-    private function preview()
+    private function preview(): self
     {
         if (! $this->template->has('preview')) {
             $this->template->set('preview', false);
@@ -101,7 +101,7 @@ class Structure
         return $this;
     }
 
-    private function defaults()
+    private function defaults(): void
     {
         if (! $this->template->has('name')) {
             $this->template->set('name', Str::plural($this->template->get('model')));
@@ -122,7 +122,7 @@ class Structure
         $this->meta->set('money', false);
     }
 
-    private function comparisonOperator()
+    private function comparisonOperator(): self
     {
         if (! $this->template->has('comparisonOperator')) {
             $this->template->set('comparisonOperator', config('enso.tables.comparisonOperator'));
@@ -131,7 +131,7 @@ class Structure
         return $this;
     }
 
-    private function searchMode()
+    private function searchMode(): self
     {
         $this->meta->set(
             'searchMode',
@@ -148,7 +148,7 @@ class Structure
         return $this;
     }
 
-    private function fullInfoRecordLimit()
+    private function fullInfoRecordLimit(): self
     {
         $this->meta->set(
             'fullInfoRecordLimit',
@@ -161,7 +161,7 @@ class Structure
         return $this;
     }
 
-    private function responsive()
+    private function responsive(): self
     {
         if (! $this->template->has('responsive')) {
             $this->template->set('responsive', config('enso.tables.responsive'));

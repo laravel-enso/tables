@@ -2,10 +2,10 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Template\Builders\Structure;
 use Route;
 use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template\Builders\Structure;
 
 class StructureTest extends TestCase
 {

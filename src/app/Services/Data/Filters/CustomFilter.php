@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data\Filters;
+namespace LaravelEnso\Tables\App\Services\Data\Filters;
 
 class CustomFilter extends BaseFilter
 {
@@ -9,7 +9,7 @@ class CustomFilter extends BaseFilter
         return $this->table->filterApplies($this->config->params());
     }
 
-    public function handle()
+    public function handle(): void
     {
         $this->table->filter($this->query, $this->config->params());
     }

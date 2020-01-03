@@ -1,22 +1,23 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Builders;
+namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Attributes\Style as Attributes;
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Style as Attributes;
 
 class Style
 {
-    private $template;
-    private $defaultStyle;
+    private Obj $template;
+    private Obj $defaultStyle;
 
-    public function __construct($template)
+    public function __construct(Obj $template)
     {
         $this->template = $template;
         $this->defaultStyle = new Obj(config('enso.tables.style'));
     }
 
-    public function build()
+    public function build(): void
     {
         $this->template->set('align', $this->compute(Attributes::Align));
         $this->template->set('style', $this->compute(Attributes::Table));
@@ -25,22 +26,20 @@ class Style
         $this->template->set('highlight', $this->defaultStyle->get('highlight'));
     }
 
-    private function compute($style)
+    private function compute($style): string
     {
         return $this->defaultStyle->get('default')
             ->intersect($style)
             ->values()
-            ->reduce(fn($style, $param) => (
-                $style->push($this->defaultStyle->get('mapping')->get($param))
-            ), collect())
+            ->reduce(fn ($style, $param) => $style
+                ->push($this->defaultStyle->get('mapping')->get($param)), new Collection())
             ->unique()
             ->implode(' ');
     }
 
-    private function preset($style)
+    private function preset($style): Obj
     {
-        return collect($style)->reduce(fn($styles, $style) => (
-            $styles->set($style, $this->defaultStyle->get('mapping')->get($style))
-        ), new Obj());
+        return (new Collection($style))->reduce(fn ($styles, $style) => $styles
+            ->set($style, $this->defaultStyle->get('mapping')->get($style)), new Obj());
     }
 }

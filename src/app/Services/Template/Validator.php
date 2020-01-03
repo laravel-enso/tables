@@ -1,13 +1,13 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template;
+namespace LaravelEnso\Tables\App\Services\Template;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template\Validators\Buttons;
-use LaravelEnso\Tables\app\Services\Template\Validators\Columns;
-use LaravelEnso\Tables\app\Services\Template\Validators\Controls;
-use LaravelEnso\Tables\app\Services\Template\Validators\Route;
-use LaravelEnso\Tables\app\Services\Template\Validators\Structure;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Template\Validators\Buttons;
+use LaravelEnso\Tables\App\Services\Template\Validators\Columns;
+use LaravelEnso\Tables\App\Services\Template\Validators\Controls;
+use LaravelEnso\Tables\App\Services\Template\Validators\Route;
+use LaravelEnso\Tables\App\Services\Template\Validators\Structure;
 
 class Validator
 {

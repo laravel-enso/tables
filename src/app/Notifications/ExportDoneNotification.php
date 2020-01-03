@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Notifications;
+namespace LaravelEnso\Tables\App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

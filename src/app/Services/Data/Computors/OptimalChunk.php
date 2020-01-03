@@ -1,10 +1,10 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data\Computors;
+namespace LaravelEnso\Tables\App\Services\Data\Computors;
 
 class OptimalChunk
 {
-    public static function get($count)
+    public static function get($count): int
     {
         $sheetLimit = config('enso.tables.export.sheetLimit');
 
