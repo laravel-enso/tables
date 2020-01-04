@@ -62,7 +62,6 @@ class MetaTest extends TestCase
         $this->validate();
     }
 
-
     private function mockedColumn()
     {
         return (new Collection(Attributes::Mandatory))

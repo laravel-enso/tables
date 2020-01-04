@@ -36,7 +36,6 @@ class RouteTest extends TestCase
         $this->validate();
     }
 
-
     /** @test */
     public function can_validate()
     {
@@ -49,7 +48,6 @@ class RouteTest extends TestCase
         $this->validate();
 
         $this->assertTrue(true);
-
     }
 
     private function validate()

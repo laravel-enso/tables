@@ -45,7 +45,6 @@ class TableCacheTest extends TestCase
         $this->createTestModel();
     }
 
-
     private function createTestModelTable()
     {
         Schema::create('test_models', function ($table) {
@@ -61,7 +60,6 @@ class TableCacheTest extends TestCase
             'name' => $this->faker->name,
         ]);
     }
-
 }
 
 class TestModel extends Model
@@ -75,5 +73,3 @@ class TestModel extends Model
         return 'test_models';
     }
 }
-
-

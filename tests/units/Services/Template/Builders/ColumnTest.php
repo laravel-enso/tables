@@ -47,9 +47,9 @@ class ColumnTest extends TestCase
     private function assertPresent(string $attribute, $expected)
     {
         $this->template->set('columns', new Obj([['meta' => [$attribute]]]));
-            $this->build();
+        $this->build();
 
-            $this->assertEquals(
+        $this->assertEquals(
                 $expected['value'],
                 $this->template->get('columns')->first()->get('meta')->get($expected['key'])
             );

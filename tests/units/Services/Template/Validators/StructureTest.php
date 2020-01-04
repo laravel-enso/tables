@@ -130,7 +130,7 @@ class StructureTest extends TestCase
             'comparisonOperator' => 'LIKE',
             'name' => 'name',
             'columns' => [],
-            'buttons'=> [],
+            'buttons' => [],
             'routePrefix' => 'prefix',
         ]);
     }
