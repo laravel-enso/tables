@@ -1,20 +1,16 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Traits;
+namespace LaravelEnso\Tables\App\Traits;
 
 use Illuminate\Support\Facades\Cache;
 
 trait TableCache
 {
-    protected static function bootTableCache()
+    public static function bootTableCache()
     {
-        self::created(function ($model) {
-            $model->resetTableCache();
-        });
+        self::created(fn ($model) => $model->resetTableCache());
 
-        self::deleted(function ($model) {
-            $model->resetTableCache();
-        });
+        self::deleted(fn ($model) => $model->resetTableCache());
     }
 
     public function resetTableCache()

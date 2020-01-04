@@ -1,9 +1,9 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Traits;
+namespace LaravelEnso\Tables\App\Traits;
 
 use Illuminate\Http\Request;
-use LaravelEnso\Tables\app\Services\Data\Request as TableRequest;
+use LaravelEnso\Tables\App\Services\Data\Request as TableRequest;
 
 trait ProvidesRequest
 {

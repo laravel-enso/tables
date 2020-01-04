@@ -4,10 +4,10 @@ namespace LaravelEnso\Tables\Tests\units\Services;
 
 use Faker\Factory;
 use Illuminate\Support\Facades\Route;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template;
-use LaravelEnso\Tables\app\Services\Data\Config;
-use LaravelEnso\Tables\app\Services\Data\Request;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Data\Config;
+use LaravelEnso\Tables\App\Services\Data\Request;
+use LaravelEnso\Tables\App\Services\Template;
 
 trait SetUp
 {

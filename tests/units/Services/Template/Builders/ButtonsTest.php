@@ -2,11 +2,12 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
-use Route;
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Template\Builders\Buttons;
 use Mockery;
+use Route;
 use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template\Builders\Buttons;
 
 class ButtonsTest extends TestCase
 {
@@ -94,7 +95,7 @@ class ButtonsTest extends TestCase
     /** @test */
     public function can_build_with_predefined_buttons()
     {
-        $this->template->set('buttons', collect(['create', 'show']));
+        $this->template->set('buttons', new Collection(['create', 'show']));
 
         $this->build();
 

@@ -1,35 +1,36 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data\Builders;
+namespace LaravelEnso\Tables\App\Services\Data\Builders;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Exceptions\Cache as Exception;
-use LaravelEnso\Tables\app\Services\Data\Config;
-use LaravelEnso\Tables\app\Services\Data\Filters;
+use LaravelEnso\Tables\App\Contracts\Table;
+use LaravelEnso\Tables\App\Exceptions\Cache as Exception;
+use LaravelEnso\Tables\App\Services\Data\Config;
+use LaravelEnso\Tables\App\Services\Data\Filters;
 use ReflectionClass;
 
 class Meta
 {
-    private $table;
-    private $config;
-    private $query;
-    private $filters;
-    private $count;
-    private $filtered;
-    private $total;
-    private $fullRecordInfo;
+    private Table $table;
+    private Config $config;
+    private Builder $query;
+    private bool $filters;
+    private int $count;
+    private bool $filtered;
+    private array $total;
+    private bool $fullRecordInfo;
 
     public function __construct(Table $table, Config $config)
     {
         $this->table = $table;
         $this->config = $config;
         $this->query = $table->query();
-        $this->total = collect();
+        $this->total = [];
         $this->filters = false;
     }
 
-    public function build()
+    public function build(): self
     {
         $this->setCount()
             ->filter()
@@ -40,7 +41,7 @@ class Meta
         return $this;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         $this->build();
 
@@ -53,19 +54,19 @@ class Meta
         ];
     }
 
-    public function count()
+    public function count(): int
     {
         return $this->query->count();
     }
 
-    private function setCount()
+    private function setCount(): self
     {
         $this->filtered = $this->count = $this->cachedCount();
 
         return $this;
     }
 
-    private function filter()
+    private function filter(): self
     {
         $filters = new Filters(
             $this->table, $this->config, $this->query
@@ -80,7 +81,7 @@ class Meta
         return $this;
     }
 
-    private function detailedInfo()
+    private function detailedInfo(): self
     {
         $this->fullRecordInfo = $this->config->meta()->get('forceInfo')
             || $this->count <= $this->config->meta()->get('fullInfoRecordLimit')
@@ -89,7 +90,7 @@ class Meta
         return $this;
     }
 
-    private function countFiltered()
+    private function countFiltered(): self
     {
         if ($this->filters && $this->fullRecordInfo) {
             $this->filtered = $this->count();
@@ -98,7 +99,7 @@ class Meta
         return $this;
     }
 
-    private function total()
+    private function total(): self
     {
         if ($this->config->meta()->get('total')) {
             $this->total = (new Total(
@@ -109,21 +110,20 @@ class Meta
         return $this;
     }
 
-    private function cachedCount()
+    private function cachedCount(): int
     {
         return $this->shouldCache()
-            ? Cache::remember($this->cacheKey(), now()->addHour(), function () {
-                return $this->count();
-            }) : $this->count();
+            ? Cache::remember($this->cacheKey(), now()->addHour(), fn () => $this->count())
+            : $this->count();
     }
 
-    private function cacheKey()
+    private function cacheKey(): string
     {
         return config('enso.tables.cache.prefix')
             .':'.$this->query->getModel()->getTable();
     }
 
-    private function shouldCache()
+    private function shouldCache(): bool
     {
         $shouldCache = $this->config->has('countCache')
             ? $this->config->get('countCache')

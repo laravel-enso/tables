@@ -1,17 +1,18 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Exports;
+namespace LaravelEnso\Tables\App\Exports;
 
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\File;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Notifications\ExportDoneNotification;
-use LaravelEnso\Tables\app\Services\Data\Config;
-use LaravelEnso\Tables\app\Services\Data\Fetcher;
+use LaravelEnso\Tables\App\Contracts\Table;
+use LaravelEnso\Tables\App\Notifications\ExportDoneNotification;
+use LaravelEnso\Tables\App\Services\Data\Config;
+use LaravelEnso\Tables\App\Services\Data\Fetcher;
 
 class Excel
 {
@@ -138,12 +139,11 @@ class Excel
 
     private function filePath()
     {
-        return $this->filePath
-            ?? $this->filePath = Storage::path(
-                config('enso.tables.export.path')
-                    .DIRECTORY_SEPARATOR
-                    .$this->hashName()
-            );
+        return $this->filePath ??= Storage::path(
+            config('enso.tables.export.path')
+                .DIRECTORY_SEPARATOR
+                .$this->hashName()
+        );
     }
 
     private function hashName()
@@ -153,21 +153,18 @@ class Excel
 
     private function filename()
     {
-        return $this->filename
-            ?? $this->filename = preg_replace(
-                '/[^A-Za-z0-9_.-]/',
-                '_',
-                __(Str::title(Str::snake($this->config->get('name'))))
-                .'_'.__('Table_Report')
-            ).'.'.self::Extension;
+        return $this->filename ??= preg_replace(
+            '/[^A-Za-z0-9_.-]/',
+            '_',
+            __(Str::title(Str::snake($this->config->get('name'))))
+            .'_'.__('Table_Report')
+        ).'.'.self::Extension;
     }
 
     private function header()
     {
         return $this->row($this->columns()->pluck('label')
-                ->map(function ($label) {
-                    return __($label);
-                }));
+                ->map(fn ($label) => __($label)));
     }
 
     private function columns()
@@ -177,27 +174,18 @@ class Excel
         }
 
         $this->columns = $this->config->columns()
-            ->reduce(function ($columns, $column) {
-                $meta = $column->get('meta');
-
-                return $meta->get('visible') && ! $meta->get('rogue') && ! $meta->get('notExportable')
-                    ? $columns->push($column)
-                    : $columns;
-            }, collect());
+            ->reduce(fn ($columns, $column) => $this->isExportable($column)
+                ? $columns->push($column)
+                : $columns, new Collection());
 
         return $this->columns;
     }
 
     private function map($data)
     {
-        return $data->map(function ($row) {
-            return $this->row($this->columns->map(function ($column) use ($row) {
-                return collect(explode('.', $column->get('name')))
-                    ->reduce(function ($value, $segment) {
-                        return $value[$segment];
-                    }, $row);
-            }));
-        })->toArray();
+        return $data->map(fn ($row) => $this->row(
+            $this->columns->map(fn ($column) => $this->value($column, $row))
+        ))->toArray();
     }
 
     private function row($row)
@@ -223,5 +211,20 @@ class Excel
     {
         return $this->dataExport->entries / config('enso.tables.export.sheetLimit')
             >= $this->sheetCount;
+    }
+
+    private function isExportable($column)
+    {
+        $meta = $column->get('meta');
+
+        return $meta->get('visible')
+            && ! $meta->get('rogue')
+            && ! $meta->get('notExportable');
+    }
+
+    private function value($column, $row)
+    {
+        return (new Collection(explode('.', $column->get('name'))))
+            ->reduce(fn ($value, $segment) => $value[$segment], $row);
     }
 }

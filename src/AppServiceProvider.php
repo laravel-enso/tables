@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables;
 
 use Illuminate\Support\ServiceProvider;
-use LaravelEnso\Tables\app\Commands\TemplateCacheClear;
+use LaravelEnso\Tables\App\Commands\TemplateCacheClear;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,11 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/config/tables.php' => config_path('enso/tables.php'),
-        ], 'tables-config');
-
-        $this->publishes([
-            __DIR__.'/config/tables.php' => config_path('enso/tables.php'),
-        ], 'enso-config');
+        ], ['tables-config', 'enso-config']);
 
         $this->publishes([
             __DIR__.'/../stubs/Tables/Actions/CustomAction.stub' => app_path('Tables/Actions/CustomAction.php'),
@@ -44,10 +40,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/tables'),
-        ], 'tables-mail');
-
-        $this->publishes([
-            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/tables'),
-        ], 'enso-mail');
+        ], ['tables-mail', 'enso-mail']);
     }
 }

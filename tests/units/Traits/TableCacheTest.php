@@ -4,11 +4,11 @@ namespace LaravelEnso\Tables\Tests\units\Traits;
 
 use Cache;
 use Config;
-use Schema;
 use Faker\Factory;
-use Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
-use LaravelEnso\Tables\app\Traits\TableCache;
+use LaravelEnso\Tables\App\Traits\TableCache;
+use Schema;
+use Tests\TestCase;
 
 class TableCacheTest extends TestCase
 {

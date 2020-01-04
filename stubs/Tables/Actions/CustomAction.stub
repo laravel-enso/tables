@@ -2,7 +2,7 @@
 
 namespace App\Tables\Actions;
 
-use LaravelEnso\Tables\app\Services\Action;
+use LaravelEnso\Tables\App\Services\Action;
 
 class CustomAction extends Action
 {

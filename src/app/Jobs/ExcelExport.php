@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Jobs;
+namespace LaravelEnso\Tables\App\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,9 +10,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use LaravelEnso\Tables\app\Contracts\AuthenticatesOnExport;
-use LaravelEnso\Tables\app\Exports\Excel;
-use LaravelEnso\Tables\app\Services\Data\Config;
+use LaravelEnso\Tables\App\Contracts\AuthenticatesOnExport;
+use LaravelEnso\Tables\App\Exports\Excel;
+use LaravelEnso\Tables\App\Services\Data\Config;
 
 class ExcelExport implements ShouldQueue
 {

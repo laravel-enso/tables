@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data\Filters;
+namespace LaravelEnso\Tables\App\Services\Data\Filters;
 
 use Illuminate\Support\Collection;
 
@@ -11,30 +11,24 @@ class Filter extends BaseFilter
         return $this->filters()->isNotEmpty();
     }
 
-    public function handle()
+    public function handle(): void
     {
-        $this->query->where(function ($query) {
-            $this->filters()->each(function ($filters, $table) use ($query) {
-                $filters->each(function ($value, $column) use ($table, $query) {
-                    $query->whereIn($table.'.'.$column,
-                        collect($value)->toArray());
-                });
-            });
-        });
+        $this->query->where(fn ($query) => $this->filters()
+            ->each(fn ($filters, $table) => $filters
+               ->each(fn ($value, $column) => $query
+                   ->whereIn($table.'.'.$column, (new Collection($value))->toArray()))));
     }
 
-    private function filters()
+    private function filters(): Collection
     {
-        return $this->config->filters()->map(function ($filters) {
-            return $filters->filter(function ($value) {
-                return $this->isValid($value);
-            });
-        })->filter->isNotEmpty();
+        return $this->config->filters()->map(fn ($filters) => $filters
+            ->filter(fn ($value) => $this->isValid($value))
+        )->filter->isNotEmpty();
     }
 
-    private function isValid($value)
+    private function isValid($value): bool
     {
-        return ! collect([null, ''])->containsStrict($value)
+        return ! (new Collection([null, '']))->containsStrict($value)
             && (! $value instanceof Collection || $value->isNotEmpty());
     }
 }

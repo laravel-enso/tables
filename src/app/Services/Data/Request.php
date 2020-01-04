@@ -1,16 +1,17 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data;
+namespace LaravelEnso\Tables\App\Services\Data;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
 
 class Request
 {
-    private $columns;
-    private $meta;
-    private $filters;
-    private $intervals;
-    private $params;
+    private Obj $columns;
+    private Obj $meta;
+    private Obj $filters;
+    private Obj $intervals;
+    private Obj $params;
 
     public function __construct($columns, $meta, $filters, $intervals, $params)
     {
@@ -21,27 +22,27 @@ class Request
         $this->params = new Obj($this->parse($params));
     }
 
-    public function columns()
+    public function columns(): Obj
     {
         return $this->columns;
     }
 
-    public function meta()
+    public function meta(): Obj
     {
         return $this->meta;
     }
 
-    public function filters()
+    public function filters(): Obj
     {
         return $this->filters;
     }
 
-    public function intervals()
+    public function intervals(): Obj
     {
         return $this->intervals;
     }
 
-    public function params()
+    public function params(): Obj
     {
         return $this->params;
     }
@@ -50,9 +51,8 @@ class Request
     {
         return ! is_array($arg)
             ? $this->decode($arg)
-            : collect($arg)->map(function ($arg) {
-                return $this->decode($arg);
-            })->toArray();
+            : (new Collection($arg))->map(fn ($arg) => $this->decode($arg))
+                ->toArray();
     }
 
     private function decode($arg)

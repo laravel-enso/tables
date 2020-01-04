@@ -1,11 +1,12 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Validators;
+namespace LaravelEnso\Tables\App\Services\Template\Validators;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Attributes\Column as Attributes;
-use LaravelEnso\Tables\app\Attributes\Style;
-use LaravelEnso\Tables\app\Exceptions\Column as Exception;
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Column as Attributes;
+use LaravelEnso\Tables\App\Attributes\Style;
+use LaravelEnso\Tables\App\Exceptions\Column as Exception;
 
 class Columns
 {
@@ -20,24 +21,22 @@ class Columns
     {
         $this->checkFormat();
 
-        $this->columns->each(function ($column) {
-            $this->checkMandatoryAttributes($column)
-                ->checkOptionalAttributes($column)
-                ->checkMeta($column)
-                ->checkEnum($column)
-                ->checkTooltip($column)
-                ->checkMoney($column)
-                ->checkClass($column)
-                ->checkAlign($column);
-        });
+        $this->columns->each(fn ($column) => $this->checkMandatoryAttributes($column)
+            ->checkOptionalAttributes($column)
+            ->checkMeta($column)
+            ->checkEnum($column)
+            ->checkTooltip($column)
+            ->checkMoney($column)
+            ->checkClass($column)
+            ->checkAlign($column)
+        );
     }
 
     private function checkFormat()
     {
-        if (! $this->columns instanceof Obj || $this->columns->isEmpty()
-            || $this->columns->first(function ($column) {
-                return ! $column instanceof Obj;
-            }) !== null
+        if (! $this->columns instanceof Obj
+            || $this->columns->isEmpty()
+            || $this->columns->first(fn ($column) => ! $column instanceof Obj) !== null
         ) {
             throw Exception::wrongFormat();
         }
@@ -45,7 +44,7 @@ class Columns
 
     private function checkMandatoryAttributes($column)
     {
-        $diff = collect(Attributes::Mandatory)
+        $diff = (new Collection(Attributes::Mandatory))
             ->diff($column->keys());
 
         if ($diff->isNotEmpty()) {
@@ -59,7 +58,7 @@ class Columns
 
     private function checkOptionalAttributes($column)
     {
-        $attributes = collect(Attributes::Mandatory)
+        $attributes = (new Collection(Attributes::Mandatory))
             ->merge(Attributes::Optional);
 
         $diff = $column->keys()->diff($attributes);
@@ -131,7 +130,7 @@ class Columns
     private function checkAlign($column)
     {
         if (property_exists($column, 'align')
-            && ! collect(Style::Align)->contains($column->align)) {
+            && ! (new Collection(Style::Align))->contains($column->align)) {
             throw Exception::invalidAlign(
                 $column->get('name')
             );

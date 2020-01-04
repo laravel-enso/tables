@@ -2,11 +2,12 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
-use Tests\TestCase;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Attributes\Column;
-use LaravelEnso\Tables\app\Services\Template\Builders\Columns;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Column;
+use LaravelEnso\Tables\App\Services\Template\Builders\Columns;
+use Tests\TestCase;
 
 class ColumnTest extends TestCase
 {
@@ -34,7 +35,7 @@ class ColumnTest extends TestCase
     /** @test */
     public function can_build_with_meta_attributes()
     {
-        collect(Column::Meta)->each(function ($attribute) {
+        (new Collection(Column::Meta))->each(function($attribute) {
             $expected = Str::startsWith($attribute, 'sort:')
                 ? ['key' => 'sort', 'value' => Str::replaceFirst('sort:', '', $attribute)]
                 : ['key' => $attribute, 'value' => true];

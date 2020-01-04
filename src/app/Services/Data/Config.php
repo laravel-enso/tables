@@ -1,9 +1,10 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data;
+namespace LaravelEnso\Tables\App\Services\Data;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template;
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Template;
 
 class Config
 {
@@ -17,10 +18,10 @@ class Config
 
     private const RequestColumnMeta = ['visible', 'sort', 'hidden'];
 
-    private $request;
-    private $template;
-    private $columns;
-    private $meta;
+    private Request $request;
+    private Template $template;
+    private Obj $columns;
+    private Obj $meta;
 
     public function __construct(Request $request, Template $template)
     {
@@ -33,49 +34,49 @@ class Config
 
     public function __call($method, $args)
     {
-        if (isset($args[0]) && collect(self::TemplateProxy)->contains($args[0])) {
+        if (isset($args[0]) && (new Collection(self::TemplateProxy))->contains($args[0])) {
             return $this->template->{$method}(...$args);
         }
 
         return $this->request->{$method}(...$args);
     }
 
-    public function meta()
+    public function meta(): Obj
     {
         return $this->meta;
     }
 
-    public function columns()
+    public function columns(): Obj
     {
         return $this->columns;
     }
 
-    public function filters()
+    public function filters(): Obj
     {
         return $this->request->filters();
     }
 
-    public function intervals()
+    public function intervals(): Obj
     {
         return $this->request->intervals();
     }
 
-    public function params()
+    public function params(): Obj
     {
         return $this->request->params();
     }
 
-    public function template()
+    public function template(): Template
     {
         return $this->template;
     }
 
-    public function request()
+    public function request(): Request
     {
         return $this->request;
     }
 
-    private function setMeta()
+    private function setMeta(): self
     {
         $this->meta = $this->template->meta()
             ->forget(static::RequestMeta)
@@ -87,28 +88,28 @@ class Config
         return $this;
     }
 
-    private function setColumns()
+    private function setColumns(): void
     {
         $this->columns = $this->request->columns()
-            ->map(function ($column, $index) {
-                return $this->mergeColumnMeta($this->template->column($index), $column);
-            });
+            ->map(fn ($column, $index) => $this->mergeColumnMeta(
+                $this->template->column($index), $column
+            ));
 
         Computors::columns($this);
     }
 
-    private function mergeColumnMeta(Obj $templateColumn, Obj $requestColumn)
+    private function mergeColumnMeta(Obj $templateColumn, Obj $requestColumn): Obj
     {
-        $meta = $templateColumn->get('meta', collect())
+        $meta = $templateColumn->get('meta', new Collection())
             ->forget(static::RequestColumnMeta)
             ->merge($this->requestColumnMeta($requestColumn));
 
         return $templateColumn->set('meta', $meta);
     }
 
-    private function requestColumnMeta(Obj $requestColumn)
+    private function requestColumnMeta(Obj $requestColumn): Collection
     {
-        return $requestColumn->get('meta', collect())
-            ->intersectByKeys(collect(static::RequestColumnMeta)->flip());
+        return $requestColumn->get('meta', new Collection())
+            ->intersectByKeys((new Collection(static::RequestColumnMeta))->flip());
     }
 }

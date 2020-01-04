@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Commands;
+namespace LaravelEnso\Tables\App\Commands;
 
 use Cache;
 use Illuminate\Cache\TaggableStore;

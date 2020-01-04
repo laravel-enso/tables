@@ -1,9 +1,9 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Validators;
+namespace LaravelEnso\Tables\App\Services\Template\Validators;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\Control as Exception;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Exceptions\Control as Exception;
 
 class Controls
 {
@@ -27,9 +27,9 @@ class Controls
     private function checkFormat()
     {
         $formattedWrong = ! $this->controls instanceof Obj
-            || $this->controls->filter(function ($control) {
-                return ! is_string($control);
-            })->isNotEmpty();
+            || $this->controls
+                ->filter(fn ($control) => ! is_string($control))
+                ->isNotEmpty();
 
         if ($formattedWrong) {
             throw Exception::invalidFormat();

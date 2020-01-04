@@ -1,8 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Traits\Tests;
-
-use Exception;
+namespace LaravelEnso\Tables\App\Traits\Tests;
 
 trait Datatable
 {

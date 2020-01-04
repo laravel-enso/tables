@@ -1,12 +1,12 @@
 <?php
 
-use Tests\TestCase;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use LaravelEnso\Tables\app\Services\Template;
-use LaravelEnso\Tables\app\Services\TemplateLoader;
+use Illuminate\Support\Str;
+use LaravelEnso\Tables\App\Services\Template;
+use LaravelEnso\Tables\App\Services\TemplateLoader;
 use LaravelEnso\Tables\Tests\units\Services\TestTable;
+use Tests\TestCase;
 
 class TemplateLoaderTest extends TestCase
 {

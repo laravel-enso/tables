@@ -1,11 +1,11 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Validators;
+namespace LaravelEnso\Tables\App\Services\Template\Validators;
 
 use Illuminate\Support\Str;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Attributes\Column as Attributes;
-use LaravelEnso\Tables\app\Exceptions\Meta as Exception;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Column as Attributes;
+use LaravelEnso\Tables\App\Exceptions\Meta as Exception;
 
 class Meta
 {

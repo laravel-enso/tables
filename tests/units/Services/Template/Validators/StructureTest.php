@@ -2,10 +2,10 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Exceptions\Template as Exception;
+use LaravelEnso\Tables\App\Services\Template\Validators\Structure;
 use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\Template as Exception;
-use LaravelEnso\Tables\app\Services\Template\Validators\Structure;
 
 class StructureTest extends TestCase
 {

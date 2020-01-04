@@ -1,10 +1,10 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Traits;
+namespace LaravelEnso\Tables\App\Traits;
 
 use Illuminate\Http\Request;
-use LaravelEnso\Tables\app\Services\Data\Builders\Data as DataBuilder;
-use LaravelEnso\Tables\app\Services\Data\Builders\Meta as MetaBuilder;
+use LaravelEnso\Tables\App\Services\Data\Builders\Data as DataBuilder;
+use LaravelEnso\Tables\App\Services\Data\Builders\Meta as MetaBuilder;
 
 trait Data
 {

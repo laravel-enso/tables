@@ -1,10 +1,10 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Contracts;
+namespace LaravelEnso\Tables\App\Contracts;
 
 interface ComputesColumns
 {
-    public static function columns($columns);
+    public static function columns($columns): void;
 
-    public static function handle($row);
+    public static function handle($row): array;
 }

@@ -1,20 +1,20 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Data\Builders;
+namespace LaravelEnso\Tables\App\Services\Data\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use LaravelEnso\Tables\app\Contracts\RawTotal;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Exceptions\Meta as Exception;
-use LaravelEnso\Tables\app\Services\Data\Config;
+use LaravelEnso\Tables\App\Contracts\RawTotal;
+use LaravelEnso\Tables\App\Contracts\Table;
+use LaravelEnso\Tables\App\Exceptions\Meta as Exception;
+use LaravelEnso\Tables\App\Services\Data\Config;
 
 class Total
 {
-    private $table;
-    private $config;
-    private $query;
-    private $total;
+    private Table $table;
+    private Config $config;
+    private Builder $query;
+    private array $total;
 
     public function __construct(Table $table, Config $config, Builder $query)
     {
@@ -24,20 +24,19 @@ class Total
         $this->total = [];
     }
 
-    public function handle()
+    public function handle(): array
     {
         $this->compute();
 
         return $this->total;
     }
 
-    private function compute()
+    private function compute(): void
     {
         $this->config->columns()
-            ->filter(function ($column) {
-                return $column->get('meta')->get('total')
-                    || $column->get('meta')->get('rawTotal');
-            })->each(function ($column) {
+            ->filter(fn ($column) => $column->get('meta')->get('total')
+                || $column->get('meta')->get('rawTotal')
+            )->each(function ($column) {
                 $this->total[$column->get('name')] = $column->get('meta')->get('rawTotal')
                     ? $this->rawTotal($column)
                     : $this->query->sum($column->get('data'));
@@ -48,7 +47,7 @@ class Total
             });
     }
 
-    private function rawTotal($column)
+    private function rawTotal($column): int
     {
         if (! $this->table instanceof RawTotal) {
             throw Exception::missingInterface();

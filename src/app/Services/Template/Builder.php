@@ -1,18 +1,18 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template;
+namespace LaravelEnso\Tables\App\Services\Template;
 
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Services\Template\Builders\Buttons;
-use LaravelEnso\Tables\app\Services\Template\Builders\Columns;
-use LaravelEnso\Tables\app\Services\Template\Builders\Controls;
-use LaravelEnso\Tables\app\Services\Template\Builders\Structure;
-use LaravelEnso\Tables\app\Services\Template\Builders\Style;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Template\Builders\Buttons;
+use LaravelEnso\Tables\App\Services\Template\Builders\Columns;
+use LaravelEnso\Tables\App\Services\Template\Builders\Controls;
+use LaravelEnso\Tables\App\Services\Template\Builders\Structure;
+use LaravelEnso\Tables\App\Services\Template\Builders\Style;
 
 class Builder
 {
-    private $template;
-    private $meta;
+    private Obj $template;
+    private Obj $meta;
 
     public function __construct(Obj $template, Obj $meta)
     {

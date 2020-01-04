@@ -2,10 +2,11 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
-use Tests\TestCase;
+use Illuminate\Support\Collection;
+use LaravelEnso\Tables\App\Services\Data\Filters\Search;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use LaravelEnso\Tables\app\Services\Data\Filters\Search;
+use Tests\TestCase;
 
 class SearchTest extends TestCase
 {
@@ -68,7 +69,7 @@ class SearchTest extends TestCase
     {
         $this->config->meta()->set(
             'search',
-            collect(explode(' ', $this->testModel->name))->last()
+            (new Collection(explode(' ', $this->testModel->name)))->last()
         )->set('searchMode', 'endsWith');
 
         $response = $this->requestResponse();

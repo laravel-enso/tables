@@ -1,22 +1,23 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services;
+namespace LaravelEnso\Tables\App\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
-use LaravelEnso\Helpers\app\Classes\JsonParser;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Template\Builder;
-use LaravelEnso\Tables\app\Services\Template\Validator;
+use LaravelEnso\Helpers\App\Classes\JsonParser;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Contracts\Table;
+use LaravelEnso\Tables\App\Services\Template\Builder;
+use LaravelEnso\Tables\App\Services\Template\Validator;
 use ReflectionClass;
 
 class Template
 {
-    private $builder;
-    private $table;
-    private $template;
-    private $meta;
+    private Builder $builder;
+    private Table $table;
+    private Obj $template;
+    private Obj $meta;
 
     public function __construct(Table $table)
     {
@@ -67,7 +68,7 @@ class Template
         return $this->template->get('columns');
     }
 
-    public function meta()
+    public function meta(): Obj
     {
         return $this->meta;
     }
@@ -80,7 +81,7 @@ class Template
     private function builder()
     {
         return $this->builder
-            ?? $this->builder = new Builder($this->template, $this->meta);
+            ??= new Builder($this->template, $this->meta);
     }
 
     private function template()
@@ -112,7 +113,7 @@ class Template
 
     private function needsValidation()
     {
-        return collect([App::environment(), 'always'])->contains(
+        return (new Collection([App::environment(), 'always']))->contains(
             config('enso.tables.validations')
         );
     }

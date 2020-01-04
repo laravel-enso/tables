@@ -2,13 +2,13 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
-use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use LaravelEnso\Helpers\app\Classes\Obj;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Data\Builders\Meta;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use LaravelEnso\Tables\app\Services\Data\Builders\Meta;
+use Tests\TestCase;
 
 class MetaTest extends TestCase
 {

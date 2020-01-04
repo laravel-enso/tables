@@ -1,11 +1,12 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services\Template\Validators;
+namespace LaravelEnso\Tables\App\Services\Template\Validators;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Attributes\Button as Attributes;
-use LaravelEnso\Tables\app\Exceptions\Button as Exception;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Button as Attributes;
+use LaravelEnso\Tables\App\Exceptions\Button as Exception;
 
 class Buttons
 {
@@ -30,9 +31,8 @@ class Buttons
 
     private function checkFormat()
     {
-        $formattedWrong = $this->buttons->filter(function ($button) {
-            return ! is_string($button) && ! $button instanceof Obj;
-        });
+        $formattedWrong = $this->buttons
+            ->filter(fn ($button) => ! is_string($button) && ! $button instanceof Obj);
 
         if ($formattedWrong->isNotEmpty()) {
             throw Exception::wrongFormat();
@@ -43,9 +43,8 @@ class Buttons
 
     private function checkDefault()
     {
-        $diff = $this->buttons->filter(function ($button) {
-            return is_string($button);
-        })->diff($this->defaults->keys());
+        $diff = $this->buttons->filter(fn ($button) => is_string($button))
+            ->diff($this->defaults->keys());
 
         if ($diff->isNotEmpty()) {
             throw Exception::undefined($diff->implode('", "'));
@@ -56,13 +55,11 @@ class Buttons
 
     private function checkStructure()
     {
-        $this->buttons->each(function ($button) {
-            $button = $button instanceof Obj
+        $this->buttons
+            ->map(fn ($button) => $button instanceof Obj
                 ? $button
-                : $this->defaults->get($button);
-
-            $this->checkAttributes($button);
-        });
+                : $this->defaults->get($button)
+            )->each(fn ($button) => $this->checkAttributes($button));
 
         return $this;
     }
@@ -79,7 +76,7 @@ class Buttons
 
     private function checkMandatoryAttributes($button)
     {
-        $formattedWrong = collect(Attributes::Mandatory)
+        $formattedWrong = (new Collection(Attributes::Mandatory))
             ->diff($button->keys())
             ->isNotEmpty();
 
@@ -122,7 +119,7 @@ class Buttons
     private function checkActions($button)
     {
         $formattedWrong = $button->has('action')
-            && ! collect(Attributes::Actions)->contains($button->get('action'));
+            && ! (new Collection(Attributes::Actions))->contains($button->get('action'));
 
         if ($formattedWrong) {
             throw Exception::wrongAction();
@@ -153,7 +150,7 @@ class Buttons
             return;
         }
 
-        if (! collect(Attributes::Methods)->contains($button->get('method'))) {
+        if (! (new Collection(Attributes::Methods))->contains($button->get('method'))) {
             throw Exception::invalidMethod($button->get('method'));
         }
 
@@ -162,14 +159,12 @@ class Buttons
 
     private function defaults()
     {
-        $this->defaults = (new Obj(config('enso.tables.buttons.global')))
-            ->map(function ($button) {
-                return $button->set('type', 'global');
-            })->merge(
-                (new Obj(config('enso.tables.buttons.row')))
-                    ->map(function ($button) {
-                        return $button->set('type', 'row');
-                    })
-            );
+        $row = (new Obj(config('enso.tables.buttons.row')))
+            ->map(fn ($button) => $button->set('type', 'row'));
+
+        $global = (new Obj(config('enso.tables.buttons.global')))
+            ->map(fn ($button) => $button->set('type', 'global'));
+
+        $this->defaults = $global->merge($row);
     }
 }

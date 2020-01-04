@@ -2,12 +2,13 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
+use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Attributes\Column as Attributes;
+use LaravelEnso\Tables\App\Exceptions\Column as ColumnException;
+use LaravelEnso\Tables\App\Exceptions\Meta as MetaException;
+use LaravelEnso\Tables\App\Services\Template\Validators\Columns;
 use Tests\TestCase;
-use LaravelEnso\Helpers\app\Classes\Obj;
-use LaravelEnso\Tables\app\Exceptions\Meta as MetaException;
-use LaravelEnso\Tables\app\Exceptions\Column as ColumnException;
-use LaravelEnso\Tables\app\Attributes\Column as Attributes;
-use LaravelEnso\Tables\app\Services\Template\Validators\Columns;
 
 class ColumnTest extends TestCase
 {
@@ -91,9 +92,9 @@ class ColumnTest extends TestCase
 
     private function mockedColumn()
     {
-        return collect(Attributes::Mandatory)->flip()->map(function () {
-            return new Obj([]);
-        });
+        return (new Collection(Attributes::Mandatory))
+            ->flip()
+            ->map(fn () => new Obj());
     }
 
     private function validate()

@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Attributes;
+namespace LaravelEnso\Tables\App\Attributes;
 
 class Style
 {

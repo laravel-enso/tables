@@ -2,9 +2,9 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services;
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
-use LaravelEnso\Tables\app\Traits\TableCache;
+use Illuminate\Support\Facades\Schema;
+use LaravelEnso\Tables\App\Traits\TableCache;
 
 class TestModel extends Model
 {

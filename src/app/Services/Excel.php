@@ -1,15 +1,15 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services;
+namespace LaravelEnso\Tables\App\Services;
 
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
-use LaravelEnso\DataExport\app\Models\DataExport;
-use LaravelEnso\IO\app\Enums\IOStatuses;
-use LaravelEnso\Tables\app\Exceptions\Export as Exception;
-use LaravelEnso\Tables\app\Jobs\ExcelExport;
-use LaravelEnso\Tables\app\Notifications\ExportStartNotification;
-use LaravelEnso\Tables\app\Services\Data\Config;
+use LaravelEnso\DataExport\App\Models\DataExport;
+use LaravelEnso\IO\App\Enums\IOStatuses;
+use LaravelEnso\Tables\App\Exceptions\Export as Exception;
+use LaravelEnso\Tables\App\Jobs\ExcelExport;
+use LaravelEnso\Tables\App\Notifications\ExportStartNotification;
+use LaravelEnso\Tables\App\Services\Data\Config;
 
 class Excel
 {

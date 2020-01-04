@@ -2,9 +2,10 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\app\Contracts\Table;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
+use LaravelEnso\Tables\App\Contracts\Table;
 
 class TestTable implements Table
 {
@@ -27,7 +28,7 @@ class TestTable implements Table
 
     public static function cache($type)
     {
-        $template = collect(json_decode(File::get(self::$path), true));
+        $template = new Collection(json_decode(File::get(self::$path), true));
         $template->forget('templateCache');
 
         if ($type !== null) {

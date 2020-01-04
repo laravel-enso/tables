@@ -1,10 +1,10 @@
 <?php
 
-namespace LaravelEnso\Tables\app\Services;
+namespace LaravelEnso\Tables\App\Services;
 
-use LaravelEnso\Tables\app\Contracts\Table;
-use LaravelEnso\Tables\app\Services\Data\Config;
-use LaravelEnso\Tables\app\Services\Data\Fetcher;
+use LaravelEnso\Tables\App\Contracts\Table;
+use LaravelEnso\Tables\App\Services\Data\Config;
+use LaravelEnso\Tables\App\Services\Data\Fetcher;
 
 abstract class Action
 {
@@ -23,9 +23,8 @@ abstract class Action
         $this->fetcher->next();
 
         while ($this->fetcher->valid()) {
-            $this->fetcher->current()->each(function ($row) {
-                $this->process($row);
-            });
+            $this->fetcher->current()
+                ->each(fn ($row) => $this->process($row));
 
             $this->fetcher->next();
         }
