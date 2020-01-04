@@ -2,13 +2,15 @@
 
 namespace LaravelEnso\Tables\App\Traits\Tests;
 
+use Exception;
+
 trait Datatable
 {
     /** @test */
     public function can_view_index()
     {
         if (! isset($this->permissionGroup)) {
-            throw Exception('"permissionGroup" property is missing from your test');
+            throw new Exception('"permissionGroup" property is missing from your test');
         }
 
         $init = $this->get(route($this->permissionGroup.'.initTable', [], false));

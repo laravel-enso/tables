@@ -8,12 +8,13 @@ use LaravelEnso\Tables\App\Services\Data\Fetcher;
 
 abstract class Action
 {
-    private $fetcher;
+    private Fetcher $fetcher;
     private $request;
 
     public function __construct(Table $table, Config $config)
     {
         $this->fetcher = new Fetcher($table, $config);
+        $this->request = $config->request();
     }
 
     abstract public function process(array $row);

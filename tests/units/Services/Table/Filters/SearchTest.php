@@ -49,10 +49,10 @@ class SearchTest extends TestCase
     /** @test */
     public function can_use_starts_with_search()
     {
-        $this->config->meta()->set(
-            'search',
-            collect(explode(' ', $this->testModel->name))->first()
-        )->set('searchMode', 'startsWith');
+        $first = (new Collection(explode(' ', $this->testModel->name)))->first();
+
+        $this->config->meta()->set('search', $first)
+            ->set('searchMode', 'startsWith');
 
         $response = $this->requestResponse();
 

@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\App\Services\Data\Filters;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use LaravelEnso\Tables\App\Exceptions\Query as Exception;
@@ -16,9 +17,10 @@ class Search extends BaseFilter
 
     public function handle(): void
     {
-        $this->searchArguments()->each(fn ($argument) => $this
-            ->query->where(fn ($query) => $this->matchArgument($query, $argument))
-        );
+        $this->searchArguments()
+            ->each(fn ($argument) => $this->query->where(
+                fn ($query) => $this->matchArgument($query, $argument)
+            ));
     }
 
     private function searchArguments(): Collection
@@ -30,30 +32,36 @@ class Search extends BaseFilter
             : (new Collection($search));
     }
 
-    private function matchArgument($query, $argument): void
+    private function matchArgument(Builder $query, string $argument): void
     {
-        $this->searchable()->each(fn ($column) => $query
-            ->orWhere(fn ($query) => $this
-                ->matchAttribute($query, $column->get('data'), $argument, $column->get('name'))
-            )
+        $this->searchable()->each(fn ($column) => $query->orWhere(
+            fn ($query) => $this->matchAttribute(
+                $query, $column->get('data'), $argument, $column->get('name')
+            ))
         );
     }
 
-    private function matchAttribute($query, $attribute, $argument, $name = null): void
+    private function matchAttribute(Builder $query, string $attribute, string $argument,
+        ?string $name = null): void
     {
-        $isNested = $this->isNested($name ?? $attribute);
+        $nested = $this->isNested($name ?? $attribute);
 
-        $query->when($isNested, function ($query) use ($attribute, $argument) {
-            $attributes = new Collection(explode('.', $attribute));
-
-            $query->whereHas($attributes->shift(), fn ($query) => $this
-                ->matchAttribute($query, $attributes->implode('.'), $argument));
-        })->when(! $isNested, fn ($query) => $query->where(
+        $query->when($nested, fn ($query) => $this->matchSegments(
+            $query, $attribute, $argument
+        ))->when(! $nested, fn ($query) => $query->where(
             $attribute, $this->config->get('comparisonOperator'), $this->wildcards($argument)
         ));
     }
 
-    private function wildcards($argument): string
+    private function matchSegments(Builder $query, string $attribute, string $argument): void
+    {
+        $attributes = new Collection(explode('.', $attribute));
+
+        $query->whereHas($attributes->shift(), fn ($query) => $this
+                ->matchAttribute($query, $attributes->implode('.'), $argument));
+    }
+
+    private function wildcards(string $argument): string
     {
         switch ($this->config->meta()->get('searchMode')) {
             case 'full':

@@ -19,51 +19,60 @@ class Columns
 
     public function build(): void
     {
-        $columns = $this->template->get('columns')
-            ->reduce(fn ($columns, $column) => $columns->push(
-                $this->computeMeta($column)
-                    ->computeDefaultSort($column)
-                    ->updateDefaults($column)
-            ), new Collection());
-
-        $this->template->set('columns', $columns);
+        $this->template->set('columns', $this->columns());
     }
 
-    private function computeMeta($column): self
+    private function columns()
     {
-        if (! $column->has('meta')) {
-            $column->set('meta', new Obj());
-        }
+        return $this->template->get('columns')
+            ->reduce(fn ($columns, $column) => $columns->push(
+                $this->compute($column)
+            ), new Collection());
+    }
 
-        $meta = collect(Attributes::Meta)
-            ->reduce(fn ($meta, $attribute) => $meta
-                ->set($attribute, $column->get('meta')->contains($attribute)), new Obj());
+    private function compute($column): Obj
+    {
+        $this->meta($column)
+            ->sort($column)
+            ->total($column)
+            ->defaults($column);
 
-        $meta->set('visible', true);
-        $meta->set('hidden', false);
+        return $column;
+    }
+
+    private function meta($column): self
+    {
+        $meta = (new Collection(Attributes::Meta))
+            ->reduce(fn ($meta, $attribute) => $meta->set(
+                $attribute, optional($column->get('meta'))->contains($attribute)
+            ), new Obj());
+
+        $meta->set('visible', true)
+            ->set('hidden', false);
+
         $column->set('meta', $meta);
 
         return $this;
     }
 
-    private function computeDefaultSort($column): self
+    private function sort($column): self
     {
         $meta = $column->get('meta');
 
-        $defaultSort = $this->defaultSort($meta);
+        $templateSort = $this->templateSort($meta);
 
-        $meta->set('sort', $defaultSort);
+        $meta->set('sort', $templateSort);
 
         $meta->forget(['sort:ASC', 'sort:DESC']);
 
-        if ($defaultSort) {
+        if ($templateSort) {
             $this->meta->set('sort', true);
         }
 
         return $this;
     }
 
-    private function defaultSort($meta): ?string
+    private function templateSort($meta): ?string
     {
         if ($meta->get('sort:ASC')) {
             return 'ASC';
@@ -76,38 +85,33 @@ class Columns
         return $meta->get('sort');
     }
 
-    private function updateDefaults($column): Obj
+    private function total($column): self
     {
         $meta = $column->get('meta');
-
-        if ($meta->get('searchable')) {
-            $this->meta->set('searchable', true);
-        }
 
         if ($meta->get('total') || $meta->get('rawTotal') || $meta->get('customTotal')) {
             $this->meta->set('total', true);
         }
 
-        if ($meta->get('date')) {
-            $this->meta->set('date', true);
-        }
+        return $this;
+    }
 
-        if ($meta->get('translatable')) {
-            $this->meta->set('translatable', true);
-        }
+    private function defaults($column): void
+    {
+        $this->fromColumn($column)
+            ->merge($this->fromColumnMeta($column))
+            ->each(fn ($attribute) => $this->meta->set($attribute, true));
+    }
 
-        if ($meta->get('cents')) {
-            $this->meta->set('cents', true);
-        }
+    private function fromColumn($column): Collection
+    {
+        return (new Collection(['enum', 'money']))
+            ->filter(fn ($attribute) => $column->get($attribute));
+    }
 
-        if ($column->has('enum')) {
-            $this->meta->set('enum', true);
-        }
-
-        if ($column->has('money')) {
-            $this->meta->set('money', true);
-        }
-
-        return $column;
+    private function fromColumnMeta($column): Collection
+    {
+        return (new Collection(['searchable', 'date', 'translatable', 'cents']))
+            ->filter(fn ($attribute) => $column->get('meta')->get($attribute));
     }
 }

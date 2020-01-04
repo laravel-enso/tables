@@ -61,10 +61,10 @@ class Request
             return $arg;
         }
 
-        $argDecoded = json_decode($arg);
+        $decodedArg = json_decode($arg);
 
         return json_last_error() === JSON_ERROR_NONE
-            ? $argDecoded
+            ? $decodedArg
             : $arg;
     }
 }

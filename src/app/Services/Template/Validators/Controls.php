@@ -7,8 +7,8 @@ use LaravelEnso\Tables\App\Exceptions\Control as Exception;
 
 class Controls
 {
-    private $controls;
-    private $defaults;
+    private ?Obj $controls;
+    private Obj $defaults;
 
     public function __construct(Obj $template)
     {
@@ -19,33 +19,33 @@ class Controls
     public function validate()
     {
         if ($this->controls !== null) {
-            $this->checkFormat()
-                ->checkDefault();
+            $this->format()
+                ->defaults();
         }
     }
 
-    private function checkFormat()
+    private function format()
     {
-        $formattedWrong = ! $this->controls instanceof Obj
-            || $this->controls
-                ->filter(fn ($control) => ! is_string($control))
-                ->isNotEmpty();
-
-        if ($formattedWrong) {
+        if ($this->wrongFormat()) {
             throw Exception::invalidFormat();
         }
 
         return $this;
     }
 
-    private function checkDefault()
+    private function wrongFormat()
+    {
+        return ! $this->controls instanceof Obj || $this->controls
+            ->filter(fn ($control) => ! is_string($control))
+            ->isNotEmpty();
+    }
+
+    private function defaults()
     {
         $diff = $this->controls->diff($this->defaults);
 
         if ($diff->isNotEmpty()) {
-            throw Exception::undefined(
-                $diff->implode('", "')
-            );
+            throw Exception::undefined($diff->implode('", "'));
         }
 
         return $this;

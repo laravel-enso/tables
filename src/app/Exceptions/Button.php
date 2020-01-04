@@ -40,14 +40,14 @@ class Button extends EnsoException
     public static function missingRoute()
     {
         return new static(__(
-            'Whenever you set an action for a button you need to provide the fullRoute or routeSuffix'
+            'When you set an action for a button you need to provide the fullRoute or routeSuffix'
         ));
     }
 
     public static function missingMethod()
     {
         return new static(__(
-            'Whenever you set an ajax action for a button you need to provide the method aswell'
+            'When you set an ajax action for a button you need to provide the method aswell'
         ));
     }
 

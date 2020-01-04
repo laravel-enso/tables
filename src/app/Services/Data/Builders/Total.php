@@ -4,6 +4,7 @@ namespace LaravelEnso\Tables\App\Services\Data\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Contracts\RawTotal;
 use LaravelEnso\Tables\App\Contracts\Table;
 use LaravelEnso\Tables\App\Exceptions\Meta as Exception;
@@ -26,25 +27,23 @@ class Total
 
     public function handle(): array
     {
-        $this->compute();
+        $this->config->columns()
+            ->filter(fn ($column) => $column->get('meta')->get('total')
+                || $column->get('meta')->get('rawTotal')
+            )->each(fn ($column) => $this->compute($column));
 
         return $this->total;
     }
 
-    private function compute(): void
+    private function compute(Obj $column): void
     {
-        $this->config->columns()
-            ->filter(fn ($column) => $column->get('meta')->get('total')
-                || $column->get('meta')->get('rawTotal')
-            )->each(function ($column) {
-                $this->total[$column->get('name')] = $column->get('meta')->get('rawTotal')
-                    ? $this->rawTotal($column)
-                    : $this->query->sum($column->get('data'));
+        $this->total[$column->get('name')] = $column->get('meta')->get('rawTotal')
+            ? $this->rawTotal($column)
+            : $this->query->sum($column->get('data'));
 
-                if ($column->get('meta')->get('cents')) {
-                    $this->total[$column->get('name')] /= 100;
-                }
-            });
+        if ($column->get('meta')->get('cents')) {
+            $this->total[$column->get('name')] /= 100;
+        }
     }
 
     private function rawTotal($column): int

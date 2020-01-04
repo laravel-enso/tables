@@ -21,9 +21,9 @@ class ExcelExport implements ShouldQueue
     public $timeout;
     public $queue;
 
-    private $user;
-    private $config;
-    private $tableClass;
+    private User $user;
+    private Config $config;
+    private string $tableClass;
     private $dataExport;
 
     public function __construct(User $user, Config $config, string $tableClass, $dataExport = null)

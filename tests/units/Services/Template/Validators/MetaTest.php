@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Attributes\Column as Attributes;
 use LaravelEnso\Tables\App\Exceptions\Meta as Exception;
-use LaravelEnso\Tables\App\Services\Template\Validators\Columns;
+use LaravelEnso\Tables\App\Services\Template\Validators\Columns\Columns;
 use Tests\TestCase;
 
 class MetaTest extends TestCase

@@ -19,11 +19,11 @@ class Style
 
     public function build(): void
     {
-        $this->template->set('align', $this->compute(Attributes::Align));
-        $this->template->set('style', $this->compute(Attributes::Table));
-        $this->template->set('aligns', $this->preset(Attributes::Align));
-        $this->template->set('styles', $this->preset(Attributes::Table));
-        $this->template->set('highlight', $this->defaultStyle->get('highlight'));
+        $this->template->set('align', $this->compute(Attributes::Align))
+            ->set('style', $this->compute(Attributes::Table))
+            ->set('aligns', $this->preset(Attributes::Align))
+            ->set('styles', $this->preset(Attributes::Table))
+            ->set('highlight', $this->defaultStyle->get('highlight'));
     }
 
     private function compute($style): string
@@ -39,7 +39,8 @@ class Style
 
     private function preset($style): Obj
     {
-        return (new Collection($style))->reduce(fn ($styles, $style) => $styles
-            ->set($style, $this->defaultStyle->get('mapping')->get($style)), new Obj());
+        return (new Collection($style))->reduce(fn ($styles, $style) => $styles->set(
+            $style, $this->defaultStyle->get('mapping')->get($style)
+        ), new Obj());
     }
 }

@@ -3,15 +3,16 @@
 namespace LaravelEnso\Tables\App\Services\Template;
 
 use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Services\Template\Validators\Buttons;
-use LaravelEnso\Tables\App\Services\Template\Validators\Columns;
+use LaravelEnso\Tables\App\Services\Template\Validators\Buttons\Buttons;
+use LaravelEnso\Tables\App\Services\Template\Validators\Columns\Columns;
 use LaravelEnso\Tables\App\Services\Template\Validators\Controls;
 use LaravelEnso\Tables\App\Services\Template\Validators\Route;
-use LaravelEnso\Tables\App\Services\Template\Validators\Structure;
+use LaravelEnso\Tables\App\Services\Template\Validators\Structure\Attributes;
+use LaravelEnso\Tables\App\Services\Template\Validators\Structure\Structure;
 
 class Validator
 {
-    private $template;
+    private Obj $template;
 
     public function __construct(Obj $template)
     {
@@ -21,6 +22,8 @@ class Validator
     public function run()
     {
         (new Structure($this->template))->validate();
+
+        (new Attributes($this->template))->validate();
 
         (new Route($this->template))->validate();
 

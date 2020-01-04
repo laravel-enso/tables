@@ -2,11 +2,26 @@
 
 namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\App\Classes\Obj;
 
 class Structure
 {
+    private const DefaultFromConfig = [
+        'dtRowId', 'lengthMenu', 'debounce', 'method', 'labels',
+        'comparisonOperator', 'responsive', 'searchModes',
+    ];
+
+    private const FalseIfMissing = ['selectable',  'preview'];
+
+    private const DefaultFalse = [
+        'loading', 'forceInfo', 'searchable', 'sort', 'total', 'date',
+        'translatable', 'enum', 'cents', 'money',
+    ];
+
+    private const TemplateOrConfigToMeta = ['searchMode', 'fullInfoRecordLimit'];
+
     private Obj $template;
     private Obj $meta;
 
@@ -18,46 +33,79 @@ class Structure
 
     public function build(): void
     {
-        $this->readPath()
-            ->dtRowId()
-            ->lengthMenu()
-            ->debounce()
-            ->method()
-            ->selectable()
-            ->preview()
-            ->comparisonOperator()
-            ->searchMode()
-            ->fullInfoRecordLimit()
-            ->responsive()
-            ->defaults();
+        $this->defaults()
+            ->defaultFromConfig()
+            ->falseIfMissing()
+            ->name()
+            ->readPath()
+            ->length()
+            ->templateOrConfigToMeta();
+    }
+
+    private function defaults(): self
+    {
+        $this->meta->set('start', 0);
+        $this->meta->set('search', '');
+
+        (new Collection(self::DefaultFalse))
+            ->each(fn ($attribute) => $this->meta->set($attribute, false));
+
+        return $this;
+    }
+
+    private function defaultFromConfig()
+    {
+        (new Collection(self::DefaultFromConfig))
+            ->each(fn ($attribute) => $this->fromConfigIfNeeded($attribute));
+
+        return $this;
+    }
+
+    private function fromConfigIfNeeded($attribute)
+    {
+        if (! $this->template->has($attribute)) {
+            $this->template->set($attribute, config("enso.tables.{$attribute}"));
+        }
+    }
+
+    private function falseIfMissing()
+    {
+        (new Collection(self::FalseIfMissing))
+            ->each(fn ($attribute) => $this->fillFalseIfMissing($attribute));
+
+        return $this;
+    }
+
+    private function fillFalseIfMissing(string $attribute): void
+    {
+        if (! $this->template->has($attribute)) {
+            $this->template->set($attribute, false);
+        }
+    }
+
+    private function name()
+    {
+        if (! $this->template->has('name')) {
+            $this->template->set('name', Str::plural($this->template->get('model')));
+        }
+
+        return $this;
     }
 
     private function readPath(): self
     {
-        $route = $this->template->get('routePrefix').'.'
-            .($this->template->get('dataRouteSuffix')
-                ?? config('enso.tables.dataRouteSuffix'));
+        $prefix = $this->template->get('routePrefix');
 
-        $this->template->set('readPath', route($route, [], false));
+        $suffix = $this->template->get('dataRouteSuffix')
+            ?? config('enso.tables.dataRouteSuffix');
 
-        return $this;
-    }
-
-    private function dtRowId(): self
-    {
-        if (! $this->template->has('dtRowId')) {
-            $this->template->set('dtRowId', config('enso.tables.dtRowId'));
-        }
+        $this->template->set('readPath', route("{$prefix}.{$suffix}", [], false));
 
         return $this;
     }
 
-    private function lengthMenu(): self
+    private function length(): self
     {
-        if (! $this->template->has('lengthMenu')) {
-            $this->template->set('lengthMenu', config('enso.tables.lengthMenu'));
-        }
-
         $this->meta->set(
             'length', $this->template->get('lengthMenu')[0]
         );
@@ -65,108 +113,21 @@ class Structure
         return $this;
     }
 
-    private function debounce(): self
+    private function templateOrConfigToMeta(): self
     {
-        if (! $this->template->has('debounce')) {
-            $this->template->set('debounce', config('enso.tables.debounce'));
-        }
+        (new Collection(self::TemplateOrConfigToMeta))
+            ->each(fn ($attribute) => $this->metaFromTemplateOrConfig($attribute));
 
         return $this;
     }
 
-    private function method(): self
+    private function metaFromTemplateOrConfig(string $attribute): void
     {
-        if (! $this->template->has('method')) {
-            $this->template->set('method', config('enso.tables.method'));
-        }
+        $value = $this->template->get($attribute)
+            ?? config("enso.tables.{$attribute}");
 
-        return $this;
-    }
+        $this->meta->set($attribute, $value);
 
-    private function selectable(): self
-    {
-        if (! $this->template->has('selectable')) {
-            $this->template->set('selectable', false);
-        }
-
-        return $this;
-    }
-
-    private function preview(): self
-    {
-        if (! $this->template->has('preview')) {
-            $this->template->set('preview', false);
-        }
-
-        return $this;
-    }
-
-    private function defaults(): void
-    {
-        if (! $this->template->has('name')) {
-            $this->template->set('name', Str::plural($this->template->get('model')));
-        }
-
-        $this->template->set('labels', config('enso.tables.labels'));
-        $this->meta->set('start', 0);
-        $this->meta->set('search', '');
-        $this->meta->set('loading', false);
-        $this->meta->set('forceInfo', false);
-        $this->meta->set('searchable', false);
-        $this->meta->set('sort', false);
-        $this->meta->set('total', false);
-        $this->meta->set('date', false);
-        $this->meta->set('translatable', false);
-        $this->meta->set('enum', false);
-        $this->meta->set('cents', false);
-        $this->meta->set('money', false);
-    }
-
-    private function comparisonOperator(): self
-    {
-        if (! $this->template->has('comparisonOperator')) {
-            $this->template->set('comparisonOperator', config('enso.tables.comparisonOperator'));
-        }
-
-        return $this;
-    }
-
-    private function searchMode(): self
-    {
-        $this->meta->set(
-            'searchMode',
-            $this->template->get('searchMode')
-                ?? config('enso.tables.searchMode')
-        );
-
-        if (! $this->template->has('searchModes')) {
-            $this->template->set('searchModes', config('enso.tables.searchModes'));
-        }
-
-        $this->template->forget('searchMode');
-
-        return $this;
-    }
-
-    private function fullInfoRecordLimit(): self
-    {
-        $this->meta->set(
-            'fullInfoRecordLimit',
-            $this->template->get('fullInfoRecordLimit')
-                ?? config('enso.tables.fullInfoRecordLimit')
-        );
-
-        $this->template->forget('fullInfoRecordLimit');
-
-        return $this;
-    }
-
-    private function responsive(): self
-    {
-        if (! $this->template->has('responsive')) {
-            $this->template->set('responsive', config('enso.tables.responsive'));
-        }
-
-        return $this;
+        $this->template->forget($attribute);
     }
 }

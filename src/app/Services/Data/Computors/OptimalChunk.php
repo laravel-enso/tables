@@ -2,28 +2,28 @@
 
 namespace LaravelEnso\Tables\App\Services\Data\Computors;
 
+use Illuminate\Support\Collection;
+
 class OptimalChunk
 {
+    public const ChunkPerLimit = [
+        [10 * 1000, 1000],
+        [50 * 1000, 2 * 1000],
+        [250 * 1000, 4 * 1000],
+        [1.25 * 1000 * 1000, 10 * 1000],
+    ];
+
+    public const MaxChunk = 20000;
+
     public static function get($count): int
     {
         $sheetLimit = config('enso.tables.export.sheetLimit');
 
-        if ($count < 10000) {
-            return min(1000, $sheetLimit);
-        }
+        $match = (new Collection(self::ChunkPerLimit))
+            ->first(fn ($limit) => $count <= $limit[0]);
 
-        if ($count < 50000) {
-            return min(2000, $sheetLimit);
-        }
+        $limit = $match ? $match[1] : self::MaxChunk;
 
-        if ($count < 250000) {
-            return min(4000, $sheetLimit);
-        }
-
-        if ($count < 1250000) {
-            return min(10000, $sheetLimit);
-        }
-
-        return min(20000, $sheetLimit);
+        return min($limit, $sheetLimit);
     }
 }

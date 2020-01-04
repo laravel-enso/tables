@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelEnso\Tables\App\Services\Template\Validators;
+namespace LaravelEnso\Tables\App\Services\Template\Validators\Columns;
 
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\App\Classes\Obj;
@@ -16,16 +16,12 @@ class Meta
         $diff = $attributes->diff(Attributes::Meta);
 
         if ($diff->isNotEmpty()) {
-            throw Exception::unknownAttributes(
-                $diff->implode('", "')
-            );
+            throw Exception::unknownAttributes($diff->implode('", "'));
         }
 
         if (Str::contains($column->get('name'), '.')
             && ($attributes->contains('sortable'))) {
-            throw Exception::unsupported(
-                $column->get('name')
-            );
+            throw Exception::unsupported($column->get('name'));
         }
     }
 }

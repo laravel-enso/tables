@@ -13,9 +13,9 @@ use LaravelEnso\Tables\App\Services\Data\Config;
 
 class Excel
 {
-    private $user;
-    private $config;
-    private $tableClass;
+    private User $user;
+    private Config $config;
+    private string $tableClass;
     private $dataExport;
 
     public function __construct(User $user, Config $config, string $tableClass)
@@ -68,10 +68,7 @@ class Excel
     private function dispatch()
     {
         ExcelExport::dispatch(
-            $this->user,
-            $this->config,
-            $this->tableClass,
-            $this->dataExport
+            $this->user, $this->config, $this->tableClass, $this->dataExport
         );
     }
 

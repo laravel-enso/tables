@@ -78,12 +78,11 @@ class Config
 
     private function setMeta(): self
     {
+        $requestMeta = new Collection(static::RequestMeta);
+
         $this->meta = $this->template->meta()
             ->forget(static::RequestMeta)
-            ->merge(
-                $this->request->meta()
-                    ->intersectByKeys(collect(static::RequestMeta)->flip())
-            );
+            ->merge($this->request->meta()->intersectByKeys($requestMeta->flip()));
 
         return $this;
     }

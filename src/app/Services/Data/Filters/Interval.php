@@ -37,6 +37,6 @@ class Interval extends BaseFilter
 
     private function isValid($value): bool
     {
-        return ! collect([null, ''])->containsStrict($value);
+        return ! (new Collection([null, '']))->containsStrict($value);
     }
 }

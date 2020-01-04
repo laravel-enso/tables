@@ -12,7 +12,7 @@ class ExportStartNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $name;
+    private string $name;
 
     public function __construct(string $name)
     {

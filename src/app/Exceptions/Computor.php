@@ -9,7 +9,7 @@ class Computor extends EnsoException
     public static function missingInterface()
     {
         return new static(__(
-            'Computors must implement the "ComputesColumns" interface',
+            'Computors must implement the "ComputesColumns" interface'
         ));
     }
 }

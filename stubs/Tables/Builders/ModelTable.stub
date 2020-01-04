@@ -3,13 +3,14 @@
 namespace App\Tables\Builders;
 
 use App\Model;
+use Illuminate\Database\Eloquent\Builder;
 use LaravelEnso\Tables\App\Services\Table;
 
 class ModelTable extends Table
 {
-    protected $templatePath = __DIR__.'/../Templates/template.json';
+    protected string $templatePath = __DIR__.'/../Templates/template.json';
 
-    public function query()
+    public function query(): Builder
     {
         return Model::selectRaw('
             id, ......

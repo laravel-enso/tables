@@ -10,9 +10,9 @@ use LaravelEnso\Tables\App\Contracts\Table;
 
 class TemplateLoader
 {
-    private $table;
-    private $template;
-    private $cache;
+    private Table $table;
+    private Template $template;
+    private array $cache;
 
     public function __construct(Table $table)
     {
@@ -76,15 +76,17 @@ class TemplateLoader
 
     private function cacheKey(): string
     {
+        $configPrefix = config('enso.tables.cache.prefix');
+
         $prefix = $this->table instanceof DynamicTemplate
-            ? $this->table->cachePrefix().'-'
+            ? "{$this->table->cachePrefix()}-"
             : null;
 
-        return config('enso.tables.cache.prefix')
-            .':'.$prefix
-            .Str::slug(str_replace(
-                ['/', '.'], [' ', ' '], $this->table->templatePath()
-            ));
+        $slug = Str::slug(str_replace(
+            ['/', '.'], [' ', ' '], $this->table->templatePath()
+        ));
+
+        return "{$configPrefix}:{$prefix}{$slug}";
     }
 
     private function cache()

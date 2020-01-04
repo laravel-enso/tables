@@ -30,6 +30,9 @@ class Sort
 
     private function rawSort($column): string
     {
-        return "({$column->get('data')} IS NULL), {$column->get('data')} {$column->get('meta')->get('sort')}";
+        $data = $column->get('data');
+        $sort = $column->get('meta')->get('sort');
+
+        return "({$data} IS NULL), {$data} {$sort}";
     }
 }

@@ -13,10 +13,10 @@ class ExportDoneNotification extends Notification implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
-    private $filePath;
-    private $filename;
+    private string $filePath;
+    private string $filename;
     private $dataExport;
-    private $link;
+    private string $link;
 
     public function __construct(string $filePath, string $filename, $dataExport)
     {
