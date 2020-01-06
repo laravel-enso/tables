@@ -8,6 +8,9 @@ use LaravelEnso\Tables\App\Attributes\Column as Attributes;
 
 class Columns
 {
+    private const FromColumn = ['enum', 'money'];
+    private const FromMeta = ['searchable', 'date', 'translatable', 'cents'];
+
     private Obj $template;
     private Obj $meta;
 
@@ -105,13 +108,13 @@ class Columns
 
     private function fromColumn($column): Collection
     {
-        return (new Collection(['enum', 'money']))
+        return (new Collection(self::FromColumn))
             ->filter(fn ($attribute) => $column->get($attribute));
     }
 
     private function fromColumnMeta($column): Collection
     {
-        return (new Collection(['searchable', 'date', 'translatable', 'cents']))
+        return (new Collection(self::FromMeta))
             ->filter(fn ($attribute) => $column->get('meta')->get($attribute));
     }
 }

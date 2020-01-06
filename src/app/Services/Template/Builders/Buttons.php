@@ -38,7 +38,7 @@ class Buttons
     private function add($buttons, $button): Collection
     {
         [$button, $type] = is_string($button)
-            ? $this->mapping($button)
+            ? $this->default($button)
             : [$button, $button->get('type')];
 
         if (! $button->has('action') || $this->actionComputingSuccedes($button, $type)) {
@@ -49,7 +49,7 @@ class Buttons
         return $buttons;
     }
 
-    private function mapping($button): array
+    private function default($button): array
     {
         return $this->defaults->get('global')->keys()->contains($button)
             ? [$this->defaults->get('global')->get($button), 'global']

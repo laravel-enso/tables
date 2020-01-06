@@ -37,17 +37,17 @@ class AppServiceProvider extends ServiceProvider
             __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/tables'),
         ], ['tables-mail', 'enso-mail']);
 
-        $this->stubs()->each(fn ($stub) => $this->publishes([
-            __DIR__."/../stubs/{$stub}.stub" => app_path("{$stub}.php"),
+        $this->stubs()->each(fn ($ext, $stub) => $this->publishes([
+            __DIR__."/../stubs/{$stub}.stub" => app_path("{$stub}.{$ext}"),
         ]));
     }
 
     private function stubs()
     {
         return new Collection([
-            'Tables/Actions/CustomAction',
-            'Tables/Builders/ModelTable',
-            'Tables/Templates/template',
+            'Tables/Actions/CustomAction' => 'php',
+            'Tables/Builders/ModelTable' => 'php',
+            'Tables/Templates/template' => 'json',
         ]);
     }
 }

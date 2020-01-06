@@ -56,31 +56,21 @@ class Structure
     private function defaultFromConfig()
     {
         (new Collection(self::DefaultFromConfig))
-            ->each(fn ($attribute) => $this->fromConfigIfNeeded($attribute));
+            ->filter(fn ($attribute) => ! $this->template->has($attribute))
+            ->each(fn ($attribute) => $this->template->set(
+                $attribute, config("enso.tables.{$attribute}")
+            ));
 
         return $this;
-    }
-
-    private function fromConfigIfNeeded($attribute)
-    {
-        if (! $this->template->has($attribute)) {
-            $this->template->set($attribute, config("enso.tables.{$attribute}"));
-        }
     }
 
     private function falseIfMissing()
     {
         (new Collection(self::FalseIfMissing))
-            ->each(fn ($attribute) => $this->fillFalseIfMissing($attribute));
+            ->filter(fn ($attribute) => ! $this->template->has($attribute))
+            ->each(fn ($attribute) => $this->template->set($attribute, false));
 
         return $this;
-    }
-
-    private function fillFalseIfMissing(string $attribute): void
-    {
-        if (! $this->template->has($attribute)) {
-            $this->template->set($attribute, false);
-        }
     }
 
     private function name()
