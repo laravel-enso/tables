@@ -22,8 +22,8 @@
         "php": ">=7.4.0",
         "box/spout": "3.0.*",
         "laravel/framework": "^6.0",
-        "laravel-enso/enums": "1.1.*",
-        "laravel-enso/helpers": "1.14.*"
+        "laravel-enso/enums": "1.2.*",
+        "laravel-enso/helpers": "1.15.*"
     },
     "autoload": {
         "psr-4": {
