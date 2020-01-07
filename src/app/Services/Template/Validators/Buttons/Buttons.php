@@ -8,7 +8,7 @@ use LaravelEnso\Tables\App\Exceptions\Button as Exception;
 class Buttons
 {
     private Obj $buttons;
-    private ?string $routePrefix; //TODO do we need to update tests?
+    private string $routePrefix;
     private Obj $defaults;
 
     public function __construct(Obj $template)
