@@ -22,7 +22,7 @@ class ButtonTest extends TestCase
         // $this->withoutExceptionHandling();
 
         $this->template = new Obj([
-            'routePrefix' => '',
+            'routePrefix' => 'mockedPrefix',
             'buttons' => [$this->mockedButton()]
         ]);
     }
