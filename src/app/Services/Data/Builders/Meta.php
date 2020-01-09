@@ -122,7 +122,7 @@ class Meta
             ? $this->table->countCacheKey()
             : $this->cacheKey();
 
-        if(! $this->cache($cacheKey)->has($cacheKey)) {
+        if (! $this->cache($cacheKey)->has($cacheKey)) {
             $this->cache($cacheKey)->put($cacheKey, $this->count(), now()->addHour());
         }
 
