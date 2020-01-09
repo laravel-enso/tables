@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\App\Traits;
 
+use Illuminate\Cache\TaggableStore;
 use Illuminate\Support\Facades\Cache;
 
 trait TableCache
@@ -15,8 +16,14 @@ trait TableCache
 
     public function resetTableCache()
     {
-        Cache::forget(
-            config('enso.tables.cache.prefix').':'.$this->getTable()
-        );
+        $key = config('enso.tables.cache.prefix').':'.$this->getTable();
+
+        if (Cache::getStore() instanceof TaggableStore) {
+            Cache::tags($key)->flush();
+
+            return;
+        }
+
+        Cache::forget($key);
     }
 }

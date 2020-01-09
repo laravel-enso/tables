@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
+use Illuminate\Cache\TaggableStore;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
@@ -35,11 +36,13 @@ class MetaTest extends TestCase
     /** @test */
     public function can_get_data_with_cache_when_table_cache_trait_used()
     {
+        $key = 'enso:tables:test_models';
+
         Config::set('enso.tables.cache.count', true);
 
         $this->requestResponse();
 
-        $this->assertEquals(1, Cache::get('enso:tables:test_models'));
+        $this->assertEquals(1, $this->cache($key)->get($key));
     }
 
     /** @test */
@@ -108,5 +111,12 @@ class MetaTest extends TestCase
         $builder = new Meta($this->table, $this->config);
 
         return new Obj($builder->toArray());
+    }
+
+    private function cache($key)
+    {
+        return Cache::getStore() instanceof TaggableStore
+            ? Cache::tags($key)
+            : Cache::store();
     }
 }

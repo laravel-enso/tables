@@ -2,8 +2,10 @@
 
 namespace LaravelEnso\Tables\App\Services\Data\Builders;
 
+use Illuminate\Cache\TaggableStore;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
+use LaravelEnso\Tables\App\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\App\Contracts\Table;
 use LaravelEnso\Tables\App\Exceptions\Cache as Exception;
 use LaravelEnso\Tables\App\Services\Data\Config;
@@ -112,10 +114,26 @@ class Meta
 
     private function cachedCount(): int
     {
-        return $this->shouldCache()
-            ? Cache::remember(
-                $this->cacheKey(), now()->addHour(), fn () => $this->count()
-            ) : $this->count();
+        if (! $this->shouldCache()) {
+            return $this->count();
+        }
+
+        $cacheKey = $this->table instanceof CustomCountCacheKey
+            ? $this->table->countCacheKey()
+            : $this->cacheKey();
+
+        if(! $this->cache($cacheKey)->has($cacheKey)) {
+            $this->cache($cacheKey)->put($cacheKey, $this->count(), now()->addHour());
+        }
+
+        return $this->cache($cacheKey)->get($cacheKey);
+    }
+
+    private function cache($cacheKey)
+    {
+        return Cache::getStore() instanceof TaggableStore
+            ? Cache::tags($cacheKey)
+            : Cache::store();
     }
 
     private function cacheKey(): string
@@ -135,6 +153,11 @@ class Meta
 
             if (! (new ReflectionClass($model))->hasMethod('resetTableCache')) {
                 throw Exception::missingTrait(get_class($model));
+            }
+
+            if ($this->table instanceof CustomCountCacheKey
+                && ! Cache::getStore() instanceof TaggableStore) {
+                $shouldCache = false;
             }
         }
 

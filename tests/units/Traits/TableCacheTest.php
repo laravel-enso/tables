@@ -2,18 +2,20 @@
 
 namespace LaravelEnso\Tables\Tests\units\Traits;
 
-use Cache;
-use Config;
 use Faker\Factory;
+use Illuminate\Cache\TaggableStore;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use LaravelEnso\Tables\App\Traits\TableCache;
-use Schema;
 use Tests\TestCase;
 
 class TableCacheTest extends TestCase
 {
     private $testModel;
     private $faker;
+    private string $key;
 
     protected function setUp() :void
     {
@@ -22,27 +24,30 @@ class TableCacheTest extends TestCase
         // $this->withoutExceptionHandling();
         Config::set('enso.tables.cache.prefix', 'prefix');
 
+        $this->key = 'prefix:test_models';
         $this->faker = Factory::create();
 
         $this->createTestModelTable();
 
         $this->testModel = $this->createTestModel();
+
+        $this->cache()->put($this->key, 1, now()->addHour());
     }
 
     /** @test */
     public function should_forgot_cache_when_model_is_deleted()
     {
-        Cache::shouldReceive('forget')->with('prefix:test_models');
-
         $this->testModel->delete();
+
+        $this->assertFalse(Cache::has($this->key));
     }
 
     /** @test */
     public function should_forgot_cache_when_model_is_created()
     {
-        Cache::shouldReceive('forget')->with('prefix:test_models');
-
         $this->createTestModel();
+
+        $this->assertFalse(Cache::has($this->key));
     }
 
     private function createTestModelTable()
@@ -59,6 +64,13 @@ class TableCacheTest extends TestCase
         return TestModel::create([
             'name' => $this->faker->name,
         ]);
+    }
+
+    private function cache()
+    {
+        return Cache::getStore() instanceof TaggableStore
+            ? Cache::tags($this->key)
+            : Cache::store();
     }
 }
 
