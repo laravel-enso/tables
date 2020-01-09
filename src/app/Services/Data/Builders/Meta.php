@@ -17,7 +17,7 @@ class Meta
     private Builder $query;
     private bool $filters;
     private int $count;
-    private bool $filtered;
+    private int $filtered;
     private array $total;
     private bool $fullRecordInfo;
 
