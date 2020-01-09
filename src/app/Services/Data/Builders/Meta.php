@@ -2,8 +2,10 @@
 
 namespace LaravelEnso\Tables\App\Services\Data\Builders;
 
+use Carbon\Carbon;
 use Illuminate\Cache\TaggableStore;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use LaravelEnso\Tables\App\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\App\Contracts\Table;
@@ -119,27 +121,31 @@ class Meta
         }
 
         $cacheKey = $this->table instanceof CustomCountCacheKey
-            ? $this->table->countCacheKey()
+            ? $this->cacheKey($this->table->countCacheKey())
             : $this->cacheKey();
 
-        if (! $this->cache($cacheKey)->has($cacheKey)) {
-            $this->cache($cacheKey)->put($cacheKey, $this->count(), now()->addHour());
+        if (! $this->cache($this->cacheKey())->has($cacheKey)) {
+            $this->cache($this->cacheKey())
+                ->put($cacheKey, $this->count(), Carbon::now()->addHour());
         }
 
-        return $this->cache($cacheKey)->get($cacheKey);
+        return $this->cache($this->cacheKey())->get($cacheKey);
     }
 
-    private function cache($cacheKey)
+    private function cache(string $tag)
     {
         return Cache::getStore() instanceof TaggableStore
-            ? Cache::tags($cacheKey)
+            ? Cache::tags($tag)
             : Cache::store();
     }
 
-    private function cacheKey(): string
+    private function cacheKey(?string $suffix = null): string
     {
-        return config('enso.tables.cache.prefix')
-            .':'.$this->query->getModel()->getTable();
+        return (new Collection([
+            config('enso.tables.cache.prefix'),
+            $this->query->getModel()->getTable(),
+            $suffix,
+        ]))->filter()->implode(':');
     }
 
     private function shouldCache(): bool
