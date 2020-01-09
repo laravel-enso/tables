@@ -16,7 +16,7 @@ class Filter extends BaseFilter
         $this->query->where(fn ($query) => $this->filters()
             ->each(fn ($filters, $table) => $filters
                ->each(fn ($value, $column) => $query
-                   ->whereIn($table.'.'.$column, (array) $value))));
+                   ->whereIn($table.'.'.$column, (new Collection($value))->toArray()))));
     }
 
     private function filters(): Collection
