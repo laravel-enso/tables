@@ -25,6 +25,7 @@ class Column
             ->enum()
             ->tooltip()
             ->money()
+            ->resource()
             ->class()
             ->align();
     }
@@ -89,6 +90,16 @@ class Column
         if (property_exists($this->column, 'money')
             && ! is_object($this->column->money)) {
             throw Exception::invalidMoney($this->column->get('name'));
+        }
+
+        return $this;
+    }
+
+    private function resource()
+    {
+        if ($this->column->has('resource')
+            && ! class_exists($this->column->get('resource'))) {
+            throw Exception::resourceNotFound($this->column->get('resource'));
         }
 
         return $this;

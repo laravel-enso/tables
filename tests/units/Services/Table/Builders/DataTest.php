@@ -5,6 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Services\Data\Builders\Data;
 use LaravelEnso\Tables\Tests\units\Services\BuilderTestEnum;
+use LaravelEnso\Tables\Tests\units\Services\BuilderTestResource;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
 use Tests\TestCase;
@@ -68,13 +69,35 @@ class DataTest extends TestCase
             'name' => 'color',
             'data' => 'color',
             'enum' => BuilderTestEnum::class,
-            'meta' => []
+            'meta' => [],
         ]));
 
         $response = $this->requestResponse();
 
         $this->assertEquals(
             BuilderTestEnum::get($this->testModel->color),
+            $response->first()->get('color')
+        );
+    }
+
+    /** @test */
+    public function can_get_data_with_resource()
+    {
+        $this->config->meta()->set('resource', true);
+
+        $this->config->columns()->push(new Obj([
+            'name' => 'color',
+            'data' => 'color',
+            'resource' => BuilderTestResource::class,
+            'meta' => [],
+        ]));
+
+        $response = $this->requestResponse();
+
+        $resource = (new BuilderTestResource($this->testModel->color))->resolve();
+
+        $this->assertEquals(
+            json_encode($resource),
             $response->first()->get('color')
         );
     }
@@ -106,7 +129,7 @@ class DataTest extends TestCase
         $this->config->columns()->push(new Obj([
             'name' => 'price',
             'data' => 'price',
-            'meta' => ['cents' => true]
+            'meta' => ['cents' => true],
         ]));
 
         $response = $this->requestResponse();
@@ -185,7 +208,7 @@ class DataTest extends TestCase
         $this->config->columns()->push(new Obj([
             'name' => 'name',
             'data' => 'name',
-            'meta' => ['searchable' => true]
+            'meta' => ['searchable' => true],
         ]));
 
         $this->config->set('comparisonOperator', 'LIKE');

@@ -8,7 +8,7 @@ use LaravelEnso\Tables\App\Attributes\Column as Attributes;
 
 class Columns
 {
-    private const FromColumn = ['enum', 'money'];
+    private const FromColumn = ['enum', 'money', 'resource'];
     private const FromMeta = ['searchable', 'date', 'translatable', 'cents'];
 
     private Obj $template;
@@ -47,7 +47,8 @@ class Columns
     {
         $meta = (new Collection(Attributes::Meta))
             ->reduce(fn ($meta, $attribute) => $meta->set(
-                $attribute, optional($column->get('meta'))->contains($attribute)
+                $attribute,
+                optional($column->get('meta'))->contains($attribute)
             ), new Obj());
 
         $meta->set('visible', true)

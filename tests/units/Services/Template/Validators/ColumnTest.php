@@ -15,7 +15,7 @@ class ColumnTest extends TestCase
     private $validator;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -64,6 +64,18 @@ class ColumnTest extends TestCase
         $this->expectException(ColumnException::class);
 
         $this->expectExceptionMessage(ColumnException::enumNotFound('MissingEnum')->getMessage());
+
+        $this->validate();
+    }
+
+    /** @test */
+    public function cannot_validate_with_wrong_resource()
+    {
+        $this->template->get('columns')->first()->set('resource', 'MissingResource');
+
+        $this->expectException(ColumnException::class);
+
+        $this->expectExceptionMessage(ColumnException::resourceNotFound('MissingResource')->getMessage());
 
         $this->validate();
     }

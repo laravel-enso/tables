@@ -13,7 +13,7 @@ class Column extends EnsoException
         ));
     }
 
-    public static function missingAttributes($attrs)
+    public static function missingAttributes(string $attrs)
     {
         return new static(__(
             'Mandatory column attribute(s) missing: ":attrs"',
@@ -21,7 +21,7 @@ class Column extends EnsoException
         ));
     }
 
-    public static function unknownAttributes($attrs)
+    public static function unknownAttributes(string $attrs)
     {
         return new static(__(
             'Unknown Column Attribute(s) Found: ":attrs"',
@@ -29,7 +29,7 @@ class Column extends EnsoException
         ));
     }
 
-    public static function enumNotFound($enum)
+    public static function enumNotFound(string $enum)
     {
         return new static(__(
             'Provided enum does not exist: ":enum"',
@@ -37,7 +37,15 @@ class Column extends EnsoException
         ));
     }
 
-    public static function invalidTooltip($column)
+    public static function resourceNotFound(string $resource)
+    {
+        return new static(__(
+            'Provided resource does not exist: ":resource"',
+            ['resource' => $resource]
+        ));
+    }
+
+    public static function invalidTooltip(string $column)
     {
         return new static(__(
             'The tooltip attribute provided for ":column" must be a string',
@@ -45,7 +53,7 @@ class Column extends EnsoException
         ));
     }
 
-    public static function invalidMoney($column)
+    public static function invalidMoney(string $column)
     {
         return new static(__(
             'Provided money attribute for ":column" must be a non empty object',
@@ -53,7 +61,7 @@ class Column extends EnsoException
         ));
     }
 
-    public static function invalidClass($column)
+    public static function invalidClass(string $column)
     {
         return new static(__(
             'The class attribute provided for ":column" must be a string',
@@ -61,7 +69,7 @@ class Column extends EnsoException
         ));
     }
 
-    public static function invalidAlign($column)
+    public static function invalidAlign(string $column)
     {
         return new static(__(
             'The align attribute provided for ":column" is incorrect',

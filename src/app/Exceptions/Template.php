@@ -6,17 +6,19 @@ use LaravelEnso\Helpers\App\Exceptions\EnsoException;
 
 class Template extends EnsoException
 {
-    public static function missingAttributes($attrs)
+    public static function missingAttributes(string $attrs)
     {
         return new static(__(
-            'Mandatory Attribute(s) Missing: ":attrs"', ['attrs' => $attrs]
+            'Mandatory Attribute(s) Missing: ":attrs"',
+            ['attrs' => $attrs]
         ));
     }
 
-    public static function unknownAttributes($attrs)
+    public static function unknownAttributes(string $attrs)
     {
         return new static(__(
-            'Unknown Attribute(s) Found: ":attrs"', ['attrs' => $attrs]
+            'Unknown Attribute(s) Found: ":attrs"',
+            ['attrs' => $attrs]
         ));
     }
 

@@ -6,7 +6,7 @@ use LaravelEnso\Helpers\App\Exceptions\EnsoException;
 
 class Meta extends EnsoException
 {
-    public static function unknownAttributes($attrs)
+    public static function unknownAttributes(string $attrs)
     {
         return new static(__(
             'Unknown Meta Parameter(s): ":attrs"',
@@ -14,7 +14,7 @@ class Meta extends EnsoException
         ));
     }
 
-    public static function unsupported($column)
+    public static function unsupported(string $column)
     {
         return new static(__(
             'Nested columns do not support "sortable": ":column"',

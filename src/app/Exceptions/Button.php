@@ -12,7 +12,7 @@ class Button extends EnsoException
         return new static(__('The buttons array may contain only strings and objects'));
     }
 
-    public static function undefined($buttons)
+    public static function undefined(string $buttons)
     {
         return new static(__(
             'Unknown Button(s) Found: ":buttons"',
@@ -24,7 +24,6 @@ class Button extends EnsoException
     {
         return new static(__(
             'The following attributes are mandatory for buttons: ":attrs"',
-
             ['attrs' => implode('", "', ButtonAttributes::Mandatory)],
         ));
     }
@@ -59,7 +58,7 @@ class Button extends EnsoException
         ));
     }
 
-    public static function routeNotFound($route)
+    public static function routeNotFound(string $route)
     {
         return new static(__(
             'Button route does not exist: ":route"',
@@ -67,7 +66,7 @@ class Button extends EnsoException
         ));
     }
 
-    public static function invalidMethod($method)
+    public static function invalidMethod(string $method)
     {
         return new static(__(
             'Method is incorrect: ":method"',

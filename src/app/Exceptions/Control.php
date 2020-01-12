@@ -11,7 +11,7 @@ class Control extends EnsoException
         return new static(__('The controls array may contain only strings'));
     }
 
-    public static function undefined($controls)
+    public static function undefined(string $controls)
     {
         return new static(__(
             'Unknown control(s) Found: ":controls"',

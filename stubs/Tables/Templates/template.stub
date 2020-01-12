@@ -40,6 +40,7 @@
             "name": "columnAlias", // required, alias from the query builder
             "meta": ["searchable", "sortable", "sort:ASC", "sort:DESC", "translatable", "boolean", "slot", "rogue", "editable", "total", "customTotal", "date", "icon", "clickable", "notExportable", "nullLast"], //optional
             "enum": "EnumClass", // optional
+            "resource": "ResourceClass", // optional
             "dateFormat": "d-m-Y",
             "tooltip": "My Tooltip Column Detail",
             "class": "is-custom-class",

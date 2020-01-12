@@ -17,7 +17,7 @@ class Structure
 
     private const DefaultFalse = [
         'loading', 'forceInfo', 'searchable', 'sort', 'total', 'date',
-        'translatable', 'enum', 'cents', 'money',
+        'translatable', 'enum', 'cents', 'money', 'resource',
     ];
 
     private const TemplateOrConfigToMeta = ['searchMode', 'fullInfoRecordLimit'];
@@ -58,7 +58,8 @@ class Structure
         (new Collection(self::DefaultFromConfig))
             ->filter(fn ($attribute) => ! $this->template->has($attribute))
             ->each(fn ($attribute) => $this->template->set(
-                $attribute, config("enso.tables.{$attribute}")
+                $attribute,
+                config("enso.tables.{$attribute}")
             ));
 
         return $this;
@@ -97,7 +98,8 @@ class Structure
     private function length(): self
     {
         $this->meta->set(
-            'length', $this->template->get('lengthMenu')[0]
+            'length',
+            $this->template->get('lengthMenu')[0]
         );
 
         return $this;

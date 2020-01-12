@@ -8,6 +8,7 @@ use LaravelEnso\Tables\App\Exceptions\Computor as Exception;
 use LaravelEnso\Tables\App\Services\Data\Computors\Cents;
 use LaravelEnso\Tables\App\Services\Data\Computors\Date;
 use LaravelEnso\Tables\App\Services\Data\Computors\Enum;
+use LaravelEnso\Tables\App\Services\Data\Computors\Resource;
 use LaravelEnso\Tables\App\Services\Data\Computors\Translator;
 
 class Computors
@@ -16,6 +17,7 @@ class Computors
 
     private static array $computors = [
         'enum' => Enum::class,
+        'resource' => Resource::class,
         'cents' => Cents::class,
         'date' => Date::class,
         'translatable' => Translator::class,
