@@ -12,7 +12,7 @@ trait Init
 
     public function __invoke(Request $request)
     {
-        $table = App::make($this->tableClass, [
+        $table = App::makeWith($this->tableClass, [
             'request' => $this->request($request),
         ]);
 
