@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\App\Services\Template\Validators;
 
+use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Exceptions\Control as Exception;
 
@@ -13,7 +14,7 @@ class Controls
     public function __construct(Obj $template)
     {
         $this->controls = $template->get('controls');
-        $this->defaults = new Obj(config('enso.tables.controls'));
+        $this->defaults = new Obj(Config::get('enso.tables.controls'));
     }
 
     public function validate()

@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
+use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Attributes\Controls as Attributes;
 
@@ -18,7 +19,8 @@ class Controls
     {
         if (! $this->template->has('controls')) {
             $this->template->set(
-                'controls', config('enso.tables.controls') ?? Attributes::List
+                'controls',
+                Config::get('enso.tables.controls') ?? Attributes::List
             );
         }
     }

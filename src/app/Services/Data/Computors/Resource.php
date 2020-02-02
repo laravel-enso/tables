@@ -2,11 +2,12 @@
 
 namespace LaravelEnso\Tables\App\Services\Data\Computors;
 
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Contracts\ComputesColumns;
+use LaravelEnso\Tables\App\Contracts\ComputesModelColumns;
 
-class Resource implements ComputesColumns
+class Resource implements ComputesModelColumns
 {
     private static Obj $columns;
 
@@ -15,26 +16,16 @@ class Resource implements ComputesColumns
         self::$columns = $columns->filter(fn ($column) => $column->get('resource'));
     }
 
-    public static function handle($row): array
+    public static function handle(Model $row)
     {
         foreach (self::$columns as $column) {
             $resource = $column->get('resource');
-            $objectMap = self::objectMap($row[$column->get('name')]);
 
-            $row[$column->get('name')] = is_array($objectMap)
-                ? $resource::collection($objectMap)
-                : new $resource($objectMap);
+            $row[$column->get('name')] = $row[$column->get('name')] instanceof EloquentCollection
+                ? $resource::collection($row[$column->get('name')])
+                : new $resource($row[$column->get('name')]);
         }
 
         return $row;
-    }
-
-    private static function objectMap($resource)
-    {
-        return is_array($resource)
-            ? (new Collection($resource))
-            ->map(fn ($model) => (object) $model)
-            ->toArray()
-            : (object) $resource;
     }
 }

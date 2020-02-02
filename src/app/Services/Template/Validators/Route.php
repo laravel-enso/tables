@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\App\Services\Template\Validators;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route as Facade;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Exceptions\Route as Exception;
@@ -26,7 +27,7 @@ class Route
     {
         $suffix = $template->has('dataRouteSuffix')
             ? $template->get('dataRouteSuffix')
-            : config('enso.tables.dataRouteSuffix');
+            : Config::get('enso.tables.dataRouteSuffix');
 
         return "{$template->get('routePrefix')}.{$suffix}";
     }

@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\App\Classes\Obj;
 
@@ -59,7 +60,7 @@ class Structure
             ->filter(fn ($attribute) => ! $this->template->has($attribute))
             ->each(fn ($attribute) => $this->template->set(
                 $attribute,
-                config("enso.tables.{$attribute}")
+                Config::get("enso.tables.{$attribute}")
             ));
 
         return $this;
@@ -88,7 +89,7 @@ class Structure
         $prefix = $this->template->get('routePrefix');
 
         $suffix = $this->template->get('dataRouteSuffix')
-            ?? config('enso.tables.dataRouteSuffix');
+            ?? Config::get('enso.tables.dataRouteSuffix');
 
         $this->template->set('readPath', route("{$prefix}.{$suffix}", [], false));
 
@@ -116,7 +117,7 @@ class Structure
     private function metaFromTemplateOrConfig(string $attribute): void
     {
         $value = $this->template->get($attribute)
-            ?? config("enso.tables.{$attribute}");
+            ?? Config::get("enso.tables.{$attribute}");
 
         $this->meta->set($attribute, $value);
 

@@ -24,7 +24,7 @@ class Fetcher
         $this->page = 0;
         $this->ready = false;
 
-        Computors::fetchMode();
+        ArrayComputors::fetchMode();
     }
 
     public function current(): Collection
@@ -55,7 +55,8 @@ class Fetcher
     private function fetch($page = 0): Collection
     {
         $this->config->meta()->set(
-            'start', $this->config->meta()->get('length') * $page
+            'start',
+            $this->config->meta()->get('length') * $page
         );
 
         return (new Data($this->table, $this->config))->data();
@@ -64,7 +65,8 @@ class Fetcher
     private function optimalChunk(): void
     {
         $this->config->meta()->set(
-            'length', OptimalChunk::get($this->count())
+            'length',
+            OptimalChunk::get($this->count())
         );
 
         $this->ready = true;

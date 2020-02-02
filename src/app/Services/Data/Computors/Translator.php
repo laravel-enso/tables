@@ -3,9 +3,9 @@
 namespace LaravelEnso\Tables\App\Services\Data\Computors;
 
 use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Contracts\ComputesColumns;
+use LaravelEnso\Tables\App\Contracts\ComputesArrayColumns;
 
-class Translator implements ComputesColumns
+class Translator implements ComputesArrayColumns
 {
     private static Obj $columns;
 
@@ -15,7 +15,7 @@ class Translator implements ComputesColumns
             ->get('meta')->get('translatable'));
     }
 
-    public static function handle($row): array
+    public static function handle(array $row): array
     {
         foreach (self::$columns as $column) {
             $row[$column->get('name')] = __($row[$column->get('name')]);

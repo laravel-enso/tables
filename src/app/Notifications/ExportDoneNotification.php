@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Config;
 
 class ExportDoneNotification extends Notification implements ShouldQueue
 {
@@ -28,7 +29,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
 
     public function via()
     {
-        return config('enso.tables.export.notifications');
+        return Config::get('enso.tables.export.notifications');
     }
 
     public function toBroadcast()
@@ -46,7 +47,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $mail = (new MailMessage())
-            ->subject(__(config('app.name')).': '.__('Table Export Notification'))
+            ->subject(__(Config::get('app.name')).': '.__('Table Export Notification'))
             ->markdown('laravel-enso/tables::emails.export', [
                 'name' => $notifiable->person->appellative ?? $notifiable->person->name,
                 'filename' => __($this->filename),

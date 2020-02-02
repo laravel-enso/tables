@@ -4,12 +4,12 @@ namespace LaravelEnso\Tables\App\Exceptions;
 
 use LaravelEnso\Helpers\App\Exceptions\EnsoException;
 
-class Computor extends EnsoException
+class ModelComputor extends EnsoException
 {
     public static function missingInterface()
     {
         return new static(__(
-            'Computors must implement the "ComputesColumns" interface'
+            'Model computors must implement the "ComputesModelColumns" interface'
         ));
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use LaravelEnso\Tables\App\Services\Template;
@@ -12,7 +13,7 @@ class TemplateLoaderTest extends TestCase
 {
     private $table;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -86,15 +87,18 @@ class TemplateLoaderTest extends TestCase
     private function assertTemplate($cache)
     {
         $this->assertEquals(
-            'name', $cache->get('columns')->first()->get('name')
+            'name',
+            $cache->get('columns')->first()->get('name')
         );
     }
 
     private function cacheKey(): string
     {
-        return config('enso.tables.cache.prefix')
-        .':'.Str::slug(str_replace(
-            ['/', '.'], [' ', ' '], $this->table->templatePath()
-        ));
+        return Config::get('enso.tables.cache.prefix')
+            .':'.Str::slug(str_replace(
+                ['/', '.'],
+                [' ', ' '],
+                $this->table->templatePath()
+            ));
     }
 }

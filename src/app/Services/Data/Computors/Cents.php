@@ -3,9 +3,9 @@
 namespace LaravelEnso\Tables\App\Services\Data\Computors;
 
 use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Contracts\ComputesColumns;
+use LaravelEnso\Tables\App\Contracts\ComputesArrayColumns;
 
-class Cents implements ComputesColumns
+class Cents implements ComputesArrayColumns
 {
     private static Obj $columns;
 
@@ -14,7 +14,7 @@ class Cents implements ComputesColumns
         self::$columns = $columns->filter(fn ($column) => $column->get('meta')->get('cents'));
     }
 
-    public static function handle($row): array
+    public static function handle(array $row): array
     {
         foreach (self::$columns as $column) {
             $row[$column->get('name')] /= 100;

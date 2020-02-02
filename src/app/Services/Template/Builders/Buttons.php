@@ -4,6 +4,7 @@ namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
 
 class Buttons
@@ -16,7 +17,7 @@ class Buttons
     public function __construct(Obj $template)
     {
         $this->template = $template;
-        $this->defaults = new Obj(config('enso.tables.buttons'));
+        $this->defaults = new Obj(Config::get('enso.tables.buttons'));
         $this->template->set('actions', false);
     }
 
@@ -83,15 +84,17 @@ class Buttons
 
     private function route($button): ?string
     {
-        if ($button->has('fullRoute')
-            && $button->get('fullRoute') !== null) {
+        if (
+            $button->has('fullRoute')
+            && $button->get('fullRoute') !== null
+        ) {
             return $button->get('fullRoute');
         }
 
         return $button->has('routeSuffix')
             && $button->get('routeSuffix') !== null
             ? $this->template->get('routePrefix')
-                .'.'.$button->get('routeSuffix')
+            .'.'.$button->get('routeSuffix')
             : null;
     }
 
@@ -103,7 +106,7 @@ class Buttons
 
     private function needAuthorization()
     {
-        return ! empty(config('enso.config'))
+        return ! empty(Config::get('enso.config'))
             && $this->template->get('auth') !== false;
     }
 }

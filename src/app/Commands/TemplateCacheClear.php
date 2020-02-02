@@ -5,6 +5,7 @@ namespace LaravelEnso\Tables\App\Commands;
 use Illuminate\Cache\TaggableStore;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class TemplateCacheClear extends Command
 {
@@ -15,7 +16,7 @@ class TemplateCacheClear extends Command
     public function handle()
     {
         if (Cache::getStore() instanceof TaggableStore) {
-            Cache::tags(config('enso.tables.cache.tag'))->flush();
+            Cache::tags(Config::get('enso.tables.cache.tag'))->flush();
             $this->info('Enso table cached templates cleared');
 
             return;

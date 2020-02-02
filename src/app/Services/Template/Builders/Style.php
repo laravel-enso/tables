@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Attributes\Style as Attributes;
 
@@ -14,7 +15,7 @@ class Style
     public function __construct(Obj $template)
     {
         $this->template = $template;
-        $this->defaultStyle = new Obj(config('enso.tables.style'));
+        $this->defaultStyle = new Obj(Config::get('enso.tables.style'));
     }
 
     public function build(): void
@@ -40,7 +41,8 @@ class Style
     private function preset($style): Obj
     {
         return (new Collection($style))->reduce(fn ($styles, $style) => $styles->set(
-            $style, $this->defaultStyle->get('mapping')->get($style)
+            $style,
+            $this->defaultStyle->get('mapping')->get($style)
         ), new Obj());
     }
 }

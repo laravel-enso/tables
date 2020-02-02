@@ -9,6 +9,7 @@ use Box\Spout\Writer\XLSX\Writer;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\File;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config as ConfigFacade;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\App\Classes\Obj;
@@ -118,7 +119,9 @@ class Excel
         }
 
         $this->dataExport->attach(
-            new File($this->filePath), $this->filename, $this->user
+            new File($this->filePath),
+            $this->filename,
+            $this->user
         );
 
         $this->dataExport->endOperation();
@@ -129,15 +132,17 @@ class Excel
     private function notify(): self
     {
         $this->user->notify((new ExportDoneNotification(
-            $this->filePath, $this->filename, $this->dataExport
-        ))->onQueue(config('enso.tables.queues.notifications')));
+            $this->filePath,
+            $this->filename,
+            $this->dataExport
+        ))->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));
 
         return $this;
     }
 
     private function filePath(): string
     {
-        $path = config('enso.tables.export.path');
+        $path = ConfigFacade::get('enso.tables.export.path');
 
         return Storage::path($path.DIRECTORY_SEPARATOR.$this->hashName());
     }
@@ -199,7 +204,7 @@ class Excel
 
     private function needsNewSheet(): bool
     {
-        return $this->dataExport->entries / config('enso.tables.export.sheetLimit')
+        return $this->dataExport->entries / ConfigFacade::get('enso.tables.export.sheetLimit')
             >= $this->sheetCount;
     }
 

@@ -4,6 +4,7 @@ namespace LaravelEnso\Tables\App\Services;
 
 use Illuminate\Cache\TaggableStore;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use LaravelEnso\Tables\App\Contracts\DynamicTemplate;
 use LaravelEnso\Tables\App\Contracts\Table;
@@ -61,7 +62,8 @@ class TemplateLoader
         }
 
         $type = $this->template->get(
-            'templateCache', config('enso.tables.cache.template')
+            'templateCache',
+            Config::get('enso.tables.cache.template')
         );
 
         switch ($type) {
@@ -76,14 +78,16 @@ class TemplateLoader
 
     private function cacheKey(): string
     {
-        $configPrefix = config('enso.tables.cache.prefix');
+        $configPrefix = Config::get('enso.tables.cache.prefix');
 
         $prefix = $this->table instanceof DynamicTemplate
             ? "{$this->table->cachePrefix()}-"
             : null;
 
         $slug = Str::slug(str_replace(
-            ['/', '.'], [' ', ' '], $this->table->templatePath()
+            ['/', '.'],
+            [' ', ' '],
+            $this->table->templatePath()
         ));
 
         return "{$configPrefix}:{$prefix}{$slug}";
@@ -92,7 +96,7 @@ class TemplateLoader
     private function cache()
     {
         return Cache::getStore() instanceof TaggableStore
-            ? Cache::tags(config('enso.tables.cache.tag'))
+            ? Cache::tags(Config::get('enso.tables.cache.tag'))
             : Cache::store();
     }
 }

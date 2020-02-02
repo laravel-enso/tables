@@ -12,5 +12,5 @@
 @endif
 
 {{ __('Thank you') }},<br>
-{{ __(config('app.name')) }}
+{{ __(Config::get('app.name')) }}
 @endcomponent

@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\App\Services\Template\Validators\Buttons;
 
+use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Exceptions\Button as Exception;
 
@@ -53,9 +54,10 @@ class Buttons
 
     private function structure(): self
     {
-        $this->buttons->map(fn ($button) => $button instanceof Obj
-            ? $button
-            : $this->defaults->get($button)
+        $this->buttons->map(
+            fn ($button) => $button instanceof Obj
+                ? $button
+                : $this->defaults->get($button)
         )->each(fn ($button) => (new Button($button, $this->routePrefix))->validate());
 
         return $this;
@@ -63,10 +65,10 @@ class Buttons
 
     private function configButtons(): Obj
     {
-        $global = (new Obj(config('enso.tables.buttons.global')))
+        $global = (new Obj(Config::get('enso.tables.buttons.global')))
             ->map(fn ($button) => $button->set('type', 'global'));
 
-        $row = (new Obj(config('enso.tables.buttons.row')))
+        $row = (new Obj(Config::get('enso.tables.buttons.row')))
             ->map(fn ($button) => $button->set('type', 'row'));
 
         return $global->merge($row);

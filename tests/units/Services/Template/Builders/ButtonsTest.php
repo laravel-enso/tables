@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Services\Template\Builders\Buttons;
 use Mockery;
@@ -14,7 +15,7 @@ class ButtonsTest extends TestCase
     private $meta;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -45,14 +46,14 @@ class ButtonsTest extends TestCase
     /** @test */
     public function cannot_build_when_user_cannot_access_to_route()
     {
-        $user = Mockery::mock(config('auth.providers.users.model'))->makePartial();
+        $user = Mockery::mock(Config::get('auth.providers.users.model'))->makePartial();
 
         $this->actingAs($user);
 
         $this->template->get('buttons')->push(new Obj([
-                'action' => '',
-                'type' => 'row',
-                'fullRoute' => 'test',
+            'action' => '',
+            'type' => 'row',
+            'fullRoute' => 'test',
         ]));
 
         $this->template->get('buttons')->push('create');
@@ -100,22 +101,22 @@ class ButtonsTest extends TestCase
         $this->build();
 
         $this->assertEquals(
-            (new Obj(config('enso.tables.buttons.global.create')))->except('routeSuffix'),
+            (new Obj(Config::get('enso.tables.buttons.global.create')))->except('routeSuffix'),
             $this->template->get('buttons')->get('global')->first()->except('route')
         );
 
         $this->assertEquals(
-            (new Obj(config('enso.tables.buttons.row.show')))->except('routeSuffix'),
+            (new Obj(Config::get('enso.tables.buttons.row.show')))->except('routeSuffix'),
             $this->template->get('buttons')->get('row')->first()->except('route')
         );
 
         $this->assertEquals(
-            '.'.config('enso.tables.buttons.global.create.routeSuffix'),
+            '.'.Config::get('enso.tables.buttons.global.create.routeSuffix'),
             $this->template->get('buttons')->get('global')->first()->get('route')
         );
 
         $this->assertEquals(
-            '.'.config('enso.tables.buttons.row.show.routeSuffix'),
+            '.'.Config::get('enso.tables.buttons.row.show.routeSuffix'),
             $this->template->get('buttons')->get('row')->first()->get('route')
         );
     }

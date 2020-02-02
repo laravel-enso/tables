@@ -9,7 +9,8 @@ use LaravelEnso\Tables\App\Services\Template;
 class Config
 {
     private const TemplateProxy = [
-        'appends', 'comparisonOperator', 'countCache', 'flatten', 'fullInfoRecordLimit', 'name',
+        'appends', 'comparisonOperator', 'countCache', 'flatten', 'fullInfoRecordLimit',
+        'name', 'strip',
     ];
 
     private const RequestMeta = [
@@ -91,10 +92,11 @@ class Config
     {
         $this->columns = $this->request->columns()
             ->map(fn ($column, $index) => $this->mergeColumnMeta(
-                $this->template->column($index), $column
+                $this->template->column($index),
+                $column
             ));
 
-        Computors::columns($this);
+        ArrayComputors::columns($this);
     }
 
     private function mergeColumnMeta(Obj $templateColumn, Obj $requestColumn): Obj

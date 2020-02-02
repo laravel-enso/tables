@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\App\Services\Data\Computors;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 
 class OptimalChunk
 {
@@ -17,7 +18,7 @@ class OptimalChunk
 
     public static function get($count): int
     {
-        $sheetLimit = config('enso.tables.export.sheetLimit');
+        $sheetLimit = Config::get('enso.tables.export.sheetLimit');
 
         $match = (new Collection(self::ChunkPerLimit))
             ->first(fn ($limit) => $count <= $limit[0]);

@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config as ConfigFacade;
 use LaravelEnso\Tables\App\Contracts\AuthenticatesOnExport;
 use LaravelEnso\Tables\App\Exports\Excel;
 use LaravelEnso\Tables\App\Services\Data\Config;
@@ -33,8 +34,8 @@ class ExcelExport implements ShouldQueue
         $this->tableClass = $tableClass;
         $this->dataExport = $dataExport;
 
-        $this->timeout = config('enso.tables.export.timeout');
-        $this->queue = config('enso.tables.queues.exports');
+        $this->timeout = ConfigFacade::get('enso.tables.export.timeout');
+        $this->queue = ConfigFacade::get('enso.tables.queues.exports');
     }
 
     public function handle()
@@ -46,7 +47,10 @@ class ExcelExport implements ShouldQueue
         }
 
         (new Excel(
-            $this->user, $table, $this->config, $this->dataExport
+            $this->user,
+            $table,
+            $this->config,
+            $this->dataExport
         ))->run();
     }
 }

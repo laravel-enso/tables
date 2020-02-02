@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\App\Services;
 
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Config as ConfigFacade;
 use Illuminate\Support\Str;
 use LaravelEnso\DataExport\App\Models\DataExport;
 use LaravelEnso\IO\App\Enums\IOStatuses;
@@ -47,7 +48,7 @@ class Excel
     {
         $this->user->notify(
             (new ExportStartNotification($this->type().'_'.__('Table_Report')))
-                ->onQueue(config('enso.tables.queues.notifications'))
+                ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
         );
 
         return $this;
@@ -68,7 +69,10 @@ class Excel
     private function dispatch()
     {
         ExcelExport::dispatch(
-            $this->user, $this->config, $this->tableClass, $this->dataExport
+            $this->user,
+            $this->config,
+            $this->tableClass,
+            $this->dataExport
         );
     }
 
@@ -78,7 +82,7 @@ class Excel
             ->whereCreatedBy($this->user->id)
             ->where('status', '<', IOStatuses::Finalized)
             ->where('created_at', '>', now()->subSeconds(
-                config('enso.tables.export.timeout')
+                ConfigFacade::get('enso.tables.export.timeout')
             ))->exists();
     }
 
@@ -91,6 +95,6 @@ class Excel
 
     private function isEnso()
     {
-        return ! empty(config('enso.config'));
+        return ! empty(ConfigFacade::get('enso.config'));
     }
 }

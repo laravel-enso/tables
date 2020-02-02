@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use LaravelEnso\Tables\App\Contracts\Table;
-use LaravelEnso\Tables\App\Services\Data\Computors;
+use LaravelEnso\Tables\App\Services\Data\ArrayComputors;
 use LaravelEnso\Tables\App\Services\Data\Config;
 use LaravelEnso\Tables\App\Services\Data\Filters;
+use LaravelEnso\Tables\App\Services\Data\ModelComputors;
 use LaravelEnso\Tables\App\Services\Data\Sort;
 
 class Data
@@ -34,8 +35,10 @@ class Data
 
         if ($this->data->isNotEmpty()) {
             $this->appends()
+                ->modelCompute()
                 ->sanitize()
-                ->compute()
+                ->arrayCompute()
+                ->strip()
                 ->flatten();
         }
 
@@ -56,9 +59,7 @@ class Data
 
     private function filter(): self
     {
-        (new Filters(
-            $this->table, $this->config, $this->query
-        ))->handle();
+        (new Filters($this->table, $this->config, $this->query))->handle();
 
         return $this;
     }
@@ -98,6 +99,13 @@ class Data
         return $this;
     }
 
+    private function modelCompute(): self
+    {
+        $this->data = ModelComputors::handle($this->config, $this->data);
+
+        return $this;
+    }
+
     private function sanitize(): self
     {
         $this->data = new Collection($this->data->toArray());
@@ -105,9 +113,26 @@ class Data
         return $this;
     }
 
-    private function compute(): self
+    private function arrayCompute(): self
     {
-        $this->data = Computors::handle($this->config, $this->data);
+        $this->data = ArrayComputors::handle($this->config, $this->data);
+
+        return $this;
+    }
+
+    private function strip(): self
+    {
+        if (! $this->config->filled('strip')) {
+            return $this;
+        }
+
+        $this->data = $this->data->map(function ($row) {
+            foreach ($this->config->get('strip')->toArray() as $attr) {
+                unset($row[$attr]);
+            }
+
+            return $row;
+        });
 
         return $this;
     }
@@ -115,7 +140,7 @@ class Data
     private function flatten(): void
     {
         if ($this->config->get('flatten')) {
-            $this->data = (new Collection($this->data))
+            $this->data = $this->data
                 ->map(fn ($record) => Arr::dot($record));
         }
     }

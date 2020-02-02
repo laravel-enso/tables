@@ -7,6 +7,7 @@ use Illuminate\Cache\TaggableStore;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config as ConfigFacade;
 use LaravelEnso\Tables\App\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\App\Contracts\Table;
 use LaravelEnso\Tables\App\Exceptions\Cache as Exception;
@@ -73,7 +74,9 @@ class Meta
     private function filter(): self
     {
         $filters = new Filters(
-            $this->table, $this->config, $this->query
+            $this->table,
+            $this->config,
+            $this->query
         );
 
         $this->filters = $filters->applies();
@@ -107,7 +110,9 @@ class Meta
     {
         if ($this->config->meta()->get('total')) {
             $this->total = (new Total(
-                $this->table, $this->config, $this->query
+                $this->table,
+                $this->config,
+                $this->query
             ))->handle();
         }
 
@@ -142,7 +147,7 @@ class Meta
     private function cacheKey(?string $suffix = null): string
     {
         return (new Collection([
-            config('enso.tables.cache.prefix'),
+            ConfigFacade::get('enso.tables.cache.prefix'),
             $this->query->getModel()->getTable(),
             $suffix,
         ]))->filter()->implode(':');
@@ -152,7 +157,7 @@ class Meta
     {
         $shouldCache = $this->config->has('countCache')
             ? $this->config->get('countCache')
-            : config('enso.tables.cache.count');
+            : ConfigFacade::get('enso.tables.cache.count');
 
         if ($shouldCache) {
             $model = $this->query->getModel();
@@ -161,8 +166,10 @@ class Meta
                 throw Exception::missingTrait(get_class($model));
             }
 
-            if ($this->table instanceof CustomCountCacheKey
-                && ! Cache::getStore() instanceof TaggableStore) {
+            if (
+                $this->table instanceof CustomCountCacheKey
+                && ! Cache::getStore() instanceof TaggableStore
+            ) {
                 $shouldCache = false;
             }
         }

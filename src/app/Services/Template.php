@@ -4,6 +4,7 @@ namespace LaravelEnso\Tables\App\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\App\Classes\JsonParser;
 use LaravelEnso\Helpers\App\Classes\Obj;
@@ -59,7 +60,7 @@ class Template
         return [
             'template' => $this->template,
             'meta' => $this->meta,
-            'apiVersion' => config('enso.tables.apiVersion'),
+            'apiVersion' => Config::get('enso.tables.apiVersion'),
         ];
     }
 
@@ -114,7 +115,7 @@ class Template
     private function needsValidation()
     {
         return (new Collection([App::environment(), 'always']))->contains(
-            config('enso.tables.validations')
+            Config::get('enso.tables.validations')
         );
     }
 }
