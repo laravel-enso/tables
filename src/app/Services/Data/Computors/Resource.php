@@ -19,13 +19,23 @@ class Resource implements ComputesModelColumns
     public static function handle(Model $row)
     {
         foreach (self::$columns as $column) {
-            $resource = $column->get('resource');
-
-            $row[$column->get('name')] = $row[$column->get('name')] instanceof EloquentCollection
-                ? $resource::collection($row[$column->get('name')])
-                : new $resource($row[$column->get('name')]);
+            $row[$column->get('name')] = self::resource($row, $column);
         }
 
         return $row;
+    }
+
+    private static function resource($row, $column)
+    {
+        if ($row[$column->get('name')] === null) {
+            return;
+        }
+
+        $resource = $column->get('resource');
+        $value = $row[$column->get('name')];
+
+        return $row[$column->get('name')] === $value instanceof EloquentCollection
+            ? $resource::collection($value)
+            : new $resource($value);
     }
 }
