@@ -13,7 +13,9 @@ class Date implements ComputesArrayColumns
 
     public static function columns($columns): void
     {
-        self::$columns = $columns->filter(fn ($column) => $column->get('meta')->get('date'));
+        self::$columns = $columns
+            ->filter(fn ($column) => $column->get('meta')->get('date'))
+            ->values();
     }
 
     public static function handle(array $row): array

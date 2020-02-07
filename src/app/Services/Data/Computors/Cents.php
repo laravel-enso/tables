@@ -11,7 +11,9 @@ class Cents implements ComputesArrayColumns
 
     public static function columns($columns): void
     {
-        self::$columns = $columns->filter(fn ($column) => $column->get('meta')->get('cents'));
+        self::$columns = $columns
+            ->filter(fn ($column) => $column->get('meta')->get('cents'))
+            ->values();
     }
 
     public static function handle(array $row): array

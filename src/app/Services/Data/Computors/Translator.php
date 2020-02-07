@@ -12,7 +12,8 @@ class Translator implements ComputesArrayColumns
     public static function columns($columns): void
     {
         self::$columns = $columns->filter(fn ($column) => $column
-            ->get('meta')->get('translatable'));
+            ->get('meta')->get('translatable'))
+            ->values();
     }
 
     public static function handle(array $row): array

@@ -11,7 +11,9 @@ class Enum implements ComputesArrayColumns
 
     public static function columns($columns): void
     {
-        self::$columns = $columns->filter(fn ($column) => $column->get('enum'));
+        self::$columns = $columns
+            ->filter(fn ($column) => $column->get('enum'))
+            ->values();
     }
 
     public static function handle(array $row): array
