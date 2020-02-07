@@ -213,7 +213,6 @@ class Excel
         $meta = $column->get('meta');
 
         return $meta->get('visible')
-            && ! $meta->get('rogue')
             && ! $meta->get('notExportable');
     }
 
