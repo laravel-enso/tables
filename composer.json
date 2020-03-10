@@ -20,8 +20,8 @@
     ],
     "require": {
         "php": ">=7.4.0",
-        "box/spout": "3.0.*",
-        "laravel/framework": "^6.0",
+        "box/spout": "^3.0",
+        "laravel/framework": "^7.0",
         "laravel-enso/enums": "1.2.*",
         "laravel-enso/helpers": "1.15.*"
     },
