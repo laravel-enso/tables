@@ -42,12 +42,20 @@ class Buttons
             ? $this->default($button)
             : [$button, $button->get('type')];
 
-        if (! $button->has('action') || $this->actionComputingSuccedes($button, $type)) {
+        if ($this->shouldDisplayButton($button, $type)) {
             $button->forget(['fullRoute', 'routeSuffix']);
             $buttons[$type]->push($button);
         }
 
         return $buttons;
+    }
+
+    private function shouldDisplayButton(Obj $button, string $type)
+    {
+        return ! $button->has('action')
+            && ! $button->has('route')
+            && ! $button->has('routeSuffix')
+            || $this->actionComputingSuccedes($button, $type);
     }
 
     private function default($button): array
