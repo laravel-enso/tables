@@ -217,13 +217,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Date format
+    | Date & Datetime format
     |--------------------------------------------------------------------------
     | Global date format for date columns. Will use Carbon to parse the columns
     | marked as date to the desired format.
      */
 
     'dateFormat' => 'd-m-Y',
+    'dateTimeFormat' => 'd-m-Y H:i:s',
 
     /*
     |--------------------------------------------------------------------------

@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
+use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Services\Data\Builders\Data;
 use LaravelEnso\Tables\Tests\units\Services\BuilderTestEnum;
@@ -117,6 +118,26 @@ class DataTest extends TestCase
 
         $this->assertEquals(
             $this->testModel->created_at->format('Y-m-d'),
+            $response->first()->get('created_at')
+        );
+    }
+
+    /** @test */
+    public function can_get_data_with_datetime()
+    {
+        $format = Config::get('enso.tables.dateTimeFormat');
+        $this->config->meta()->set('datetime', true);
+
+        $this->config->columns()->push(new Obj([
+            'name' => 'created_at',
+            'dateFormat' => $format,
+            'meta' => ['datetime' => true],
+        ]));
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            $this->testModel->created_at->format($format),
             $response->first()->get('created_at')
         );
     }
