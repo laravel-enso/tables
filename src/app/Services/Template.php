@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-use LaravelEnso\Helpers\App\Classes\JsonParser;
+use LaravelEnso\Helpers\App\Classes\JsonReader;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Contracts\Table;
 use LaravelEnso\Tables\App\Services\Template\Builder;
@@ -102,7 +102,7 @@ class Template
     private function readJson($path)
     {
         $template = new Obj(
-            (new JsonParser($path))->array()
+            (new JsonReader($path))->array()
         );
 
         if ($this->needsValidation()) {
