@@ -61,7 +61,7 @@ class Meta
 
     public function count(): int
     {
-        return $this->query->count();
+        return $this->query->getQuery()->getCountForPagination();
     }
 
     private function setCount(): self
