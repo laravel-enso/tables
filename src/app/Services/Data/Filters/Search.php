@@ -34,23 +34,29 @@ class Search extends BaseFilter
 
     private function matchArgument(Builder $query, string $argument): void
     {
-        $this->searchable()->each(fn ($column) => $query->orWhere(
-            fn ($query) => $this->matchAttribute(
-                $query, $column->get('data'), $argument, $column->get('name')
-            ))
+        $this->searchable()->each(
+            fn ($column) => $query->orWhere(
+                fn ($query) => $this->matchAttribute(
+                    $query,
+                    $column->get('data'),
+                    $argument,
+                    $column->get('name')
+                )
+            )
         );
     }
 
-    private function matchAttribute(Builder $query, string $attribute, string $argument,
-        ?string $name = null): void
+    private function matchAttribute(Builder $query, string $attribute, string $argument, ?string $name = null): void
     {
         $nested = $this->isNested($name ?? $attribute);
 
-        $query->when($nested, fn ($query) => $this->matchSegments(
-            $query, $attribute, $argument
-        ))->when(! $nested, fn ($query) => $query->where(
-            $attribute, $this->config->get('comparisonOperator'), $this->wildcards($argument)
-        ));
+        $query->when($nested, fn ($query) => $this
+            ->matchSegments($query, $attribute, $argument))
+            ->when(! $nested, fn ($query) => $query->where(
+                $attribute,
+                $this->config->get('comparisonOperator'),
+                $this->wildcards($argument)
+            ));
     }
 
     private function matchSegments(Builder $query, string $attribute, string $argument): void
@@ -58,7 +64,7 @@ class Search extends BaseFilter
         $attributes = new Collection(explode('.', $attribute));
 
         $query->whereHas($attributes->shift(), fn ($query) => $this
-                ->matchAttribute($query, $attributes->implode('.'), $argument));
+            ->matchAttribute($query, $attributes->implode('.'), $argument));
     }
 
     private function wildcards(string $argument): string
