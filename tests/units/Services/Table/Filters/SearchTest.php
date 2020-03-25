@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
 use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Services\Data\Filters\Search;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
@@ -85,11 +86,11 @@ class SearchTest extends TestCase
     /** @test */
     public function can_use_multi_argument_search()
     {
-        $this->config->columns()->push([
+        $this->config->columns()->push(new Obj([
             'data' => 'color',
             'name' => 'color',
-            'meta' => ['searchable' => true]
-        ]);
+            'meta' => ['searchable' => true],
+        ]));
 
         $response = $this->requestResponse();
 

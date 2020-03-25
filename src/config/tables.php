@@ -1,5 +1,8 @@
 <?php
 
+use LaravelEnso\Filters\App\Enums\ComparisonOperators;
+use LaravelEnso\Filters\App\Enums\SearchModes;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -283,33 +286,32 @@ return [
     |--------------------------------------------------------------------------
     | SQL comparison operator
     |--------------------------------------------------------------------------
-    | The comparison operator will be the default used for every table. You
-    | will still have the option of customizing the operator for certain
-    | tables by using the same attribute in the table's json template.
-    | Possible values for comparison operator: LIKE, ILIKE
+    | The comparison operator will be the default used for every table. Can be
+    | customized for each table. Possible values:
+    | ComparisonOperators::Like, ComparisonOperators::ILike
     */
 
-    'comparisonOperator' => 'LIKE',
+    'comparisonOperator' => ComparisonOperators::Like,
 
     /*
     |--------------------------------------------------------------------------
     | Search Modes
     |--------------------------------------------------------------------------
-    | Allowed search modes. Array with one ore more possible values
-    | Possible values for search mode: 'full', 'startsWith', 'endsWith'
-    |
+    | Global allowed search modes that can be customized for each table.
+    | Possible values:
+    | SearchModes::Full', SearchModes::StartsWith, SearchModes::EndsWith
     */
 
-    'searchModes' => ['full', 'startsWith', 'endsWith'],
+    'searchModes' => [SearchModes::Full, SearchModes::StartsWith, SearchModes::EndsWith],
 
     /*
     |--------------------------------------------------------------------------
     | Search Mode
     |--------------------------------------------------------------------------
-    | Controls the global way in which wildcards are used in the query.
-    | Can be customized for each table.
-    | Possible values for search mode: 'full', 'startsWith', 'endsWith'
+    | Controls the default way in which wildcards are used in the query.
+    | Can be customized for each table. Possible values:
+    | SearchModes::Full', SearchModes::StartsWith, SearchModes::EndsWith
     */
 
-    'searchMode' => 'startsWith',
+    'searchMode' => SearchModes::Full,
 ];
