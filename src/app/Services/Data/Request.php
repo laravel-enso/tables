@@ -9,14 +9,16 @@ class Request
 {
     private Obj $columns;
     private Obj $meta;
+    private Obj $internalFilters;
     private Obj $filters;
     private Obj $intervals;
     private Obj $params;
 
-    public function __construct($columns, $meta, $filters, $intervals, $params)
+    public function __construct($columns, $meta, $internalFilters, $filters, $intervals, $params)
     {
         $this->columns = new Obj($this->parse($columns));
         $this->meta = new Obj($this->parse($meta));
+        $this->internalFilters = new Obj($this->parse($internalFilters));
         $this->filters = new Obj($this->parse($filters));
         $this->intervals = new Obj($this->parse($intervals));
         $this->params = new Obj($this->parse($params));
@@ -30,6 +32,11 @@ class Request
     public function meta(): Obj
     {
         return $this->meta;
+    }
+
+    public function internalFilters(): Obj
+    {
+        return $this->internalFilters;
     }
 
     public function filters(): Obj
@@ -47,12 +54,18 @@ class Request
         return $this->params;
     }
 
+    public function column(string $name): ?Obj
+    {
+        return $this->columns
+            ->first(fn ($column) => $column->get('name') === $name);
+    }
+
     private function parse($arg)
     {
         return ! is_array($arg)
             ? $this->decode($arg)
             : (new Collection($arg))->map(fn ($arg) => $this->decode($arg))
-                ->toArray();
+            ->toArray();
     }
 
     private function decode($arg)

@@ -10,12 +10,14 @@ use LaravelEnso\Tables\App\Exceptions\Filter as Exception;
 use LaravelEnso\Tables\App\Services\Data\Filters\BaseFilter;
 use LaravelEnso\Tables\App\Services\Data\Filters\CustomFilter;
 use LaravelEnso\Tables\App\Services\Data\Filters\Filter;
+use LaravelEnso\Tables\App\Services\Data\Filters\InternalFilter;
 use LaravelEnso\Tables\App\Services\Data\Filters\Interval;
 use LaravelEnso\Tables\App\Services\Data\Filters\Search;
 
 class Filters extends BaseFilter
 {
     private static array $defaultFilters = [
+        InternalFilter::class,
         Filter::class,
         Interval::class,
         Search::class,
@@ -28,7 +30,7 @@ class Filters extends BaseFilter
     public function applies(): bool
     {
         return $this->applicable()
-                ->first(fn ($filter) => $this->filter($filter)->applies()) !== null;
+            ->first(fn ($filter) => $this->filter($filter)->applies()) !== null;
     }
 
     public function handle(): void

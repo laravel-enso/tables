@@ -17,15 +17,14 @@ class Sort
 
     public function handle(): void
     {
-        $this->config->columns()
-            ->filter(fn ($column) => $column->get('meta')->get('sortable')
-                && $column->get('meta')->get('sort')
-            )->each(fn ($column) => $column->get('meta')->get('nullLast')
-                ? $this->query->orderByRaw($this->rawSort($column))
-                : $this->query->orderBy(
-                    $column->get('data'), $column->get('meta')->get('sort')
-                )
-            );
+        $this->config->columns()->filter(fn ($column) => $column
+            ->get('meta')->get('sortable') && $column->get('meta')->get('sort'))
+            ->each(fn ($column) => $this->query->when(
+                $column->get('meta')->get('nullLast'),
+                fn ($query) => $query->orderByRaw($this->rawSort($column)),
+                fn ($query) => $query
+                    ->orderBy($column->get('data'), $column->get('meta')->get('sort'))
+            ));
     }
 
     private function rawSort($column): string

@@ -20,8 +20,8 @@ class Search extends BaseFilter
 
         (new Service($this->query, $this->attributes(), $search))
             ->relations($this->relations())
-            ->searchMode($this->config->meta()->get('searchMode'))
             ->comparisonOperator($this->config->get('comparisonOperator'))
+            ->searchMode($this->config->meta()->get('searchMode'))
             ->handle();
     }
 

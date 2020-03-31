@@ -12,6 +12,7 @@ trait ProvidesRequest
         return new TableRequest(
             $request->get('columns'),
             $request->get('meta'),
+            $request->get('internalFilters'),
             $request->get('filters'),
             $request->get('intervals'),
             $request->get('params')

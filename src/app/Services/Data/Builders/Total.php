@@ -30,23 +30,28 @@ class Total
         $this->config->columns()
             ->filter(fn ($column) => $column->get('meta')->get('total')
                 || $column->get('meta')->get('rawTotal')
-            )->each(fn ($column) => $this->compute($column));
+                || $column->get('meta')->get('average'))
+            ->each(fn ($column) => $this->compute($column));
 
         return $this->total;
     }
 
     private function compute(Obj $column): void
     {
-        $this->total[$column->get('name')] = $column->get('meta')->get('rawTotal')
-            ? $this->rawTotal($column)
-            : $this->query->sum($column->get('data'));
+        if ($column->get('meta')->get('rawTotal')) {
+            $this->total[$column->get('name')] = $this->rawTotal($column);
+        } elseif ($column->get('meta')->get('average')) {
+            $this->total[$column->get('name')] = $this->query->average($column->get('data'));
+        } else {
+            $this->total[$column->get('name')] = $this->query->sum($column->get('data'));
+        }
 
         if ($column->get('meta')->get('cents')) {
             $this->total[$column->get('name')] /= 100;
         }
     }
 
-    private function rawTotal($column): int
+    private function rawTotal($column): float
     {
         if (! $this->table instanceof RawTotal) {
             throw Exception::missingInterface();

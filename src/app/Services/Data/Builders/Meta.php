@@ -75,11 +75,7 @@ class Meta
 
     private function filter(): self
     {
-        $filters = new Filters(
-            $this->table,
-            $this->config,
-            $this->query
-        );
+        $filters = new Filters($this->table, $this->config, $this->query);
 
         $this->filters = $filters->applies();
 

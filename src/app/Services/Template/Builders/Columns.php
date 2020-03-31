@@ -30,7 +30,7 @@ class Columns
         return $this->template->get('columns')
             ->reduce(fn ($columns, $column) => $columns->push(
                 $this->compute($column)
-            ), new Collection());
+            ), new Obj());
     }
 
     private function compute($column): Obj
@@ -93,7 +93,7 @@ class Columns
     {
         $meta = $column->get('meta');
 
-        if ($meta->get('total') || $meta->get('rawTotal') || $meta->get('customTotal')) {
+        if ($meta->get('total') || $meta->get('rawTotal') || $meta->get('customTotal') || $meta->get('average')) {
             $this->meta->set('total', true);
         }
 

@@ -302,7 +302,10 @@ return [
     | SearchModes::Full', SearchModes::StartsWith, SearchModes::EndsWith
     */
 
-    'searchModes' => [SearchModes::Full, SearchModes::StartsWith, SearchModes::EndsWith],
+    'searchModes' => [
+        SearchModes::Full, SearchModes::StartsWith, SearchModes::EndsWith,
+        SearchModes::ExactMatch, SearchModes::DoesntContain,
+    ],
 
     /*
     |--------------------------------------------------------------------------

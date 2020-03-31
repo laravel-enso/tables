@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\App\Services\Data\Filters;
 
 use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\App\Classes\Obj;
 
 class Filter extends BaseFilter
 {
@@ -15,15 +16,15 @@ class Filter extends BaseFilter
     {
         $this->query->where(fn ($query) => $this->filters()
             ->each(fn ($filters, $table) => $filters
-               ->each(fn ($value, $column) => $query
-                   ->whereIn($table.'.'.$column, (new Collection($value))->toArray()))));
+                ->each(fn ($value, $column) => $query
+                    ->whereIn($table.'.'.$column, (new Collection($value))->toArray()))));
     }
 
-    private function filters(): Collection
+    private function filters(): Obj
     {
         return $this->config->filters()->map(fn ($filters) => $filters
-            ->filter(fn ($value) => $this->isValid($value))
-        )->filter->isNotEmpty();
+            ->filter(fn ($value) => $this->isValid($value)))
+            ->filter->isNotEmpty();
     }
 
     private function isValid($value): bool

@@ -52,6 +52,11 @@ class Config
         return $this->columns;
     }
 
+    public function internalFilters(): Obj
+    {
+        return $this->request->internalFilters();
+    }
+
     public function filters(): Obj
     {
         return $this->request->filters();
@@ -90,22 +95,25 @@ class Config
 
     private function setColumns(): void
     {
-        $this->columns = $this->request->columns()
-            ->map(fn ($column, $index) => $this->mergeColumnMeta(
-                $this->template->column($index),
-                $column
-            ));
+        $this->columns = $this->template->columns()
+            ->map(fn ($column) => $this->mergeColumnMeta($column));
 
         ArrayComputors::columns($this);
     }
 
-    private function mergeColumnMeta(Obj $templateColumn, Obj $requestColumn): Obj
+    private function mergeColumnMeta(Obj $templateColumn): Obj
     {
-        $meta = $templateColumn->get('meta', new Collection())
-            ->forget(static::RequestColumnMeta)
-            ->merge($this->requestColumnMeta($requestColumn));
+        $requestColumn = $this->request->column($templateColumn->get('name'));
 
-        return $templateColumn->set('meta', $meta);
+        if ($requestColumn) {
+            $meta = $templateColumn->get('meta', new Collection())
+                ->forget(static::RequestColumnMeta)
+                ->merge($this->requestColumnMeta($requestColumn));
+
+            $templateColumn->set('meta', $meta);
+        }
+
+        return $templateColumn;
     }
 
     private function requestColumnMeta(Obj $requestColumn): Collection

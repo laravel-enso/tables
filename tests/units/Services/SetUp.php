@@ -32,13 +32,11 @@ trait SetUp
 
         $this->testModel = $this->createTestModel();
 
-        $columns = $filters = $intervals = $params = [];
+        $columns = $internalFilters = $filters = $intervals = $params = [];
 
         $meta = ['length' => 10, 'search' => '', 'searchMode' => 'full'];
 
-        $request = new Request(
-            $columns, $meta, $filters, $intervals, $params
-        );
+        $request = new Request($columns, $meta, $internalFilters, $filters, $intervals, $params);
 
         $request->columns()->push(new Obj([
             'name' => 'name',

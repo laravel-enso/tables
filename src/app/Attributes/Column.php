@@ -11,8 +11,8 @@ class Column
     ];
 
     public const Meta = [
-        'boolean', 'clickable', 'cents', 'customTotal', 'date', 'datetime', 'icon',
-        'notExportable', 'nullLast', 'searchable', 'rawTotal', 'rogue', 'slot',
-        'sortable', 'sort:ASC', 'sort:DESC', 'translatable', 'total',
+        'average', 'boolean', 'clickable', 'cents', 'customTotal', 'date', 'datetime',
+        'filterable', 'icon', 'notExportable', 'nullLast', 'searchable', 'rawTotal',
+        'rogue', 'slot', 'sortable', 'sort:ASC', 'sort:DESC', 'translatable', 'total',
     ];
 }
