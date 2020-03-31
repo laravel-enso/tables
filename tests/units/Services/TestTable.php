@@ -18,7 +18,7 @@ class TestTable implements Table
 
     public function query(): Builder
     {
-        return TestModel::selectRaw('id, name, is_active, created_at, price, color');
+        return TestModel::selectRaw('id, name, is_active, created_at, price');
     }
 
     public function templatePath(): string

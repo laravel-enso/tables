@@ -5,7 +5,6 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Services\Data\Builders\Data;
-use LaravelEnso\Tables\Tests\units\Services\BuilderTestEnum;
 use LaravelEnso\Tables\Tests\units\Services\BuilderTestResource;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
@@ -60,46 +59,24 @@ class DataTest extends TestCase
     }
 
     /** @test */
-    public function can_get_data_with_enum()
-    {
-        $this->testModel->update(['color' => BuilderTestEnum::Blue]);
-
-        $this->config->meta()->set('enum', true);
-
-        $this->config->columns()->push(new Obj([
-            'name' => 'color',
-            'data' => 'color',
-            'enum' => BuilderTestEnum::class,
-            'meta' => [],
-        ]));
-
-        $response = $this->requestResponse();
-
-        $this->assertEquals(
-            BuilderTestEnum::get($this->testModel->color),
-            $response->first()->get('color')
-        );
-    }
-
-    /** @test */
     public function can_get_data_with_resource()
     {
         $this->config->meta()->set('resource', true);
 
         $this->config->columns()->push(new Obj([
-            'name' => 'color',
-            'data' => 'color',
+            'name' => 'price',
+            'data' => 'price',
             'resource' => BuilderTestResource::class,
             'meta' => [],
         ]));
 
         $response = $this->requestResponse();
 
-        $resource = (new BuilderTestResource($this->testModel->color))->resolve();
+        $resource = (new BuilderTestResource($this->testModel->price))->resolve();
 
         $this->assertEquals(
             json_encode($resource),
-            $response->first()->get('color')
+            $response->first()->get('price')
         );
     }
 

@@ -87,8 +87,8 @@ class SearchTest extends TestCase
     public function can_use_multi_argument_search()
     {
         $this->config->columns()->push(new Obj([
-            'data' => 'color',
-            'name' => 'color',
+            'data' => 'price',
+            'name' => 'price',
             'meta' => ['searchable' => true],
         ]));
 

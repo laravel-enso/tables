@@ -60,7 +60,6 @@ trait SetUp
             'name' => $this->faker->name,
             'is_active' => $this->faker->boolean,
             'price' => $this->faker->numberBetween(1000, 10000),
-            'color' => BuilderTestEnum::Red,
         ]);
     }
 }

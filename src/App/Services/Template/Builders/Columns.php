@@ -36,6 +36,7 @@ class Columns
     private function compute($column): Obj
     {
         $this->meta($column)
+            ->enum($column)
             ->sort($column)
             ->total($column)
             ->defaults($column);
@@ -55,6 +56,15 @@ class Columns
             ->set('hidden', false);
 
         $column->set('meta', $meta);
+
+        return $this;
+    }
+
+    private function enum($column): self
+    {
+        if ($column->has('enum')) {
+            $column->set('enum', $column->get('enum')::all());
+        }
 
         return $this;
     }

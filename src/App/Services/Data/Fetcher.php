@@ -24,7 +24,7 @@ class Fetcher
         $this->page = 0;
         $this->ready = false;
 
-        ArrayComputors::fetchMode();
+        ArrayComputors::serverSide();
     }
 
     public function current(): Collection

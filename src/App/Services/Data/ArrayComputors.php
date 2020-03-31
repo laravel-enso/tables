@@ -13,7 +13,7 @@ use LaravelEnso\Tables\App\Services\Data\Computors\Translator;
 
 class ArrayComputors extends Computors
 {
-    private static bool $fetchMode = false;
+    private static bool $serverSide = false;
 
     protected static array $computors = [
         'enum' => Enum::class,
@@ -23,9 +23,9 @@ class ArrayComputors extends Computors
         'translatable' => Translator::class,
     ];
 
-    public static function fetchMode(): void
+    public static function serverSide(): void
     {
-        self::$fetchMode = true;
+        self::$serverSide = true;
     }
 
     protected static function computor($computor): ComputesArrayColumns
@@ -42,6 +42,7 @@ class ArrayComputors extends Computors
     protected static function applicable(Config $config): Collection
     {
         return parent::applicable($config)
-            ->filter(fn ($computor) => $computor !== 'translatable' || self::$fetchMode);
+            ->when(! self::$serverSide, fn ($computors) => $computors
+                ->reject(fn ($computor) => in_array($computor, ['enum', 'translatable'])));
     }
 }

@@ -10,7 +10,7 @@ class TestModel extends Model
 {
     use TableCache;
 
-    protected $fillable = ['name', 'price', 'is_active', 'color'];
+    protected $fillable = ['name', 'price', 'is_active'];
 
     protected $casts = ['is_active' => 'boolean'];
 
