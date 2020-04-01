@@ -27,22 +27,20 @@ class Style
             ->set('highlight', $this->defaultStyle->get('highlight'));
     }
 
-    private function compute($style): string
+    private function compute($style): Collection
     {
         return $this->defaultStyle->get('default')
             ->intersect($style)
             ->values()
             ->reduce(fn ($style, $param) => $style
                 ->push($this->defaultStyle->get('mapping')->get($param)), new Collection())
-            ->unique()
-            ->implode(' ');
+            ->unique();
     }
 
     private function preset($style): Obj
     {
-        return (new Collection($style))->reduce(fn ($styles, $style) => $styles->set(
-            $style,
-            $this->defaultStyle->get('mapping')->get($style)
-        ), new Obj());
+        return (new Collection($style))
+            ->reduce(fn ($styles, $style) => $styles
+                ->set($style, $this->defaultStyle->get('mapping')->get($style)), new Obj());
     }
 }
