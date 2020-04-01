@@ -9,7 +9,7 @@ use LaravelEnso\Tables\App\Attributes\Column as Attributes;
 class Columns
 {
     private const FromColumn = ['enum', 'money', 'resource'];
-    private const FromMeta = ['searchable', 'date', 'datetime', 'translatable', 'cents'];
+    private const FromMeta = ['filterable', 'searchable', 'date', 'datetime', 'translatable', 'cents'];
 
     private Obj $template;
     private Obj $meta;

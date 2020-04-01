@@ -14,10 +14,10 @@ class Structure
         'comparisonOperator', 'responsive', 'searchModes',
     ];
 
-    private const FalseIfMissing = ['selectable',  'preview'];
+    private const FalseIfMissing = ['selectable', 'preview'];
 
     private const DefaultFalse = [
-        'loading', 'forceInfo', 'searchable', 'sort', 'total', 'date',
+        'loading', 'forceInfo', 'filterable', 'searchable', 'sort', 'total', 'date',
         'datetime', 'translatable', 'enum', 'cents', 'money', 'resource',
     ];
 
