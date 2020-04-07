@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\App\Exceptions;
 
 use LaravelEnso\Helpers\App\Exceptions\EnsoException;
-use LaravelEnso\Tables\App\Attributes\Button as ButtonAttributes;
+use LaravelEnso\Tables\App\Attributes\Button as Attributes;
 
 class Button extends EnsoException
 {
@@ -24,7 +24,7 @@ class Button extends EnsoException
     {
         return new static(__(
             'The following attributes are mandatory for buttons: ":attrs"',
-            ['attrs' => implode('", "', ButtonAttributes::Mandatory)],
+            ['attrs' => implode('", "', Attributes::Mandatory)],
         ));
     }
 
@@ -32,7 +32,7 @@ class Button extends EnsoException
     {
         return new static(__(
             'The following optional attributes are allowed for buttons: ":attrs"',
-            ['attrs' => implode('", "', ButtonAttributes::Optional)]
+            ['attrs' => implode('", "', Attributes::Optional)]
         ));
     }
 
@@ -54,7 +54,7 @@ class Button extends EnsoException
     {
         return new static(__(
             'The following actions are allowed for buttons: ":actions"',
-            ['actions' => implode('", "', ButtonAttributes::Actions)]
+            ['actions' => implode('", "', Attributes::Actions)]
         ));
     }
 

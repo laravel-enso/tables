@@ -11,17 +11,23 @@ class Meta
 {
     public static function validate(Obj $column)
     {
-        $attributes = $column->get('meta');
+        $meta = $column->get('meta');
 
-        $diff = $attributes->diff(Attributes::Meta);
+        $diff = $meta->diff(Attributes::Meta);
 
         if ($diff->isNotEmpty()) {
             throw Exception::unknownAttributes($diff->implode('", "'));
         }
 
-        if (Str::contains($column->get('name'), '.')
-            && ($attributes->contains('sortable'))) {
+        if (
+            Str::contains($column->get('name'), '.')
+            && ($meta->contains('sortable'))
+        ) {
             throw Exception::unsupported($column->get('name'));
+        }
+
+        if ($meta->has('filterable') && $meta->has('icon')) {
+            throw Exception::cannotFilterIcon($column->get('name'));
         }
     }
 }

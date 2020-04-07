@@ -6,6 +6,7 @@ use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Services\Template\Validators\Buttons\Buttons;
 use LaravelEnso\Tables\App\Services\Template\Validators\Columns\Columns;
 use LaravelEnso\Tables\App\Services\Template\Validators\Controls;
+use LaravelEnso\Tables\App\Services\Template\Validators\Filters\Filters;
 use LaravelEnso\Tables\App\Services\Template\Validators\Route;
 use LaravelEnso\Tables\App\Services\Template\Validators\Structure\Attributes;
 use LaravelEnso\Tables\App\Services\Template\Validators\Structure\Structure;
@@ -28,6 +29,8 @@ class Validator
         (new Route($this->template))->validate();
 
         (new Buttons($this->template))->validate();
+
+        (new Filters($this->template))->validate();
 
         (new Controls($this->template))->validate();
 

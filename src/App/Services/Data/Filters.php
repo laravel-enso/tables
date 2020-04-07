@@ -10,14 +10,14 @@ use LaravelEnso\Tables\App\Exceptions\Filter as Exception;
 use LaravelEnso\Tables\App\Services\Data\Filters\BaseFilter;
 use LaravelEnso\Tables\App\Services\Data\Filters\CustomFilter;
 use LaravelEnso\Tables\App\Services\Data\Filters\Filter;
-use LaravelEnso\Tables\App\Services\Data\Filters\InternalFilter;
 use LaravelEnso\Tables\App\Services\Data\Filters\Interval;
 use LaravelEnso\Tables\App\Services\Data\Filters\Search;
+use LaravelEnso\Tables\App\Services\Data\Filters\Searches;
 
 class Filters extends BaseFilter
 {
     private static array $defaultFilters = [
-        InternalFilter::class,
+        Searches::class,
         Filter::class,
         Interval::class,
         Search::class,
@@ -66,7 +66,7 @@ class Filters extends BaseFilter
         ]);
 
         if (! $instance instanceof TableFilter) {
-            throw Exception::invalidClass($filter);
+            throw Exception::missingContract($filter);
         }
 
         return $instance;

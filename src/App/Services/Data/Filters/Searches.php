@@ -3,19 +3,11 @@
 namespace LaravelEnso\Tables\App\Services\Data\Filters;
 
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
-use LaravelEnso\Filters\App\Enums\SearchModes;
 use LaravelEnso\Filters\App\Services\Search;
 use LaravelEnso\Helpers\App\Classes\Obj;
 
-class InternalFilter extends BaseFilter
+class Searches extends BaseFilter
 {
-    private const Boolean = 'boolean';
-    private const Date = 'date';
-    private const Enum = 'enum';
-    private const Money = 'money';
-    private const String = 'string';
-
     public function applies(): bool
     {
         return $this->filterable()->isNotEmpty()
@@ -30,23 +22,10 @@ class InternalFilter extends BaseFilter
 
     private function filter(Obj $filter): void
     {
-        $search = (new Search($this->query, [$filter->get('data')], $filter->get('value')))
-            ->comparisonOperator($this->config->get('comparisonOperator'));
-
-        switch ($filter->get('type')) {
-            case self::Boolean:
-                $search->searchMode(SearchModes::ExactMatch)->handle();
-                break;
-            case self::Enum:
-                $search->searchMode(SearchModes::StartsWith)->handle();
-                break;
-            case self::String:
-                $search->searchMode($filter->get('mode'))->handle();
-                break;
-            default:
-                throw new InvalidArgumentException();
-                break;
-        }
+        (new Search($this->query, [$filter->get('data')], $filter->get('value')))
+            ->comparisonOperator($this->config->get('comparisonOperator'))
+            ->searchMode($filter->get('mode'))
+            ->handle();
     }
 
     private function filterable(): Collection
@@ -57,7 +36,7 @@ class InternalFilter extends BaseFilter
 
     private function filters(): Obj
     {
-        return $this->config->internalFilters()->map(fn ($filters) => $filters
+        return $this->config->searches()->map(fn ($filters) => $filters
             ->filter(fn ($value) => $this->isValid($value)))
             ->filter->isNotEmpty();
     }

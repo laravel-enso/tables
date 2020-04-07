@@ -6,6 +6,7 @@ use Faker\Factory;
 use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Services\Data\Config;
+use LaravelEnso\Tables\App\Services\Data\FilterAggregator;
 use LaravelEnso\Tables\App\Services\Data\Request;
 use LaravelEnso\Tables\App\Services\Template;
 
@@ -36,7 +37,9 @@ trait SetUp
 
         $meta = ['length' => 10, 'search' => '', 'searchMode' => 'full'];
 
-        $request = new Request($columns, $meta, $internalFilters, $filters, $intervals, $params);
+        $aggregator = new FilterAggregator($internalFilters, $filters, $intervals, $params);
+
+        $request = new Request($columns, $meta, $aggregator);
 
         $request->columns()->push(new Obj([
             'name' => 'name',

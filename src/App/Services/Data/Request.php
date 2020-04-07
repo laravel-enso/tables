@@ -2,26 +2,26 @@
 
 namespace LaravelEnso\Tables\App\Services\Data;
 
-use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\App\Classes\Obj;
+use LaravelEnso\Tables\App\Services\Data\RequestArgument as Argument;
 
 class Request
 {
     private Obj $columns;
     private Obj $meta;
-    private Obj $internalFilters;
+    private Obj $searches;
     private Obj $filters;
     private Obj $intervals;
     private Obj $params;
 
-    public function __construct($columns, $meta, $internalFilters, $filters, $intervals, $params)
+    public function __construct($columns, $meta, FilterAggregator $aggregator)
     {
-        $this->columns = new Obj($this->parse($columns));
-        $this->meta = new Obj($this->parse($meta));
-        $this->internalFilters = new Obj($this->parse($internalFilters));
-        $this->filters = new Obj($this->parse($filters));
-        $this->intervals = new Obj($this->parse($intervals));
-        $this->params = new Obj($this->parse($params));
+        $this->columns = new Obj(Argument::parse($columns));
+        $this->meta = new Obj(Argument::parse($meta));
+        $this->searches = $aggregator->searches();
+        $this->filters = $aggregator->filters();
+        $this->intervals = $aggregator->intervals();
+        $this->params = $aggregator->params();
     }
 
     public function columns(): Obj
@@ -34,9 +34,9 @@ class Request
         return $this->meta;
     }
 
-    public function internalFilters(): Obj
+    public function searches(): Obj
     {
-        return $this->internalFilters;
+        return $this->searches;
     }
 
     public function filters(): Obj
@@ -58,26 +58,5 @@ class Request
     {
         return $this->columns
             ->first(fn ($column) => $column->get('name') === $name);
-    }
-
-    private function parse($arg)
-    {
-        return ! is_array($arg)
-            ? $this->decode($arg)
-            : (new Collection($arg))->map(fn ($arg) => $this->decode($arg))
-            ->toArray();
-    }
-
-    private function decode($arg)
-    {
-        if (is_array($arg)) {
-            return $arg;
-        }
-
-        $decodedArg = json_decode($arg);
-
-        return json_last_error() === JSON_ERROR_NONE
-            ? $decodedArg
-            : $arg;
     }
 }

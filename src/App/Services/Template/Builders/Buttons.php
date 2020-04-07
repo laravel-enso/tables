@@ -69,7 +69,7 @@ class Buttons
     {
         $route = $this->route($button);
 
-        if ($this->routeIsForbidden($route)) {
+        if ($this->routeForbidden($route)) {
             return false;
         }
 
@@ -106,7 +106,7 @@ class Buttons
             : null;
     }
 
-    private function routeIsForbidden($route): bool
+    private function routeForbidden($route): bool
     {
         return $this->needAuthorization()
             && Auth::user()->cannot('access-route', $route);

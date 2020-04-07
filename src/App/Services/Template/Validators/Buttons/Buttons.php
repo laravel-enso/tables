@@ -30,8 +30,7 @@ class Buttons
     private function format(): self
     {
         $formattedWrong = $this->buttons
-            ->filter(fn ($button) => ! is_string($button)
-                && ! $button instanceof Obj);
+            ->filter(fn ($button) => ! is_string($button) && ! $button instanceof Obj);
 
         if ($formattedWrong->isNotEmpty()) {
             throw Exception::wrongFormat();
@@ -54,13 +53,17 @@ class Buttons
 
     private function structure(): self
     {
-        $this->buttons->map(
-            fn ($button) => $button instanceof Obj
-                ? $button
-                : $this->defaults->get($button)
-        )->each(fn ($button) => (new Button($button, $this->routePrefix))->validate());
+        $this->buttons->map(fn ($button) => $this->map($button))
+            ->each(fn ($button) => (new Button($button, $this->routePrefix))->validate());
 
         return $this;
+    }
+
+    private function map($button)
+    {
+        return $button instanceof Obj
+            ? $button
+            : $this->defaults->get($button);
     }
 
     private function configButtons(): Obj

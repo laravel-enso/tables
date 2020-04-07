@@ -22,6 +22,14 @@ class Meta extends EnsoException
         ));
     }
 
+    public static function cannotFilterIcon(string $column)
+    {
+        return new static(__(
+            'Icon columns do not support "fiterable": ":column"',
+            ['column' => $column]
+        ));
+    }
+
     public static function missingInterface()
     {
         return new static(__(

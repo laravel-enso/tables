@@ -52,9 +52,9 @@ class Config
         return $this->columns;
     }
 
-    public function internalFilters(): Obj
+    public function searches(): Obj
     {
-        return $this->request->internalFilters();
+        return $this->request->searches();
     }
 
     public function filters(): Obj

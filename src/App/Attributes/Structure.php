@@ -8,8 +8,8 @@ class Structure
 
     public const Optional = [
         'appends', 'auth', 'buttons', 'controls', 'comparisonOperator', 'countCache',
-        'crtNo', 'dataRouteSuffix', 'debounce', 'dtRowId', 'flatten', 'fullInfoRecordLimit',
-        'lengthMenu', 'method', 'model', 'name',  'preview', 'responsive', 'searchMode',
-        'searchModes', 'selectable', 'strip', 'templateCache',
+        'crtNo', 'dataRouteSuffix', 'debounce', 'dtRowId', 'filters', 'flatten',
+        'fullInfoRecordLimit', 'lengthMenu', 'method', 'model', 'name',  'preview',
+        'responsive', 'searchMode', 'searchModes', 'selectable', 'strip', 'templateCache',
     ];
 }
