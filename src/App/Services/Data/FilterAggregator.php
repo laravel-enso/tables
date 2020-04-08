@@ -59,16 +59,31 @@ class FilterAggregator
 
     public function mergeIfNeeded(): void
     {
-        $this->handle();
-        $this->merged = true;
+        if (! $this->merged) {
+            $this->handle();
+        }
     }
 
     public function handle(): void
     {
-        $this->merge($this->filters, self::Filters)
+        $this->extractCustom()
+            ->merge($this->filters, self::Filters)
             ->merge($this->filters, self::Intervals, $this->excludeArrays())
-            ->merge($this->intervals, self::Intervals, $this->onlyArrays())
-            ->merge($this->params, ['custom']);
+            ->merge($this->intervals, self::Intervals, $this->onlyArrays());
+
+        $this->merged = true;
+    }
+
+    private function extractCustom(): self
+    {
+        $this->internalFilters
+            ->filter(fn ($filter) => $filter->get('custom'))
+            ->each(fn ($filter) => $this->set($this->params, $filter));
+
+        $this->internalFilters = $this->internalFilters
+            ->reject(fn ($filter) => $filter->get('custom'));
+
+        return $this;
     }
 
     private function merge(Obj $filters, array $types, ?Closure $filter = null): self
@@ -83,7 +98,9 @@ class FilterAggregator
     private function set(Obj $filters, Obj $filter)
     {
         $array = [];
+
         Arr::set($array, $filter->get('data'), $filter->get('value'));
+
         $filters->set(key($array), new Obj($array[key($array)]));
     }
 
