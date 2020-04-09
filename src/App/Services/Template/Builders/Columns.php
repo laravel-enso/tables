@@ -63,6 +63,7 @@ class Columns
     private function enum($column): self
     {
         if ($column->has('enum')) {
+            $column->get('enum')::localisation(false);
             $column->set('enum', $column->get('enum')::all());
         }
 
