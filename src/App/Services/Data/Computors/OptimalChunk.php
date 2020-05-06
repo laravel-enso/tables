@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Config;
 
 class OptimalChunk
 {
-    public const ChunkPerLimit = [
-        [10 * 1000, 1000],
-        [50 * 1000, 2 * 1000],
-        [250 * 1000, 4 * 1000],
-        [1.25 * 1000 * 1000, 10 * 1000],
+    public const Thresholds = [
+        ['limit' => 10 * 1000, 'chunk' => 1000],
+        ['limit' => 50 * 1000, 'chunk' => 2 * 1000],
+        ['limit' => 250 * 1000, 'chunk' => 4 * 1000],
+        ['limit' => 1.25 * 1000 * 1000, 'chunk' => 10 * 1000],
     ];
 
     public const MaxChunk = 20000;
@@ -20,10 +20,10 @@ class OptimalChunk
     {
         $sheetLimit = Config::get('enso.tables.export.sheetLimit');
 
-        $match = (new Collection(self::ChunkPerLimit))
-            ->first(fn ($limit) => $count <= $limit[0]);
+        $match = (new Collection(self::Thresholds))
+            ->first(fn ($threshold) => $count <= $threshold['limit']);
 
-        $limit = $match ? $match[1] : self::MaxChunk;
+        $limit = $match ? $match['chunk'] : self::MaxChunk;
 
         return min($limit, $sheetLimit);
     }

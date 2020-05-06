@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\App\Services\Template\Builders;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\App\Classes\Obj;
 use LaravelEnso\Tables\App\Attributes\Column as Attributes;
 
@@ -63,8 +64,9 @@ class Columns
     private function enum($column): self
     {
         if ($column->has('enum')) {
-            $column->get('enum')::localisation(false);
-            $column->set('enum', $column->get('enum')::all());
+            $enum = App::make($column->get('enum'));
+            $enum::localisation(false);
+            $column->set('enum', $enum::all());
         }
 
         return $this;

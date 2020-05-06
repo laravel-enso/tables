@@ -20,7 +20,8 @@ class Controls
         if (! $this->template->has('controls')) {
             $this->template->set(
                 'controls',
-                Config::get('enso.tables.controls') ?? Attributes::List
+                Config::get('enso.tables.controls')
+                    ?? Attributes::List
             );
         }
     }

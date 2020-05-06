@@ -23,6 +23,7 @@ class Date implements ComputesArrayColumns
         foreach (self::$columns as $column) {
             if ($row[$column->get('name')] !== null) {
                 $row[$column->get('name')] = Carbon::parse($row[$column->get('name')])
+                    ->setTimezone(Config::get('app.timezone'))
                     ->format(self::format($column));
             }
         }

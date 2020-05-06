@@ -9,27 +9,36 @@ use Tests\TestCase;
 class OptimalChunkTest extends TestCase
 {
     /** @test */
-    public function can_get_correct_chunk_within_limits()
+    public function can_get_correct_chunk_within_threshold()
     {
-        $limits = OptimalChunk::ChunkPerLimit;
-
-        (new Collection($limits))->map(fn ($limit, $index) => [
-            $index ? $limits[$index - 1][0] : 0, ...$limit
-        ])->each(fn ($limit) => $this->assertCorrectChunk($limit));
+        (new Collection(OptimalChunk::Thresholds))
+            ->map(fn ($threshold, $index) => $this->map($threshold, $index))
+            ->each(fn ($threshold) => $this->assertCorrectChunk($threshold));
     }
 
     /** @test */
-    public function can_get_maximal_chunk_above_limits()
+    public function can_get_maximal_chunk_above_threshold()
     {
-        $limit = (new Collection(OptimalChunk::ChunkPerLimit))->pop();
+        $threshold = (new Collection(OptimalChunk::Thresholds))->pop();
 
-        $this->assertEquals(OptimalChunk::get($limit[0] + 1), OptimalChunk::MaxChunk);
+        $this->assertEquals(OptimalChunk::get(++$threshold['limit']), OptimalChunk::MaxChunk);
     }
 
-    private function assertCorrectChunk($limit)
+    private function map(array $threshold, int $index): array
     {
-        $count = rand($limit[0], $limit[1]);
+        $start = $index ? OptimalChunk::Thresholds[$index - 1]['limit'] : 0;
 
-        $this->assertEquals(OptimalChunk::get($count), $limit[2]);
+        return [
+            'min' => $start,
+            'max' => $threshold['limit'],
+            'chunk' => $threshold['chunk'],
+        ];
+    }
+
+    private function assertCorrectChunk(array $threshold)
+    {
+        $count = rand($threshold['min'], $threshold['max']);
+
+        $this->assertEquals(OptimalChunk::get($count), $threshold['chunk']);
     }
 }
