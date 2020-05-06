@@ -90,7 +90,7 @@ class Meta
     {
         $this->fullRecordInfo = $this->config->meta()->get('forceInfo')
             || $this->count <= $this->config->meta()->get('fullInfoRecordLimit')
-            || ! $this->filters;
+            || (! $this->filters && ! $this->config->meta()->get('total'));
 
         return $this;
     }
@@ -106,7 +106,7 @@ class Meta
 
     private function total(): self
     {
-        if ($this->config->meta()->get('total')) {
+        if ($this->fullRecordInfo && $this->config->meta()->get('total')) {
             $this->total = (new Total(
                 $this->table,
                 $this->config,
