@@ -304,7 +304,7 @@ return [
 
     'searchModes' => [
         SearchModes::Full, SearchModes::StartsWith, SearchModes::EndsWith,
-        SearchModes::ExactMatch, SearchModes::DoesntContain,
+        SearchModes::ExactMatch, SearchModes::DoesntContain, SearchModes::Algolia,
     ],
 
     /*
