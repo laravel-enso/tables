@@ -35,10 +35,9 @@ class Filters
 
     private function compute(Obj $filter): Obj
     {
-        $filter->set('path', route($filter->get('route'), [], false))
-            ->forget('route');
-
-        return $filter;
+        return $filter->when($filter->has('route'), fn ($filter) => $filter
+            ->set('path', route($filter->get('route'), [], false))
+            ->forget('route'));
     }
 
     private function routeAllowed($route): bool
