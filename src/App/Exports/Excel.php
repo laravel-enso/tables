@@ -145,8 +145,6 @@ class Excel
     {
         $path = ConfigFacade::get('enso.tables.export.path');
 
-        Files::ensureFolderExists($path);
-
         return Storage::path($path.DIRECTORY_SEPARATOR.$this->hashName());
     }
 
