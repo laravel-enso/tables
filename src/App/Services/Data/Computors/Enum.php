@@ -19,10 +19,8 @@ class Enum implements ComputesArrayColumns
     public static function handle(array $row): array
     {
         foreach (self::$columns as $column) {
-            if ($row[$column->get('name')]) {
-                $row[$column->get('name')] = $column
-                    ->get('enum')[$row[$column->get('name')]];
-            }
+            $row[$column->get('name')] = $column
+                ->get('enum')[$row[$column->get('name')]] ?? null;
         }
 
         return $row;
