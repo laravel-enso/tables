@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Export;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Tables\App\Services\Data\Computors\OptimalChunk;
+use LaravelEnso\Tables\Services\Data\Computors\OptimalChunk;
 use Tests\TestCase;
 
 class OptimalChunkTest extends TestCase

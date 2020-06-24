@@ -3,9 +3,9 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Illuminate\Support\Facades\Route;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Exceptions\Control as Exception;
-use LaravelEnso\Tables\App\Services\Template\Validators\Controls;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Exceptions\Control as Exception;
+use LaravelEnso\Tables\Services\Template\Validators\Controls;
 use Tests\TestCase;
 
 class ControlTest extends TestCase

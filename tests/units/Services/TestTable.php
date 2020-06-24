@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use LaravelEnso\Tables\App\Contracts\Table;
+use LaravelEnso\Tables\Contracts\Table;
 
 class TestTable implements Table
 {

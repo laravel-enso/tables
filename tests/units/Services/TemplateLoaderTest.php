@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use LaravelEnso\Tables\App\Services\Template;
-use LaravelEnso\Tables\App\Services\TemplateLoader;
+use LaravelEnso\Tables\Services\Template;
+use LaravelEnso\Tables\Services\TemplateLoader;
 use LaravelEnso\Tables\Tests\units\Services\TestTable;
 use Tests\TestCase;
 

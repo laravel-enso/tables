@@ -4,7 +4,7 @@ namespace App\Tables\Builders;
 
 use App\Model;
 use Illuminate\Database\Eloquent\Builder;
-use LaravelEnso\Tables\App\Services\Table;
+use LaravelEnso\Tables\Services\Table;
 
 class ModelTable extends Table
 {

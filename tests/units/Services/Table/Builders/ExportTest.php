@@ -3,8 +3,8 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
 use Illuminate\Support\Facades\App;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Services\Data\Fetcher;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Services\Data\Fetcher;
 use LaravelEnso\Tables\Tests\units\Services\Setup;
 use Tests\TestCase;
 

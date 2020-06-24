@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\Tests\units\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
-use LaravelEnso\Tables\App\Traits\TableCache;
+use LaravelEnso\Tables\Traits\TableCache;
 
 class TestModel extends Model
 {

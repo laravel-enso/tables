@@ -3,10 +3,10 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Attributes\Structure as Attributes;
-use LaravelEnso\Tables\App\Exceptions\Route as Exception;
-use LaravelEnso\Tables\App\Services\Template\Validators\Route;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Attributes\Structure as Attributes;
+use LaravelEnso\Tables\Exceptions\Route as Exception;
+use LaravelEnso\Tables\Services\Template\Validators\Route;
 use Tests\TestCase;
 
 class RouteTest extends TestCase

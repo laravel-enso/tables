@@ -4,11 +4,11 @@ namespace LaravelEnso\Tables\Tests\units\Services;
 
 use Faker\Factory;
 use Illuminate\Support\Facades\Route;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Services\Data\Config;
-use LaravelEnso\Tables\App\Services\Data\FilterAggregator;
-use LaravelEnso\Tables\App\Services\Data\Request;
-use LaravelEnso\Tables\App\Services\Template;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Services\Data\Config;
+use LaravelEnso\Tables\Services\Data\FilterAggregator;
+use LaravelEnso\Tables\Services\Data\Request;
+use LaravelEnso\Tables\Services\Template;
 
 trait SetUp
 {

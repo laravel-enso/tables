@@ -3,10 +3,10 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Attributes\Button as Attributes;
-use LaravelEnso\Tables\App\Exceptions\Button as Exception;
-use LaravelEnso\Tables\App\Services\Template\Validators\Buttons\Buttons;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Attributes\Button as Attributes;
+use LaravelEnso\Tables\Exceptions\Button as Exception;
+use LaravelEnso\Tables\Services\Template\Validators\Buttons\Buttons;
 use Route;
 use Tests\TestCase;
 

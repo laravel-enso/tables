@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
-use LaravelEnso\Tables\App\Traits\TableCache;
+use LaravelEnso\Tables\Traits\TableCache;
 use Tests\TestCase;
 
 class TableCacheTest extends TestCase

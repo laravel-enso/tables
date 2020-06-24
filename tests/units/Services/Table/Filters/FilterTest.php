@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Services\Data\Filters\Filter;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Services\Data\Filters\Filter;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use Tests\TestCase;
 

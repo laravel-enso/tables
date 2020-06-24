@@ -2,8 +2,8 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Services\Template\Builders\Structure;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Services\Template\Builders\Structure;
 use Route;
 use Tests\TestCase;
 

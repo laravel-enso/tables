@@ -1,6 +1,6 @@
 # Tables
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d54378598375451382b4d5d248d5a8dd)](https://www.codacy.com/app/laravel-enso/tables?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=laravel-enso/tables&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/edd421567e43456dbe6fe8ebe5210c74)](https://www.codacy.com/gh/laravel-enso/tables?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=laravel-enso/tables&amp;utm_campaign=Badge_Grade)
 [![StyleCI](https://github.styleci.io/repos/111688250/shield?branch=master)](https://github.styleci.io/repos/111688250)
 [![License](https://poser.pugx.org/laravel-enso/tables/license)](https://packagist.org/packages/laravel-enso/tables)
 [![Total Downloads](https://poser.pugx.org/laravel-enso/tables/downloads)](https://packagist.org/packages/laravel-enso/tables)

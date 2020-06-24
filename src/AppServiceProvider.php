@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
-use LaravelEnso\Tables\App\Commands\TemplateCacheClear;
+use LaravelEnso\Tables\Commands\TemplateCacheClear;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,11 +18,11 @@ class AppServiceProvider extends ServiceProvider
 
     private function load()
     {
-        $this->mergeConfigFrom(__DIR__.'/config/tables.php', 'enso.tables');
+        $this->mergeConfigFrom(__DIR__.'/../config/tables.php', 'enso.tables');
 
-        $this->mergeConfigFrom(__DIR__.'/config/api.php', 'enso.tables');
+        $this->mergeConfigFrom(__DIR__.'/../config/api.php', 'enso.tables');
 
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-enso/tables');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-enso/tables');
 
         return $this;
     }
@@ -30,11 +30,11 @@ class AppServiceProvider extends ServiceProvider
     private function publish()
     {
         $this->publishes([
-            __DIR__.'/config/tables.php' => config_path('enso/tables.php'),
+            __DIR__.'/../config/tables.php' => config_path('enso/tables.php'),
         ], ['tables-config', 'enso-config']);
 
         $this->publishes([
-            __DIR__.'/resources/views' => resource_path('views/vendor/laravel-enso/tables'),
+            __DIR__.'/../resources/views' => resource_path('views/vendor/laravel-enso/tables'),
         ], ['tables-mail', 'enso-mail']);
 
         $this->stubs()->each(fn ($ext, $stub) => $this->publishes([

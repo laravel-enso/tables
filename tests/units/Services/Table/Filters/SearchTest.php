@@ -3,8 +3,8 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Filters;
 
 use Illuminate\Support\Collection;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Services\Data\Filters\Search;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Services\Data\Filters\Search;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
 use Tests\TestCase;

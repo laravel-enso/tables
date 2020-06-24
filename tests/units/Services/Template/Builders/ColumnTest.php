@@ -4,9 +4,9 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Attributes\Column;
-use LaravelEnso\Tables\App\Services\Template\Builders\Columns;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Attributes\Column;
+use LaravelEnso\Tables\Services\Template\Builders\Columns;
 use Tests\TestCase;
 
 class ColumnTest extends TestCase

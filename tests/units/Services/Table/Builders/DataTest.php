@@ -3,8 +3,8 @@
 namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 
 use Illuminate\Support\Facades\Config;
-use LaravelEnso\Helpers\App\Classes\Obj;
-use LaravelEnso\Tables\App\Services\Data\Builders\Data;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Services\Data\Builders\Data;
 use LaravelEnso\Tables\Tests\units\Services\BuilderTestResource;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
