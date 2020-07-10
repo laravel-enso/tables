@@ -43,7 +43,7 @@ class ExcelExport implements ShouldQueue
         $table = App::make($this->tableClass, ['request' => $this->config->request()]);
 
         if ($table instanceof AuthenticatesOnExport) {
-            Auth::onceUsingId($this->user->id);
+            Auth::setUser($this->user);
         }
 
         (new Excel(
