@@ -44,7 +44,7 @@ class Sort
 
     protected function columns(): Obj
     {
-        return $this->config->columns()->filter(fn($column) => $column
+        return $this->config->columns()->filter(fn ($column) => $column
                 ->get('meta')->get('sortable') && $column->get('meta')->get('sort'));
     }
 }
