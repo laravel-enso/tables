@@ -116,9 +116,9 @@ class Columns
 
     private function visibility($column): self
     {
-        if ($column->get('meta')->get('invisible')) {
+        if ($column->get('meta')->get('notVisible')) {
             $column->get('meta')->set('visible', false);
-            $column->get('meta')->forget('invisible');
+            $column->get('meta')->forget('notVisible');
         }
 
         return $this;
