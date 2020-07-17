@@ -57,10 +57,10 @@ trait SetUp
         $this->query = $this->table->query();
     }
 
-    protected function createTestModel()
+    protected function createTestModel($name = null)
     {
         return TestModel::create([
-            'name' => $this->faker->name,
+            'name' => $name ?? $this->faker->name,
             'is_active' => $this->faker->boolean,
             'price' => $this->faker->numberBetween(1000, 10000),
         ]);

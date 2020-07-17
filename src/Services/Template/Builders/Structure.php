@@ -40,7 +40,8 @@ class Structure
             ->name()
             ->readPath()
             ->length()
-            ->templateOrConfigToMeta();
+            ->templateOrConfigToMeta()
+            ->defaultSort();
     }
 
     private function defaults(): self
@@ -112,6 +113,13 @@ class Structure
             ->each(fn ($attribute) => $this->metaFromTemplateOrConfig($attribute));
 
         return $this;
+    }
+
+    private function defaultSort()
+    {
+        $defaultSort = $this->template->get('defaultSort') ?? $this->template->get('dtRowId');
+
+        $this->template->set('defaultSort', $defaultSort);
     }
 
     private function metaFromTemplateOrConfig(string $attribute): void

@@ -35,13 +35,8 @@ class ColumnTest extends TestCase
     /** @test */
     public function can_build_with_meta_attributes()
     {
-        (new Collection(Column::Meta))->each(function($attribute) {
-            $expected = Str::startsWith($attribute, 'sort:')
-                ? ['key' => 'sort', 'value' => Str::replaceFirst('sort:', '', $attribute)]
-                : ['key' => $attribute, 'value' => true];
-
-            $this->assertPresent($attribute, $expected);
-        });
+        (new Collection(Column::Meta))
+            ->each(fn($attribute) => $this->assertPresent($attribute, $this->metaValue($attribute)));
     }
 
     private function assertPresent(string $attribute, $expected)
@@ -61,5 +56,18 @@ class ColumnTest extends TestCase
             $this->template,
             $this->meta
         ))->build();
+    }
+
+    protected function metaValue($attribute): array
+    {
+        if ($attribute === 'notVisible') {
+            return ['key' => 'visible', 'value' => false];
+        }
+
+        if (Str::startsWith($attribute, 'sort:')) {
+            return ['key' => 'sort', 'value' => Str::replaceFirst('sort:', '', $attribute)];
+        }
+
+        return ['key' => $attribute, 'value' => true];
     }
 }
