@@ -40,6 +40,7 @@ class Columns
             ->enum($column)
             ->sort($column)
             ->total($column)
+            ->visibility($column)
             ->defaults($column);
 
         return $column;
@@ -108,6 +109,16 @@ class Columns
 
         if ($meta->get('total') || $meta->get('rawTotal') || $meta->get('customTotal') || $meta->get('average')) {
             $this->meta->set('total', true);
+        }
+
+        return $this;
+    }
+
+    private function visibility($column): self
+    {
+        if ($column->get('meta')->get('notVisible')) {
+            $column->get('meta')->set('visible', false);
+            $column->get('meta')->forget('notVisible');
         }
 
         return $this;
