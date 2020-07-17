@@ -12,7 +12,6 @@ class Structure
     private const DefaultFromConfig = [
         'dtRowId', 'lengthMenu', 'debounce', 'method', 'labels',
         'comparisonOperator', 'responsive', 'searchModes', 'dateFormat',
-        'defaultSort',
     ];
 
     private const FalseIfMissing = ['selectable', 'preview'];
