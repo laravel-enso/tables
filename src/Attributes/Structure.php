@@ -11,6 +11,6 @@ class Structure
         'crtNo', 'dataRouteSuffix', 'debounce', 'dtRowId', 'filters', 'flatten',
         'fullInfoRecordLimit', 'lengthMenu', 'method', 'model', 'name',  'preview',
         'responsive', 'searchMode', 'searchModes', 'selectable', 'strip', 'templateCache',
-        'defaultSort'
+        'defaultSort',
     ];
 }
