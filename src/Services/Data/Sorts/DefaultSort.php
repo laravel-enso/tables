@@ -18,6 +18,16 @@ class DefaultSort
 
     public function handle(): void
     {
-        $this->query->orderBy($this->config->template()->get('defaultSort'));
+        $this->query->orderBy("{$this->table()}.{$this->column()}");
+    }
+
+    protected function table(): string
+    {
+        return $this->query->getModel()->getTable();
+    }
+
+    protected function column(): string
+    {
+        return $this->config->template()->get('defaultSort');
     }
 }
