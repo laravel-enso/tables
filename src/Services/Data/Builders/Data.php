@@ -10,7 +10,7 @@ use LaravelEnso\Tables\Services\Data\ArrayComputors;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Filters;
 use LaravelEnso\Tables\Services\Data\ModelComputors;
-use LaravelEnso\Tables\Services\Data\Sort;
+use LaravelEnso\Tables\Services\Data\Sorts\Sorts;
 
 class Data
 {
@@ -66,9 +66,7 @@ class Data
 
     private function sort(): self
     {
-        if ($this->config->meta()->get('sort')) {
-            (new Sort($this->config, $this->query))->handle();
-        }
+        (new Sorts($this->config, $this->query))->handle();
 
         return $this;
     }

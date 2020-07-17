@@ -162,6 +162,22 @@ class DataTest extends TestCase
     }
 
     /** @test */
+    public function can_get_data_with_default_sort()
+    {
+        $this->createTestModel('Z');
+        $this->createTestModel('A');
+
+        $this->config->template()->set('defaultSort', 'name');
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            TestModel::orderBy('name')->first()->name,
+            $response->first()->get('name')
+        );
+    }
+
+    /** @test */
     public function can_get_data_with_sort_null_last()
     {
         $secondModel = $this->createTestModel();

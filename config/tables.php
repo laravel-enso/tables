@@ -57,6 +57,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default sort attribute
+    |--------------------------------------------------------------------------
+    | When there isn't any other sort we should have a default sort for consistency.
+    | if it's null dtRowId will use.
+     */
+
+    'defaultSort' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Labels used when the drawing a table
     |--------------------------------------------------------------------------
     | The labels are translated if a localisation function is available
