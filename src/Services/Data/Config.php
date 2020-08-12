@@ -19,6 +19,8 @@ class Config
 
     private const RequestColumnMeta = ['visible', 'sort', 'hidden'];
 
+    private const RemoveDefaultColumnMeta = ['sort'];
+
     private Request $request;
     private Template $template;
     private Obj $columns;
@@ -95,6 +97,8 @@ class Config
 
     private function setColumns(): void
     {
+        $this->removeDefaults();
+
         $this->columns = $this->template->columns()
             ->map(fn ($column) => $this->mergeColumnMeta($column));
 
@@ -120,5 +124,14 @@ class Config
     {
         return $requestColumn->get('meta', new Collection())
             ->intersectByKeys((new Collection(static::RequestColumnMeta))->flip());
+    }
+
+    private function removeDefaults(): void
+    {
+        $this->template->columns()->map(function ($column) {
+            $column->get('meta')->forget(static::RemoveDefaultColumnMeta);
+
+            return $column;
+        });
     }
 }
