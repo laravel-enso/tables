@@ -19,6 +19,8 @@ class Config
 
     private const RequestColumnMeta = ['visible', 'sort', 'hidden'];
 
+    private const RemoveDefaultColumnMeta = ['sort'];
+
     private Request $request;
     private Template $template;
     private Obj $columns;
@@ -77,13 +79,6 @@ class Config
         return $this->template;
     }
 
-    public function isUserSort($column)
-    {
-        $column = $this->request->column($column->get('name'));
-
-        return $column && $column->get('meta')->has('sort');
-    }
-
     public function request(): Request
     {
         return $this->request;
@@ -102,6 +97,8 @@ class Config
 
     private function setColumns(): void
     {
+        $this->removeDefaults();
+
         $this->columns = $this->template->columns()
             ->map(fn ($column) => $this->mergeColumnMeta($column));
 
@@ -127,5 +124,14 @@ class Config
     {
         return $requestColumn->get('meta', new Collection())
             ->intersectByKeys((new Collection(static::RequestColumnMeta))->flip());
+    }
+
+    private function removeDefaults(): void
+    {
+        $this->template->columns()->map(function ($column) {
+            $column->get('meta')->forget(static::RemoveDefaultColumnMeta);
+
+            return $column;
+        });
     }
 }

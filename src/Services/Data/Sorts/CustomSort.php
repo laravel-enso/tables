@@ -45,7 +45,6 @@ class CustomSort
     protected function columns(): Obj
     {
         return $this->config->columns()->filter(fn ($column) => $column
-                ->get('meta')->get('sortable') && $column->get('meta')->get('sort'))
-                ->sortByDesc(fn ($column) => $this->config->isUserSort($column));
+                ->get('meta')->get('sortable') && $column->get('meta')->get('sort'));
     }
 }
