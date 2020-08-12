@@ -77,6 +77,13 @@ class Config
         return $this->template;
     }
 
+    public function isUserSort($column)
+    {
+        $column = $this->request->column($column->get('name'));
+
+        return $column && $column->get('meta')->has('sort');
+    }
+
     public function request(): Request
     {
         return $this->request;
