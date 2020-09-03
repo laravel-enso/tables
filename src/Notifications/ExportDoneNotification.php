@@ -17,7 +17,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
     private string $filePath;
     private string $filename;
     private $dataExport;
-    private string $link;
+    private ?string $link;
 
     public function __construct(string $filePath, string $filename, $dataExport)
     {
@@ -49,7 +49,8 @@ class ExportDoneNotification extends Notification implements ShouldQueue
         $mail = (new MailMessage())
             ->subject(__(Config::get('app.name')).': '.__('Table Export Notification'))
             ->markdown('laravel-enso/tables::emails.export', [
-                'name' => $notifiable->person->appellative ?? $notifiable->person->name,
+                'name' => optional($notifiable->person)->appellative
+                    ?? optional($notifiable->person)->name,
                 'filename' => __($this->filename),
                 'entries' => optional($this->dataExport)->entries,
                 'link' => $this->link,

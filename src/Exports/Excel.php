@@ -191,7 +191,7 @@ class Excel
     private function updateProgress(int $entries): void
     {
         optional($this->dataExport)->update([
-            'entries' => $this->dataExport->entries + $entries,
+            'entries' => optional($this->dataExport)->entries + $entries,
         ]);
     }
 
@@ -204,7 +204,7 @@ class Excel
 
     private function needsNewSheet(): bool
     {
-        return $this->dataExport->entries / ConfigFacade::get('enso.tables.export.sheetLimit')
+        return optional($this->dataExport)->entries / ConfigFacade::get('enso.tables.export.sheetLimit')
             >= $this->sheetCount;
     }
 
