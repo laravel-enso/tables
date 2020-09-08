@@ -219,6 +219,6 @@ class Excel
     private function value($column, $row)
     {
         return (new Collection(explode('.', $column->get('name'))))
-            ->reduce(fn ($value, $segment) => $value[$segment], $row);
+            ->reduce(fn ($value, $segment) => $value[$segment] ?? null, $row);
     }
 }
