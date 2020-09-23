@@ -59,11 +59,9 @@ class Meta
         ];
     }
 
-    public function count($filtered = false): int
+    public function count(): int
     {
-        return $filtered
-            ? $this->query->count()
-            : $this->query->getQuery()->getCountForPagination();
+        return $this->query->getQuery()->getCountForPagination();
     }
 
     private function setCount(): self
@@ -98,7 +96,7 @@ class Meta
     private function countFiltered(): self
     {
         if ($this->filters && $this->fullRecordInfo) {
-            $this->filtered = $this->count(true);
+            $this->filtered = $this->count();
         }
 
         return $this;
