@@ -101,7 +101,9 @@ class FilterAggregator
 
         Arr::set($array, $filter->get('data'), $filter->get('value'));
 
-        $filters->set(key($array), new Obj($array[key($array)]));
+        $filters->set(key($array), $filters->has(key($array))
+            ? $filters->get(key($array))->merge(new Obj($array[key($array)]))
+            : new Obj($array[key($array)]));
     }
 
     private function filter($types): Obj
