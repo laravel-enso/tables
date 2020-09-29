@@ -17,8 +17,8 @@ class ExportDoneNotification extends Notification implements ShouldQueue
     private string $filePath;
     private string $filename;
     private $dataExport;
-    private ?string $link;
     private $entries;
+    private ?string $link;
 
     public function __construct(string $filePath, string $filename, $dataExport, $entries)
     {
