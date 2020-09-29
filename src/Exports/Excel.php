@@ -31,6 +31,7 @@ class Excel
     private int $sheetCount;
     private string $filename;
     private string $filePath;
+    private int $entries;
 
     public function __construct(User $user, Table $table, Config $config, $dataExport = null)
     {
@@ -40,6 +41,7 @@ class Excel
         $this->fetcher = new Fetcher($table, $this->config);
         $this->filename = $this->filename();
         $this->filePath = $this->filePath();
+        $this->entries = optional($dataExport)->entries ?? 0;
     }
 
     public function run(): void
@@ -134,7 +136,8 @@ class Excel
         $this->user->notify((new ExportDoneNotification(
             $this->filePath,
             $this->filename,
-            $this->dataExport
+            $this->dataExport,
+            $this->entries
         ))->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));
 
         return $this;
@@ -190,8 +193,10 @@ class Excel
 
     private function updateProgress(int $entries): void
     {
+        $this->entries += $entries;
+
         optional($this->dataExport)->update([
-            'entries' => $this->dataExport->entries + $entries,
+            'entries' => $this->entries,
         ]);
     }
 
@@ -204,7 +209,7 @@ class Excel
 
     private function needsNewSheet(): bool
     {
-        return $this->dataExport->entries / ConfigFacade::get('enso.tables.export.sheetLimit')
+        return $this->entries / ConfigFacade::get('enso.tables.export.sheetLimit')
             >= $this->sheetCount;
     }
 
