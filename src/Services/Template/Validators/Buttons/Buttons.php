@@ -4,6 +4,7 @@ namespace LaravelEnso\Tables\Services\Template\Validators\Buttons;
 
 use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Button as Exception;
 
 class Buttons
@@ -11,12 +12,13 @@ class Buttons
     private Obj $buttons;
     private string $routePrefix;
     private Obj $defaults;
+    private Table $table;
 
-    public function __construct(Obj $template)
+    public function __construct(Obj $template, Table $table)
     {
         $this->buttons = $template->get('buttons');
         $this->routePrefix = $template->get('routePrefix');
-
+        $this->table = $table;
         $this->defaults = $this->configButtons();
     }
 
@@ -54,7 +56,7 @@ class Buttons
     private function structure(): self
     {
         $this->buttons->map(fn ($button) => $this->map($button))
-            ->each(fn ($button) => (new Button($button, $this->routePrefix))->validate());
+            ->each(fn ($button) => (new Button($button, $this->table, $this->routePrefix))->validate());
 
         return $this;
     }
@@ -69,10 +71,12 @@ class Buttons
     private function configButtons(): Obj
     {
         $global = (new Obj(Config::get('enso.tables.buttons.global')))
-            ->map(fn ($button) => $button->set('type', 'global'));
+            ->map(fn ($button, $key) => $button->set('type', 'global')
+                ->set('name', $key));
 
         $row = (new Obj(Config::get('enso.tables.buttons.row')))
-            ->map(fn ($button) => $button->set('type', 'row'));
+            ->map(fn ($button, $key) => $button->set('type', 'row')
+                ->set('name', $key));
 
         return $global->merge($row);
     }

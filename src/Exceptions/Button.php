@@ -50,6 +50,13 @@ class Button extends EnsoException
         ));
     }
 
+    public static function missingName()
+    {
+        return new static(__(
+            'When you use render action conditionally you need to provide name as well'
+        ));
+    }
+
     public static function wrongAction()
     {
         return new static(__(

@@ -5,6 +5,8 @@ namespace LaravelEnso\Tables\Services\Data\Builders;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Contracts\ConditionalActions;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Data\ArrayComputors;
 use LaravelEnso\Tables\Services\Data\Config;
@@ -39,7 +41,8 @@ class Data
                 ->sanitize()
                 ->arrayCompute()
                 ->strip()
-                ->flatten();
+                ->flatten()
+                ->actions();
         }
 
         return $this;
@@ -135,11 +138,33 @@ class Data
         return $this;
     }
 
-    private function flatten(): void
+    private function flatten(): self
     {
         if ($this->config->get('flatten')) {
             $this->data = $this->data
                 ->map(fn ($record) => Arr::dot($record));
         }
+
+        return $this;
+    }
+
+    private function actions(): self
+    {
+        if ($this->table instanceof ConditionalActions) {
+            $this->data = $this->data->map(fn ($row) => $row + [
+                '_actions' => $this->rowActions($row),
+            ]);
+        }
+
+        return $this;
+    }
+
+    private function rowActions(array $row): array
+    {
+        return $this->config->template()->buttons()->flatten(1)
+            ->map(fn (Obj $action) => $action->get('name'))
+            ->filter(fn (string $action) => $this->table->render($row, $action))
+            ->values()
+            ->toArray();
     }
 }

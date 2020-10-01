@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Services\Template;
 
 use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Template\Validators\Buttons\Buttons;
 use LaravelEnso\Tables\Services\Template\Validators\Columns\Columns;
 use LaravelEnso\Tables\Services\Template\Validators\Controls;
@@ -14,10 +15,12 @@ use LaravelEnso\Tables\Services\Template\Validators\Structure\Structure;
 class Validator
 {
     private Obj $template;
+    private Table $table;
 
-    public function __construct(Obj $template)
+    public function __construct(Obj $template, Table $table)
     {
         $this->template = $template;
+        $this->table = $table;
     }
 
     public function run()
@@ -28,7 +31,7 @@ class Validator
 
         (new Route($this->template))->validate();
 
-        (new Buttons($this->template))->validate();
+        (new Buttons($this->template, $this->table))->validate();
 
         (new Filters($this->template))->validate();
 

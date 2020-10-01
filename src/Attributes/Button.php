@@ -9,7 +9,7 @@ class Button
     public const Optional = [
         'action', 'confirmation', 'event', 'fullRoute', 'label',  'message',
         'method', 'params', 'postEvent', 'routeSuffix', 'tooltip', 'slot',
-        'class',
+        'class', 'name',
     ];
 
     public const Actions = ['ajax', 'export', 'href', 'router'];
