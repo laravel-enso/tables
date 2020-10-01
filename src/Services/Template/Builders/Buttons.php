@@ -17,7 +17,7 @@ class Buttons
     public function __construct(Obj $template)
     {
         $this->template = $template;
-        $this->defaults = new Obj(Config::get('enso.tables.buttons'));
+        $this->defaults = $this->defaults();
         $this->template->set('actions', false);
     }
 
@@ -116,5 +116,11 @@ class Buttons
     {
         return ! empty(Config::get('enso.config'))
             && $this->template->get('auth') !== false;
+    }
+
+    private function defaults(): Obj
+    {
+        return (new Obj(Config::get('enso.tables.buttons')))
+            ->each->each(fn ($button, $key) => $button->set('name', $key));
     }
 }

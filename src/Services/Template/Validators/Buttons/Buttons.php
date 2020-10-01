@@ -71,10 +71,12 @@ class Buttons
     private function configButtons(): Obj
     {
         $global = (new Obj(Config::get('enso.tables.buttons.global')))
-            ->map(fn ($button) => $button->set('type', 'global'));
+            ->map(fn ($button, $key) => $button->set('type', 'global')
+                ->set('name', $key));
 
         $row = (new Obj(Config::get('enso.tables.buttons.row')))
-            ->map(fn ($button) => $button->set('type', 'row'));
+            ->map(fn ($button, $key) => $button->set('type', 'row')
+                ->set('name', $key));
 
         return $global->merge($row);
     }
