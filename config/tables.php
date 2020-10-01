@@ -93,6 +93,7 @@ return [
     'buttons' => [
         'global' => [
             'create' => [
+                'name' => 'create',
                 'icon' => 'plus',
                 'class' => null,
                 'routeSuffix' => 'create',
@@ -101,6 +102,7 @@ return [
                 'label' => 'Create',
             ],
             'excel' => [
+                'name' => 'excel',
                 'icon' => 'file-excel',
                 'class' => null,
                 'routeSuffix' => 'exportExcel',
@@ -109,6 +111,7 @@ return [
                 'label' => 'Excel',
             ],
             'action' => [
+                'name' => 'action',
                 'icon' => 'check',
                 'class' => null,
                 'routeSuffix' => 'action',
@@ -123,6 +126,7 @@ return [
         ],
         'row' => [
             'show' => [
+                'name' => 'show',
                 'icon' => 'eye',
                 'class' => 'is-row-button',
                 'routeSuffix' => 'show',
@@ -130,6 +134,7 @@ return [
                 'action' => 'router',
             ],
             'edit' => [
+                'name' => 'edit',
                 'icon' => 'pencil-alt',
                 'class' => 'is-row-button',
                 'routeSuffix' => 'edit',
@@ -137,6 +142,7 @@ return [
                 'action' => 'router',
             ],
             'destroy' => [
+                'name' => 'destroy',
                 'icon' => 'trash-alt',
                 'class' => 'is-row-button',
                 'routeSuffix' => 'destroy',
@@ -148,6 +154,7 @@ return [
                 'postEvent' => 'destroyed',
             ],
             'download' => [
+                'name' => 'download',
                 'icon' => 'cloud-download-alt',
                 'class' => 'is-row-button',
                 'routeSuffix' => 'download',

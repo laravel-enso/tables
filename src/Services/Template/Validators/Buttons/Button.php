@@ -6,17 +6,21 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Button as Attributes;
+use LaravelEnso\Tables\Contracts\RenderActionsConditionally;
+use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Button as Exception;
 
 class Button
 {
     private Obj $button;
     private ?string $routePrefix;
+    private Table $table;
 
-    public function __construct(Obj $button, ?string $routePrefix)
+    public function __construct(Obj $button, Table $table, ?string $routePrefix)
     {
         $this->button = $button;
         $this->routePrefix = $routePrefix;
+        $this->table = $table;
     }
 
     public function validate(): void
@@ -26,7 +30,8 @@ class Button
             ->complementaryAttributes()
             ->actions()
             ->route()
-            ->method();
+            ->method()
+            ->name();
     }
 
     private function mandatoryAttributes(): self
@@ -110,5 +115,13 @@ class Button
         }
 
         return $this;
+    }
+
+    private function name(): void
+    {
+        if ($this->table instanceof RenderActionsConditionally
+            && ! $this->button->has('name')) {
+            throw Exception::missingName();
+        }
     }
 }

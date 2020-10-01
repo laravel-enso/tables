@@ -69,6 +69,11 @@ class Template
         return $this->template->get('columns');
     }
 
+    public function buttons(): Collection
+    {
+        return $this->template->get('buttons');
+    }
+
     public function meta(): Obj
     {
         return $this->meta;
@@ -106,7 +111,7 @@ class Template
         );
 
         if ($this->needsValidation()) {
-            (new Validator($template))->run();
+            (new Validator($template, $this->table))->run();
         }
 
         return $template;
