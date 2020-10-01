@@ -148,11 +148,11 @@ class Data
         return $this;
     }
 
-    private function actions(): Data
+    private function actions(): self
     {
         if ($this->table instanceof RenderActionsConditionally) {
             $this->data = $this->data->map(fn ($row) => $row + [
-                '_actions' => $this->rowActions($row)
+                '_actions' => $this->rowActions($row),
             ]);
         }
 
