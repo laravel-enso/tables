@@ -2,7 +2,7 @@
 
 namespace LaravelEnso\Tables\Contracts;
 
-interface RenderActionsConditionally
+interface ConditionalActions
 {
     public function render(array $row, string $action): bool;
 }

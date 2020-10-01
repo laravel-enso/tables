@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\Services\Obj;
-use LaravelEnso\Tables\Contracts\RenderActionsConditionally;
+use LaravelEnso\Tables\Contracts\ConditionalActions;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Data\ArrayComputors;
 use LaravelEnso\Tables\Services\Data\Config;
@@ -150,7 +150,7 @@ class Data
 
     private function actions(): self
     {
-        if ($this->table instanceof RenderActionsConditionally) {
+        if ($this->table instanceof ConditionalActions) {
             $this->data = $this->data->map(fn ($row) => $row + [
                 '_actions' => $this->rowActions($row),
             ]);
