@@ -11,6 +11,7 @@ use LaravelEnso\Tables\Contracts\ConditionalActions;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Button as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Buttons\Buttons;
+use LaravelEnso\Tables\Tests\units\Services\TestTable;
 use Route;
 use Tests\TestCase;
 
@@ -163,7 +164,7 @@ class ButtonTest extends TestCase
 
     private function validate()
     {
-        $this->validator = new Buttons($this->template, $this->dummyTable());
+        $this->validator = new Buttons($this->template, new TestTable());
 
         $this->validator->validate();
     }
@@ -174,21 +175,6 @@ class ButtonTest extends TestCase
         Route::getRoutes()->refreshNameLookups();
 
         return 'test.create';
-    }
-
-    private function dummyTable(): Table
-    {
-        return new class implements Table {
-            public function query(): Builder
-            {
-                return Model::query();
-            }
-
-            public function templatePath(): string
-            {
-                return '';
-            }
-        };
     }
 
     private function conditionalActionTable(): Table
