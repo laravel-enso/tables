@@ -101,12 +101,16 @@ class ButtonsTest extends TestCase
         $this->build();
 
         $this->assertEquals(
-            (new Obj(Config::get('enso.tables.buttons.global.create')))->except('routeSuffix'),
+            (new Obj(Config::get('enso.tables.buttons.global.create')))
+                ->put('name', 'create')
+                ->except('routeSuffix'),
             $this->template->get('buttons')->get('global')->first()->except('route')
         );
 
         $this->assertEquals(
-            (new Obj(Config::get('enso.tables.buttons.row.show')))->except('routeSuffix'),
+            (new Obj(Config::get('enso.tables.buttons.row.show')))
+                ->put('name', 'show')
+                ->except('routeSuffix'),
             $this->template->get('buttons')->get('row')->first()->except('route')
         );
 
