@@ -118,8 +118,6 @@ class ButtonTest extends TestCase
     /** @test */
     public function cannot_validate_when_name_not_applied_for_conditional_actions()
     {
-        $button = $this->template->get('buttons')->first();
-
         $this->expectException(Exception::class);
 
         $this->expectExceptionMessage(Exception::missingName()->getMessage());

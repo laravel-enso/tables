@@ -127,9 +127,6 @@ class ButtonsTest extends TestCase
 
     private function build(): void
     {
-        (new Buttons(
-            $this->template,
-            $this->meta
-        ))->build();
+        (new Buttons($this->template))->build();
     }
 }
