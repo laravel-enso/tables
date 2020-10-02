@@ -179,17 +179,7 @@ class ButtonTest extends TestCase
 
     private function conditionalActionTable(): Table
     {
-        return new class implements Table, ConditionalActions {
-            public function query(): Builder
-            {
-                return Model::query();
-            }
-
-            public function templatePath(): string
-            {
-                return '';
-            }
-
+        return new class extends TestTable implements ConditionalActions {
             public function render(array $row, string $action): bool
             {
                 return false;
