@@ -19,10 +19,10 @@
     "require": {
         "php": ">=7.4.0",
         "box/spout": "^3.0",
-        "laravel/framework": "^7.0",
+        "laravel/framework": "^7.0|^8.0",
         "laravel-enso/enums": "^2.0",
         "laravel-enso/filters": "^2.0",
-        "laravel-enso/helpers": "^2.0"
+        "laravel-enso/helpers": "^2.0|^3.0"
     },
     "autoload": {
         "psr-4": {
