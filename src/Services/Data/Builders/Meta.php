@@ -62,7 +62,8 @@ class Meta
 
     public function count(): int
     {
-        return DB::table(DB::raw("({$this->query->toSql()}) as tbl"))
+        return DB::connection($this->query->getConnection()->getName())
+            ->table(DB::raw("({$this->query->toSql()}) as tbl"))
             ->setBindings($this->query->getBindings())
             ->count();
     }
