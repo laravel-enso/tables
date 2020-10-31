@@ -128,10 +128,8 @@ class Config
 
     private function removeDefaults(): void
     {
-        $this->template->columns()->map(function ($column) {
-            $column->get('meta')->forget(static::RemoveDefaultColumnMeta);
-
-            return $column;
-        });
+        $this->template->columns()
+            ->map(fn ($column) => tap($column, fn ($column) => $column->get('meta')
+                ->forget(static::RemoveDefaultColumnMeta)));
     }
 }
