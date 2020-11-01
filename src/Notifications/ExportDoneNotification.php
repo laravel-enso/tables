@@ -36,13 +36,9 @@ class ExportDoneNotification extends Notification implements ShouldQueue
 
     public function toBroadcast()
     {
-        return (new BroadcastMessage([
+        return (new BroadcastMessage($this->toArray() + [
             'level' => 'success',
             'title' => __('Export Done'),
-            'body' => $this->link
-                ? __('Export available for download').': '.__($this->filename)
-                : __('Export emailed').': '.__($this->filename),
-            'icon' => 'file-excel',
         ]))->onQueue($this->queue);
     }
 
@@ -51,8 +47,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
         $mail = (new MailMessage())
             ->subject(__(Config::get('app.name')).': '.__('Table Export Notification'))
             ->markdown('laravel-enso/tables::emails.export', [
-                'name' => optional($notifiable->person)->appellative
-                    ?? optional($notifiable->person)->name,
+                'name' => optional($notifiable->person)->appellative(),
                 'filename' => __($this->filename),
                 'entries' => $this->entries,
                 'link' => $this->link,
@@ -72,9 +67,7 @@ class ExportDoneNotification extends Notification implements ShouldQueue
                 ? __('Export available for download').': '.__($this->filename)
                 : __('Export emailed').': '.__($this->filename),
             'icon' => 'file-excel',
-            'path' => $this->link
-                ? '/files'
-                : null,
+            'path' => $this->link ? '/files' : null,
         ];
     }
 }
