@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use LaravelEnso\Tables\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Cache as Exception;
@@ -62,10 +63,20 @@ class Meta
 
     public function count(): int
     {
+        $table = $this->query
+            ->when(! $this->isAggregated(), fn ($query) => $query
+                ->select(DB::raw("1 as '1'")))->toSql();
+
         return DB::connection($this->query->getConnection()->getName())
-            ->table(DB::raw("({$this->query->toSql()}) as tbl"))
+            ->table(DB::raw("({$table}) as tbl"))
             ->setBindings($this->query->getBindings())
             ->count();
+    }
+
+    private function isAggregated(): bool
+    {
+        return Str::of($this->query->toSql())->upper()
+            ->contains(['GROUP BY', 'DISTINCT']);
     }
 
     private function setCount(): self
