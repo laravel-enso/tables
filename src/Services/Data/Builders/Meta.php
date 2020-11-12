@@ -62,10 +62,7 @@ class Meta
 
     public function count(): int
     {
-        return DB::connection($this->query->getConnection()->getName())
-            ->table(DB::raw("({$this->query->toSql()}) as tbl"))
-            ->setBindings($this->query->getBindings())
-            ->count();
+        return $this->query->getQuery()->getCountForPagination();
     }
 
     private function setCount(): self
