@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config as ConfigFacade;
-use Illuminate\Support\Facades\DB;
 use LaravelEnso\Tables\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Cache as Exception;
