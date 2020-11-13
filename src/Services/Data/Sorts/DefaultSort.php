@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\Services\Data\Sorts;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 use LaravelEnso\Tables\Services\Data\Config;
 
 class DefaultSort
@@ -19,14 +18,7 @@ class DefaultSort
 
     public function handle(): void
     {
-        Str::contains($this->column(), '.')
-            ? $this->query->orderBy("{$this->column()}")
-            : $this->query->orderBy("{$this->table()}.{$this->column()}");
-    }
-
-    protected function table(): string
-    {
-        return $this->query->getModel()->getTable();
+        $this->query->orderBy("{$this->column()}");
     }
 
     protected function column(): string
