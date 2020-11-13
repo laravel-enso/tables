@@ -95,13 +95,24 @@ class Template
         $template = $this->readJson($this->table->templatePath());
 
         if (! $template->has('model')) {
-            $model = (new ReflectionClass($this->table->query()->getModel()))
-                ->getShortName();
-
-            $template->set('model', Str::camel($model));
+            $this->setModel($template);
         }
+        $this->setTable($template);
 
         return $template;
+    }
+
+    private function setModel(Obj $template)
+    {
+        $model = (new ReflectionClass($this->table->query()->getModel()))
+            ->getShortName();
+
+        $template->set('model', Str::camel($model));
+    }
+
+    private function setTable(Obj $template)
+    {
+        $template->set('table', $this->table->query()->getModel()->getTable());
     }
 
     private function readJson($path)
