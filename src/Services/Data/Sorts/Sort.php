@@ -22,10 +22,8 @@ class Sort
 
         if ($sort->applies()) {
             $sort->handle();
-
-            return;
+        } else {
+            $this->query->orderBy($this->config->template()->get('defaultSort'));
         }
-
-        (new DefaultSort($this->config, $this->query))->handle();
     }
 }
