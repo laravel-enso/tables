@@ -25,11 +25,13 @@ class Structure
 
     private Obj $template;
     private Obj $meta;
+    private bool $customDtRowId;
 
     public function __construct(Obj $template, Obj $meta)
     {
         $this->template = $template;
         $this->meta = $meta;
+        $this->customDtRowId = $this->template->has('dtRowId');
     }
 
     public function build(): void
@@ -115,9 +117,17 @@ class Structure
         return $this;
     }
 
-    private function defaultSort()
+    private function defaultSort(): void
     {
-        $defaultSort = $this->template->get('defaultSort') ?? $this->template->get('dtRowId');
+        if ($this->template->has('defaultSort')) {
+            return;
+        }
+
+        $dtRowId = $this->template->get('dtRowId');
+
+        $defaultSort = $this->customDtRowId
+            ? $dtRowId
+            : "{$this->template->get('table')}.{$dtRowId}";
 
         $this->template->set('defaultSort', $defaultSort);
     }
