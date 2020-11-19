@@ -74,6 +74,7 @@ class Fetcher
 
     private function count(): int
     {
-        return (new Meta($this->table, $this->config))->count();
+        return (new Meta($this->table, $this->config))
+            ->filter()->count(true);
     }
 }

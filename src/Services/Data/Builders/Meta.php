@@ -67,14 +67,7 @@ class Meta
             : $this->table->count();
     }
 
-    private function setCount(): self
-    {
-        $this->filtered = $this->count = $this->cachedCount();
-
-        return $this;
-    }
-
-    private function filter(): self
+    public function filter(): self
     {
         $filters = new Filters($this->table, $this->config, $this->query);
 
@@ -83,6 +76,13 @@ class Meta
         if ($this->filters) {
             $filters->handle();
         }
+
+        return $this;
+    }
+
+    private function setCount(): self
+    {
+        $this->filtered = $this->count = $this->cachedCount();
 
         return $this;
     }
