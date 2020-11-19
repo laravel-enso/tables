@@ -9,6 +9,7 @@ use Box\Spout\Writer\XLSX\Writer;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\File;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -63,9 +64,7 @@ class Excel
                 $this->addNewSheet();
             }
 
-            $this->writer->addRows(
-                $this->map($this->fetcher->current())
-            );
+            $this->writeChunk();
 
             $this->updateProgress($this->fetcher->chunkSize());
 
@@ -75,10 +74,18 @@ class Excel
         return $this;
     }
 
+    private function writeChunk()
+    {
+        $this->fetcher->current()
+            ->each(fn ($row) => $this->writer->addRow($this->row(
+                $this->columns->map(fn ($column) => $this->value($column, $row))
+            )));
+    }
+
     private function start(): self
     {
         if ($this->dataExport) {
-            app()->setLocale(
+            App::setLocale(
                 $this->user->preferences()->global->lang
             );
 
@@ -177,13 +184,6 @@ class Excel
             ->reduce(fn ($columns, $column) => $this->isExportable($column)
                 ? $columns->push($column)
                 : $columns, new Collection());
-    }
-
-    private function map(Collection $data): array
-    {
-        return $data->map(fn ($row) => $this->row(
-            $this->columns->map(fn ($column) => $this->value($column, $row))
-        ))->toArray();
     }
 
     private function row(Collection $row): Row

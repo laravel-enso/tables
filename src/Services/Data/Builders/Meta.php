@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config as ConfigFacade;
+use LaravelEnso\Tables\Contracts\CustomCount;
 use LaravelEnso\Tables\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Cache as Exception;
@@ -59,9 +60,11 @@ class Meta
         ];
     }
 
-    public function count(): int
+    public function count($filtered = false): int
     {
-        return $this->query->getQuery()->getCountForPagination();
+        return $filtered || ! $this->table instanceof CustomCount
+            ? $this->query->getQuery()->getCountForPagination()
+            : $this->table->count();
     }
 
     private function setCount(): self
@@ -96,7 +99,7 @@ class Meta
     private function countFiltered(): self
     {
         if ($this->filters && $this->fullRecordInfo) {
-            $this->filtered = $this->count();
+            $this->filtered = $this->count(true);
         }
 
         return $this;
