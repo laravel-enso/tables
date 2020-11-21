@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Services\Data\Filters;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use LaravelEnso\Filters\Services\Search;
 use LaravelEnso\Helpers\Services\Obj;
 
@@ -22,10 +23,28 @@ class Searches extends BaseFilter
 
     private function filter(Obj $filter): void
     {
-        (new Search($this->query, [$filter->get('data')], $filter->get('value')))
+        (new Search($this->query, $this->attributes($filter), $filter->get('value')))
+            ->relations($this->relations($filter))
             ->comparisonOperator($this->config->get('comparisonOperator'))
             ->searchMode($filter->get('mode'))
             ->handle();
+    }
+
+    private function attributes(Obj $filter): array
+    {
+        return $this->isNested($filter) ? [] : $filter->get('data');
+    }
+
+    private function relations(Obj $filter): array
+    {
+        return $this->isNested($filter)
+            ? [Str::of($filter->get('data'))->explode('.')->splice(1)->implode('.')]
+            : [];
+    }
+
+    private function isNested(string $attribute): bool
+    {
+        return Str::of($attribute)->explode('.')->count() > 1;
     }
 
     private function filterable(): Collection

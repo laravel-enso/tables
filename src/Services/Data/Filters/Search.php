@@ -49,6 +49,6 @@ class Search extends BaseFilter
 
     private function isNested($attribute): bool
     {
-        return Str::contains($attribute, '.');
+        return Str::of($attribute)->contains('.');
     }
 }
