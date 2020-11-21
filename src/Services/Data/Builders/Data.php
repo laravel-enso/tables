@@ -161,7 +161,7 @@ class Data
 
     private function rowActions(array $row): array
     {
-        return $this->config->template()->buttons()->flatten(1)
+        return $this->config->template()->buttons()->get('row')
             ->map(fn (Obj $action) => $action->get('name'))
             ->filter(fn (string $action) => $this->table->render($row, $action))
             ->values()
