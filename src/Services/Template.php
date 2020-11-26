@@ -2,6 +2,8 @@
 
 namespace LaravelEnso\Tables\Services;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -93,26 +95,38 @@ class Template
     private function template()
     {
         $template = $this->readJson($this->table->templatePath());
+        $model = $this->table->query()->getModel();
 
         if (! $template->has('model')) {
-            $this->setModel($template);
+            $this->setModel($template, $model);
         }
-        $this->setTable($template);
+
+        $this->setTable($template, $model)
+            ->setSoftDeletes($template, $model);
 
         return $template;
     }
 
-    private function setModel(Obj $template)
+    private function setModel(Obj $template, Model $model)
     {
-        $model = (new ReflectionClass($this->table->query()->getModel()))
-            ->getShortName();
+        $model = (new ReflectionClass($model))->getShortName();
 
         $template->set('model', Str::camel($model));
     }
 
-    private function setTable(Obj $template)
+    private function setTable(Obj $template, Model $model): self
     {
-        $template->set('table', $this->table->query()->getModel()->getTable());
+        $template->set('table', $model->getTable());
+
+        return $this;
+    }
+
+    private function setSoftDeletes(Obj $template, Model $model)
+    {
+        $traits = (new ReflectionClass($model))->getTraitNames();
+        $template->set('softDeletes', in_array(SoftDeletes::class, $traits));
+
+        return $this;
     }
 
     private function readJson($path)

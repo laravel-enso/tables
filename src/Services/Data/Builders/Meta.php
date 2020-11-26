@@ -62,9 +62,14 @@ class Meta
 
     public function count($filtered = false): int
     {
-        return $filtered || ! $this->table instanceof CustomCount
-            ? $this->query->getQuery()->getCountForPagination()
-            : $this->table->count();
+        if ($this->table instanceof CustomCount && ! $filtered) {
+            return $this->table->count();
+        }
+
+        return $this->query
+            ->when($this->config->get('softDeletes'), fn ($query) => $query
+                ->whereNull('deleted_at'))
+            ->getQuery()->getCountForPagination();
     }
 
     public function filter(): self
