@@ -68,7 +68,7 @@ class Meta
 
         return $this->query
             ->when($this->config->get('softDeletes'), fn ($query) => $query
-                ->whereNull('deleted_at'))
+                ->whereNull("{$this->config->get('table')}.deleted_at"))
             ->getQuery()->getCountForPagination();
     }
 
@@ -150,11 +150,11 @@ class Meta
 
     private function cacheKey(?string $suffix = null): string
     {
-        return (new Collection([
-            ConfigFacade::get('enso.tables.cache.prefix'),
-            $this->query->getModel()->getTable(),
-            $suffix,
-        ]))->filter()->implode(':');
+        $prefix = ConfigFacade::get('enso.tables.cache.prefix');
+
+        return Collection::wrap([
+            $prefix, $this->config->get('table'), $suffix,
+        ])->filter()->implode(':');
     }
 
     private function shouldCache(): bool

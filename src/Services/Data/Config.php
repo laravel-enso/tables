@@ -10,7 +10,7 @@ class Config
 {
     private const TemplateProxy = [
         'appends', 'comparisonOperator', 'countCache', 'flatten', 'fullInfoRecordLimit',
-        'name', 'strip', 'softDeletes',
+        'name', 'strip', 'softDeletes', 'table',
     ];
 
     private const RequestMeta = [
