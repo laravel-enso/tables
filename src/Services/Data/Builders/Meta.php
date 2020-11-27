@@ -68,7 +68,7 @@ class Meta
 
         return $this->query
             ->when($this->config->get('softDeletes'), fn ($query) => $query
-                ->whereNull("{$this->config->get('table')}.deleted_at"))
+                ->whereNull($this->deletedAt()))
             ->getQuery()->getCountForPagination();
     }
 
@@ -169,15 +169,18 @@ class Meta
             if (! (new ReflectionClass($model))->hasMethod('resetTableCache')) {
                 throw Exception::missingTrait(get_class($model));
             }
-
-            if (
-                $this->table instanceof CustomCountCacheKey
-                && ! Cache::getStore() instanceof TaggableStore
-            ) {
-                $shouldCache = false;
-            }
         }
 
-        return $shouldCache;
+        return $shouldCache
+            && (Cache::getStore() instanceof TaggableStore
+                || ! $this->table instanceof CustomCountCacheKey);
+    }
+
+    private function deletedAt(): string
+    {
+        $table = $this->config->get('table');
+        $column = $this->query->getModel()->getDeletedAtColumn();
+
+        return "{$table}.{$column}";
     }
 }
