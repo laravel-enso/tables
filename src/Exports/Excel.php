@@ -115,7 +115,7 @@ class Excel
         $this->writer = WriterEntityFactory::createXLSXWriter();
 
         $this->writer->setDefaultRowStyle($defaultStyle)
-            ->openToFile($this->filePath);
+            ->openToFile(Storage::path($this->filePath));
 
         return $this;
     }
@@ -140,7 +140,7 @@ class Excel
     private function notify(): self
     {
         $this->user->notify((new ExportDoneNotification(
-            $this->filePath,
+            Storage::path($this->filePath),
             $this->filename,
             $this->dataExport,
             $this->entries
@@ -153,7 +153,7 @@ class Excel
     {
         $path = ConfigFacade::get('enso.tables.export.path');
 
-        return Storage::path($path.DIRECTORY_SEPARATOR.$this->hashName());
+        return $path.DIRECTORY_SEPARATOR.$this->hashName();
     }
 
     private function hashName(): string
