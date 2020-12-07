@@ -26,11 +26,6 @@ class Prepare
             ->dispatch();
     }
 
-    protected function dispatch(): void
-    {
-        Job::dispatch($this->user, $this->config, $this->table);
-    }
-
     private function notifyStart(): self
     {
         $this->user->notifyNow(
@@ -38,5 +33,10 @@ class Prepare
         );
 
         return $this;
+    }
+
+    protected function dispatch(): void
+    {
+        Job::dispatch($this->user, $this->config, $this->table);
     }
 }

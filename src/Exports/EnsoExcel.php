@@ -21,6 +21,13 @@ class EnsoExcel extends Excel
         $this->export = $export;
     }
 
+    protected function notifyError(): void
+    {
+        $this->export->update(['status' => Statuses::Failed]);
+
+        parent::notifyError();
+    }
+
     protected function start(): self
     {
         parent::start();

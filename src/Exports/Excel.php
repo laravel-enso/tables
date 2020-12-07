@@ -6,6 +6,7 @@ use Box\Spout\Common\Entity\Row;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\XLSX\Writer;
+use Exception;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -17,8 +18,10 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\AuthenticatesOnExport;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Notifications\ExportDone;
+use LaravelEnso\Tables\Notifications\ExportError;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Fetcher;
+use Throwable;
 
 class Excel
 {
@@ -52,10 +55,15 @@ class Excel
 
     public function handle(): void
     {
-        $this->initWriter()
-            ->start()
-            ->process()
-            ->closeWriter();
+        try {
+            $this->initWriter()
+                ->start()
+                ->process();
+        } catch (Throwable $th) {
+            $this->notifyError();
+        } finally {
+            $this->closeWriter();
+        }
 
         if ($this->cancelled) {
             Storage::delete($this->path);
@@ -64,7 +72,17 @@ class Excel
         }
     }
 
-    protected function process(): self
+    protected function notifyError(): void
+    {
+        $this->cancelled = true;
+
+        $this->user->notify(
+            (new ExportError($this->config->name()))
+                ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
+        );
+    }
+
+    protected function process(): void
     {
         $this->fetcher->next();
 
@@ -78,8 +96,6 @@ class Excel
 
             $this->fetcher->next();
         }
-
-        return $this;
     }
 
     protected function writeChunk(): self

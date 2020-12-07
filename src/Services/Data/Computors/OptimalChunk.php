@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Config;
 class OptimalChunk
 {
     public const Thresholds = [
+        ['limit' => 1000, 'chunk' => 100],
         ['limit' => 10 * 1000, 'chunk' => 250],
         ['limit' => 50 * 1000, 'chunk' => 2 * 250],
         ['limit' => 250 * 1000, 'chunk' => 4 * 250],

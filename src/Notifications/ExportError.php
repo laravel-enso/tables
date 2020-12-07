@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 
-class ExportStarted extends Notification implements ShouldQueue
+class ExportError extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -32,15 +32,17 @@ class ExportStarted extends Notification implements ShouldQueue
     public function toBroadcast()
     {
         return (new BroadcastMessage($this->toArray() + [
-            'level' => 'info',
-            'title' => __('Table export started'),
+            'level' => 'error',
+            'title' => __('Table export error'),
         ]))->onQueue($this->queue);
     }
 
     public function toArray()
     {
         return [
-            'body' => __('Export :name started', ['name' => $this->name]),
+            'body' => __('The export :name could not be completed due to an unknown error', [
+                'name' => $this->name,
+            ]),
             'path' => '#',
             'icon' => 'file-excel',
         ];

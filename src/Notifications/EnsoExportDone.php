@@ -6,7 +6,7 @@ use LaravelEnso\DataExport\Models\DataExport;
 
 class EnsoExportDone extends ExportDone
 {
-    private $export;
+    private DataExport $export;
 
     public function __construct(string $path, string $filename, DataExport $export)
     {
