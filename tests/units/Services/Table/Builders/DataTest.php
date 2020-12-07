@@ -237,8 +237,8 @@ class DataTest extends TestCase
 
     private function requestResponse()
     {
-        $builder = new Data($this->table, $this->config);
+        $data = new Data($this->table, $this->config);
 
-        return new Obj($builder->data());
+        return new Obj($data->build());
     }
 }
