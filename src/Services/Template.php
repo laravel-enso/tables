@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -101,8 +100,7 @@ class Template
             $this->setModel($template, $model);
         }
 
-        $this->setTable($template, $model)
-            ->setSoftDeletes($template, $model);
+        $this->setTable($template, $model);
 
         return $template;
     }
@@ -117,14 +115,6 @@ class Template
     private function setTable(Obj $template, Model $model): self
     {
         $template->set('table', $model->getTable());
-
-        return $this;
-    }
-
-    private function setSoftDeletes(Obj $template, Model $model)
-    {
-        $traits = (new ReflectionClass($model))->getTraitNames();
-        $template->set('softDeletes', in_array(SoftDeletes::class, $traits));
 
         return $this;
     }

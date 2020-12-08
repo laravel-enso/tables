@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config as ConfigFacade;
+use LaravelEnso\Companies\Models\Company;
 use LaravelEnso\Tables\Contracts\CustomCount;
 use LaravelEnso\Tables\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\Contracts\Table;
@@ -67,9 +68,9 @@ class Meta
         }
 
         return $this->query
-            ->when($this->config->get('softDeletes'), fn ($query) => $query
-                ->whereNull($this->deletedAt()))
-            ->getQuery()->getCountForPagination();
+            ->applyScopes()
+            ->getQuery()
+            ->getCountForPagination();
     }
 
     public function filter(): self
