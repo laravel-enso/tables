@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 
-class ExportStartNotification extends Notification implements ShouldQueue
+class ExportStarted extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -22,25 +22,25 @@ class ExportStartNotification extends Notification implements ShouldQueue
 
     public function via()
     {
-        return (new Collection(Config::get('enso.tables.export.notifications')))
+        $channels = Config::get('enso.tables.export.notifications');
+
+        return Collection::wrap($channels)
             ->intersect(['broadcast', 'database'])
             ->toArray();
     }
 
     public function toBroadcast()
     {
-        return (new BroadcastMessage([
+        return (new BroadcastMessage($this->toArray() + [
             'level' => 'info',
-            'title' => __('Export Started'),
-            'body' => __('Export started').': '.__($this->name),
-            'icon' => 'file-excel',
+            'title' => __('Table export started'),
         ]))->onQueue($this->queue);
     }
 
     public function toArray()
     {
         return [
-            'body' => __('Export started').': '.__($this->name),
+            'body' => __('Export :name started', ['name' => $this->name]),
             'path' => '#',
             'icon' => 'file-excel',
         ];

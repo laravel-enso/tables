@@ -3,7 +3,8 @@
 namespace LaravelEnso\Tables\Traits;
 
 use Illuminate\Http\Request;
-use LaravelEnso\Tables\Services\Excel as Service;
+use LaravelEnso\Tables\Exports\EnsoPrepare;
+use LaravelEnso\Tables\Exports\Prepare;
 
 trait Excel
 {
@@ -12,11 +13,13 @@ trait Excel
     public function __invoke(Request $request)
     {
         $user = $request->user();
-
         ['config' => $config] = $this->data($request);
+        $attrs = [$user, $config, $this->tableClass];
 
-        (new Service(
-            $user, $config, $this->tableClass
-        ))->handle();
+        if ($config->isEnso()) {
+            (new EnsoPrepare(...$attrs))->handle();
+        } else {
+            (new Prepare(...$attrs))->handle();
+        }
     }
 }

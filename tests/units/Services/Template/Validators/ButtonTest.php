@@ -2,8 +2,6 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Button as Attributes;
@@ -20,7 +18,7 @@ class ButtonTest extends TestCase
     private $validator;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -28,7 +26,7 @@ class ButtonTest extends TestCase
 
         $this->template = new Obj([
             'routePrefix' => 'mockedPrefix',
-            'buttons' => [$this->mockedButton()]
+            'buttons' => [$this->mockedButton()],
         ]);
     }
 

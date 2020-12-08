@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Config;
 class OptimalChunk
 {
     public const Thresholds = [
-        ['limit' => 10 * 1000, 'chunk' => 1000],
-        ['limit' => 50 * 1000, 'chunk' => 2 * 1000],
-        ['limit' => 250 * 1000, 'chunk' => 4 * 1000],
-        ['limit' => 1.25 * 1000 * 1000, 'chunk' => 10 * 1000],
+        ['limit' => 1000, 'chunk' => 100],
+        ['limit' => 10 * 1000, 'chunk' => 250],
+        ['limit' => 50 * 1000, 'chunk' => 2 * 250],
+        ['limit' => 250 * 1000, 'chunk' => 4 * 250],
+        ['limit' => 1.25 * 1000 * 1000, 'chunk' => 10 * 250],
     ];
 
-    public const MaxChunk = 20000;
+    public const MaxChunk = 5000;
 
     public static function get($count): int
     {

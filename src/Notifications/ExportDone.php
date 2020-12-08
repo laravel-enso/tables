@@ -10,22 +10,18 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Config;
 
-class ExportDoneNotification extends Notification implements ShouldQueue
+class ExportDone extends Notification implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
-    private string $filePath;
-    private string $filename;
-    private $dataExport;
-    private $entries;
-    private ?string $link;
+    protected string $path;
+    protected string $filename;
+    protected int $entries;
 
-    public function __construct(string $filePath, string $filename, $dataExport, $entries)
+    public function __construct(string $path, string $filename, int $entries)
     {
-        $this->filePath = $filePath;
+        $this->path = $path;
         $this->filename = $filename;
-        $this->dataExport = $dataExport;
-        $this->link = optional($this->dataExport)->temporaryLink();
         $this->entries = $entries;
     }
 
@@ -38,23 +34,25 @@ class ExportDoneNotification extends Notification implements ShouldQueue
     {
         return (new BroadcastMessage($this->toArray() + [
             'level' => 'success',
-            'title' => __('Export Done'),
+            'title' => $this->title(),
         ]))->onQueue($this->queue);
     }
 
     public function toMail($notifiable)
     {
+        $appName = Config::get('app.name');
+
         $mail = (new MailMessage())
-            ->subject(__(Config::get('app.name')).': '.__('Table Export Notification'))
+            ->subject("[ {$appName} ] {$this->title()}")
             ->markdown('laravel-enso/tables::emails.export', [
-                'name' => optional($notifiable->person)->appellative(),
+                'name' => $this->notifiable($notifiable),
                 'filename' => __($this->filename),
                 'entries' => $this->entries,
-                'link' => $this->link,
+                'link' => $this->link(),
             ]);
 
-        if (! $this->link) {
-            $mail->attach($this->filePath);
+        if (! $this->link()) {
+            $mail->attach($this->path);
         }
 
         return $mail;
@@ -63,11 +61,29 @@ class ExportDoneNotification extends Notification implements ShouldQueue
     public function toArray()
     {
         return [
-            'body' => $this->link
-                ? __('Export available for download').': '.__($this->filename)
-                : __('Export emailed').': '.__($this->filename),
+            'body' => $this->body(),
             'icon' => 'file-excel',
-            'path' => $this->link ? '/files' : null,
+            'path' => '/import',
         ];
+    }
+
+    protected function notifiable($notifiable): string
+    {
+        return $notifiable->name;
+    }
+
+    protected function body(): string
+    {
+        return __('Export emailed: :filename', ['filename' => $this->filename]);
+    }
+
+    protected function link(): ?string
+    {
+        return null;
+    }
+
+    private function title(): string
+    {
+        return __('Table export done');
     }
 }

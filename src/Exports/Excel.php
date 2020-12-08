@@ -7,107 +7,126 @@ use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\XLSX\Writer;
 use Illuminate\Foundation\Auth\User;
-use Illuminate\Http\File;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use LaravelEnso\Helpers\Services\Decimals;
 use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Tables\Contracts\AuthenticatesOnExport;
 use LaravelEnso\Tables\Contracts\Table;
-use LaravelEnso\Tables\Notifications\ExportDoneNotification;
+use LaravelEnso\Tables\Notifications\ExportDone;
+use LaravelEnso\Tables\Notifications\ExportError;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Fetcher;
+use Throwable;
 
 class Excel
 {
-    private const Extension = 'xlsx';
+    protected const Extension = 'xlsx';
 
-    private User $user;
-    private Config $config;
-    private $dataExport;
-    private Fetcher $fetcher;
-    private Writer $writer;
-    private Collection $columns;
-    private int $sheetCount;
-    private string $filename;
-    private string $filePath;
-    private int $entries;
+    protected User $user;
+    protected Config $config;
+    protected Fetcher $fetcher;
+    protected bool $authenticates;
+    protected Writer $writer;
+    protected Collection $columns;
+    protected int $sheets;
+    protected string $filename;
+    protected string $relativePath;
+    protected string $path;
+    protected int $entries;
+    protected bool $cancelled;
 
-    public function __construct(User $user, Table $table, Config $config, $dataExport = null)
+    public function __construct(User $user, Table $table, Config $config)
     {
         $this->user = $user;
         $this->config = $config;
-        $this->dataExport = $dataExport;
         $this->fetcher = new Fetcher($table, $this->config);
+        $this->authenticates = $table instanceof AuthenticatesOnExport;
         $this->filename = $this->filename();
-        $this->filePath = $this->filePath();
-        $this->entries = optional($dataExport)->entries ?? 0;
+        $this->relativePath = $this->relativePath();
+        $this->path = Storage::path($this->relativePath);
+        $this->entries = 0;
+        $this->cancelled = false;
     }
 
-    public function run(): void
+    public function handle(): void
     {
-        $this->initWriter()
-            ->start()
-            ->process()
-            ->closeWriter()
-            ->finalize()
-            ->notify();
+        try {
+            $this->initWriter()
+                ->start()
+                ->process();
+        } catch (Throwable $th) {
+            $this->notifyError();
+        } finally {
+            $this->closeWriter();
+        }
+
+        if ($this->cancelled) {
+            Storage::delete($this->path);
+        } else {
+            $this->finalize();
+        }
     }
 
-    private function process(): self
+    protected function notifyError(): void
+    {
+        $this->cancelled = true;
+
+        $this->user->notify(
+            (new ExportError($this->config->name()))
+                ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
+        );
+    }
+
+    protected function process(): void
     {
         $this->fetcher->next();
 
-        while ($this->fetcher->valid()) {
+        while ($this->fetcher->valid() && ! $this->cancelled) {
             if ($this->needsNewSheet()) {
                 $this->addNewSheet();
             }
 
-            $this->writeChunk();
-
-            $this->updateProgress($this->fetcher->chunkSize());
+            $this->writeChunk()
+                ->updateProgress();
 
             $this->fetcher->next();
         }
-
-        return $this;
     }
 
-    private function writeChunk()
+    protected function writeChunk(): self
     {
         $this->fetcher->current()
             ->each(fn ($row) => $this->writer->addRow($this->row(
                 $this->columns->map(fn ($column) => $this->value($column, $row))
             )));
+
+        return $this;
     }
 
-    private function start(): self
+    protected function start(): self
     {
-        if ($this->dataExport) {
-            App::setLocale(
-                $this->user->preferences()->global->lang
-            );
-
-            $this->dataExport->startProcessing();
+        if ($this->authenticates) {
+            Auth::setUser($this->user);
         }
 
-        $this->sheetCount = 1;
+        $this->sheets = 1;
 
         $this->writer->addRow($this->header());
 
         return $this;
     }
 
-    private function closeWriter(): self
+    protected function closeWriter(): void
     {
         $this->writer->close();
         unset($this->writer);
-
-        return $this;
     }
 
-    private function initWriter(): self
+    protected function initWriter(): self
     {
         $defaultStyle = (new StyleBuilder())
             ->setShouldWrapText(false)
@@ -116,104 +135,80 @@ class Excel
         $this->writer = WriterEntityFactory::createXLSXWriter();
 
         $this->writer->setDefaultRowStyle($defaultStyle)
-            ->openToFile($this->filePath);
+            ->openToFile($this->path);
 
         return $this;
     }
 
-    private function finalize(): self
+    protected function finalize(): void
     {
-        if (! $this->dataExport) {
-            return $this;
-        }
-
-        $this->dataExport->attach(
-            new File($this->filePath),
-            $this->filename,
-            $this->user
+        $this->user->notify(
+            (new ExportDone($this->path, $this->filename, $this->entries))
+                ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
         );
-
-        $this->dataExport->endOperation();
-
-        return $this;
     }
 
-    private function notify(): self
+    protected function relativePath(): string
     {
-        $this->user->notify((new ExportDoneNotification(
-            $this->filePath,
-            $this->filename,
-            $this->dataExport,
-            $this->entries
-        ))->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));
+        $folder = ConfigFacade::get('enso.tables.export.folder');
+        $hash = Str::random(40);
+        $extension = self::Extension;
 
-        return $this;
+        return "{$folder}/{$hash}.{$extension}";
     }
 
-    private function filePath(): string
+    protected function filename(): string
     {
-        $path = ConfigFacade::get('enso.tables.export.path');
+        $suffix = __('table_export');
+        $extension = self::Extension;
 
-        return Storage::path($path.DIRECTORY_SEPARATOR.$this->hashName());
+        return "{$this->config->name()}_{$suffix}.{$extension}";
     }
 
-    private function hashName(): string
+    protected function header(): Row
     {
-        return Str::random(40).'.'.self::Extension;
-    }
-
-    private function filename(): string
-    {
-        $title = Str::title(Str::snake($this->config->get('name')));
-        $baseName = __($title).'_'.__('Table_Report');
-        $sanitized = preg_replace('/[^A-Za-z0-9_.-]/', '_', $baseName);
-
-        return $sanitized.'.'.self::Extension;
-    }
-
-    private function header(): Row
-    {
-        $labels = $this->columns()->pluck('label')->map(fn ($label) => __($label));
+        $labels = $this->columns()->pluck('label')
+            ->map(fn ($label) => __($label));
 
         return $this->row($labels);
     }
 
-    private function columns(): Collection
+    protected function columns(): Collection
     {
         return $this->columns ??= $this->config->columns()
-            ->reduce(fn ($columns, $column) => $this->isExportable($column)
-                ? $columns->push($column)
-                : $columns, new Collection());
+            ->filter(fn ($column) => $this->exportable($column))
+            ->reduce(fn ($columns, $column) => $columns
+                ->push($column), new Collection());
     }
 
-    private function row(Collection $row): Row
+    protected function row(Collection $row): Row
     {
         return WriterEntityFactory::createRowFromArray($row->toArray());
     }
 
-    private function updateProgress(int $entries): void
+    protected function updateProgress(): self
     {
-        $this->entries += $entries;
+        $this->entries += $this->fetcher->chunkSize();
 
-        optional($this->dataExport)->update([
-            'entries' => $this->entries,
-        ]);
+        return $this;
     }
 
-    private function addNewSheet(): void
+    protected function addNewSheet(): void
     {
         $this->writer->addNewSheetAndMakeItCurrent();
         $this->writer->addRow($this->header());
-        $this->sheetCount++;
+        $this->sheets++;
     }
 
-    private function needsNewSheet(): bool
+    protected function needsNewSheet(): bool
     {
-        return $this->entries / ConfigFacade::get('enso.tables.export.sheetLimit')
-            >= $this->sheetCount;
+        $limit = ConfigFacade::get('enso.tables.export.sheetLimit');
+        $needed = Decimals::div($this->entries, $limit);
+
+        return $needed >= $this->sheets;
     }
 
-    private function isExportable(Obj $column): bool
+    protected function exportable(Obj $column): bool
     {
         $meta = $column->get('meta');
 
@@ -221,9 +216,14 @@ class Excel
             && ! $meta->get('notExportable');
     }
 
-    private function value($column, $row)
+    protected function value($column, $row)
     {
-        return (new Collection(explode('.', $column->get('name'))))
+        return Collection::wrap(explode('.', $column->get('name')))
             ->reduce(fn ($value, $segment) => $value[$segment] ?? null, $row);
+    }
+
+    protected function wasCancelled(): bool
+    {
+        return false;
     }
 }

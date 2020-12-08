@@ -15,6 +15,7 @@ class Fetcher
     private Collection $data;
     private int $page;
     private bool $ready;
+    private int $count;
 
     public function __construct(Table $table, Config $config)
     {
@@ -52,29 +53,29 @@ class Fetcher
         return $this->data->isNotEmpty();
     }
 
+    public function count(): int
+    {
+        if (! isset($this->count)) {
+            $this->count = (new Meta($this->table, $this->config))
+                ->filter()->count(true);
+        }
+
+        return $this->count;
+    }
+
     private function fetch($page = 0): Collection
     {
-        $this->config->meta()->set(
-            'start',
-            $this->config->meta()->get('length') * $page
-        );
+        $start = $this->config->meta()->get('length') * $page;
+        $this->config->meta()->set('start', $start);
 
-        return (new Data($this->table, $this->config))->data();
+        return (new Data($this->table, $this->config, true))->build();
     }
 
     private function optimalChunk(): void
     {
-        $this->config->meta()->set(
-            'length',
-            OptimalChunk::get($this->count())
-        );
+        $optimalChunk = OptimalChunk::get($this->count());
+        $this->config->meta()->set('length', $optimalChunk);
 
         $this->ready = true;
-    }
-
-    private function count(): int
-    {
-        return (new Meta($this->table, $this->config))
-            ->filter()->count(true);
     }
 }

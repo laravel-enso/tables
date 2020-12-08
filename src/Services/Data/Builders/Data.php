@@ -20,15 +20,17 @@ class Data
     private Table $table;
     private Builder $query;
     private Collection $data;
+    private bool $fetchMode;
 
-    public function __construct(Table $table, Config $config)
+    public function __construct(Table $table, Config $config, bool $fetchMode = false)
     {
         $this->table = $table;
         $this->config = $config;
         $this->query = $this->table->query();
+        $this->fetchMode = $fetchMode;
     }
 
-    public function build(): self
+    public function build(): Collection
     {
         $this->filter()
             ->sort()
@@ -41,23 +43,19 @@ class Data
                 ->sanitize()
                 ->arrayCompute()
                 ->strip()
-                ->flatten()
-                ->actions();
+                ->flatten();
+
+            if (! $this->fetchMode) {
+                $this->actions();
+            }
         }
 
-        return $this;
+        return $this->data;
     }
 
     public function toArray(): array
     {
-        return ['data' => $this->data()];
-    }
-
-    public function data(): Collection
-    {
-        $this->build();
-
-        return $this->data;
+        return ['data' => $this->build()];
     }
 
     private function filter(): self
@@ -138,25 +136,21 @@ class Data
         return $this;
     }
 
-    private function flatten(): self
+    private function flatten(): void
     {
         if ($this->config->get('flatten')) {
             $this->data = $this->data
                 ->map(fn ($record) => Arr::dot($record));
         }
-
-        return $this;
     }
 
-    private function actions(): self
+    private function actions(): void
     {
         if ($this->table instanceof ConditionalActions) {
             $this->data = $this->data->map(fn ($row) => $row + [
                 '_actions' => $this->rowActions($row),
             ]);
         }
-
-        return $this;
     }
 
     private function rowActions(array $row): array

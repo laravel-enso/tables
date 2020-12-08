@@ -3,6 +3,8 @@
 namespace LaravelEnso\Tables\Services\Data;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config as ConfigFacade;
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Template;
 
@@ -82,6 +84,18 @@ class Config
     public function request(): Request
     {
         return $this->request;
+    }
+
+    public function isEnso(): bool
+    {
+        return ! empty(ConfigFacade::get('enso.config'));
+    }
+
+    public function name(): string
+    {
+        $name = Str::of($this->get('name'))->snake();
+
+        return preg_replace('/[^A-Za-z0-9_.-]/', '_', $name);
     }
 
     private function setMeta(): self
