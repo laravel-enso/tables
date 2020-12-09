@@ -3,10 +3,10 @@
 namespace LaravelEnso\Tables\Services\Data;
 
 use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\Services\OptimalChunk;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Data\Builders\Data;
 use LaravelEnso\Tables\Services\Data\Builders\Meta;
-use LaravelEnso\Tables\Services\Data\Computors\OptimalChunk;
 
 class Fetcher
 {
