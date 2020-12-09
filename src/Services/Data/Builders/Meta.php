@@ -176,12 +176,4 @@ class Meta
             && (Cache::getStore() instanceof TaggableStore
                 || ! $this->table instanceof CustomCountCacheKey);
     }
-
-    private function deletedAt(): string
-    {
-        $table = $this->config->get('table');
-        $column = $this->query->getModel()->getDeletedAtColumn();
-
-        return "{$table}.{$column}";
-    }
 }
