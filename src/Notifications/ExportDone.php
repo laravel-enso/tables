@@ -42,44 +42,25 @@ class ExportDone extends Notification implements ShouldQueue
     {
         $appName = Config::get('app.name');
 
-        $mail = (new MailMessage())
+        return (new MailMessage())
             ->subject("[ {$appName} ] {$this->title()}")
             ->markdown('laravel-enso/tables::emails.export', [
-                'name' => $this->notifiable($notifiable),
+                'name' => $notifiable->name,
                 'filename' => __($this->filename),
                 'entries' => $this->entries,
-                'link' => $this->link(),
-            ]);
-
-        if (! $this->link()) {
-            $mail->attach($this->path);
-        }
-
-        return $mail;
+            ])->attach($this->path);
     }
 
     public function toArray()
     {
         return [
             'body' => $this->body(),
-            'icon' => 'file-excel',
-            'path' => '/import',
         ];
-    }
-
-    protected function notifiable($notifiable): string
-    {
-        return $notifiable->name;
     }
 
     protected function body(): string
     {
         return __('Export emailed: :filename', ['filename' => $this->filename]);
-    }
-
-    protected function link(): ?string
-    {
-        return null;
     }
 
     private function title(): string

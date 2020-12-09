@@ -10,10 +10,9 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->commands(TemplateCacheClear::class);
-
         $this->load()
-            ->publish();
+            ->publish()
+            ->commands(TemplateCacheClear::class);
     }
 
     private function load()
@@ -40,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
         $this->stubs()->each(fn ($ext, $stub) => $this->publishes([
             __DIR__."/../stubs/{$stub}.stub" => app_path("{$stub}.{$ext}"),
         ]));
+
+        return $this;
     }
 
     private function stubs()

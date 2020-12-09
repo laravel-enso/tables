@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use LaravelEnso\DataExport\Enums\Statuses;
 use LaravelEnso\DataExport\Models\DataExport;
+use LaravelEnso\DataExport\Notifications\ExportDone;
 use LaravelEnso\Tables\Contracts\Table;
-use LaravelEnso\Tables\Notifications\EnsoExportDone;
 use LaravelEnso\Tables\Services\Data\Config;
 
 class EnsoExcel extends Excel
@@ -51,7 +51,7 @@ class EnsoExcel extends Excel
         $this->export->update(['status' => Statuses::Finalized]);
 
         $this->user->notify(
-            (new EnsoExportDone($this->path, $this->filename, $this->export))
+            (new ExportDone($this->export))
                 ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
         );
     }
