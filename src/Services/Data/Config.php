@@ -98,6 +98,11 @@ class Config
         return preg_replace('/[^A-Za-z0-9_.-]/', '_', $name);
     }
 
+    public function label(): string
+    {
+        return Str::of($this->name())->replace('_', ' ')->ucfirst();
+    }
+
     private function setMeta(): self
     {
         $requestMeta = new Collection(static::RequestMeta);

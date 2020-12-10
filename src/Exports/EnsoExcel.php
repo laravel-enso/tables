@@ -5,7 +5,6 @@ namespace LaravelEnso\Tables\Exports;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config as ConfigFacade;
-use Illuminate\Support\Str;
 use LaravelEnso\DataExport\Enums\Statuses;
 use LaravelEnso\DataExport\Models\DataExport;
 use LaravelEnso\DataExport\Notifications\ExportDone;
@@ -59,9 +58,7 @@ class EnsoExcel extends Excel
 
     private function emailSubject(): string
     {
-        $name = Str::of($this->config->name())
-            ->replace('_', ' ')
-            ->ucfirst();
+        $name = $this->config->label();
 
         return __(':name export done', ['name' => $name]);
     }
