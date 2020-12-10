@@ -46,6 +46,7 @@ class EnsoExcel extends Excel
 
     protected function finalize(): void
     {
+        $this->export->file->created_by = $this->export->created_by;
         $this->export->file->attach($this->relativePath, $this->filename);
 
         $this->export->update(['status' => Statuses::Finalized]);
