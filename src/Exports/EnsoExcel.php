@@ -5,13 +5,15 @@ namespace LaravelEnso\Tables\Exports;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config as ConfigFacade;
+use Illuminate\Support\Str;
+use LaravelEnso\DataExport\Contracts\Notifies;
 use LaravelEnso\DataExport\Enums\Statuses;
 use LaravelEnso\DataExport\Models\DataExport;
 use LaravelEnso\DataExport\Notifications\ExportDone;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Data\Config;
 
-class EnsoExcel extends Excel
+class EnsoExcel extends Excel implements Notifies
 {
     private DataExport $export;
 
@@ -19,6 +21,13 @@ class EnsoExcel extends Excel
     {
         parent::__construct($user, $table, $config);
         $this->export = $export;
+    }
+
+    public function emailSubject(DataExport $export): string
+    {
+        $name = Str::ucfirst(str_replace('_', ' ', $export->name));
+
+        return __(':name export done', ['name' => $name]);
     }
 
     protected function notifyError(): void
@@ -51,7 +60,7 @@ class EnsoExcel extends Excel
         $this->export->update(['status' => Statuses::Finalized]);
 
         $this->user->notify(
-            (new ExportDone($this->export))
+            (new ExportDone($this->export, $this))
                 ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
         );
     }
