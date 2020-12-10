@@ -6,14 +6,13 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use Illuminate\Support\Str;
-use LaravelEnso\DataExport\Contracts\Notifies;
 use LaravelEnso\DataExport\Enums\Statuses;
 use LaravelEnso\DataExport\Models\DataExport;
 use LaravelEnso\DataExport\Notifications\ExportDone;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Data\Config;
 
-class EnsoExcel extends Excel implements Notifies
+class EnsoExcel extends Excel
 {
     private DataExport $export;
 
@@ -21,13 +20,6 @@ class EnsoExcel extends Excel implements Notifies
     {
         parent::__construct($user, $table, $config);
         $this->export = $export;
-    }
-
-    public function emailSubject(DataExport $export): string
-    {
-        $name = Str::ucfirst(str_replace('_', ' ', $export->name));
-
-        return __(':name export done', ['name' => $name]);
     }
 
     protected function notifyError(): void
@@ -60,9 +52,18 @@ class EnsoExcel extends Excel implements Notifies
         $this->export->update(['status' => Statuses::Finalized]);
 
         $this->user->notify(
-            (new ExportDone($this->export, $this))
+            (new ExportDone($this->export, $this->emailSubject()))
                 ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
         );
+    }
+
+    private function emailSubject(): string
+    {
+        $name = Str::of($this->config->name())
+            ->replace('_', ' ')
+            ->ucfirst();
+
+        return __(':name export done', ['name' => $name]);
     }
 
     protected function updateProgress(): self

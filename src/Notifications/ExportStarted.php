@@ -40,7 +40,7 @@ class ExportStarted extends Notification implements ShouldQueue
     public function toArray()
     {
         return [
-            'body' => __('Export :name started', ['name' => $this->name]),
+            'body' => __(':name export started', ['name' => $this->name]),
             'path' => '#',
             'icon' => 'file-excel',
         ];

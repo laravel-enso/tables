@@ -39,7 +39,7 @@ class Config
 
     public function __call($method, $args)
     {
-        if (isset($args[0]) && (new Collection(self::TemplateProxy))->contains($args[0])) {
+        if (isset($args[0]) && Collection::wrap(self::TemplateProxy)->contains($args[0])) {
             return $this->template->{$method}(...$args);
         }
 
