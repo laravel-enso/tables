@@ -60,6 +60,7 @@ class Excel
                 ->process();
         } catch (Throwable $th) {
             $this->notifyError();
+            throw $th;
         } finally {
             $this->closeWriter();
         }
