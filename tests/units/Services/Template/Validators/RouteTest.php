@@ -14,7 +14,7 @@ class RouteTest extends TestCase
     private $validator;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -24,7 +24,7 @@ class RouteTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_route()
+    public function cannot_validate_with_invalid_route()
     {
         $this->template->set('routePrefix', 'routePrefix');
         $this->template->set('dataRouteSuffix', 'dataRouteSuffix');

@@ -9,6 +9,7 @@ use LaravelEnso\Tables\Services\Data\Computors\Cents;
 use LaravelEnso\Tables\Services\Data\Computors\Date;
 use LaravelEnso\Tables\Services\Data\Computors\DateTime;
 use LaravelEnso\Tables\Services\Data\Computors\Enum;
+use LaravelEnso\Tables\Services\Data\Computors\Number;
 use LaravelEnso\Tables\Services\Data\Computors\Translator;
 
 class ArrayComputors extends Computors
@@ -16,10 +17,11 @@ class ArrayComputors extends Computors
     private static bool $serverSide = false;
 
     protected static array $computors = [
-        'enum' => Enum::class,
         'cents' => Cents::class,
+        'enum' => Enum::class,
         'date' => Date::class,
         'datetime' => DateTime::class,
+        'number' => Number::class,
         'translatable' => Translator::class,
     ];
 

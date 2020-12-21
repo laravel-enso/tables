@@ -10,7 +10,7 @@ use LaravelEnso\Tables\Services\Data\RequestArgument as Argument;
 class FilterAggregator
 {
     private const Filters = ['boolean', 'enum', 'select'];
-    private const Intervals = ['date', 'money'];
+    private const Intervals = ['date', 'money', 'number'];
 
     private Obj $internalFilters;
     private Obj $searches;

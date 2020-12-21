@@ -7,7 +7,7 @@ class Column
     public const Mandatory = ['data', 'label', 'name'];
 
     public const Optional = [
-        'align', 'class', 'dateFormat', 'enum', 'meta', 'money', 'tooltip', 'resource',
+        'align', 'class', 'dateFormat', 'enum', 'meta', 'money', 'number', 'tooltip', 'resource',
     ];
 
     public const Meta = [

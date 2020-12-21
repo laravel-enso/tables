@@ -28,20 +28,20 @@ class Columns
 
     private function format()
     {
-        if ($this->wrongFormat() || $this->wrongChildFormat()) {
-            throw Exception::wrongFormat();
+        if ($this->invalidFormat() || $this->invalidChild()) {
+            throw Exception::invalidFormat();
         }
 
         return $this;
     }
 
-    private function wrongFormat()
+    private function invalidFormat()
     {
         return ! $this->columns instanceof Obj
             || $this->columns->isEmpty();
     }
 
-    private function wrongChildFormat()
+    private function invalidChild()
     {
         return $this->columns
             ->some(fn ($column) => ! $column instanceof Obj);

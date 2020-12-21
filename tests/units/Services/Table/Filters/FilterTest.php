@@ -35,7 +35,7 @@ class FilterTest extends TestCase
     }
 
     /** @test */
-    public function cannot_use_wrong_filters()
+    public function cannot_use_invalid_filters()
     {
         $filters = new Obj(['name' => null]);
 

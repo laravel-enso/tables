@@ -14,7 +14,7 @@ class MetaTest extends TestCase
     private $validator;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -34,13 +34,13 @@ class MetaTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_meta_with_wrong_attributes()
+    public function cannot_validate_meta_with_invalid_attributes()
     {
-        $this->template->get('columns')->first()->set('meta', new Obj(['wrong_attribute']));
+        $this->template->get('columns')->first()->set('meta', new Obj(['invalid_attribute']));
 
         $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(Exception::unknownAttributes('wrong_attribute')->getMessage());
+        $this->expectExceptionMessage(Exception::unknownAttributes('invalid_attribute')->getMessage());
 
         $this->validate();
     }
@@ -52,7 +52,7 @@ class MetaTest extends TestCase
             'label' => 'child',
             'name' => 'parent.child',
             'data' => 'parent.child',
-            'meta' => ['sortable']
+            'meta' => ['sortable'],
         ]));
 
         $this->expectException(Exception::class);

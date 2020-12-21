@@ -9,7 +9,7 @@ use LaravelEnso\Tables\Attributes\Column as Attributes;
 
 class Columns
 {
-    private const FromColumn = ['enum', 'money', 'resource'];
+    private const FromColumn = ['enum', 'money', 'number', 'resource'];
     private const FromMeta = ['filterable', 'searchable', 'date', 'datetime', 'translatable', 'cents'];
 
     private Obj $template;
@@ -38,6 +38,7 @@ class Columns
     {
         $this->meta($column)
             ->enum($column)
+            ->number($column)
             ->sort($column)
             ->total($column)
             ->visibility($column)
@@ -68,6 +69,18 @@ class Columns
             $enum = App::make($column->get('enum'));
             $enum::localisation(false);
             $column->set('enum', $enum::all());
+        }
+
+        return $this;
+    }
+
+    private function number($column): self
+    {
+        if ($column->has('number')) {
+            $number = $column->get('number');
+            $number->set('symbol', $number->get('symbol', ''));
+            $number->set('precision', $number->get('precision', 0));
+            $number->set('template', $number->get('template', '%s%v'));
         }
 
         return $this;
@@ -107,7 +120,10 @@ class Columns
     {
         $meta = $column->get('meta');
 
-        if ($meta->get('total') || $meta->get('rawTotal') || $meta->get('customTotal') || $meta->get('average')) {
+        $hasTotal = $meta->get('total') || $meta->get('rawTotal')
+            || $meta->get('customTotal') || $meta->get('average');
+
+        if ($hasTotal) {
             $this->meta->set('total', true);
         }
 

@@ -24,11 +24,11 @@ class Filters
 
     private function format(): self
     {
-        $formattedWrong = $this->filters
+        $invalid = $this->filters
             ->filter(fn ($filter) => ! is_string($filter) && ! $filter instanceof Obj);
 
-        if ($formattedWrong->isNotEmpty()) {
-            throw Exception::wrongFormat();
+        if ($invalid->isNotEmpty()) {
+            throw Exception::invalidFormat();
         }
 
         return $this;

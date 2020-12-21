@@ -5,11 +5,17 @@ namespace LaravelEnso\Tables\Services\Template\Validators\Columns;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Column as Attributes;
+use LaravelEnso\Tables\Attributes\Number;
 use LaravelEnso\Tables\Attributes\Style;
 use LaravelEnso\Tables\Exceptions\Column as Exception;
 
 class Column
 {
+    private const Validations = [
+        'mandatory', 'optional', 'align', 'class', 'enum',
+        'meta', 'money', 'number', 'resource', 'tooltip',
+    ];
+
     private Obj $column;
 
     public function __construct(Obj $column)
@@ -19,32 +25,23 @@ class Column
 
     public function validate(): void
     {
-        $this->mandatoryAttributes()
-            ->optionalAttributes()
-            ->meta()
-            ->enum()
-            ->tooltip()
-            ->money()
-            ->resource()
-            ->class()
-            ->align();
+        Collection::wrap(self::Validations)
+            ->each(fn ($validation) => $this->{$validation}());
     }
 
-    private function mandatoryAttributes()
+    private function mandatory(): void
     {
-        $diff = (new Collection(Attributes::Mandatory))
+        $diff = Collection::wrap(Attributes::Mandatory)
             ->diff($this->column->keys());
 
         if ($diff->isNotEmpty()) {
             throw Exception::missingAttributes($diff->implode('", "'));
         }
-
-        return $this;
     }
 
-    private function optionalAttributes()
+    private function optional(): void
     {
-        $attributes = (new Collection(Attributes::Mandatory))
+        $attributes = Collection::wrap(Attributes::Mandatory)
             ->merge(Attributes::Optional);
 
         $diff = $this->column->keys()->diff($attributes);
@@ -52,76 +49,96 @@ class Column
         if ($diff->isNotEmpty()) {
             throw Exception::unknownAttributes($diff->implode('", "'));
         }
-
-        return $this;
     }
 
-    private function meta()
+    private function align(): void
+    {
+        if ($this->invalidAttribute('align', Style::Align)) {
+            throw Exception::invalidAlign($this->column->get('name'));
+        }
+    }
+
+    private function class(): void
+    {
+        if ($this->invalidString('class')) {
+            throw Exception::invalidClass($this->column->get('name'));
+        }
+    }
+
+    private function enum(): void
+    {
+        if ($this->missingClass('enum')) {
+            throw Exception::enumNotFound($this->column->get('enum'));
+        }
+    }
+
+    private function meta(): void
     {
         if ($this->column->has('meta')) {
             Meta::validate($this->column);
         }
-
-        return $this;
     }
 
-    private function enum()
+    private function money(): void
     {
-        if ($this->column->has('enum')
-            && ! class_exists($this->column->get('enum'))) {
-            throw Exception::enumNotFound($this->column->get('enum'));
-        }
-
-        return $this;
-    }
-
-    private function tooltip()
-    {
-        if (property_exists($this->column, 'tooltip')
-            && ! is_string($this->column->tooltip)) {
-            throw Exception::invalidTooltip($this->column->get('name'));
-        }
-
-        return $this;
-    }
-
-    private function money()
-    {
-        if (property_exists($this->column, 'money')
-            && ! is_object($this->column->money)) {
+        if ($this->invalidObject('money')) {
             throw Exception::invalidMoney($this->column->get('name'));
         }
-
-        return $this;
     }
 
-    private function resource()
+    private function number(): void
     {
-        if ($this->column->has('resource')
-            && ! class_exists($this->column->get('resource'))) {
+        if ($this->invalidObject('number')) {
+            throw Exception::invalidNumber($this->column->get('name'));
+        }
+
+        if ($this->invalidAttributes('number', Number::Optional)) {
+            throw Exception::invalidNumberAttributes($this->column->get('name'));
+        }
+    }
+
+    private function resource(): void
+    {
+        if ($this->missingClass('resource')) {
             throw Exception::resourceNotFound($this->column->get('resource'));
         }
-
-        return $this;
     }
 
-    private function class()
+    private function tooltip(): void
     {
-        if (property_exists($this->column, 'class')
-            && ! is_string($this->column->class)) {
-            throw Exception::invalidClass($this->column->get('name'));
+        if ($this->invalidString('tooltip')) {
+            throw Exception::invalidTooltip($this->column->get('name'));
         }
-
-        return $this;
     }
 
-    private function align()
+    private function missingClass(string $attribute): bool
     {
-        if (property_exists($this->column, 'align')
-            && ! (new Collection(Style::Align))->contains($this->column->align)) {
-            throw Exception::invalidAlign($this->column->get('name'));
-        }
+        return $this->column->has($attribute)
+            && ! class_exists($this->column->get($attribute));
+    }
 
-        return $this;
+    private function invalidString(string $attribute): bool
+    {
+        return $this->column->has($attribute)
+            && ! is_string($this->column->get($attribute));
+    }
+
+    private function invalidObject(string $attribute): bool //TODO can be aggregated with invalidAttributes
+    {
+        return $this->column->has($attribute)
+            && ! is_object($this->column->get($attribute));
+    }
+
+    private function invalidAttribute(string $attribute, array $allowed): bool
+    {
+        return $this->column->has($attribute)
+            && ! in_array($this->column->get($attribute), $allowed);
+    }
+
+    private function invalidAttributes(string $attribute, array $allowed): bool
+    {
+        return $this->column->has($attribute)
+            && Collection::wrap($this->column->get($attribute))
+            ->keys()->diff($allowed)->isNotEmpty();
     }
 }

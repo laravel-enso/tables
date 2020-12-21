@@ -43,9 +43,9 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_attribute()
+    public function cannot_validate_with_invalid_attribute()
     {
-        $this->template->get('buttons')->first()->set('wrong_attribute', 'wrong');
+        $this->template->get('buttons')->first()->set('invalid_attribute', 'invalid');
 
         $this->expectException(Exception::class);
 
@@ -55,7 +55,7 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_action()
+    public function cannot_validate_with_invalid_action()
     {
         $this->template->get('buttons')->first()->set('action', true);
 
@@ -82,13 +82,13 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_route()
+    public function cannot_validate_with_invalid_route()
     {
         $button = $this->template->get('buttons')->first();
 
         $button->set('action', 'ajax');
         $button->set('fullRoute', '/');
-        $button->set('method', 'post');
+        $button->set('method', 'GET');
 
         $this->expectException(Exception::class);
 
@@ -98,17 +98,17 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_method()
+    public function cannot_validate_with_invalid_method()
     {
         $button = $this->template->get('buttons')->first();
 
         $button->set('action', 'ajax');
         $button->set('fullRoute', $this->createRoute());
-        $button->set('method', 'WRONG_METHOD');
+        $button->set('method', 'invalid_method');
 
         $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(Exception::invalidMethod('WRONG_METHOD')->getMessage());
+        $this->expectExceptionMessage(Exception::invalidMethod('invalid_method')->getMessage());
 
         $this->validate();
     }
@@ -125,7 +125,7 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_button_type()
+    public function cannot_validate_with_invalid_button_type()
     {
         $this->template->set('buttons', new Obj(['UNKNOWN_TYPE']));
 

@@ -12,6 +12,7 @@ use LaravelEnso\Tables\Contracts\CustomCount;
 use LaravelEnso\Tables\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Cache as Exception;
+use LaravelEnso\Tables\Services\Data\Computors\Number;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Filters;
 use ReflectionClass;
@@ -26,6 +27,7 @@ class Meta
     private int $filtered;
     private array $total;
     private bool $fullRecordInfo;
+    private array $pagionation;
 
     public function __construct(Table $table, Config $config)
     {
@@ -53,10 +55,13 @@ class Meta
 
         return [
             'count' => $this->count,
+            'formattedCount' => Number::format($this->count),
             'filtered' => $this->filtered,
+            'formattedFiltered' => Number::format($this->filtered),
             'total' => $this->total,
             'fullRecordInfo' => $this->fullRecordInfo,
             'filters' => $this->filters,
+            'pagination' => $this->pagination()->toArray(),
         ];
     }
 
@@ -108,14 +113,20 @@ class Meta
     private function total(): self
     {
         if ($this->fullRecordInfo && $this->config->meta()->get('total')) {
-            $this->total = (new Total(
-                $this->table,
-                $this->config,
-                $this->query
-            ))->handle();
+            $this->total = (new Total($this->table, $this->config, $this->query))
+                ->handle();
         }
 
         return $this;
+    }
+
+    private function pagination(): Pagination
+    {
+        return new Pagination(
+            $this->config->meta(),
+            $this->filtered,
+            $this->fullRecordInfo
+        );
     }
 
     private function cachedCount(): int

@@ -8,6 +8,7 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\RawTotal;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Meta as Exception;
+use LaravelEnso\Tables\Services\Data\Computors\Number;
 use LaravelEnso\Tables\Services\Data\Config;
 
 class Total
@@ -49,6 +50,13 @@ class Total
         if ($column->get('meta')->get('cents')) {
             $this->total[$column->get('name')] /= 100;
         }
+
+        if ($column->has('number')) {
+            $this->total[$column->get('name')] = Number::format(
+                $this->total[$column->get('name')],
+                $column->get('number')->get('precision')
+            );
+        }
     }
 
     private function rawTotal($column): float
@@ -57,11 +65,11 @@ class Total
             throw Exception::missingInterface();
         }
 
-        return optional(
-            $this->query->getQuery()->cloneWithoutBindings(['select'])
-                ->select(
-                    DB::raw("{$this->table->rawTotal($column)} as {$column->get('name')}")
-                )->first()
-        )->{$column->get('name')} ?? 0;
+        $raw = DB::raw("{$this->table->rawTotal($column)} as {$column->get('name')}");
+
+        $result = $this->query->getQuery()->cloneWithoutBindings(['select'])
+            ->select($raw)->first();
+
+        return optional($result)->{$column->get('name')} ?? 0;
     }
 }

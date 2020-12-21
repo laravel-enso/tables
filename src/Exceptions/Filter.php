@@ -15,7 +15,7 @@ class Filter extends EnsoException
         ));
     }
 
-    public static function wrongFormat()
+    public static function invalidFormat()
     {
         return new static(__('The filters array may contain only objects'));
     }

@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\Services\Template\Validators\Buttons;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\Table;
@@ -9,6 +10,8 @@ use LaravelEnso\Tables\Exceptions\Button as Exception;
 
 class Buttons
 {
+    private const Validations = ['format', 'defaults', 'structure'];
+
     private Obj $buttons;
     private string $routePrefix;
     private Obj $defaults;
@@ -24,24 +27,21 @@ class Buttons
 
     public function validate(): void
     {
-        $this->format()
-            ->defaults()
-            ->structure();
+        Collection::wrap(self::Validations)
+            ->each(fn ($validation) => $this->{$validation}());
     }
 
-    private function format(): self
+    private function format(): void
     {
-        $formattedWrong = $this->buttons
+        $invalid = $this->buttons
             ->filter(fn ($button) => ! is_string($button) && ! $button instanceof Obj);
 
-        if ($formattedWrong->isNotEmpty()) {
-            throw Exception::wrongFormat();
+        if ($invalid->isNotEmpty()) {
+            throw Exception::invalidFormat();
         }
-
-        return $this;
     }
 
-    private function defaults(): self
+    private function defaults(): void
     {
         $diff = $this->buttons->filter(fn ($button) => is_string($button))
             ->diff($this->defaults->keys());
@@ -49,16 +49,13 @@ class Buttons
         if ($diff->isNotEmpty()) {
             throw Exception::undefined($diff->implode('", "'));
         }
-
-        return $this;
     }
 
-    private function structure(): self
+    private function structure(): void
     {
         $this->buttons->map(fn ($button) => $this->map($button))
-            ->each(fn ($button) => (new Button($button, $this->table, $this->routePrefix))->validate());
-
-        return $this;
+            ->each(fn ($button) => (new Button($button, $this->table, $this->routePrefix))
+                ->validate());
     }
 
     private function map($button)

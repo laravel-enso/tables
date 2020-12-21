@@ -10,15 +10,17 @@ use LaravelEnso\Helpers\Services\Obj;
 class Structure
 {
     private const DefaultFromConfig = [
-        'dtRowId', 'lengthMenu', 'debounce', 'method', 'labels',
-        'comparisonOperator', 'responsive', 'searchModes', 'dateFormat',
+        'comparisonOperator', 'dateFormat', 'debounce', 'dtRowId',
+        'labels', 'lengthMenu', 'method', 'responsive', 'searchModes',
     ];
 
-    private const FalseIfMissing = ['selectable', 'preview'];
+    private const FalseIfMissing = [
+        'selectable', 'preview',
+    ];
 
     private const DefaultFalse = [
-        'loading', 'forceInfo', 'filterable', 'searchable', 'sort', 'total', 'date',
-        'datetime', 'translatable', 'enum', 'cents', 'money', 'resource',
+        'cents', 'date', 'datetime', 'enum', 'filterable', 'forceInfo', 'loading',
+        'money', 'number', 'resource', 'searchable', 'sort', 'total', 'translatable',
     ];
 
     private const TemplateOrConfigToMeta = ['searchMode', 'fullInfoRecordLimit'];

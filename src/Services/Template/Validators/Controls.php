@@ -27,14 +27,14 @@ class Controls
 
     private function format()
     {
-        if ($this->wrongFormat()) {
+        if ($this->invalidFormat()) {
             throw Exception::invalidFormat();
         }
 
         return $this;
     }
 
-    private function wrongFormat()
+    private function invalidFormat()
     {
         return ! $this->controls instanceof Obj || $this->controls
             ->filter(fn ($control) => ! is_string($control))

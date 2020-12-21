@@ -12,86 +12,84 @@ use LaravelEnso\Tables\Exceptions\Button as Exception;
 
 class Button
 {
+    private const Validations = [
+        'mandatory', 'optional', 'complementary',
+        'actions', 'method', 'name', 'route',
+    ];
+
     private Obj $button;
-    private ?string $routePrefix;
     private Table $table;
+    private ?string $routePrefix;
 
     public function __construct(Obj $button, Table $table, ?string $routePrefix)
     {
         $this->button = $button;
-        $this->routePrefix = $routePrefix;
         $this->table = $table;
+        $this->routePrefix = $routePrefix;
     }
 
     public function validate(): void
     {
-        $this->mandatoryAttributes()
-            ->optionalAttributes()
-            ->complementaryAttributes()
-            ->actions()
-            ->route()
-            ->method()
-            ->name();
+        Collection::wrap(self::Validations)
+            ->each(fn ($validation) => $this->{$validation}());
     }
 
-    private function mandatoryAttributes(): self
+    private function mandatory(): void
     {
-        $formattedWrong = (new Collection(Attributes::Mandatory))
+        $missing = (new Collection(Attributes::Mandatory))
             ->diff($this->button->keys())
             ->isNotEmpty();
 
-        if ($formattedWrong) {
+        if ($missing) {
             throw Exception::missingAttributes();
         }
-
-        return $this;
     }
 
-    private function optionalAttributes(): self
+    private function optional(): void
     {
-        $formattedWrong = $this->button->keys()
+        $unknown = $this->button->keys()
             ->diff(Attributes::Mandatory)
             ->diff(Attributes::Optional)
             ->isNotEmpty();
 
-        if ($formattedWrong) {
+        if ($unknown) {
             throw Exception::unknownAttributes();
         }
-
-        return $this;
     }
 
-    private function complementaryAttributes(): self
+    private function complementary(): void
     {
         if (! $this->button->has('action')) {
-            return $this;
+            return;
         }
 
-        if (! $this->button->has('fullRoute') && ! $this->button->has('routeSuffix')) {
+        $missingRoute = ! $this->button->has('fullRoute')
+            && ! $this->button->has('routeSuffix');
+
+        if ($missingRoute) {
             throw Exception::missingRoute();
         }
 
-        if ($this->button->get('action') === 'ajax' && ! $this->button->has('method')) {
+        $missingMethod = $this->button->get('action') === 'ajax'
+            && ! $this->button->has('method');
+
+        if ($missingMethod) {
             throw Exception::missingMethod();
         }
-
-        return $this;
     }
 
-    private function actions(): self
+    private function actions(): void
     {
-        $formattedWrong = $this->button->has('action')
+        $invalid = $this->button->has('action')
             && ! (new Collection(Attributes::Actions))
                 ->contains($this->button->get('action'));
 
-        if ($formattedWrong) {
-            throw Exception::wrongAction();
+        if ($invalid) {
+            throw Exception::invalidAction();
         }
-
-        return $this;
     }
 
-    private function route(): self
+    private function route(): void
     {
         $route = $this->button->get('fullRoute');
 
@@ -102,25 +100,24 @@ class Button
         if ($route !== null && ! Route::has($route)) {
             throw Exception::routeNotFound($route);
         }
-
-        return $this;
     }
 
-    private function method(): self
+    private function method(): void
     {
-        if ($this->button->has('method')
-            && ! (new Collection(Attributes::Methods))
-                ->contains($this->button->get('method'))) {
+        $invalid = $this->button->has('method')
+            && ! in_array($this->button->get('method'), Attributes::Methods);
+
+        if ($invalid) {
             throw Exception::invalidMethod($this->button->get('method'));
         }
-
-        return $this;
     }
 
     private function name(): void
     {
-        if ($this->table instanceof ConditionalActions
-            && ! $this->button->has('name')) {
+        $missing = $this->table instanceof ConditionalActions
+            && ! $this->button->has('name');
+
+        if ($missing) {
             throw Exception::missingName();
         }
     }

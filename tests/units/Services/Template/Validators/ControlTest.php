@@ -13,7 +13,7 @@ class ControlTest extends TestCase
     private $validator;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -23,13 +23,13 @@ class ControlTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_button_type()
+    public function cannot_validate_with_invalid_button_type()
     {
-        $this->template->get('controls')->push('WRONG_CONTROL');
+        $this->template->get('controls')->push('invalid_action');
 
         $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(Exception::undefined('WRONG_CONTROL')->getMessage());
+        $this->expectExceptionMessage(Exception::undefined('invalid_action')->getMessage());
 
         $this->validate();
     }

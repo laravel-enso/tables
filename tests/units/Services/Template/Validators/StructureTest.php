@@ -12,7 +12,7 @@ class StructureTest extends TestCase
     private $validator;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -34,13 +34,13 @@ class StructureTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_attribute()
+    public function cannot_validate_with_invalid_attribute()
     {
-        $this->template->set('wrong_attributes', 'wrong');
+        $this->template->set('invalid_attributes', 'invalid');
 
         $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(Exception::unknownAttributes('wrong_attributes')->getMessage());
+        $this->expectExceptionMessage(Exception::unknownAttributes('invalid_attributes')->getMessage());
 
         $this->validate();
     }

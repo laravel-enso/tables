@@ -45,19 +45,19 @@ class ColumnTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_attribute()
+    public function cannot_validate_with_invalid_attribute()
     {
-        $this->template->get('columns')->first()->set('wrong_attribute', 'wrong');
+        $this->template->get('columns')->first()->set('invalid_attribute', 'invalid');
 
         $this->expectException(ColumnException::class);
 
-        $this->expectExceptionMessage(ColumnException::unknownAttributes('wrong_attribute')->getMessage());
+        $this->expectExceptionMessage(ColumnException::unknownAttributes('invalid_attribute')->getMessage());
 
         $this->validate();
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_enum()
+    public function cannot_validate_with_invalid_enum()
     {
         $this->template->get('columns')->first()->set('enum', 'MissingEnum');
 
@@ -69,7 +69,7 @@ class ColumnTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_resource()
+    public function cannot_validate_with_invalid_resource()
     {
         $this->template->get('columns')->first()->set('resource', 'MissingResource');
 
@@ -91,13 +91,13 @@ class ColumnTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_meta_with_wrong_attributes()
+    public function cannot_validate_meta_with_invalid_attributes()
     {
-        $this->template->get('columns')->first()->set('meta', new Obj(['wrong_attribute']));
+        $this->template->get('columns')->first()->set('meta', new Obj(['invalid_attribute']));
 
         $this->expectException(MetaException::class);
 
-        $this->expectExceptionMessage(MetaException::unknownAttributes('wrong_attribute')->getMessage());
+        $this->expectExceptionMessage(MetaException::unknownAttributes('invalid_attribute')->getMessage());
 
         $this->validate();
     }

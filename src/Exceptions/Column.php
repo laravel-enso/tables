@@ -3,10 +3,11 @@
 namespace LaravelEnso\Tables\Exceptions;
 
 use LaravelEnso\Helpers\Exceptions\EnsoException;
+use LaravelEnso\Tables\Attributes\Number;
 
 class Column extends EnsoException
 {
-    public static function wrongFormat()
+    public static function invalidFormat()
     {
         return new static(__(
             'The columns attribute must be an array of objects with at least one element'
@@ -56,7 +57,15 @@ class Column extends EnsoException
     public static function invalidMoney(string $column)
     {
         return new static(__(
-            'Provided money attribute for ":column" must be a non empty object',
+            'Provided money attribute for ":column" must be an object',
+            ['column' => $column]
+        ));
+    }
+
+    public static function invalidNumber(string $column)
+    {
+        return new static(__(
+            'Provided number attribute for ":column" must be an object',
             ['column' => $column]
         ));
     }
@@ -74,6 +83,14 @@ class Column extends EnsoException
         return new static(__(
             'The align attribute provided for ":column" is incorrect',
             ['column' => $column]
+        ));
+    }
+
+    public static function invalidNumberAttributes(string $column)
+    {
+        return new static(__(
+            'The number configuration provided for ":column" is invalid. Supported :attributes',
+            ['column' => $column, 'attributes' => implode(', ', Number::Optional)]
         ));
     }
 }

@@ -12,7 +12,7 @@ class AttributesTest extends TestCase
     private $validator;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -22,7 +22,7 @@ class AttributesTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_length_menu_format()
+    public function cannot_validate_with_invalid_length_menu_format()
     {
         $this->template->set('lengthMenu', 'string');
 
@@ -46,7 +46,7 @@ class AttributesTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_method()
+    public function cannot_validate_with_invalid_method()
     {
         $this->template->set('method', 'patch');
 
@@ -70,7 +70,7 @@ class AttributesTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_wrong_comparison_operator()
+    public function cannot_validate_with_invalid_comparison_operator()
     {
         $this->template->set('comparisonOperator', 'I_DONT_LIKE');
 

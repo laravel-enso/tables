@@ -10,6 +10,7 @@ use LaravelEnso\Tables\Exceptions\Filter as Exception;
 
 class Filter
 {
+    private const Validations = ['mandatory', 'optional', 'complementary', 'route'];
     private Obj $filter;
 
     public function __construct(Obj $filter)
@@ -19,46 +20,38 @@ class Filter
 
     public function validate(): void
     {
-        $this->mandatoryAttributes()
-            ->optionalAttributes()
-            ->complementaryAttributes()
-            ->route();
+        Collection::wrap(self::Validations)
+            ->each(fn ($validation) => $this->{$validation}());
     }
 
-    private function mandatoryAttributes(): self
+    private function mandatory(): void
     {
-        $formattedWrong = (new Collection(Attributes::Mandatory))
+        $missing = (new Collection(Attributes::Mandatory))
             ->diff($this->filter->keys())
             ->isNotEmpty();
 
-        if ($formattedWrong) {
+        if ($missing) {
             throw Exception::missingAttributes();
         }
-
-        return $this;
     }
 
-    private function optionalAttributes(): self
+    private function optional(): void
     {
-        $formattedWrong = $this->filter->keys()
+        $unknown = $this->filter->keys()
             ->diff(Attributes::Mandatory)
             ->diff(Attributes::Optional)
             ->isNotEmpty();
 
-        if ($formattedWrong) {
+        if ($unknown) {
             throw Exception::unknownAttributes();
         }
-
-        return $this;
     }
 
-    private function complementaryAttributes(): self
+    private function complementary(): void
     {
         if ($this->filter->get('type') === 'select' && ! $this->filter->has('route')) {
             throw Exception::missingRoute();
         }
-
-        return $this;
     }
 
     private function route(): void

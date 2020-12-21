@@ -74,7 +74,7 @@ class IntervalTest extends TestCase
             'id' => [
                 'min' => $this->testModel->id - 1,
                 'max' => null,
-            ]
+            ],
         ]);
 
         $this->config->intervals()->set('test_models', $intervals);
@@ -90,13 +90,13 @@ class IntervalTest extends TestCase
     }
 
     /** @test */
-    public function cannot_use_wrong_intervals()
+    public function cannot_use_invalid_intervals()
     {
         $intervals = new Obj([
             'id' => [
                 'min' => null,
                 'max' => null,
-            ]
+            ],
         ]);
 
         $this->config->intervals()->set('test_models', $intervals);
@@ -113,6 +113,6 @@ class IntervalTest extends TestCase
 
     private function interval()
     {
-        return (new Interval($this->table, $this->config, $this->query));
+        return new Interval($this->table, $this->config, $this->query);
     }
 }

@@ -7,7 +7,7 @@ use LaravelEnso\Tables\Attributes\Button as Attributes;
 
 class Button extends EnsoException
 {
-    public static function wrongFormat()
+    public static function invalidFormat()
     {
         return new static(__('The buttons array may contain only strings and objects'));
     }
@@ -57,7 +57,7 @@ class Button extends EnsoException
         ));
     }
 
-    public static function wrongAction()
+    public static function invalidAction()
     {
         return new static(__(
             'The following actions are allowed for buttons: ":actions"',
