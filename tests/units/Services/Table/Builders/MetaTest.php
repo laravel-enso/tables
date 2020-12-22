@@ -48,7 +48,7 @@ class MetaTest extends TestCase
     /** @test */
     public function can_get_data_with_limit()
     {
-        $this->config->meta()->put('length', 0);
+        $this->config->meta()->put('length', 10);
 
         $response = $this->requestResponse();
 
@@ -89,7 +89,7 @@ class MetaTest extends TestCase
         $this->config->columns()->push(new Obj([
             'name' => 'name',
             'data' => 'name',
-            'meta' => ['searchable' => true]
+            'meta' => ['searchable' => true],
         ]));
 
         $this->config->set('comparisonOperator', 'LIKE');
