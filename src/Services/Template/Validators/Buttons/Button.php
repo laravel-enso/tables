@@ -14,18 +14,19 @@ class Button
 {
     private const Validations = [
         'mandatory', 'optional', 'complementary',
-        'actions', 'method', 'name', 'route',
+        'actions', 'method', 'name', 'route', 'selection',
     ];
 
     private Obj $button;
+    private Obj $template;
     private Table $table;
     private ?string $routePrefix;
 
-    public function __construct(Obj $button, Table $table, ?string $routePrefix)
+    public function __construct(Obj $button, Table $table, Obj $template)
     {
         $this->button = $button;
         $this->table = $table;
-        $this->routePrefix = $routePrefix;
+        $this->template = $template;
     }
 
     public function validate(): void
@@ -94,7 +95,7 @@ class Button
         $route = $this->button->get('fullRoute');
 
         $route ??= $this->button->has('routeSuffix')
-            ? "{$this->routePrefix}.{$this->button->get('routeSuffix')}"
+            ? "{$this->template->get('routePrefix')}.{$this->button->get('routeSuffix')}"
             : null;
 
         if ($route !== null && ! Route::has($route)) {
@@ -119,6 +120,21 @@ class Button
 
         if ($missing) {
             throw Exception::missingName();
+        }
+    }
+
+    private function selection(): void
+    {
+        if (! $this->button->get('selection')) {
+            return;
+        }
+
+        if ($this->button->get('type') === 'row') {
+            throw Exception::rowSelection();
+        }
+
+        if (! $this->template->get('selectable')) {
+            throw Exception::noSelectable();
         }
     }
 }

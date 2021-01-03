@@ -80,4 +80,18 @@ class Button extends EnsoException
             ['method' => $method]
         ));
     }
+
+    public static function noSelectable()
+    {
+        return new static(__(
+            "You can't have an action with selection when the table is not selectable",
+        ));
+    }
+
+    public static function rowSelection()
+    {
+        return new static(__(
+            'Selection works only on global buttons',
+        ));
+    }
 }

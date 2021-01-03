@@ -13,14 +13,12 @@ class Buttons
     private const Validations = ['format', 'defaults', 'structure'];
 
     private Obj $buttons;
-    private string $routePrefix;
     private Obj $defaults;
     private Table $table;
 
     public function __construct(Obj $template, Table $table)
     {
-        $this->buttons = $template->get('buttons');
-        $this->routePrefix = $template->get('routePrefix');
+        $this->template = $template;
         $this->table = $table;
         $this->defaults = $this->configButtons();
     }
@@ -33,7 +31,7 @@ class Buttons
 
     private function format(): void
     {
-        $invalid = $this->buttons
+        $invalid = $this->template->get('buttons')
             ->filter(fn ($button) => ! is_string($button) && ! $button instanceof Obj);
 
         if ($invalid->isNotEmpty()) {
@@ -43,7 +41,8 @@ class Buttons
 
     private function defaults(): void
     {
-        $diff = $this->buttons->filter(fn ($button) => is_string($button))
+        $diff = $this->template->get('buttons')
+            ->filter(fn ($button) => is_string($button))
             ->diff($this->defaults->keys());
 
         if ($diff->isNotEmpty()) {
@@ -53,8 +52,9 @@ class Buttons
 
     private function structure(): void
     {
-        $this->buttons->map(fn ($button) => $this->map($button))
-            ->each(fn ($button) => (new Button($button, $this->table, $this->routePrefix))
+        $this->template->get('buttons')
+            ->map(fn ($button) => $this->map($button))
+            ->each(fn ($button) => (new Button($button, $this->table, $this->template))
                 ->validate());
     }
 
