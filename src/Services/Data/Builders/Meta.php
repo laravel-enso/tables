@@ -67,9 +67,14 @@ class Meta
 
     public function count($filtered = false): int
     {
-        return $filtered || ! $this->table instanceof CustomCount
-            ? $this->query->getQuery()->getCountForPagination()
-            : $this->table->count();
+        if ($this->table instanceof CustomCount && ! $filtered) {
+            return $this->table->count();
+        }
+
+        return $this->query
+            ->applyScopes()
+            ->getQuery()
+            ->getCountForPagination();
     }
 
     public function filter(): self
@@ -156,11 +161,11 @@ class Meta
 
     private function cacheKey(?string $suffix = null): string
     {
-        return (new Collection([
-            ConfigFacade::get('enso.tables.cache.prefix'),
-            $this->query->getModel()->getTable(),
-            $suffix,
-        ]))->filter()->implode(':');
+        $prefix = ConfigFacade::get('enso.tables.cache.prefix');
+
+        return Collection::wrap([
+            $prefix, $this->config->get('table'), $suffix,
+        ])->filter()->implode(':');
     }
 
     private function shouldCache(): bool
@@ -175,15 +180,10 @@ class Meta
             if (! (new ReflectionClass($model))->hasMethod('resetTableCache')) {
                 throw Exception::missingTrait(get_class($model));
             }
-
-            if (
-                $this->table instanceof CustomCountCacheKey
-                && ! Cache::getStore() instanceof TaggableStore
-            ) {
-                $shouldCache = false;
-            }
         }
 
-        return $shouldCache;
+        return $shouldCache
+            && (Cache::getStore() instanceof TaggableStore
+                || ! $this->table instanceof CustomCountCacheKey);
     }
 }
