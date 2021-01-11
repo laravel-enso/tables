@@ -28,9 +28,7 @@ class Prepare
 
     private function notifyStart(): self
     {
-        $this->user->notifyNow(
-            (new ExportStarted($this->config->label()))
-        );
+        $this->user->notifyNow(new ExportStarted($this->config->label()));
 
         return $this;
     }
