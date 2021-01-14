@@ -61,7 +61,7 @@ class Pagination
     {
         if ($this->fullInfo) {
             $div = Decimals::div($this->filtered, $this->meta->get('length'));
-            $this->pages = Decimals::ceil($div);
+            $this->pages = Decimals::ceil($div, 0);
         }
     }
 
@@ -121,6 +121,6 @@ class Pagination
 
     private function addMiddlePages(): void
     {
-        $this->middlePages->push($this->pages - 1, $this->page, $this->pages + 1);
+        $this->middlePages->push($this->page - 1, $this->page, $this->page + 1);
     }
 }
