@@ -22,7 +22,7 @@ class Sort
 
         if ($sort->applies()) {
             $sort->handle();
-        } else {
+        } elseif (! $this->query->getQuery()->orders) {
             $this->query->orderBy($this->config->template()->get('defaultSort'));
         }
     }
