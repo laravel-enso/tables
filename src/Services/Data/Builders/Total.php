@@ -59,15 +59,21 @@ class Total
         }
     }
 
-    private function rawTotal($column): float
+    private function rawTotal($column): string
     {
         if (! $this->table instanceof RawTotal) {
             throw Exception::missingInterface();
         }
 
-        $raw = DB::raw("{$this->table->rawTotal($column)} as {$column->get('name')}");
+        $rawTotal = $this->table->rawTotal($column);
 
-        $result = $this->query->getQuery()->cloneWithoutBindings(['select'])
+        if (is_numeric($rawTotal)) {
+            return $rawTotal;
+        }
+
+        $raw = DB::raw("{$rawTotal} as {$column->get('name')}");
+
+        $result = $this->query->getQuery()->cloneWitthoutBindings(['select'])
             ->select($raw)->first();
 
         return optional($result)->{$column->get('name')} ?? 0;
