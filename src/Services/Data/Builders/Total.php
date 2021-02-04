@@ -73,7 +73,7 @@ class Total
 
         $raw = DB::raw("{$rawTotal} as {$column->get('name')}");
 
-        $result = $this->query->getQuery()->cloneWitthoutBindings(['select'])
+        $result = $this->query->getQuery()->cloneWithoutBindings(['select'])
             ->select($raw)->first();
 
         return optional($result)->{$column->get('name')} ?? 0;
