@@ -55,9 +55,9 @@ class Meta
 
         return [
             'count' => $this->count,
-            'formattedCount' => Number::format($this->count),
+            'formattedCount' => number_format($this->count),
             'filtered' => $this->filtered,
-            'formattedFiltered' => Number::format($this->filtered),
+            'formattedFiltered' => number_format($this->filtered),
             'total' => $this->total,
             'fullRecordInfo' => $this->fullRecordInfo,
             'filters' => $this->filters,
