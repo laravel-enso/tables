@@ -12,7 +12,6 @@ use LaravelEnso\Tables\Contracts\CustomCount;
 use LaravelEnso\Tables\Contracts\CustomCountCacheKey;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Cache as Exception;
-use LaravelEnso\Tables\Services\Data\Computors\Number;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Filters;
 use ReflectionClass;
