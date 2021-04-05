@@ -51,10 +51,8 @@ class EnsoExcel extends Excel
 
         $this->export->update(['status' => Statuses::Finalized]);
 
-        $this->user->notify(
-            (new ExportDone($this->export, $this->emailSubject()))
-                ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
-        );
+        $this->user->notify((new ExportDone($this->export, $this->emailSubject()))
+            ->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));
     }
 
     private function emailSubject(): string

@@ -76,10 +76,8 @@ class Excel
     {
         $this->cancelled = true;
 
-        $this->user->notify(
-            (new ExportError($this->config->name()))
-                ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
-        );
+        $this->user->notify((new ExportError($this->config->name()))
+            ->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));
     }
 
     protected function process(): void
