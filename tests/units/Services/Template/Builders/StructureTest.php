@@ -23,7 +23,7 @@ class StructureTest extends TestCase
         $this->template = new Obj([
             'routePrefix' => 'prefix',
             'dataRouteSuffix' => 'suffix',
-            'model' => 'test'
+            'model' => 'test',
         ]);
 
         $this->meta = new Obj([]);

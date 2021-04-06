@@ -36,7 +36,7 @@ class ColumnTest extends TestCase
     public function can_build_with_meta_attributes()
     {
         (new Collection(Column::Meta))
-            ->each(fn($attribute) => $this->assertPresent($attribute, $this->metaValue($attribute)));
+            ->each(fn ($attribute) => $this->assertPresent($attribute, $this->metaValue($attribute)));
     }
 
     private function assertPresent(string $attribute, $expected)
