@@ -69,6 +69,7 @@ class Columns
             $enum = App::make($column->get('enum'));
             $enum::localisation(false);
             $column->set('enum', $enum::all());
+            $enum::localisation(true);
         }
 
         return $this;
