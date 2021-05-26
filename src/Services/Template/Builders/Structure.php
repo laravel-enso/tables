@@ -12,6 +12,7 @@ class Structure
     private const DefaultFromConfig = [
         'comparisonOperator', 'dateFormat', 'debounce', 'dtRowId',
         'labels', 'lengthMenu', 'method', 'responsive', 'searchModes',
+        'totalLabel',
     ];
 
     private const FalseIfMissing = [
