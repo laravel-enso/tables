@@ -18,17 +18,11 @@ class TemplateCacheClear extends Command
         if (Cache::getStore() instanceof TaggableStore) {
             Cache::tags(Config::get('enso.tables.cache.tag'))->flush();
             $this->info('Enso table cached templates cleared');
-
-            return;
-        }
-
-        if ($this->confirm("Your cache driver doesn't support tags, therefore we should flush the whole cache")) {
+        } elseif ($this->confirm("Your cache driver doesn't support tags, therefore we should flush the whole cache")) {
             Cache::flush();
             $this->info('Application cache cleared');
-
-            return;
+        } else {
+            $this->warn('Enso Table cached templates were not cleared');
         }
-
-        $this->warn('Enso Table cached templates were not cleared');
     }
 }

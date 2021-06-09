@@ -8,19 +8,21 @@ class Interval extends BaseFilter
 {
     public function applies(): bool
     {
-        return $this->config->intervals()->first(fn ($interval) => $interval
-            ->first(fn ($value) => $this->isValid($value->get('min'))
-                || $this->isValid($value->get('max'))) !== null
-            ) !== null;
+        return $this->config->intervals()->first(
+            fn ($interval) => $interval
+                ->first(fn ($value) => $this->isValid($value->get('min'))
+                    || $this->isValid($value->get('max'))) !== null
+        ) !== null;
     }
 
     public function handle(): void
     {
-        $this->query->where(fn () => $this->config->intervals()
-            ->each(fn ($interval, $table) => (new Collection($interval))
-                ->each(fn ($value, $column) => $this
-                    ->limit($table, $column, $value, 'min', '>=')
-                    ->limit($table, $column, $value, 'max', '<=')))
+        $this->query->where(
+            fn () => $this->config->intervals()
+                ->each(fn ($interval, $table) => Collection::wrap($interval)
+                    ->each(fn ($value, $column) => $this
+                        ->limit($table, $column, $value, 'min', '>=')
+                        ->limit($table, $column, $value, 'max', '<=')))
         );
     }
 
@@ -28,7 +30,9 @@ class Interval extends BaseFilter
     {
         if ($this->isValid($value->get($bound))) {
             $this->query->where(
-                $table.'.'.$column, $operator, $value->get($bound)
+                $table.'.'.$column,
+                $operator,
+                $value->get($bound)
             );
         }
 
@@ -37,6 +41,6 @@ class Interval extends BaseFilter
 
     private function isValid($value): bool
     {
-        return ! (new Collection([null, '']))->containsStrict($value);
+        return ! Collection::wrap([null, ''])->containsStrict($value);
     }
 }

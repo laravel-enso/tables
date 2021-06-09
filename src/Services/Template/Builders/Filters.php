@@ -8,13 +8,10 @@ use LaravelEnso\Helpers\Services\Obj;
 
 class Filters
 {
-    private Obj $template;
-    private Obj $meta;
-
-    public function __construct(Obj $template, Obj $meta)
-    {
-        $this->template = $template;
-        $this->meta = $meta;
+    public function __construct(
+        private Obj $template,
+        private Obj $meta
+    ) {
     }
 
     public function build(): void

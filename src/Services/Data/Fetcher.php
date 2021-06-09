@@ -10,17 +10,15 @@ use LaravelEnso\Tables\Services\Data\Builders\Meta;
 
 class Fetcher
 {
-    private Config $config;
-    private Table $table;
     private Collection $data;
     private int $page;
     private bool $ready;
     private int $count;
 
-    public function __construct(Table $table, Config $config)
-    {
-        $this->config = $config;
-        $this->table = $table;
+    public function __construct(
+        private Table $table,
+        private Config $config
+    ) {
         $this->data = new Collection();
         $this->page = 0;
         $this->ready = false;

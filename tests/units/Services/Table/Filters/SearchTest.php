@@ -50,7 +50,7 @@ class SearchTest extends TestCase
     /** @test */
     public function can_use_starts_with_search()
     {
-        $first = (new Collection(explode(' ', $this->testModel->name)))->first();
+        $first = Collection::wrap(explode(' ', $this->testModel->name))->first();
 
         $this->config->meta()->set('search', $first)
             ->set('searchMode', 'startsWith');
@@ -68,10 +68,9 @@ class SearchTest extends TestCase
     /** @test */
     public function can_use_ends_with_search()
     {
-        $this->config->meta()->set(
-            'search',
-            (new Collection(explode(' ', $this->testModel->name)))->last()
-        )->set('searchMode', 'endsWith');
+        $this->config->meta()
+            ->set('search', Collection::wrap(explode(' ', $this->testModel->name))->last())
+            ->set('searchMode', 'endsWith');
 
         $response = $this->requestResponse();
 

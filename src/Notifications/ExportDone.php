@@ -14,15 +14,11 @@ class ExportDone extends Notification implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
-    protected string $path;
-    protected string $filename;
-    protected int $entries;
-
-    public function __construct(string $path, string $filename, int $entries)
-    {
-        $this->path = $path;
-        $this->filename = $filename;
-        $this->entries = $entries;
+    public function __construct(
+        protected string $path,
+        protected string $filename,
+        protected int $entries
+    ) {
     }
 
     public function via()

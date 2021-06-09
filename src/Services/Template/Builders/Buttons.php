@@ -11,12 +11,10 @@ class Buttons
 {
     private const PathActions = ['href', 'ajax', 'export', 'action'];
 
-    private Obj $template;
     private Obj $defaults;
 
-    public function __construct(Obj $template)
+    public function __construct(private Obj $template)
     {
-        $this->template = $template;
         $this->defaults = $this->defaults();
         $this->template->set('actions', false);
     }
@@ -80,7 +78,7 @@ class Buttons
 
     private function pathOrRoute($button, $route, $type)
     {
-        if ((new Collection(self::PathActions))->contains($button->get('action'))) {
+        if (in_array($button->get('action'), self::PathActions)) {
             $param = $type === 'row' ? 'dtRowId' : null;
             $button->set('path', route($route, [$param], false));
 

@@ -16,18 +16,15 @@ use LaravelEnso\Tables\Services\Data\Sorts\Sort;
 
 class Data
 {
-    private Config $config;
-    private Table $table;
     private Builder $query;
     private Collection $data;
-    private bool $fetchMode;
 
-    public function __construct(Table $table, Config $config, bool $fetchMode = false)
-    {
-        $this->table = $table;
-        $this->config = $config;
-        $this->query = $this->table->query();
-        $this->fetchMode = $fetchMode;
+    public function __construct(
+        private Table $table,
+        private Config $config,
+        private bool $fetchMode = false
+    ) {
+        $this->query = $table->query();
     }
 
     public function build(): Collection

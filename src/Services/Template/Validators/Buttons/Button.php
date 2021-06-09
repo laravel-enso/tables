@@ -17,16 +17,11 @@ class Button
         'actions', 'method', 'name', 'route', 'selection',
     ];
 
-    private Obj $button;
-    private Obj $template;
-    private Table $table;
-    private ?string $routePrefix;
-
-    public function __construct(Obj $button, Table $table, Obj $template)
-    {
-        $this->button = $button;
-        $this->table = $table;
-        $this->template = $template;
+    public function __construct(
+        private Obj $button,
+        private Table $table,
+        private Obj $template
+    ) {
     }
 
     public function validate(): void
@@ -37,7 +32,7 @@ class Button
 
     private function mandatory(): void
     {
-        $missing = (new Collection(Attributes::Mandatory))
+        $missing = Collection::wrap(Attributes::Mandatory)
             ->diff($this->button->keys())
             ->isNotEmpty();
 
@@ -82,8 +77,7 @@ class Button
     private function actions(): void
     {
         $invalid = $this->button->has('action')
-            && ! (new Collection(Attributes::Actions))
-                ->contains($this->button->get('action'));
+            && ! in_array($this->button->get('action'), Attributes::Actions);
 
         if ($invalid) {
             throw Exception::invalidAction();

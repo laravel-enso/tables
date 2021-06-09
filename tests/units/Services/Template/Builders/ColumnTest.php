@@ -18,8 +18,6 @@ class ColumnTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
         $this->meta = new Obj([]);
         $this->template = new Obj(['columns' => [[]]]);
     }
@@ -35,7 +33,7 @@ class ColumnTest extends TestCase
     /** @test */
     public function can_build_with_meta_attributes()
     {
-        (new Collection(Column::Meta))
+        Collection::wrap(Column::Meta)
             ->each(fn ($attribute) => $this->assertPresent($attribute, $this->metaValue($attribute)));
     }
 

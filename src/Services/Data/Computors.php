@@ -33,6 +33,6 @@ abstract class Computors
     protected static function applicable(Config $config): Collection
     {
         return $config->meta()->filter()->keys()
-            ->intersect((new Collection(static::$computors))->keys());
+            ->intersect(Collection::wrap(static::$computors)->keys());
     }
 }

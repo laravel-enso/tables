@@ -18,6 +18,7 @@ class EnsoExcel extends Excel
     public function __construct(User $user, Table $table, Config $config, DataExport $export)
     {
         parent::__construct($user, $table, $config);
+
         $this->export = $export;
     }
 
@@ -32,9 +33,7 @@ class EnsoExcel extends Excel
     {
         parent::start();
 
-        App::setLocale(
-            $this->user->preferences()->global->lang
-        );
+        App::setLocale($this->user->preferences()->global->lang);
 
         $this->export->update([
             'status' => Statuses::Processing,

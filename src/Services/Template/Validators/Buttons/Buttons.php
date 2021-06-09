@@ -12,14 +12,12 @@ class Buttons
 {
     private const Validations = ['format', 'defaults', 'structure'];
 
-    private Obj $buttons;
     private Obj $defaults;
-    private Table $table;
 
-    public function __construct(Obj $template, Table $table)
-    {
-        $this->template = $template;
-        $this->table = $table;
+    public function __construct(
+        private Obj $template,
+        private Table $table
+    ) {
         $this->defaults = $this->configButtons();
     }
 

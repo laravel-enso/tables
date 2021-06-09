@@ -79,7 +79,7 @@ class Filters extends BaseFilter
 
     private function applicable(): Collection
     {
-        return (new Collection(self::$defaultFilters))
+        return Collection::wrap(self::$defaultFilters)
             ->merge($this->needsCustomFiltering() ? self::$customFilters : null);
     }
 }

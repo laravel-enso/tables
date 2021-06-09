@@ -16,11 +16,8 @@ class Column
         'meta', 'money', 'number', 'resource', 'tooltip',
     ];
 
-    private Obj $column;
-
-    public function __construct(Obj $column)
+    public function __construct(private Obj $column)
     {
-        $this->column = $column;
     }
 
     public function validate(): void

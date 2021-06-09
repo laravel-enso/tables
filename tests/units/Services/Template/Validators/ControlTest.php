@@ -17,8 +17,6 @@ class ControlTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
         $this->template = new Obj(['controls' => []]);
     }
 

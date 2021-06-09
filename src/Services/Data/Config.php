@@ -23,16 +23,13 @@ class Config
 
     private const RemoveDefaultColumnMeta = ['sort'];
 
-    private Request $request;
-    private Template $template;
     private Obj $columns;
     private Obj $meta;
 
-    public function __construct(Request $request, Template $template)
-    {
-        $this->request = $request;
-        $this->template = $template;
-
+    public function __construct(
+        private Request $request,
+        private Template $template
+    ) {
         $this->setMeta()
             ->setColumns();
     }
@@ -142,7 +139,7 @@ class Config
     private function requestColumnMeta(Obj $requestColumn): Collection
     {
         return $requestColumn->get('meta', new Collection())
-            ->intersectByKeys((new Collection(static::RequestColumnMeta))->flip());
+            ->intersectByKeys(Collection::wrap(static::RequestColumnMeta)->flip());
     }
 
     private function removeDefaults(): void

@@ -16,8 +16,6 @@ class AttributesTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
         $this->template = new Obj($this->mockedTemplate());
     }
 

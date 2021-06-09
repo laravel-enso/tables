@@ -22,8 +22,6 @@ class ButtonTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
         $this->template = new Obj([
             'routePrefix' => 'mockedPrefix',
             'buttons' => [$this->mockedButton()],
@@ -154,7 +152,7 @@ class ButtonTest extends TestCase
 
     private function mockedButton()
     {
-        return (new Collection(Attributes::Mandatory))
+        return Collection::wrap(Attributes::Mandatory)
             ->mapWithKeys(fn ($attribute) => [$attribute => new Obj()]);
     }
 

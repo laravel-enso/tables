@@ -10,16 +10,18 @@
     "homepage": "https://github.com/laravel-enso/tables",
     "type": "library",
     "license": "MIT",
-    "authors": [{
-        "name": "Adrian Ocneanu",
-        "email": "aocneanu@gmail.com",
-        "homepage": "https://laravel-enso.com",
-        "role": "Developer"
-    }],
+    "authors": [
+        {
+            "name": "Adrian Ocneanu",
+            "email": "aocneanu@gmail.com",
+            "homepage": "https://laravel-enso.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
-        "php": ">=7.4.0",
+        "php": ">=8.0",
         "box/spout": "^3.0",
-        "laravel/framework": "^7.0|^8.0",
+        "laravel/framework": "^8.0",
         "laravel-enso/enums": "^2.0",
         "laravel-enso/filters": "^2.0",
         "laravel-enso/helpers": "^2.0"

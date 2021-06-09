@@ -12,13 +12,10 @@ use LaravelEnso\Tables\Services\Template\Builders\Style;
 
 class Builder
 {
-    private Obj $template;
-    private Obj $meta;
-
-    public function __construct(Obj $template, Obj $meta)
-    {
-        $this->template = $template;
-        $this->meta = $meta;
+    public function __construct(
+        private Obj $template,
+        private Obj $meta
+    ) {
     }
 
     public function handleCacheable()

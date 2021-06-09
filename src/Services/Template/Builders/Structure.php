@@ -26,14 +26,12 @@ class Structure
 
     private const TemplateOrConfigToMeta = ['searchMode', 'fullInfoRecordLimit'];
 
-    private Obj $template;
-    private Obj $meta;
     private bool $customDtRowId;
 
-    public function __construct(Obj $template, Obj $meta)
-    {
-        $this->template = $template;
-        $this->meta = $meta;
+    public function __construct(
+        private Obj $template,
+        private Obj $meta
+    ) {
         $this->customDtRowId = $this->template->has('dtRowId');
     }
 
@@ -54,7 +52,7 @@ class Structure
         $this->meta->set('start', 0);
         $this->meta->set('search', '');
 
-        (new Collection(self::DefaultFalse))
+        Collection::wrap(self::DefaultFalse)
             ->each(fn ($attribute) => $this->meta->set($attribute, false));
 
         return $this;
@@ -62,7 +60,7 @@ class Structure
 
     private function defaultFromConfig()
     {
-        (new Collection(self::DefaultFromConfig))
+        Collection::wrap(self::DefaultFromConfig)
             ->filter(fn ($attribute) => ! $this->template->has($attribute))
             ->each(fn ($attribute) => $this->template->set(
                 $attribute,
@@ -74,7 +72,7 @@ class Structure
 
     private function falseIfMissing()
     {
-        (new Collection(self::FalseIfMissing))
+        Collection::wrap(self::FalseIfMissing)
             ->filter(fn ($attribute) => ! $this->template->has($attribute))
             ->each(fn ($attribute) => $this->template->set($attribute, false));
 
@@ -114,7 +112,7 @@ class Structure
 
     private function templateOrConfigToMeta(): self
     {
-        (new Collection(self::TemplateOrConfigToMeta))
+        Collection::wrap(self::TemplateOrConfigToMeta)
             ->each(fn ($attribute) => $this->metaFromTemplateOrConfig($attribute));
 
         return $this;

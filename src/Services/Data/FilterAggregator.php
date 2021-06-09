@@ -13,10 +13,10 @@ class FilterAggregator
     private const Intervals = ['date', 'money', 'number'];
 
     private Obj $internalFilters;
-    private Obj $searches;
     private Obj $filters;
     private Obj $intervals;
     private Obj $params;
+    private Obj $searches;
     private bool $merged;
 
     public function __construct($internalFilters, $filters, $intervals, $params)

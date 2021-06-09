@@ -11,13 +11,11 @@ use LaravelEnso\Tables\Contracts\Table;
 
 class TemplateLoader
 {
-    private Table $table;
     private Template $template;
     private array $cache;
 
-    public function __construct(Table $table)
+    public function __construct(private Table $table)
     {
-        $this->table = $table;
     }
 
     public function handle()

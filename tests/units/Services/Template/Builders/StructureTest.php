@@ -16,8 +16,6 @@ class StructureTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
         $this->createRoute();
 
         $this->template = new Obj([

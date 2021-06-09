@@ -10,21 +10,18 @@ class Pagination
 {
     private const Computes = ['page', 'pages', 'atStart', 'atEnd', 'atMiddle', 'middlePages'];
 
-    private Obj $meta;
-    private int $filtered;
-    private bool $fullInfo;
-    private bool $atEnd;
+    private ?int $pages;
     private bool $atStart;
+    private bool $atEnd;
     private bool $atMiddle;
     private Collection $middlePages;
     private int $page;
-    private ?int $pages;
 
-    public function __construct(Obj $meta, int $filtered, bool $fullInfo)
-    {
-        $this->meta = $meta;
-        $this->filtered = $filtered;
-        $this->fullInfo = $fullInfo;
+    public function __construct(
+        private Obj $meta,
+        private int $filtered,
+        private bool $fullInfo
+    ) {
         $this->pages = null;
         $this->atStart = false;
         $this->atEnd = false;

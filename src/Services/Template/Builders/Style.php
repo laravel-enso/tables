@@ -9,10 +9,9 @@ use LaravelEnso\Tables\Attributes\Style as Attributes;
 
 class Style
 {
-    private Obj $template;
     private Obj $defaultStyle;
 
-    public function __construct(Obj $template)
+    public function __construct(private Obj $template)
     {
         $this->template = $template;
         $this->defaultStyle = new Obj(Config::get('enso.tables.style'));
@@ -39,7 +38,7 @@ class Style
 
     private function preset($style): Obj
     {
-        return (new Collection($style))
+        return Collection::wrap($style)
             ->reduce(fn ($styles, $style) => $styles
                 ->set($style, $this->defaultStyle->get('mapping')->get($style)), new Obj());
     }

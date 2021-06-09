@@ -8,11 +8,8 @@ use LaravelEnso\Tables\Attributes\Controls as Attributes;
 
 class Controls
 {
-    private Obj $template;
-
-    public function __construct(Obj $template)
+    public function __construct(private Obj $template)
     {
-        $this->template = $template;
     }
 
     public function build(): void

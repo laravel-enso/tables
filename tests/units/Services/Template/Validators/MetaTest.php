@@ -18,8 +18,6 @@ class MetaTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
         $this->template = new Obj(['columns' => [$this->mockedColumn()]]);
     }
 
@@ -64,9 +62,8 @@ class MetaTest extends TestCase
 
     private function mockedColumn()
     {
-        return (new Collection(Attributes::Mandatory))
-            ->flip()
-            ->map(fn () => new Obj());
+        return Collection::wrap(Attributes::Mandatory)
+            ->flip()->map(fn () => new Obj());
     }
 
     private function validate()

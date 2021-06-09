@@ -10,7 +10,7 @@ class RequestArgument
     {
         return ! is_array($arg)
             ? self::decode($arg)
-            : (new Collection($arg))->map(fn ($arg) => self::decode($arg))->toArray();
+            : Collection::wrap($arg)->map(fn ($arg) => self::decode($arg))->toArray();
     }
 
     public static function decode($arg)

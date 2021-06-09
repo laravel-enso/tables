@@ -9,15 +9,11 @@ use LaravelEnso\Tables\Services\Data\Config;
 
 abstract class BaseFilter implements Filter
 {
-    protected Table $table;
-    protected Config $config;
-    protected Builder $query;
-
-    public function __construct(Table $table, Config $config, Builder $query)
-    {
-        $this->table = $table;
-        $this->config = $config;
-        $this->query = $query;
+    public function __construct(
+        protected Table $table,
+        protected Config $config,
+        protected Builder $query
+    ) {
     }
 
     abstract public function applies(): bool;

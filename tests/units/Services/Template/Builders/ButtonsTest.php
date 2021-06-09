@@ -19,8 +19,6 @@ class ButtonsTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
         $this->meta = new Obj([]);
 
         $this->template = new Obj([

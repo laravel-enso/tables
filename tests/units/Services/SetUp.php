@@ -22,8 +22,6 @@ trait SetUp
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
         $this->faker = Factory::create();
 
         Route::any('route')->name('testTables.tableData');

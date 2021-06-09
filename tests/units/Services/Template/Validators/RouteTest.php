@@ -18,9 +18,7 @@ class RouteTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
-
-        $this->template = new Obj((new Collection(Attributes::Mandatory))->flip());
+        $this->template = new Obj(Collection::wrap(Attributes::Mandatory)->flip());
     }
 
     /** @test */

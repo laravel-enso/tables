@@ -11,11 +11,9 @@ use LaravelEnso\Tables\Exceptions\Filter as Exception;
 class Filter
 {
     private const Validations = ['mandatory', 'optional', 'complementary', 'route'];
-    private Obj $filter;
 
-    public function __construct(Obj $filter)
+    public function __construct(private Obj $filter)
     {
-        $this->filter = $filter;
     }
 
     public function validate(): void
@@ -26,7 +24,7 @@ class Filter
 
     private function mandatory(): void
     {
-        $missing = (new Collection(Attributes::Mandatory))
+        $missing = Collection::wrap(Attributes::Mandatory)
             ->diff($this->filter->keys())
             ->isNotEmpty();
 

@@ -14,13 +14,10 @@ use LaravelEnso\Tables\Services\Template\Validators\Structure\Structure;
 
 class Validator
 {
-    private Obj $template;
-    private Table $table;
-
-    public function __construct(Obj $template, Table $table)
-    {
-        $this->template = $template;
-        $this->table = $table;
+    public function __construct(
+        private Obj $template,
+        private Table $table
+    ) {
     }
 
     public function run()

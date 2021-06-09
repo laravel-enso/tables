@@ -7,13 +7,10 @@ use LaravelEnso\Tables\Services\Data\Config;
 
 class Sort
 {
-    private Config $config;
-    private Builder $query;
-
-    public function __construct(Config $config, Builder $query)
-    {
-        $this->config = $config;
-        $this->query = $query;
+    public function __construct(
+        private Config $config,
+        private Builder $query
+    ) {
     }
 
     public function handle(): void

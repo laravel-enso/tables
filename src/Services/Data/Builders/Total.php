@@ -13,16 +13,13 @@ use LaravelEnso\Tables\Services\Data\Config;
 
 class Total
 {
-    private Table $table;
-    private Config $config;
-    private Builder $query;
     private array $total;
 
-    public function __construct(Table $table, Config $config, Builder $query)
-    {
-        $this->table = $table;
-        $this->config = $config;
-        $this->query = $query;
+    public function __construct(
+        private Table $table,
+        private Config $config,
+        private Builder $query
+    ) {
         $this->total = [];
     }
 
@@ -76,6 +73,6 @@ class Total
         $result = $this->query->getQuery()->cloneWithoutBindings(['select'])
             ->select($raw)->first();
 
-        return optional($result)->{$column->get('name')} ?? 0;
+        return $result?->{$column->get('name')} ?? 0;
     }
 }

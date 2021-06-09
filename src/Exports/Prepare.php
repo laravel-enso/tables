@@ -9,15 +9,11 @@ use LaravelEnso\Tables\Services\Data\Config;
 
 class Prepare
 {
-    protected User $user;
-    protected Config $config;
-    protected string $table;
-
-    public function __construct(User $user, Config $config, string $table)
-    {
-        $this->user = $user;
-        $this->config = $config;
-        $this->table = $table;
+    public function __construct(
+        protected User $user,
+        protected Config $config,
+        protected string $table
+    ) {
     }
 
     public function handle(): void

@@ -9,11 +9,8 @@ use LaravelEnso\Tables\Exceptions\Template as Exception;
 
 class Structure
 {
-    private Obj $template;
-
-    public function __construct(Obj $template)
+    public function __construct(private Obj $template)
     {
-        $this->template = $template;
     }
 
     public function validate()
@@ -24,7 +21,7 @@ class Structure
 
     private function mandatoryAttributes()
     {
-        $diff = (new Collection(Attributes::Mandatory))
+        $diff = Collection::wrap(Attributes::Mandatory)
             ->diff($this->template->keys());
 
         if ($diff->isNotEmpty()) {
@@ -36,7 +33,7 @@ class Structure
 
     private function optionalAttributes()
     {
-        $attributes = (new Collection(Attributes::Mandatory))
+        $attributes = Collection::wrap(Attributes::Mandatory)
             ->merge(Attributes::Optional);
 
         $diff = $this->template->keys()->diff($attributes);

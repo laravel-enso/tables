@@ -8,13 +8,10 @@ use LaravelEnso\Tables\Services\Data\Config;
 
 class CustomSort
 {
-    private Config $config;
-    private Builder $query;
-
-    public function __construct(Config $config, Builder $query)
-    {
-        $this->config = $config;
-        $this->query = $query;
+    public function __construct(
+        private Config $config,
+        private Builder $query
+    ) {
     }
 
     public function applies(): bool
@@ -45,6 +42,6 @@ class CustomSort
     protected function columns(): Obj
     {
         return $this->config->columns()->filter(fn ($column) => $column
-                ->get('meta')->get('sortable') && $column->get('meta')->get('sort'));
+            ->get('meta')->get('sortable') && $column->get('meta')->get('sort'));
     }
 }

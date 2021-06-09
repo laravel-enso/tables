@@ -21,7 +21,6 @@ class TableCacheTest extends TestCase
     {
         parent::setUp();
 
-        // $this->withoutExceptionHandling();
         Config::set('enso.tables.cache.prefix', 'prefix');
 
         $this->key = 'prefix:test_models';

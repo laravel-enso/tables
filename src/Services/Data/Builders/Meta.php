@@ -19,8 +19,6 @@ use ReflectionClass;
 
 class Meta
 {
-    private Table $table;
-    private Config $config;
     private Builder $query;
     private bool $filters;
     private int $count;
@@ -29,10 +27,10 @@ class Meta
     private bool $fullRecordInfo;
     private array $pagionation;
 
-    public function __construct(Table $table, Config $config)
-    {
-        $this->table = $table;
-        $this->config = $config;
+    public function __construct(
+        private Table $table,
+        private Config $config
+    ) {
         $this->query = $table->query();
         $this->total = [];
         $this->filters = false;
@@ -178,7 +176,7 @@ class Meta
             $model = $this->query->getModel();
 
             if (! (new ReflectionClass($model))->hasMethod('resetTableCache')) {
-                throw Exception::missingTrait(get_class($model));
+                throw Exception::missingTrait($model::class);
             }
         }
 

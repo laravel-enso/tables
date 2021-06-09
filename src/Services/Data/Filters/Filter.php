@@ -17,7 +17,7 @@ class Filter extends BaseFilter
         $this->query->where(fn ($query) => $this->filters()
             ->each(fn ($filters, $table) => $filters
                 ->each(fn ($value, $column) => $query
-                    ->whereIn($table.'.'.$column, (new Collection($value))->toArray()))));
+                    ->whereIn($table.'.'.$column, Collection::wrap($value)->toArray()))));
     }
 
     private function filters(): Obj
@@ -29,7 +29,7 @@ class Filter extends BaseFilter
 
     private function isValid($value): bool
     {
-        return ! (new Collection([null, '']))->containsStrict($value)
+        return ! Collection::wrap([null, ''])->containsStrict($value)
             && (! $value instanceof Collection || $value->isNotEmpty());
     }
 }

@@ -12,13 +12,10 @@ class Columns
     private const FromColumn = ['enum', 'money', 'number', 'resource'];
     private const FromMeta = ['filterable', 'searchable', 'date', 'datetime', 'translatable', 'cents'];
 
-    private Obj $template;
-    private Obj $meta;
-
-    public function __construct(Obj $template, Obj $meta)
-    {
-        $this->template = $template;
-        $this->meta = $meta;
+    public function __construct(
+        private Obj $template,
+        private Obj $meta
+    ) {
     }
 
     public function build(): void
@@ -49,11 +46,9 @@ class Columns
 
     private function meta($column): self
     {
-        $meta = (new Collection(Attributes::Meta))
-            ->reduce(fn ($meta, $attribute) => $meta->set(
-                $attribute,
-                optional($column->get('meta'))->contains($attribute)
-            ), new Obj());
+        $meta = Collection::wrap(Attributes::Meta)
+            ->reduce(fn ($meta, $attribute) => $meta
+                ->set($attribute, $column->get('meta')?->contains($attribute)), new Obj());
 
         $meta->set('visible', true)
             ->set('hidden', false);
@@ -150,13 +145,13 @@ class Columns
 
     private function fromColumn($column): Collection
     {
-        return (new Collection(self::FromColumn))
+        return Collection::wrap(self::FromColumn)
             ->filter(fn ($attribute) => $column->get($attribute));
     }
 
     private function fromColumnMeta($column): Collection
     {
-        return (new Collection(self::FromMeta))
+        return Collection::wrap(self::FromMeta)
             ->filter(fn ($attribute) => $column->get('meta')->get($attribute));
     }
 }

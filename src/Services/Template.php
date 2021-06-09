@@ -17,13 +17,11 @@ use ReflectionClass;
 class Template
 {
     private Builder $builder;
-    private Table $table;
     private Obj $template;
     private Obj $meta;
 
-    public function __construct(Table $table)
+    public function __construct(private Table $table)
     {
-        $this->table = $table;
         $this->meta = new Obj();
     }
 
@@ -134,8 +132,8 @@ class Template
 
     private function needsValidation()
     {
-        return (new Collection([App::environment(), 'always']))->contains(
-            Config::get('enso.tables.validations')
-        );
+        $validations = Config::get('enso.tables.validations');
+
+        return in_array($validations, [App::environment(), 'always']);
     }
 }
