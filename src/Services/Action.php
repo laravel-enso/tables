@@ -5,11 +5,12 @@ namespace LaravelEnso\Tables\Services;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Fetcher;
+use LaravelEnso\Tables\Services\Data\Request;
 
 abstract class Action
 {
     private Fetcher $fetcher;
-    private $request;
+    private Request $request;
 
     public function __construct(Table $table, Config $config)
     {
@@ -17,10 +18,20 @@ abstract class Action
         $this->request = $config->request();
     }
 
+    public function before(): void
+    {
+    }
+
     abstract public function process(array $row);
 
-    public function handle()
+    public function after(): void
     {
+    }
+
+    public function handle(): void
+    {
+        $this->before();
+
         $this->fetcher->next();
 
         while ($this->fetcher->valid()) {
@@ -30,10 +41,10 @@ abstract class Action
             $this->fetcher->next();
         }
 
-        return $this;
+        $this->after();
     }
 
-    public function request()
+    public function request(): Request
     {
         return $this->request;
     }
