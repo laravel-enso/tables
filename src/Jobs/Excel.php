@@ -20,9 +20,9 @@ class Excel implements ShouldQueue
     public $timeout;
 
     public function __construct(
-        private User $user,
-        private Config $config,
-        private string $table
+        protected User $user,
+        protected Config $config,
+        protected string $table
     ) {
         $this->timeout = ConfigFacade::get('enso.tables.export.timeout');
         $this->queue = ConfigFacade::get('enso.tables.queues.exports');
