@@ -13,7 +13,9 @@ trait Datatable
             throw new Exception('"permissionGroup" property is missing from your test');
         }
 
-        $init = $this->get(route($this->permissionGroup.'.initTable', [], false));
+        $absolute = Config::get('enso.tables.absoluteRoutes');
+
+        $init = $this->get(route($this->permissionGroup.'.initTable', [], $absolute));
 
         $init->assertStatus(200)
             ->assertJsonStructure(['template', 'meta', 'apiVersion']);
@@ -23,7 +25,7 @@ trait Datatable
             'meta' => '{"start":0,"length":10,"sort":false,"search": "","forceInfo":false,"searchMode":"full"}',
         ];
 
-        $this->get(route($this->permissionGroup.'.tableData', $params, false))
+        $this->get(route($this->permissionGroup.'.tableData', $params, $absolute))
             ->assertStatus(200)
             ->assertJsonStructure(['data']);
     }

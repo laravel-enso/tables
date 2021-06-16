@@ -32,8 +32,10 @@ class Filters
 
     private function compute(Obj $filter): Obj
     {
+        $absolute = Config::get('enso.tables.absoluteRoutes');
+
         return $filter->when($filter->has('route'), fn ($filter) => $filter
-            ->set('path', route($filter->get('route'), [], false))
+            ->set('path', route($filter->get('route'), [], $absolute))
             ->forget('route'));
     }
 

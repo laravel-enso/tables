@@ -329,4 +329,15 @@ return [
     */
 
     'totalLabel' => 'Total',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Absolute Routes
+    |--------------------------------------------------------------------------
+    |
+    | Boolean flag that is used to determine how back-end routes will be
+    | computed (relative or absolute)
+    */
+
+    'absoluteRoutes' => false,
 ];

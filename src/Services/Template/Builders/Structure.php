@@ -95,7 +95,9 @@ class Structure
         $suffix = $this->template->get('dataRouteSuffix')
             ?? Config::get('enso.tables.dataRouteSuffix');
 
-        $this->template->set('readPath', route("{$prefix}.{$suffix}", [], false));
+        $absolute = Config::get('enso.tables.absoluteRoutes');
+
+        $this->template->set('readPath', route("{$prefix}.{$suffix}", [], $absolute));
 
         return $this;
     }

@@ -80,12 +80,11 @@ class Buttons
     {
         if (in_array($button->get('action'), self::PathActions)) {
             $param = $type === 'row' ? 'dtRowId' : null;
-            $button->set('path', route($route, [$param], false));
-
-            return;
+            $absolute = Config::get('enso.tables.absoluteRoutes');
+            $button->set('path', route($route, [$param], $absolute));
+        } else {
+            $button->set('route', $route);
         }
-
-        $button->set('route', $route);
     }
 
     private function route($button): ?string
