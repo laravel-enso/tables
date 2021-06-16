@@ -150,6 +150,11 @@ class Excel
     protected function relativePath(): string
     {
         $folder = ConfigFacade::get('enso.tables.export.folder');
+
+        if (! Storage::has($folder)) {
+            Storage::makeDirectory($folder);
+        }
+
         $hash = Str::random(40);
         $extension = self::Extension;
 
