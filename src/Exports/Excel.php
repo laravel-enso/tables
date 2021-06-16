@@ -220,9 +220,4 @@ class Excel
         return Collection::wrap(explode('.', $column->get('name')))
             ->reduce(fn ($value, $segment) => $value[$segment] ?? null, $row);
     }
-
-    protected function wasCancelled(): bool
-    {
-        return false;
-    }
 }
