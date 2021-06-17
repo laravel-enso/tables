@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Traits\Tests;
 
 use Exception;
+use Illuminate\Support\Facades\Config;
 
 trait Datatable
 {
