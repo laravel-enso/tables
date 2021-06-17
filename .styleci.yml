@@ -1,5 +1,7 @@
 risky: true
 
+version: 8
+
 preset: laravel
 
 enabled:
