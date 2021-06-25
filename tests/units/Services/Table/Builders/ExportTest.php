@@ -5,12 +5,12 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Fetcher;
-use LaravelEnso\Tables\Tests\units\Services\Setup;
+use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use Tests\TestCase;
 
 class ExportTest extends TestCase
 {
-    use Setup;
+    use SetUp;
 
     /** @test */
     public function can_get_export_data_with_translatable()
