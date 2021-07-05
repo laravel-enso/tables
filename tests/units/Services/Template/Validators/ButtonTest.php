@@ -112,8 +112,10 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_when_name_not_applied_for_conditional_actions()
+    public function cannot_validate_when_name_missing_for_conditional_actions()
     {
+        $this->template->get('buttons')[0]->set('type', 'row');
+
         $this->expectException(Exception::class);
 
         $this->expectExceptionMessage(Exception::missingName()->getMessage());
@@ -153,7 +155,7 @@ class ButtonTest extends TestCase
     private function mockedButton()
     {
         return Collection::wrap(Attributes::Mandatory)
-            ->mapWithKeys(fn ($attribute) => [$attribute => new Obj()]);
+            ->mapWithKeys(fn ($attribute) => [$attribute => $attribute]);
     }
 
     private function validate()
@@ -173,7 +175,8 @@ class ButtonTest extends TestCase
 
     private function conditionalActionTable(): Table
     {
-        return new class extends TestTable implements ConditionalActions {
+        return new class extends TestTable implements ConditionalActions
+        {
             public function render(array $row, string $action): bool
             {
                 return false;
