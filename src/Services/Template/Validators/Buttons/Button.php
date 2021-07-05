@@ -110,6 +110,7 @@ class Button
     private function name(): void
     {
         $missing = $this->table instanceof ConditionalActions
+            && $this->button->get('type') === 'row'
             && ! $this->button->has('name');
 
         if ($missing) {
