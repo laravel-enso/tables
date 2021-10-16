@@ -53,7 +53,15 @@ class Button extends EnsoException
     public static function missingName()
     {
         return new static(__(
-            'When you use render action conditionally you need to provide name as well'
+            'When you use conditionally rendered button you need to provide name as well'
+        ));
+    }
+
+    public static function invalidType()
+    {
+        return new static(__(
+            'The following types are allowed for buttons: ":types"',
+            ['types' => implode('", "', Attributes::Types)]
         ));
     }
 
@@ -84,7 +92,7 @@ class Button extends EnsoException
     public static function noSelectable()
     {
         return new static(__(
-            "You can't have an action with selection when the table is not selectable",
+            "You can't have a button with selection when the table is not selectable",
         ));
     }
 

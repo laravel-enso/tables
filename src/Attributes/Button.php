@@ -6,6 +6,8 @@ class Button
 {
     public const Mandatory = ['type', 'icon'];
 
+    public const Types = ['global', 'row', 'dropdown'];
+
     public const Optional = [
         'action', 'confirmation', 'event', 'fullRoute', 'label',  'message',
         'method', 'params', 'postEvent', 'routeSuffix', 'tooltip', 'slot',

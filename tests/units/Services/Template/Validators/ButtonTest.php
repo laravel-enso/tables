@@ -2,9 +2,7 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
-use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\Services\Obj;
-use LaravelEnso\Tables\Attributes\Button as Attributes;
 use LaravelEnso\Tables\Contracts\ConditionalActions;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Button as Exception;
@@ -29,7 +27,7 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_without_mandatory_attributes()
+    public function cant_validateout_mandatory_attributes()
     {
         $this->template->get('buttons')->first()->forget('type');
 
@@ -41,7 +39,7 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_invalid_attribute()
+    public function cant_validate_invalid_attribute()
     {
         $this->template->get('buttons')->first()->set('invalid_attribute', 'invalid');
 
@@ -53,24 +51,37 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_invalid_action()
+    public function cant_validate_invalid_type()
     {
-        $this->template->get('buttons')->first()->set('action', true);
+        $this->template->get('buttons')->first()->set('type', 'unknown');
 
         $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage(Exception::missingRoute()->getMessage());
+        $this->expectExceptionMessage(Exception::invalidType()->getMessage());
 
         $this->validate();
     }
 
     /** @test */
-    public function cannot_validate_action_with_missing_method()
+    public function cant_validate_invalid_action()
+    {
+        $this->template->get('buttons')->first()
+            ->set('action', 'unknown');
+
+        $this->expectException(Exception::class);
+
+        $this->expectExceptionMessage(Exception::invalidAction()->getMessage());
+
+        $this->validate();
+    }
+
+    /** @test */
+    public function cant_validate_action_with_missing_method()
     {
         $button = $this->template->get('buttons')->first();
 
         $button->set('action', 'ajax');
-        $button->set('fullRoute', '/');
+        $button->set('fullRoute', $this->createRoute());
 
         $this->expectException(Exception::class);
 
@@ -80,7 +91,7 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_invalid_route()
+    public function cant_validate_invalid_route()
     {
         $button = $this->template->get('buttons')->first();
 
@@ -96,7 +107,7 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_invalid_method()
+    public function cant_validate_invalid_method()
     {
         $button = $this->template->get('buttons')->first();
 
@@ -112,7 +123,7 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_when_name_missing_for_conditional_actions()
+    public function cant_validate_when_name_missing_for_conditional_actions()
     {
         $this->template->get('buttons')[0]->set('type', 'row');
 
@@ -125,7 +136,7 @@ class ButtonTest extends TestCase
     }
 
     /** @test */
-    public function cannot_validate_with_invalid_button_type()
+    public function cant_validate_invalid_button_type()
     {
         $this->template->set('buttons', new Obj(['UNKNOWN_TYPE']));
 
@@ -139,8 +150,6 @@ class ButtonTest extends TestCase
     /** @test */
     public function can_validate()
     {
-        $this->createRoute();
-
         $button = $this->template->get('buttons')->first();
 
         $button->set('action', 'ajax');
@@ -154,8 +163,7 @@ class ButtonTest extends TestCase
 
     private function mockedButton()
     {
-        return Collection::wrap(Attributes::Mandatory)
-            ->mapWithKeys(fn ($attribute) => [$attribute => $attribute]);
+        return ['type' => 'global', 'icon' => 'icon'];
     }
 
     private function validate()
@@ -175,8 +183,7 @@ class ButtonTest extends TestCase
 
     private function conditionalActionTable(): Table
     {
-        return new class extends TestTable implements ConditionalActions
-        {
+        return new class extends TestTable implements ConditionalActions {
             public function render(array $row, string $action): bool
             {
                 return false;

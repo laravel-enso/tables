@@ -13,8 +13,7 @@ use LaravelEnso\Tables\Exceptions\Button as Exception;
 class Button
 {
     private const Validations = [
-        'mandatory', 'optional', 'complementary',
-        'actions', 'method', 'name', 'route', 'selection',
+        'mandatory', 'optional', 'type', 'action', 'name', 'selection',
     ];
 
     public function __construct(
@@ -32,59 +31,45 @@ class Button
 
     private function mandatory(): void
     {
-        $missing = Collection::wrap(Attributes::Mandatory)
+        Collection::wrap(Attributes::Mandatory)
             ->diff($this->button->keys())
-            ->isNotEmpty();
-
-        if ($missing) {
-            throw Exception::missingAttributes();
-        }
+            ->whenNotEmpty(fn () => throw Exception::missingAttributes());
     }
 
     private function optional(): void
     {
-        $unknown = $this->button->keys()
+        $this->button->keys()
             ->diff(Attributes::Mandatory)
             ->diff(Attributes::Optional)
-            ->isNotEmpty();
+            ->whenNotEmpty(fn () => throw Exception::unknownAttributes());
+    }
 
-        if ($unknown) {
-            throw Exception::unknownAttributes();
+    private function type(): void
+    {
+        $invalid = ! in_array($this->button->get('type'), Attributes::Types);
+
+        if ($invalid) {
+            throw Exception::invalidType();
         }
     }
 
-    private function complementary(): void
+    private function action(): void
     {
         if (! $this->button->has('action')) {
             return;
         }
 
-        $missingRoute = ! $this->button->has('fullRoute')
-            && ! $this->button->has('routeSuffix');
-
-        if ($missingRoute) {
-            throw Exception::missingRoute();
-        }
-
-        $missingMethod = $this->button->get('action') === 'ajax'
-            && ! $this->button->has('method');
-
-        if ($missingMethod) {
-            throw Exception::missingMethod();
-        }
-    }
-
-    private function actions(): void
-    {
-        $invalid = $this->button->has('action')
-            && ! in_array($this->button->get('action'), Attributes::Actions);
+        $invalid = ! in_array($this->button->get('action'), Attributes::Actions);
 
         if ($invalid) {
             throw Exception::invalidAction();
         }
+
+        $this->route()
+            ->method();
     }
 
-    private function route(): void
+    private function route(): self
     {
         $route = $this->button->get('fullRoute');
 
@@ -92,18 +77,29 @@ class Button
             ? "{$this->template->get('routePrefix')}.{$this->button->get('routeSuffix')}"
             : null;
 
-        if ($route !== null && ! Route::has($route)) {
+        if ($route === null) {
+            throw Exception::missingRoute();
+        }
+
+        if (! Route::has($route)) {
             throw Exception::routeNotFound($route);
         }
+
+        return $this;
     }
 
     private function method(): void
     {
-        $invalid = $this->button->has('method')
-            && ! in_array($this->button->get('method'), Attributes::Methods);
+        if ($this->button->has('method')) {
+            $invalid = ! in_array($this->button->get('method'), Attributes::Methods);
 
-        if ($invalid) {
-            throw Exception::invalidMethod($this->button->get('method'));
+            if ($invalid) {
+                throw Exception::invalidMethod($this->button->get('method'));
+            }
+        } else {
+            if ($this->button->get('action') === 'ajax') {
+                throw Exception::missingMethod();
+            }
         }
     }
 

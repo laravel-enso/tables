@@ -31,7 +31,7 @@ class Buttons
     {
         return $this->template->get('buttons')
             ->reduce(fn ($buttons, $button) => $this
-                ->add($buttons, $button), new Obj(['global' => [], 'row' => []]));
+                ->add($buttons, $button), $this->factory());
     }
 
     private function add($buttons, $button): Collection
@@ -40,15 +40,15 @@ class Buttons
             ? $this->default($button)
             : [$button, $button->get('type')];
 
-        if ($this->shouldDisplayButton($button, $type)) {
-            $button->forget(['fullRoute', 'routeSuffix']);
+        if ($this->shouldDisplay($button, $type)) {
+            $button->forget(['fullRoute', 'routeSuffix', 'type']);
             $buttons[$type]->push($button);
         }
 
         return $buttons;
     }
 
-    private function shouldDisplayButton(Obj $button, string $type)
+    private function shouldDisplay(Obj $button, string $type)
     {
         return ! $button->has('action')
             && ! $button->has('route')
@@ -76,17 +76,6 @@ class Buttons
         return true;
     }
 
-    private function pathOrRoute($button, $route, $type)
-    {
-        if (in_array($button->get('action'), self::PathActions)) {
-            $param = $type === 'row' ? 'dtRowId' : null;
-            $absolute = Config::get('enso.tables.absoluteRoutes');
-            $button->set('path', route($route, [$param], $absolute));
-        } else {
-            $button->set('route', $route);
-        }
-    }
-
     private function route($button): ?string
     {
         if (
@@ -98,9 +87,19 @@ class Buttons
 
         return $button->has('routeSuffix')
             && $button->get('routeSuffix') !== null
-            ? $this->template->get('routePrefix')
-            .'.'.$button->get('routeSuffix')
+            ? "{$this->template->get('routePrefix')}.{$button->get('routeSuffix')}"
             : null;
+    }
+
+    private function pathOrRoute($button, $route, $type)
+    {
+        if (in_array($button->get('action'), self::PathActions)) {
+            $param = $type === 'row' ? 'dtRowId' : null;
+            $absolute = Config::get('enso.tables.absoluteRoutes');
+            $button->set('path', route($route, [$param], $absolute));
+        } else {
+            $button->set('route', $route);
+        }
     }
 
     private function routeForbidden($route): bool
@@ -118,6 +117,12 @@ class Buttons
     private function defaults(): Obj
     {
         return (new Obj(Config::get('enso.tables.buttons')))
-            ->each->each(fn ($button, $key) => $button->set('name', $key));
+            ->each(fn ($group) => $group
+                ->each(fn ($button, $key) => $button->set('name', $key)));
+    }
+
+    private function factory(): Obj
+    {
+        return new Obj(['global' => [], 'row' => [], 'dropdown' => []]);
     }
 }

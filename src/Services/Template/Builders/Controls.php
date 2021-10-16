@@ -14,12 +14,11 @@ class Controls
 
     public function build(): void
     {
-        if (! $this->template->has('controls')) {
-            $this->template->set(
-                'controls',
-                Config::get('enso.tables.controls')
-                    ?? Attributes::List
-            );
+        if ($this->template->has('controls')) {
+            return;
         }
+
+        $controls = Config::get('enso.tables.controls') ?? Attributes::List;
+        $this->template->set('controls', $controls);
     }
 }
