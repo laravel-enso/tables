@@ -4,6 +4,7 @@ namespace LaravelEnso\Tables\Services\Data\Computors;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\ComputesModelColumns;
 
@@ -36,13 +37,13 @@ class Resource implements ComputesModelColumns
     {
         return $value->isEmpty()
             ? $value
-            : $resource::collection($value);
+            : App::make($resource)::collection($value);
     }
 
     private static function resource($value, $resource)
     {
         return $value === null
             ? null
-            : new $resource($value);
+            : App::make($resource, ['resource' => $value]);
     }
 }
