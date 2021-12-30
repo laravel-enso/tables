@@ -3,8 +3,8 @@
 namespace LaravelEnso\Tables\Traits;
 
 use Illuminate\Http\Request;
-use LaravelEnso\Tables\Exports\EnsoPrepare;
 use LaravelEnso\Tables\Exports\Prepare;
+use LaravelEnso\Tables\Notifications\ExportStarted;
 
 trait Excel
 {
@@ -16,10 +16,8 @@ trait Excel
         ['config' => $config] = $this->data($request);
         $attrs = [$user, $config, $this->tableClass];
 
-        if ($config->isEnso()) {
-            (new EnsoPrepare(...$attrs))->handle();
-        } else {
-            (new Prepare(...$attrs))->handle();
-        }
+        $user->notifyNow(new ExportStarted($config->label()));
+
+        (new Prepare(...$attrs))->handle();
     }
 }

@@ -3,8 +3,10 @@
 namespace LaravelEnso\Tables\Exports;
 
 use Illuminate\Foundation\Auth\User;
-use LaravelEnso\Tables\Jobs\Excel as Job;
-use LaravelEnso\Tables\Notifications\ExportStarted;
+use LaravelEnso\DataExport\Enums\Statuses;
+use LaravelEnso\DataExport\Models\DataExport;
+use LaravelEnso\Tables\Jobs\EnsoExcel;
+use LaravelEnso\Tables\Jobs\Excel;
 use LaravelEnso\Tables\Services\Data\Config;
 
 class Prepare
@@ -18,19 +20,21 @@ class Prepare
 
     public function handle(): void
     {
-        $this->notifyStart()
-            ->dispatch();
+        $args = [$this->user, $this->config, $this->table];
+
+        if ($this->config->isEnso()) {
+            $args[] = $this->export();
+            EnsoExcel::dispatch(...$args);
+        } else {
+            Excel::dispatch(...$args);
+        }
     }
 
-    private function notifyStart(): self
+    protected function export(): DataExport
     {
-        $this->user->notifyNow(new ExportStarted($this->config->label()));
-
-        return $this;
-    }
-
-    protected function dispatch(): void
-    {
-        Job::dispatch($this->user, $this->config, $this->table);
+        return DataExport::factory()->create([
+            'name' => $this->config->name(),
+            'status' => Statuses::Waiting,
+        ]);
     }
 }
