@@ -43,23 +43,6 @@ class MetaTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
-    public function cannot_validate_nested_column_with_sortable()
-    {
-        $this->template->get('columns')->push(new Obj([
-            'label' => 'child',
-            'name' => 'parent.child',
-            'data' => 'parent.child',
-            'meta' => ['sortable'],
-        ]));
-
-        $this->expectException(Exception::class);
-
-        $this->expectExceptionMessage(Exception::unsupported('parent.child')->getMessage());
-
-        $this->validate();
-    }
-
     private function mockedColumn()
     {
         return Collection::wrap(Attributes::Mandatory)

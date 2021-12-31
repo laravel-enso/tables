@@ -53,12 +53,8 @@ class Fetcher
 
     public function count(): int
     {
-        if (! isset($this->count)) {
-            $this->count = (new Meta($this->table, $this->config))
+        return $this->count ??= (new Meta($this->table, $this->config))
                 ->filter()->count(true);
-        }
-
-        return $this->count;
     }
 
     private function fetch($page = 0): Collection
@@ -66,7 +62,7 @@ class Fetcher
         $start = $this->config->meta()->get('length') * $page;
         $this->config->meta()->set('start', $start);
 
-        return (new Data($this->table, $this->config, true))->build();
+        return (new Data($this->table, $this->config, true))->handle();
     }
 
     private function optimalChunk(): void

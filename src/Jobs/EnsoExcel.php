@@ -14,11 +14,14 @@ class EnsoExcel extends Excel
     public function __construct(User $user, Config $config, string $table, DataExport $export)
     {
         parent::__construct($user, $config, $table);
+
         $this->export = $export;
     }
 
     public function handle()
     {
-        (new Service($this->user, $this->table(), $this->config, $this->export))->handle();
+        $args = [$this->user, $this->table(), $this->config, $this->export];
+
+        (new Service(...$args))->handle();
     }
 }

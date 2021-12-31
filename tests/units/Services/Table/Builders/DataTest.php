@@ -239,6 +239,6 @@ class DataTest extends TestCase
     {
         $data = new Data($this->table, $this->config);
 
-        return new Obj($data->build());
+        return new Obj($data->handle());
     }
 }

@@ -3,15 +3,12 @@
 namespace LaravelEnso\Tables\Services\Data\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\ConditionalActions;
 use LaravelEnso\Tables\Contracts\Table;
-use LaravelEnso\Tables\Services\Data\ArrayComputors;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Filters;
-use LaravelEnso\Tables\Services\Data\ModelComputors;
 use LaravelEnso\Tables\Services\Data\Sorts\Sort;
 
 class Data
@@ -27,7 +24,7 @@ class Data
         $this->query = $table->query();
     }
 
-    public function build(): Collection
+    public function handle(): Collection
     {
         $this->filter()
             ->sort()
@@ -35,12 +32,7 @@ class Data
             ->setData();
 
         if ($this->data->isNotEmpty()) {
-            $this->appends()
-                ->modelCompute()
-                ->sanitize()
-                ->arrayCompute()
-                ->strip()
-                ->flatten();
+            $this->data = (new Computor($this->config, $this->data))->handle();
 
             if (! $this->fetchMode) {
                 $this->actions();
@@ -52,7 +44,7 @@ class Data
 
     public function toArray(): array
     {
-        return ['data' => $this->build()];
+        return ['data' => $this->handle()];
     }
 
     private function filter(): self
@@ -82,63 +74,6 @@ class Data
         $this->data = $this->query->get();
 
         return $this;
-    }
-
-    private function appends(): self
-    {
-        if ($this->config->filled('appends')) {
-            $this->data->each->setAppends(
-                $this->config->get('appends')->toArray()
-            );
-        }
-
-        return $this;
-    }
-
-    private function modelCompute(): self
-    {
-        $this->data = ModelComputors::handle($this->config, $this->data);
-
-        return $this;
-    }
-
-    private function sanitize(): self
-    {
-        $this->data = new Collection($this->data->toArray());
-
-        return $this;
-    }
-
-    private function arrayCompute(): self
-    {
-        $this->data = ArrayComputors::handle($this->config, $this->data);
-
-        return $this;
-    }
-
-    private function strip(): self
-    {
-        if (! $this->config->filled('strip')) {
-            return $this;
-        }
-
-        $this->data = $this->data->map(function ($row) {
-            foreach ($this->config->get('strip')->toArray() as $attr) {
-                unset($row[$attr]);
-            }
-
-            return $row;
-        });
-
-        return $this;
-    }
-
-    private function flatten(): void
-    {
-        if ($this->config->get('flatten')) {
-            $this->data = $this->data
-                ->map(fn ($record) => Arr::dot($record));
-        }
     }
 
     private function actions(): void
