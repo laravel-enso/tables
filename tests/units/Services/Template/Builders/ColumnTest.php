@@ -43,9 +43,9 @@ class ColumnTest extends TestCase
         $this->build();
 
         $this->assertEquals(
-                $expected['value'],
-                $this->template->get('columns')->first()->get('meta')->get($expected['key'])
-            );
+            $expected['value'],
+            $this->template->get('columns')->first()->get('meta')->get($expected['key'])
+        );
     }
 
     private function build(): void
