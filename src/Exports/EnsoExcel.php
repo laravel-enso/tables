@@ -22,23 +22,24 @@ class EnsoExcel extends Excel
         $this->export = $export;
     }
 
-    protected function notifyError(): void
+    protected function process(): void
     {
-        $this->export->update(['status' => Statuses::Failed]);
-
-        parent::notifyError();
-    }
-
-    protected function start(): self
-    {
-        parent::start();
-
         App::setLocale($this->user->preferences()->global->lang);
 
         $this->export->update([
             'status' => Statuses::Processing,
-            'total' => $this->fetcher->count(),
+            'total' => $this->count,
         ]);
+
+        parent::process();
+    }
+
+    protected function updateProgress(int $chunkSize): self
+    {
+        parent::updateProgress($chunkSize);
+
+        $this->export->update(['entries' => $this->entryCount]);
+        $this->cancelled = $this->export->fresh()->cancelled();
 
         return $this;
     }
@@ -54,21 +55,17 @@ class EnsoExcel extends Excel
             ->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));
     }
 
+    protected function notifyError(): void
+    {
+        $this->export->update(['status' => Statuses::Failed]);
+
+        parent::notifyError();
+    }
+
     private function emailSubject(): string
     {
         $name = $this->config->label();
 
         return __(':name export done', ['name' => $name]);
-    }
-
-    protected function updateProgress(): self
-    {
-        $this->cancelled = $this->export->fresh()->cancelled();
-
-        parent::updateProgress();
-
-        $this->export->update(['entries' => $this->entries]);
-
-        return $this;
     }
 }

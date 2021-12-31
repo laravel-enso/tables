@@ -6,6 +6,7 @@ use Box\Spout\Common\Entity\Row;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\XLSX\Writer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -14,49 +15,53 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\Services\Decimals;
 use LaravelEnso\Helpers\Services\Obj;
+use LaravelEnso\Helpers\Services\OptimalChunk;
 use LaravelEnso\Tables\Contracts\AuthenticatesOnExport;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Notifications\ExportDone;
 use LaravelEnso\Tables\Notifications\ExportError;
+use LaravelEnso\Tables\Services\Data\Builders\Computor;
+use LaravelEnso\Tables\Services\Data\Builders\Meta;
 use LaravelEnso\Tables\Services\Data\Config;
-use LaravelEnso\Tables\Services\Data\Fetcher;
+use LaravelEnso\Tables\Services\Data\Filters;
 use Throwable;
 
 class Excel
 {
     protected const Extension = 'xlsx';
 
-    protected User $user;
-    protected Config $config;
-    protected Fetcher $fetcher;
-    protected bool $authenticates;
+    protected Builder $query;
     protected Writer $writer;
     protected Collection $columns;
-    protected int $sheets;
+    protected int $count;
+    protected int $optimalChunk;
+    protected int $sheetCount;
+    protected int $entryCount;
     protected string $filename;
     protected string $relativePath;
     protected string $path;
-    protected int $entries;
     protected bool $cancelled;
 
-    public function __construct(User $user, Table $table, Config $config)
-    {
-        $this->user = $user;
-        $this->config = $config;
-        $this->fetcher = new Fetcher($table, $this->config);
-        $this->authenticates = $table instanceof AuthenticatesOnExport;
+    public function __construct(
+        protected User $user,
+        protected Table $table,
+        protected Config $config
+    ) {
+        $this->query = $this->table->query();
         $this->filename = $this->filename();
         $this->relativePath = $this->relativePath();
         $this->path = Storage::path($this->relativePath);
-        $this->entries = 0;
+        $this->entryCount = 0;
         $this->cancelled = false;
     }
 
     public function handle(): void
     {
         try {
-            $this->initWriter()
-                ->start()
+            $this->filter()
+                ->count()
+                ->optimalChunk()
+                ->initWriter()
                 ->process();
         } catch (Throwable $th) {
             $this->notifyError();
@@ -72,6 +77,30 @@ class Excel
         }
     }
 
+    protected function process(): void
+    {
+        if ($this->table instanceof AuthenticatesOnExport) {
+            Auth::setUser($this->user);
+        }
+
+        $this->sheetCount = 1;
+        $this->writer->addRow($this->header());
+
+        $process = fn ($chunk) => $this->processChunk($chunk);
+        $defaultSort = $this->config->template()->get('defaultSort');
+        $column = Str::afterLast($defaultSort, '.');
+
+        $this->query->chunkById($this->optimalChunk, $process, $column);
+    }
+
+    protected function finalize(): void
+    {
+        $notification = (new ExportDone($this->path, $this->filename, $this->entryCount))
+            ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'));
+
+        $this->user->notify($notification);
+    }
+
     protected function notifyError(): void
     {
         $this->cancelled = true;
@@ -80,52 +109,36 @@ class Excel
             ->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));
     }
 
-    protected function process(): void
+    protected function updateProgress(int $chunkSize): self
     {
-        $this->fetcher->next();
-
-        while ($this->fetcher->valid() && ! $this->cancelled) {
-            if ($this->needsNewSheet()) {
-                $this->addNewSheet();
-            }
-
-            $this->writeChunk()
-                ->updateProgress();
-
-            $this->fetcher->next();
-        }
-    }
-
-    protected function writeChunk(): self
-    {
-        $this->fetcher->current()
-            ->each(fn ($row) => $this->writer->addRow($this->row(
-                $this->columns->map(fn ($column) => $this->value($column, $row))
-            )));
+        $this->entryCount += $chunkSize;
 
         return $this;
     }
 
-    protected function start(): self
+    private function filter(): self
     {
-        if ($this->authenticates) {
-            Auth::setUser($this->user);
-        }
-
-        $this->sheets = 1;
-
-        $this->writer->addRow($this->header());
+        (new Filters($this->table, $this->config, $this->query))->handle();
 
         return $this;
     }
 
-    protected function closeWriter(): void
+    private function count(): self
     {
-        $this->writer->close();
-        unset($this->writer);
+        $this->count = (new Meta($this->table, $this->config))
+            ->filter()->count(true);
+
+        return $this;
     }
 
-    protected function initWriter(): self
+    private function optimalChunk(): self
+    {
+        $this->optimalChunk = OptimalChunk::get($this->count);
+
+        return $this;
+    }
+
+    private function initWriter(): self
     {
         $defaultStyle = (new StyleBuilder())
             ->setShouldWrapText(false)
@@ -139,15 +152,87 @@ class Excel
         return $this;
     }
 
-    protected function finalize(): void
+    private function processChunk(Collection $chunk): bool
     {
-        $this->user->notify(
-            (new ExportDone($this->path, $this->filename, $this->entries))
-                ->onQueue(ConfigFacade::get('enso.tables.queues.notifications'))
-        );
+        if ($this->needsNewSheet()) {
+            $this->addNewSheet();
+        }
+
+        $chunk = (new Computor($this->config, $chunk))->handle();
+
+        $chunk->each(fn ($row) => $this->writeRow($row));
+
+        $this->updateProgress($chunk->count());
+
+        return ! $this->cancelled;
     }
 
-    protected function relativePath(): string
+    private function needsNewSheet(): bool
+    {
+        $limit = ConfigFacade::get('enso.tables.export.sheetLimit');
+        $needed = Decimals::div($this->entryCount, $limit);
+
+        return $needed >= $this->sheetCount;
+    }
+
+    private function addNewSheet(): void
+    {
+        $this->writer->addNewSheetAndMakeItCurrent();
+        $this->writer->addRow($this->header());
+        $this->sheetCount++;
+    }
+
+    private function writeRow(array $row): bool
+    {
+        $value = $this->columns->map(fn ($column) => $this->value($column, $row));
+
+        $this->writer->addRow($this->row($value));
+
+        return ! $this->cancelled;
+    }
+
+    private function header(): Row
+    {
+        $labels = $this->columns()->pluck('label')
+            ->map(fn ($label) => __($label));
+
+        return $this->row($labels);
+    }
+
+    private function columns(): Collection
+    {
+        return $this->columns ??= $this->config->columns()
+            ->filter(fn ($column) => $this->exportable($column))
+            ->reduce(fn ($columns, $column) => $columns
+                ->push($column), new Collection());
+    }
+
+    private function exportable(Obj $column): bool
+    {
+        $meta = $column->get('meta');
+
+        return $meta->get('visible')
+            && ! $meta->get('notExportable');
+    }
+
+    private function row(Collection $row): Row
+    {
+        return WriterEntityFactory::createRowFromArray($row->toArray());
+    }
+
+    private function value(Obj $column, array $row)
+    {
+        return Collection::wrap(explode('.', $column->get('name')))
+            ->reduce(fn ($value, $segment) => $value[$segment] ?? '', $row);
+    }
+
+    private function closeWriter(): void
+    {
+        $this->writer->close();
+        unset($this->writer);
+    }
+
+    private function relativePath(): string
     {
         $folder = ConfigFacade::get('enso.tables.export.folder');
 
@@ -161,68 +246,11 @@ class Excel
         return "{$folder}/{$hash}.{$extension}";
     }
 
-    protected function filename(): string
+    private function filename(): string
     {
         $suffix = __('table_export');
         $extension = self::Extension;
 
         return "{$this->config->name()}_{$suffix}.{$extension}";
-    }
-
-    protected function header(): Row
-    {
-        $labels = $this->columns()->pluck('label')
-            ->map(fn ($label) => __($label));
-
-        return $this->row($labels);
-    }
-
-    protected function columns(): Collection
-    {
-        return $this->columns ??= $this->config->columns()
-            ->filter(fn ($column) => $this->exportable($column))
-            ->reduce(fn ($columns, $column) => $columns
-                ->push($column), new Collection());
-    }
-
-    protected function row(Collection $row): Row
-    {
-        return WriterEntityFactory::createRowFromArray($row->toArray());
-    }
-
-    protected function updateProgress(): self
-    {
-        $this->entries += $this->fetcher->chunkSize();
-
-        return $this;
-    }
-
-    protected function addNewSheet(): void
-    {
-        $this->writer->addNewSheetAndMakeItCurrent();
-        $this->writer->addRow($this->header());
-        $this->sheets++;
-    }
-
-    protected function needsNewSheet(): bool
-    {
-        $limit = ConfigFacade::get('enso.tables.export.sheetLimit');
-        $needed = Decimals::div($this->entries, $limit);
-
-        return $needed >= $this->sheets;
-    }
-
-    protected function exportable(Obj $column): bool
-    {
-        $meta = $column->get('meta');
-
-        return $meta->get('visible')
-            && ! $meta->get('notExportable');
-    }
-
-    protected function value($column, $row)
-    {
-        return Collection::wrap(explode('.', $column->get('name')))
-            ->reduce(fn ($value, $segment) => $value[$segment] ?? null, $row);
     }
 }
