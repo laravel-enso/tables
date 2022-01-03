@@ -47,16 +47,12 @@ class Excel
         protected Table $table,
         protected Config $config
     ) {
-        $this->query = $this->table->query();
-        $this->filename = $this->filename();
-        $this->relativePath = $this->relativePath();
-        $this->path = Storage::path($this->relativePath);
-        $this->entryCount = 0;
-        $this->cancelled = false;
     }
 
     public function handle(): void
     {
+        $this->init();
+
         try {
             $this->filter()
                 ->count()
@@ -79,10 +75,6 @@ class Excel
 
     protected function process(): void
     {
-        if ($this->table instanceof AuthenticatesOnExport) {
-            Auth::setUser($this->user);
-        }
-
         $this->sheetCount = 1;
         $this->writer->addRow($this->header());
 
@@ -114,6 +106,20 @@ class Excel
         $this->entryCount += $chunkSize;
 
         return $this;
+    }
+
+    private function init(): void
+    {
+        if ($this->table instanceof AuthenticatesOnExport) {
+            Auth::setUser($this->user);
+        }
+
+        $this->query = $this->table->query();
+        $this->filename = $this->filename();
+        $this->relativePath = $this->relativePath();
+        $this->path = Storage::path($this->relativePath);
+        $this->entryCount = 0;
+        $this->cancelled = false;
     }
 
     private function filter(): self

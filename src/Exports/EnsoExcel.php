@@ -13,13 +13,12 @@ use LaravelEnso\Tables\Services\Data\Config;
 
 class EnsoExcel extends Excel
 {
-    private DataExport $export;
-
-    public function __construct(User $user, Table $table, Config $config, DataExport $export)
-    {
-        parent::__construct($user, $table, $config);
-
-        $this->export = $export;
+    public function __construct(
+        protected User $user,
+        protected Table $table,
+        protected Config $config,
+        private DataExport $export
+    ) {
     }
 
     protected function process(): void
