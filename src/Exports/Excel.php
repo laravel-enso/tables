@@ -80,9 +80,9 @@ class Excel
 
         $process = fn ($chunk) => $this->processChunk($chunk);
         $defaultSort = $this->config->template()->get('defaultSort');
-        $column = Str::afterLast($defaultSort, '.');
+        $alias = Str::afterLast($defaultSort, '.');
 
-        $this->query->chunkById($this->optimalChunk, $process, $column);
+        $this->query->chunkById($this->optimalChunk, $process, $defaultSort, $alias);
     }
 
     protected function finalize(): void
