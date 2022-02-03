@@ -13,8 +13,12 @@ trait ProvidesData
 
     public function data(Request $request)
     {
+        $tableClass = method_exists($this, 'tableClass')
+            ? $this->tableClass($request)
+            : $this->tableClass;
+
         $request = $this->request($request);
-        $table = App::make($this->tableClass, ['request' => $request]);
+        $table = App::make($tableClass, ['request' => $request]);
         $template = (new TemplateLoader($table))->handle();
         $config = new Config($request, $template);
 
