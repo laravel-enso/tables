@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\ComputesModelColumns;
+use stdClass;
 
 class Resource implements ComputesModelColumns
 {
@@ -37,7 +38,7 @@ class Resource implements ComputesModelColumns
     {
         return $value->isEmpty()
             ? $value
-            : App::make($resource)::collection($value);
+            : App::make($resource, ['resource' => new stdClass()])::collection($value);
     }
 
     private static function resource($value, $resource)
