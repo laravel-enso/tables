@@ -18,7 +18,7 @@ trait Excel
 
         $user = $request->user();
         ['config' => $config] = $this->data($request);
-        $attrs = [$user, $config, $this->tableClass];
+        $attrs = [$user, $config, $tableClass];
 
         $user->notifyNow(new ExportStarted($config->label()));
 
