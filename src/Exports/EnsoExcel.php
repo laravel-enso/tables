@@ -6,8 +6,9 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use LaravelEnso\DataExport\Enums\Statuses;
-use LaravelEnso\DataExport\Models\DataExport;
+use LaravelEnso\DataExport\Models\Export;
 use LaravelEnso\DataExport\Notifications\ExportDone;
+use LaravelEnso\Files\Models\File;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Data\Config;
 
@@ -17,7 +18,7 @@ class EnsoExcel extends Excel
         protected User $user,
         protected Table $table,
         protected Config $config,
-        private DataExport $export
+        private Export $export
     ) {
     }
 
@@ -45,10 +46,13 @@ class EnsoExcel extends Excel
 
     protected function finalize(): void
     {
-        $this->export->file->created_by = $this->export->created_by;
-        $this->export->file->attach($this->relativePath, $this->filename);
+        $args = [$this->export, $this->savedName, $this->filename, $this->export->created_by];
 
-        $this->export->update(['status' => Statuses::Finalized]);
+        $file = File::attach(...$args);
+
+        $this->export->fill(['status' => Statuses::Finalized])
+            ->file()->associate($file)
+            ->save();
 
         $this->user->notify((new ExportDone($this->export, $this->emailSubject()))
             ->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));

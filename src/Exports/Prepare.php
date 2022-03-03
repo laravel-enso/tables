@@ -4,7 +4,7 @@ namespace LaravelEnso\Tables\Exports;
 
 use Illuminate\Foundation\Auth\User;
 use LaravelEnso\DataExport\Enums\Statuses;
-use LaravelEnso\DataExport\Models\DataExport;
+use LaravelEnso\DataExport\Models\Export;
 use LaravelEnso\Tables\Jobs\EnsoExcel;
 use LaravelEnso\Tables\Jobs\Excel;
 use LaravelEnso\Tables\Services\Data\Config;
@@ -30,9 +30,9 @@ class Prepare
         }
     }
 
-    protected function export(): DataExport
+    protected function export(): Export
     {
-        return DataExport::factory()->create([
+        return Export::factory()->create([
             'name' => $this->config->name(),
             'status' => Statuses::Waiting,
         ]);

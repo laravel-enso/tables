@@ -38,7 +38,7 @@ class Excel
     protected int $sheetCount;
     protected int $entryCount;
     protected string $filename;
-    protected string $relativePath;
+    protected string $savedName;
     protected string $path;
     protected bool $cancelled;
 
@@ -116,8 +116,8 @@ class Excel
 
         $this->query = $this->table->query();
         $this->filename = $this->filename();
-        $this->relativePath = $this->relativePath();
-        $this->path = Storage::path($this->relativePath);
+        $this->savedName = $this->savedName();
+        $this->path = $this->relativePath();
         $this->entryCount = 0;
         $this->cancelled = false;
     }
@@ -246,10 +246,15 @@ class Excel
             Storage::makeDirectory($folder);
         }
 
+        return Storage::path("{$folder}/{$this->savedName}");
+    }
+
+    private function savedName(): string
+    {
         $hash = Str::random(40);
         $extension = self::Extension;
 
-        return "{$folder}/{$hash}.{$extension}";
+        return "{$hash}.{$extension}";
     }
 
     private function filename(): string
