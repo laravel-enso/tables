@@ -12,9 +12,13 @@ trait Excel
 
     public function __invoke(Request $request)
     {
+        $tableClass = method_exists($this, 'tableClass')
+            ? $this->tableClass($request)
+            : $this->tableClass;
+
         $user = $request->user();
         ['config' => $config] = $this->data($request);
-        $attrs = [$user, $config, $this->tableClass];
+        $attrs = [$user, $config, $tableClass];
 
         $user->notifyNow(new ExportStarted($config->label()));
 

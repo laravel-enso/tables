@@ -12,7 +12,11 @@ trait Init
 
     public function __invoke(Request $request)
     {
-        $table = App::make($this->tableClass, [
+        $tableClass = method_exists($this, 'tableClass')
+            ? $this->tableClass($request)
+            : $this->tableClass;
+
+        $table = App::make($tableClass, [
             'request' => $this->request($request),
         ]);
 
