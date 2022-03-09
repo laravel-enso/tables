@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\Services\Data\Computors;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\ComputesArrayColumns;
@@ -22,10 +23,10 @@ class Number implements ComputesArrayColumns
     public static function handle(array $row): array
     {
         foreach (self::$columns as $column) {
-            $row[$column->get('name')] = self::format(
-                $row[$column->get('name')],
+            Arr::set($row, $column->get('name'), self::format(
+                Arr::get($row, $column->get('name')),
                 $column->get('number')->get('precision')
-            );
+            ));
         }
 
         return $row;

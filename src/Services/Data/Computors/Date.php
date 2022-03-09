@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Services\Data\Computors;
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\ComputesArrayColumns;
@@ -21,10 +22,11 @@ class Date implements ComputesArrayColumns
     public static function handle(array $row): array
     {
         foreach (self::$columns as $column) {
-            if ($row[$column->get('name')] !== null) {
-                $row[$column->get('name')] = Carbon::parse($row[$column->get('name')])
+            $rowValue = Arr::get($row, $column->get('name'));
+            if ($rowValue !== null) {
+                Arr::set($row, $column->get('name'), Carbon::parse($rowValue)
                     ->setTimezone(Config::get('app.timezone'))
-                    ->format(self::format($column));
+                    ->format(self::format($column)));
             }
         }
 
