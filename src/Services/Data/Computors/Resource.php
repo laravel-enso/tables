@@ -25,6 +25,7 @@ class Resource implements ComputesModelColumns
         foreach (self::$columns as $column) {
             $value = $row->{$column->get('name')};
             $resource = $column->get('resource');
+            unset($row->{$column->get('name')});
 
             $row->{$column->get('name')} = $value instanceof Collection
                 ? self::collection($value, $resource)
@@ -38,7 +39,9 @@ class Resource implements ComputesModelColumns
     {
         return $value->isEmpty()
             ? $value
-            : App::make($resource, ['resource' => new stdClass()])::collection($value);
+            : App::make($resource, [
+                'resource' => new stdClass(),
+            ])::collection($value);
     }
 
     private static function resource($value, $resource)
