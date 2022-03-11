@@ -4,11 +4,13 @@ namespace LaravelEnso\Tables\Services\Data;
 
 use LaravelEnso\Tables\Contracts\ComputesModelColumns;
 use LaravelEnso\Tables\Exceptions\ModelComputor;
+use LaravelEnso\Tables\Services\Data\Computors\Method;
 use LaravelEnso\Tables\Services\Data\Computors\Resource;
 
 class ModelComputors extends Computors
 {
     protected static array $computors = [
+        'method' => Method::class,
         'resource' => Resource::class,
     ];
 
