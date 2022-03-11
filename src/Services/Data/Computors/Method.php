@@ -21,8 +21,7 @@ class Method implements ComputesModelColumns
     public static function handle(Model $row)
     {
         foreach (self::$columns as $column) {
-            $method = $column->get('name');
-            $row->{$column->get('name')} = $row->{$method}();
+            $row->{$column->get('name')} = $row->{$column->get('name')}();
         }
 
         return $row;
