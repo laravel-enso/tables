@@ -32,6 +32,9 @@ abstract class Computors
 
     protected static function applicable(Config $config): Collection
     {
+        \Log::info($config->meta()->filter()->keys());
+        \Log::debug(Collection::wrap(static::$computors)->keys());
+
         return $config->meta()->filter()->keys()
             ->intersect(Collection::wrap(static::$computors)->keys());
     }

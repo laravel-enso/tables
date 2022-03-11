@@ -44,6 +44,25 @@ class DataTest extends TestCase
     }
 
     /** @test */
+    public function can_get_data_with_method()
+    {
+        $this->config->meta()->set('method', true);
+
+        $this->config->columns()->push(new Obj([
+            'name' => 'customMethod',
+            'data' => 'customMethod',
+            'meta' => ['method' => true],
+        ]));
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            'custom',
+            $response->first()->get('customMethod')
+        );
+    }
+
+    /** @test */
     public function can_get_data_with_flatten()
     {
         $this->config->get('appends')->push('custom');

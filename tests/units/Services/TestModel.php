@@ -19,6 +19,11 @@ class TestModel extends Model
         return ['relation' => 'name'];
     }
 
+    public function customMethod()
+    {
+        return 'custom';
+    }
+
     public static function createTable()
     {
         Schema::create('test_models', function ($table) {

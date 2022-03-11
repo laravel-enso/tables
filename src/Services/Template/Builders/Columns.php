@@ -10,7 +10,10 @@ use LaravelEnso\Tables\Attributes\Column as Attributes;
 class Columns
 {
     private const FromColumn = ['enum', 'money', 'number', 'resource'];
-    private const FromMeta = ['filterable', 'searchable', 'date', 'datetime', 'translatable', 'cents'];
+    private const FromMeta = [
+        'cents', 'date', 'datetime', 'filterable', 'method', 'searchable',
+        'translatable',
+    ];
 
     public function __construct(
         private Obj $template,
