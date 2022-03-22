@@ -17,7 +17,7 @@ class Filter extends BaseFilter
         $this->query->where(fn ($query) => $this->filters()
             ->each(fn ($filters, $table) => $filters
                 ->each(fn ($value, $column) => $query
-                    ->whereIn("{$table}.{$column}", (array) $value))));
+                    ->whereIn("{$table}.{$column}", $this->value($value)))));
     }
 
     private function filters(): Obj
@@ -31,5 +31,12 @@ class Filter extends BaseFilter
     {
         return ! Collection::wrap([null, ''])->containsStrict($value)
             && (! $value instanceof Collection || $value->isNotEmpty());
+    }
+
+    private function value($value): array
+    {
+        return $value instanceof Collection
+            ? $value->toArray()
+            : (array) $value;
     }
 }
