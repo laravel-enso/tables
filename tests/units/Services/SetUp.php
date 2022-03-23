@@ -34,10 +34,11 @@ trait SetUp
         $columns = $internalFilters = $filters = $intervals = $params = [];
 
         $meta = ['length' => 10, 'search' => '', 'searchMode' => 'full'];
+        $filters = [$internalFilters, $filters, $intervals, $params];
 
-        $aggregator = new FilterAggregator($internalFilters, $filters, $intervals, $params);
+        $aggregator = new FilterAggregator(...$filters);
 
-        $request = new Request($columns, $meta, $aggregator);
+        $request = new Request($columns, $meta, $aggregator());
 
         $request->columns()->push(new Obj([
             'name' => 'name',

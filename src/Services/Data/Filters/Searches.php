@@ -23,23 +23,26 @@ class Searches extends BaseFilter
 
     private function filter(Obj $filter): void
     {
-        (new Search($this->query, $this->attributes($filter), $filter->get('value')))
-            ->relations($this->relations($filter))
+        (new Search(
+            $this->query,
+            (array) $this->attribute($filter),
+            $filter->get('value')
+        ))->relations((array) $this->relation($filter))
             ->comparisonOperator($this->config->get('comparisonOperator'))
             ->searchMode($filter->get('mode'))
             ->handle();
     }
 
-    private function attributes(Obj $filter): array
+    private function attribute(Obj $filter): ?string
     {
-        return $this->isNested($filter) ? [] : $filter->get('data');
+        return $this->isNested($filter) ? null : $filter->get('data');
     }
 
-    private function relations(Obj $filter): array
+    private function relation(Obj $filter): ?string
     {
         return $this->isNested($filter)
-            ? [Str::of($filter->get('data'))->explode('.')->splice(1)->implode('.')]
-            : [];
+            ? Str::of($filter->get('data'))->after('.')
+            : null;
     }
 
     private function isNested(string $attribute): bool
@@ -55,8 +58,9 @@ class Searches extends BaseFilter
 
     private function filters(): Obj
     {
-        return $this->config->searches()->map(fn ($filters) => $filters
-            ->filter(fn ($value) => $this->isValid($value)))
+        return $this->config->searches()
+            ->map(fn ($filters) => $filters
+                ->filter(fn ($value) => $this->isValid($value)))
             ->filter->isNotEmpty();
     }
 

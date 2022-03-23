@@ -17,6 +17,6 @@ trait ProvidesRequest
             $request->get('params')
         );
 
-        return new TableRequest($request->get('columns'), $request->get('meta'), $aggregator);
+        return new TableRequest($request->get('columns'), $request->get('meta'), $aggregator());
     }
 }

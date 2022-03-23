@@ -17,14 +17,15 @@ class Filter extends BaseFilter
         $this->query->where(fn ($query) => $this->filters()
             ->each(fn ($filters, $table) => $filters
                 ->each(fn ($value, $column) => $query
-                    ->whereIn("{$table}.{$column}", $this->value($value)))));
+                    ->whereIn("{$table}.{$column}", $value))));
     }
 
     private function filters(): Obj
     {
-        return $this->config->filters()
-            ->map->filter(fn ($value) => $this->isValid($value))
-            ->filter->isNotEmpty();
+        return $this->config->filters()->map
+            ->filter(fn ($value) => $this->isValid($value))
+            ->filter->isNotEmpty()->map
+            ->map(fn ($value) => $this->value($value));
     }
 
     private function isValid($value): bool

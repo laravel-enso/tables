@@ -17,61 +17,44 @@ class FilterAggregator
     private Obj $intervals;
     private Obj $params;
     private Obj $searches;
-    private bool $merged;
 
     public function __construct($internalFilters, $filters, $intervals, $params)
     {
         $this->internalFilters = new Obj(Argument::parse($internalFilters));
-        $this->searches = $this->filter('string');
+        $this->searches = $this->filterInternal('string');
         $this->filters = new Obj(Argument::parse($filters));
         $this->intervals = new Obj(Argument::parse($intervals));
         $this->params = new Obj(Argument::parse($params));
-        $this->merged = false;
     }
 
     public function searches(): Obj
     {
-        $this->mergeIfNeeded();
-
         return $this->searches;
     }
 
     public function filters(): Obj
     {
-        $this->mergeIfNeeded();
-
         return $this->filters;
     }
 
     public function intervals(): Obj
     {
-        $this->mergeIfNeeded();
-
         return $this->intervals;
     }
 
     public function params(): Obj
     {
-        $this->mergeIfNeeded();
-
         return $this->params;
     }
 
-    public function mergeIfNeeded(): void
-    {
-        if (! $this->merged) {
-            $this->handle();
-        }
-    }
-
-    public function handle(): void
+    public function __invoke(): self
     {
         $this->extractCustom()
             ->merge($this->filters, self::Filters)
             ->merge($this->filters, self::Intervals, $this->excludeArrays())
             ->merge($this->intervals, self::Intervals, $this->onlyArrays());
 
-        $this->merged = true;
+        return $this;
     }
 
     private function extractCustom(): self
@@ -88,7 +71,7 @@ class FilterAggregator
 
     private function merge(Obj $filters, array $types, ?Closure $filter = null): self
     {
-        $this->filter($types)
+        $this->filterInternal($types)
             ->when($filter, fn ($filters) => $filters->filter($filter))
             ->each(fn ($filter) => $this->set($filters, $filter));
 
@@ -106,7 +89,7 @@ class FilterAggregator
             : new Obj($array[key($array)]));
     }
 
-    private function filter($types): Obj
+    private function filterInternal($types): Obj
     {
         return $this->internalFilters
             ->filter(fn ($filter) => in_array($filter->get('type'), (array) $types));
