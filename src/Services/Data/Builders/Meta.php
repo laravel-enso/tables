@@ -25,7 +25,6 @@ class Meta
     private int $filtered;
     private array $total;
     private bool $fullRecordInfo;
-    private array $pagionation;
 
     public function __construct(
         private Table $table,
@@ -125,11 +124,9 @@ class Meta
 
     private function pagination(): Pagination
     {
-        return new Pagination(
-            $this->config->meta(),
-            $this->filtered,
-            $this->fullRecordInfo
-        );
+        $args = [$this->config->meta(), $this->filtered, $this->fullRecordInfo];
+
+        return new Pagination(...$args);
     }
 
     private function cachedCount(): int

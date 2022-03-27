@@ -17,7 +17,7 @@ trait TableCache
 
     public function resetTableCache()
     {
-        $key = Config::get('enso.tables.cache.prefix').':'.$this->getTable();
+        $key = $this->tableCacheKey();
 
         if (Cache::getStore() instanceof TaggableStore) {
             Cache::tags($key)->flush();
@@ -26,5 +26,10 @@ trait TableCache
         }
 
         Cache::forget($key);
+    }
+
+    public function tableCacheKey(): string
+    {
+        return Config::get('enso.tables.cache.prefix').':'.$this->getTable();
     }
 }

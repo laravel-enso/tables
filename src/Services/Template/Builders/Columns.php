@@ -10,9 +10,10 @@ use LaravelEnso\Tables\Attributes\Column as Attributes;
 class Columns
 {
     private const FromColumn = ['enum', 'money', 'number', 'resource'];
+
     private const FromMeta = [
-        'cents', 'date', 'datetime', 'filterable', 'method', 'searchable',
-        'translatable',
+        'cents', 'date', 'datetime', 'filterable',
+        'method', 'searchable', 'translatable',
     ];
 
     public function __construct(
@@ -29,9 +30,8 @@ class Columns
     private function columns()
     {
         return $this->template->get('columns')
-            ->reduce(fn ($columns, $column) => $columns->push(
-                $this->compute($column)
-            ), new Obj());
+            ->reduce(fn ($columns, $column) => $columns
+                ->push($this->compute($column)), new Obj());
     }
 
     private function compute($column): Obj
