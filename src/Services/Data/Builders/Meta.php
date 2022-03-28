@@ -156,11 +156,10 @@ class Meta
 
     private function cacheKey(?string $suffix = null): string
     {
-        $prefix = ConfigFacade::get('enso.tables.cache.prefix');
+        $model = $this->query->getModel();
+        $key = (new $model())->tableCacheKey();
 
-        return Collection::wrap([
-            $prefix, $this->config->get('table'), $suffix,
-        ])->filter()->implode(':');
+        return Collection::wrap([$key, $suffix])->filter()->implode(':');
     }
 
     private function shouldCache(): bool
@@ -172,7 +171,12 @@ class Meta
         if ($shouldCache) {
             $model = $this->query->getModel();
 
-            if (! (new ReflectionClass($model))->hasMethod('resetTableCache')) {
+            $instance = (new ReflectionClass($model));
+
+            $compatible = $instance->hasMethod('resetTableCache')
+                && $instance->hasMethod('tableCacheKey');
+
+            if (! $compatible) {
                 throw Exception::missingTrait($model::class);
             }
         }
