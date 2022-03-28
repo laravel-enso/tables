@@ -54,8 +54,9 @@ class EnsoExcel extends Excel
             ->file()->associate($file)
             ->save();
 
-        $this->user->notify((new ExportDone($this->export, $this->emailSubject()))
-            ->onQueue(ConfigFacade::get('enso.tables.queues.notifications')));
+        $notification = new ExportDone($this->export, $this->emailSubject());
+        $queue = ConfigFacade::get('enso.tables.queues.notifications');
+        $this->user->notify($notification->onQueue($queue));
     }
 
     protected function notifyError(): void
