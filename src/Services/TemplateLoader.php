@@ -79,16 +79,13 @@ class TemplateLoader
         $configPrefix = Config::get('enso.tables.cache.prefix');
 
         $prefix = $this->table instanceof DynamicTemplate
-            ? "{$this->table->cachePrefix()}-"
+            ? "{$this->table->cachePrefix()}:"
             : null;
 
-        $slug = Str::slug(str_replace(
-            ['/', '.'],
-            [' ', ' '],
-            $this->table->templatePath()
-        ));
-
-        return "{$configPrefix}:{$prefix}{$slug}";
+        return  Str::of($this->table->templatePath())
+            ->replace(['/', '.'], [' ', ' '])
+            ->slug()
+            ->prepend("{$configPrefix}:{$prefix}");
     }
 
     private function cache()
