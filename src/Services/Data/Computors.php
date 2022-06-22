@@ -9,12 +9,12 @@ abstract class Computors
 {
     protected static array $computors = [];
 
-    public static function handle(Config $config, Collection $data): Collection
+    public static function handle(Config $config, Collection $data): void
     {
         static::columns($config);
 
-        return static::applicable($config)->reduce(fn ($data, $computor) => $data
-            ->map(fn ($row) => static::computor($computor)::handle($row)), $data);
+        static::applicable($config)->each(fn ($computor) => $data
+            ->transform(fn ($row) => static::computor($computor)::handle($row)));
     }
 
     public static function columns(Config $config): void

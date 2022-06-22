@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\ConditionalActions;
+use LaravelEnso\Tables\Contracts\CustomCssClasses;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Filters;
@@ -32,10 +33,11 @@ class Data
             ->setData();
 
         if ($this->data->isNotEmpty()) {
-            $this->data = (new Computor($this->config, $this->data))->handle();
+            (new Computor($this->config, $this->data))->handle();
 
             if (! $this->fetchMode) {
                 $this->actions();
+                $this->style();
             }
         }
 
@@ -79,8 +81,17 @@ class Data
     private function actions(): void
     {
         if ($this->table instanceof ConditionalActions) {
-            $this->data = $this->data->map(fn ($row) => $row + [
+            $this->data->transform(fn ($row) => $row + [
                 '_actions' => $this->rowActions($row),
+            ]);
+        }
+    }
+
+    private function style(): void
+    {
+        if ($this->table instanceof CustomCssClasses) {
+            $this->data->transform(fn ($row) => $row + [
+                '_cssClasses' => $this->table->cssClasses($row),
             ]);
         }
     }
