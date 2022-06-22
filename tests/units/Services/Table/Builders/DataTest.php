@@ -21,9 +21,11 @@ class DataTest extends TestCase
 
         $this->assertCount(TestModel::count(), $response);
 
-        $this->assertTrue($response->first()
+        $this->assertTrue(
+            $response->first()
                 ->diff($this->testModel->toArray())
-                ->isEmpty());
+                ->isEmpty()
+        );
     }
 
     /** @test */
