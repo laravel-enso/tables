@@ -16,7 +16,7 @@ class Computor
     ) {
     }
 
-    public function handle(): Collection
+    public function handle(): void
     {
         $this->appends()
             ->modelCompute()
@@ -24,8 +24,6 @@ class Computor
             ->arrayCompute()
             ->strip()
             ->flatten();
-
-        return $this->data;
     }
 
     private function appends(): self
@@ -41,21 +39,21 @@ class Computor
 
     private function modelCompute(): self
     {
-        $this->data = ModelComputors::handle($this->config, $this->data);
+        ModelComputors::handle($this->config, $this->data);
 
         return $this;
     }
 
     private function sanitize(): self
     {
-        $this->data = new Collection($this->data->toArray());
+        $this->data->transform(fn ($row) => $row->toArray());
 
         return $this;
     }
 
     private function arrayCompute(): self
     {
-        $this->data = ArrayComputors::handle($this->config, $this->data);
+        ArrayComputors::handle($this->config, $this->data);
 
         return $this;
     }
@@ -66,7 +64,7 @@ class Computor
             return $this;
         }
 
-        $this->data = $this->data->map(function ($row) {
+        $this->data->transform(function ($row) {
             foreach ($this->config->get('strip')->toArray() as $attr) {
                 unset($row[$attr]);
             }
@@ -80,8 +78,7 @@ class Computor
     private function flatten(): void
     {
         if ($this->config->get('flatten')) {
-            $this->data = $this->data
-                ->map(fn ($record) => Arr::dot($record));
+            $this->data->transform(fn ($record) => Arr::dot($record));
         }
     }
 }
