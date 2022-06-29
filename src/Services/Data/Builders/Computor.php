@@ -16,7 +16,7 @@ class Computor
     ) {
     }
 
-    public function handle(): void
+    public function handle(): Collection
     {
         $this->appends()
             ->modelCompute()
@@ -24,6 +24,8 @@ class Computor
             ->arrayCompute()
             ->strip()
             ->flatten();
+
+        return $this->data;
     }
 
     private function appends(): self
@@ -46,7 +48,7 @@ class Computor
 
     private function sanitize(): self
     {
-        $this->data->transform(fn ($row) => $row->toArray());
+        $this->data = new Collection($this->data->toArray());
 
         return $this;
     }

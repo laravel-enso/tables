@@ -33,7 +33,7 @@ class Data
             ->setData();
 
         if ($this->data->isNotEmpty()) {
-            (new Computor($this->config, $this->data))->handle();
+            $this->data = (new Computor($this->config, $this->data))->handle();
 
             if (! $this->fetchMode) {
                 $this->actions();
