@@ -164,7 +164,7 @@ class Excel
             $this->addNewSheet();
         }
 
-        $chunk = (new Computor($this->config, $chunk))->handle();
+        (new Computor($this->config, $chunk))->handle();
 
         $chunk->each(fn ($row) => $this->writeRow($row));
 
