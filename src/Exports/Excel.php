@@ -80,19 +80,19 @@ class Excel
 
         $defaultSort = $this->config->template()->get('defaultSort');
         $alias = Str::afterLast($defaultSort, '.');
-        $start = $this->query->orderBy($defaultSort)->min($alias);
-        $end = $this->query->orderBy($defaultSort)->max($alias);
+        $start = $this->query->min($alias);
+        $end = $this->query->max($alias);
+        $this->optimalChunk = 1000;
 
         while ($start <= $end) {
-            $chunk = $this->query->where($defaultSort, '>=', $start)
-                ->where($defaultSort, '<', $start + $this->optimalChunk)
+            $chunk = $this->query->clone()
+                ->where($defaultSort, '>=', $start)
+                ->where($defaultSort, '<', $start += $this->optimalChunk)
                 ->get();
 
             if ($chunk->isNotEmpty()) {
                 $this->processChunk($chunk);
             }
-
-            $start += $this->optimalChunk;
         }
     }
 
