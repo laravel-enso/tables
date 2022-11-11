@@ -78,11 +78,22 @@ class Excel
         $this->sheetCount = 1;
         $this->writer->addRow($this->header());
 
-        $process = fn ($chunk) => $this->processChunk($chunk);
         $defaultSort = $this->config->template()->get('defaultSort');
         $alias = Str::afterLast($defaultSort, '.');
+        $start = $this->query->orderBy($defaultSort)->min($alias);
+        $end = $this->query->orderBy($defaultSort)->max($alias);
 
-        $this->query->chunkById($this->optimalChunk, $process, $defaultSort, $alias);
+        while ($start <= $end) {
+            $chunk = $this->query->where($defaultSort, '>=', $start)
+                ->where($defaultSort, '<', $start + $this->optimalChunk)
+                ->get();
+
+            if ($chunk->isNotEmpty()) {
+                $this->processChunk($chunk);
+            }
+
+            $start += $this->optimalChunk;
+        }
     }
 
     protected function finalize(): void
