@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config as ConfigFacade;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use LaravelEnso\Helpers\Services\Decimals;
@@ -80,9 +81,10 @@ class Excel
 
         $defaultSort = $this->config->template()->get('defaultSort');
         $alias = Str::afterLast($defaultSort, '.');
-        $start = $this->query->min($alias);
-        $end = $this->query->max($alias);
-        $this->optimalChunk = 1000;
+
+        ['start' => $start, 'end' => $end] = $this->query->clone()
+            ->select(DB::raw("min({$alias}) as start"), DB::raw("max({$alias}) as end"))
+            ->first();
 
         while ($start <= $end) {
             $chunk = $this->query->clone()
