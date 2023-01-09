@@ -48,6 +48,7 @@ class Excel
         protected Table $table,
         protected Config $config
     ) {
+        $this->writer = null;
     }
 
     public function handle(): void
@@ -247,8 +248,10 @@ class Excel
 
     private function closeWriter(): void
     {
-        $this->writer->close();
-        unset($this->writer);
+        if (isset($this->writer)) {
+            $this->writer->close();
+            unset($this->writer);
+        }
     }
 
     private function relativePath(): string
