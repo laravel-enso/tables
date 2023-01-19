@@ -1,7 +1,7 @@
 <?php
 
-use LaravelEnso\Filters\Enums\ComparisonOperators;
-use LaravelEnso\Filters\Enums\SearchModes;
+use LaravelEnso\Filters\Enums\ComparisonOperator;
+use LaravelEnso\Filters\Enums\SearchMode;
 
 return [
     /*
@@ -288,10 +288,10 @@ return [
     |--------------------------------------------------------------------------
     | The comparison operator will be the default used for every table. Can be
     | customized for each table. Possible values:
-    | ComparisonOperators::Like, ComparisonOperators::ILike
+    | ComparisonOperator::Like, ComparisonOperator::ILike
     */
 
-    'comparisonOperator' => ComparisonOperators::Like,
+    'comparisonOperator' => ComparisonOperator::Like,
 
     /*
     |--------------------------------------------------------------------------
@@ -299,13 +299,13 @@ return [
     |--------------------------------------------------------------------------
     | Global allowed search modes that can be customized for each table.
     | Possible values:
-    | SearchModes::Full', SearchModes::StartsWith, SearchModes::EndsWith
+    | SearchMode::Full', SearchMode::StartsWith, SearchMode::EndsWith
     */
 
     'searchModes' => [
-        SearchModes::Full, SearchModes::StartsWith, SearchModes::EndsWith,
-        SearchModes::ExactMatch, SearchModes::DoesntContain,
-        // SearchModes::Algolia,
+        SearchMode::Full, SearchMode::StartsWith, SearchMode::EndsWith,
+        SearchMode::ExactMatch, SearchMode::DoesntContain,
+        // SearchMode::Algolia,
     ],
 
     /*
@@ -314,10 +314,10 @@ return [
     |--------------------------------------------------------------------------
     | Controls the default way in which wildcards are used in the query.
     | Can be customized for each table. Possible values:
-    | SearchModes::Full', SearchModes::StartsWith, SearchModes::EndsWith
+    | SearchMode::Full', SearchMode::StartsWith, SearchMode::EndsWith
     */
 
-    'searchMode' => SearchModes::Full,
+    'searchMode' => SearchMode::Full,
 
     /*
     |--------------------------------------------------------------------------
