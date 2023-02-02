@@ -21,6 +21,7 @@ use LaravelEnso\Tables\Contracts\AuthenticatesOnExport;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Notifications\ExportDone;
 use LaravelEnso\Tables\Notifications\ExportError;
+use LaravelEnso\Tables\Services\Data\ArrayComputors;
 use LaravelEnso\Tables\Services\Data\Builders\Computor;
 use LaravelEnso\Tables\Services\Data\Builders\Meta;
 use LaravelEnso\Tables\Services\Data\Config;
@@ -138,6 +139,8 @@ class Excel
         $this->path = $this->relativePath();
         $this->entryCount = 0;
         $this->cancelled = false;
+
+        ArrayComputors::serverSide();
     }
 
     private function filter(): self
