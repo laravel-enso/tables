@@ -81,10 +81,14 @@ class Excel
         $this->writer->addRow($this->header());
 
         $defaultSort = $this->config->template()->get('defaultSort');
-        $alias = Str::afterLast($defaultSort, '.');
+
+        $ends = [
+            DB::raw("min({$defaultSort}) as start"),
+            DB::raw("max({$defaultSort}) as end"),
+        ];
 
         ['start' => $start, 'end' => $end] = $this->query->clone()
-            ->select(DB::raw("min({$alias}) as start"), DB::raw("max({$alias}) as end"))
+            ->select(...$ends)
             ->first();
 
         while ($start <= $end) {
