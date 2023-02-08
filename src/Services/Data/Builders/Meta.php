@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use LaravelEnso\Tables\Contracts\CustomCount;
 use LaravelEnso\Tables\Contracts\CustomCountCacheKey;
+use LaravelEnso\Tables\Contracts\CustomFilteredCount;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Cache as Exception;
 use LaravelEnso\Tables\Services\Data\Computors\Number;
@@ -66,6 +67,10 @@ class Meta
     {
         if ($this->table instanceof CustomCount && ! $filtered) {
             return $this->table->count();
+        }
+
+        if ($this->table instanceof CustomFilteredCount && $filtered) {
+            return $this->table->filteredCount();
         }
 
         return $this->query
