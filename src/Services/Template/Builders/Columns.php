@@ -60,14 +60,14 @@ class Columns
         return $this;
     }
 
-    // private function enum($column): self
-    // {
-    //     if ($column->has('enum')) {
-    //         $column->set('enum', $column->get('enum'));
-    //     }
+    private function enum($column): self
+    {
+        if ($column->has('enum')) {
+            $column->set('enum', $column->get('enum'));
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     private function number($column): self
     {

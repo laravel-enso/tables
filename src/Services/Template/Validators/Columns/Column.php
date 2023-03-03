@@ -3,11 +3,13 @@
 namespace LaravelEnso\Tables\Services\Template\Validators\Columns;
 
 use Illuminate\Support\Collection;
+use LaravelEnso\Enums\Traits\Select;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Column as Attributes;
 use LaravelEnso\Tables\Attributes\Number;
 use LaravelEnso\Tables\Attributes\Style;
 use LaravelEnso\Tables\Exceptions\Column as Exception;
+use ReflectionEnum;
 
 class Column
 {
@@ -64,7 +66,7 @@ class Column
 
     private function enum(): void
     {
-        if ($this->missingClass('enum')) {
+        if ($this->invalidEnum()) {
             throw Exception::enumNotFound($this->column->get('enum'));
         }
     }
@@ -112,6 +114,14 @@ class Column
     {
         return $this->column->has($attribute)
             && ! class_exists($this->column->get($attribute));
+    }
+
+    private function invalidEnum(): bool
+    {
+        return $this->column->has('enum')
+            && ! in_array(Select::class, array_keys(
+                (new ReflectionEnum($this->column->get('enum')))->getTraits()
+            ));
     }
 
     private function invalidString(string $attribute): bool
