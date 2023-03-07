@@ -2,38 +2,38 @@
 
 namespace LaravelEnso\Tables\Services\Data\Filters;
 
-use Illuminate\Support\Collection;
+use LaravelEnso\Helpers\Services\Obj;
 
 class Interval extends BaseFilter
 {
     public function applies(): bool
     {
-        return $this->config->intervals()->first(fn ($interval) => $interval
-            ->first(fn ($value) => $this->isValid($value->get('min'))
-                || $this->isValid($value->get('max'))) !== null) !== null;
+        return $this->config->intervals()
+            ->some(fn ($column) => $column
+                ->some(fn ($interval) => $interval->filled('min')
+                    || $interval->filled('max')));
     }
 
     public function handle(): void
     {
         $this->query->where(fn () => $this->config->intervals()
-            ->each(fn ($interval, $table) => Collection::wrap($interval)
-                ->each(fn ($value, $column) => $this
-                    ->limit($table, $column, $value, 'min', '>=')
-                    ->limit($table, $column, $value, 'max', '<='))));
+            ->each(fn ($interval, $table) => $interval
+                ->each(fn ($interval, $column) => $this
+                    ->limit($table, $column, $interval))));
     }
 
-    private function limit($table, $column, $value, $bound, $operator): self
+    private function limit($table, $column, Obj $interval): self
     {
-        if ($this->isValid($value->get($bound))) {
-            $this->query
-                ->where("{$table}.{$column}", $operator, $value->get($bound));
+        $attribute = "{$table}.{$column}";
+
+        if ($interval->filled('min')) {
+            $this->query->where($attribute, '>=', $interval->get('min'));
+        }
+
+        if ($interval->filled('max')) {
+            $this->query->where($attribute, '<=', $interval->get('max'));
         }
 
         return $this;
-    }
-
-    private function isValid($value): bool
-    {
-        return ! Collection::wrap([null, ''])->containsStrict($value);
     }
 }
