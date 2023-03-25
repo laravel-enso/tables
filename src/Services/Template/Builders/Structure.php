@@ -20,9 +20,9 @@ class Structure
     ];
 
     private const DefaultFalse = [
-        'cents', 'date', 'datetime', 'enum', 'filterable', 'forceInfo', 'loading',
-        'method', 'money', 'number', 'resource', 'searchable', 'sort', 'total',
-        'translatable',
+        'cents', 'date', 'datetime', 'enum', 'filterable', 'forceInfo',
+        'loading', 'method', 'number', 'resource', 'searchable', 'sort',
+        'total', 'translatable',
     ];
 
     private const TemplateOrConfigToMeta = ['searchMode', 'fullInfoRecordLimit'];
@@ -62,7 +62,7 @@ class Structure
     private function defaultFromConfig()
     {
         Collection::wrap(self::DefaultFromConfig)
-            ->filter(fn ($attribute) => ! $this->template->has($attribute))
+            ->filter(fn ($attribute) => !$this->template->has($attribute))
             ->each(fn ($attribute) => $this->template->set(
                 $attribute,
                 Config::get("enso.tables.{$attribute}")
@@ -74,7 +74,7 @@ class Structure
     private function falseIfMissing()
     {
         Collection::wrap(self::FalseIfMissing)
-            ->filter(fn ($attribute) => ! $this->template->has($attribute))
+            ->filter(fn ($attribute) => !$this->template->has($attribute))
             ->each(fn ($attribute) => $this->template->set($attribute, false));
 
         return $this;
@@ -82,7 +82,7 @@ class Structure
 
     private function name()
     {
-        if (! $this->template->has('name')) {
+        if (!$this->template->has('name')) {
             $this->template->set('name', Str::plural($this->template->get('model')));
         }
 
