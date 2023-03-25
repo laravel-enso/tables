@@ -23,22 +23,32 @@ class Number implements ComputesArrayColumns
     public static function handle(array $row): array
     {
         foreach (self::$columns as $column) {
-            Arr::set($row, $column->get('name'), self::format(
+            $format = self::format(
                 Arr::get($row, $column->get('name')),
-                $column->get('number')->get('precision')
-            ));
+                $column->get('number')
+            );
+
+            Arr::set($row, $column->get('name'), $format);
         }
 
         return $row;
     }
 
-    public static function format($value, $precision = 0)
+    public static function format($value, Obj $number)
     {
-        if (! isset(self::$formatter)) {
+        if (!isset(self::$formatter)) {
             self::$formatter = new Formatter(App::getLocale(), Formatter::DECIMAL);
         }
 
-        self::$formatter->setAttribute(Formatter::FRACTION_DIGITS, $precision);
+        self::$formatter->setAttribute(Formatter::FRACTION_DIGITS, $number->get('precision', 0));
+
+        if ($number->has('decimal')) {
+            self::$formatter->setAttribute(Formatter::DECIMAL_SEPARATOR_SYMBOL, $number->get('decimal'));
+        }
+
+        if ($number->has('thousand')) {
+            self::$formatter->setAttribute(Formatter::GROUPING_SEPARATOR_SYMBOL, $number->get('thousand'));
+        }
 
         return self::$formatter->format($value);
     }

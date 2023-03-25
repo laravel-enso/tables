@@ -51,7 +51,7 @@ class Total
         if ($column->has('number')) {
             $this->total[$column->get('name')] = Number::format(
                 $this->total[$column->get('name')],
-                $column->get('number')->get('precision')
+                $column->get('number')
             );
         }
     }
