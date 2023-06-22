@@ -64,13 +64,22 @@ class Columns
     private function enum($column): self
     {
         if ($column->has('enum')) {
-            $enum = App::make($column->get('enum'));
-            $enum::localisation(false);
-            $column->set('enum', $enum::all());
-            $enum::localisation(true);
+            enum_exists($column->get('enum'))
+                ? $column->get('enum')
+                : $this->legacyEnum();
         }
 
         return $this;
+    }
+
+    private function legacyEnum($column): void
+    {
+        $enum = enum_exists($column->get('enum'))
+            ? $column->get('enum')
+            : App::make($column->get('enum'));
+        $enum::localisation(false);
+        $column->set('enum', $enum::all());
+        $enum::localisation(true);
     }
 
     private function number($column): self
