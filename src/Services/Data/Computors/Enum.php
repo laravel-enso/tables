@@ -20,7 +20,7 @@ class Enum implements ComputesArrayColumns
     {
         foreach (self::$columns as $column) {
             $row[$column->get('name')] = $column
-                ->get('enum')[$row[$column->get('name')]] ?? null;
+                ->get('enum')::from([$row[$column->get('name')]]);
         }
 
         return $row;

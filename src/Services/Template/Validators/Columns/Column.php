@@ -66,7 +66,7 @@ class Column
 
     private function enum(): void
     {
-        if ($this->missingClass('enum')) {
+        if ($this->invalidEnum()) {
             throw Exception::enumNotFound($this->column->get('enum'));
         }
     }

@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\Services\Template\Builders;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Column as Attributes;
 
@@ -37,7 +36,7 @@ class Columns
     private function compute($column): Obj
     {
         $this->meta($column)
-            ->enum($column)
+            // ->enum($column)
             ->number($column)
             ->sort($column)
             ->total($column)

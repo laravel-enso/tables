@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\Exports;
 
 use Illuminate\Foundation\Auth\User;
-use LaravelEnso\DataExport\Enums\Statuses;
+use LaravelEnso\DataExport\Enums\Status;
 use LaravelEnso\DataExport\Models\Export;
 use LaravelEnso\Tables\Jobs\EnsoExcel;
 use LaravelEnso\Tables\Jobs\Excel;
@@ -34,7 +34,7 @@ class Prepare
     {
         return Export::factory()->create([
             'name' => $this->config->name(),
-            'status' => Statuses::Waiting,
+            'status' => Status::Waiting,
         ]);
     }
 }

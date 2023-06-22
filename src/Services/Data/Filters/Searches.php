@@ -4,6 +4,8 @@ namespace LaravelEnso\Tables\Services\Data\Filters;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use LaravelEnso\Filters\Enums\ComparisonOperator;
+use LaravelEnso\Filters\Enums\SearchMode;
 use LaravelEnso\Filters\Services\Search;
 use LaravelEnso\Helpers\Services\Obj;
 
@@ -28,8 +30,10 @@ class Searches extends BaseFilter
             (array) $this->attribute($filter),
             $filter->get('value')
         ))->relations((array) $this->relation($filter))
-            ->comparisonOperator($this->config->get('comparisonOperator'))
-            ->searchMode($filter->get('mode'))
+            ->comparisonOperator(
+                ComparisonOperator::from($this->config->get('comparisonOperator'))
+            )
+            ->searchMode(SearchMode::from($filter->get('mode')))
             ->handle();
     }
 
