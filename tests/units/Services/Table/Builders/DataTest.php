@@ -194,6 +194,15 @@ class DataTest extends TestCase
             TestModel::orderBy('name')->first()->name,
             $response->first()->get('name')
         );
+
+        $this->config->template()->set('defaultSortDirection', 'desc');
+
+        $response = $this->requestResponse();
+
+        $this->assertEquals(
+            TestModel::orderBy('name')->latest()->first()->name,
+            $response->last()->get('name')
+        );
     }
 
     /** @test */
