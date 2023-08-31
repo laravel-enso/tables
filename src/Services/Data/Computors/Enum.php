@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\Services\Data\Computors;
 
+use Illuminate\Support\Arr;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\ComputesArrayColumns;
 
@@ -19,8 +20,10 @@ class Enum implements ComputesArrayColumns
     public static function handle(array $row): array
     {
         foreach (self::$columns as $column) {
-            $row[$column->get('name')] = $column
-                ->get('enum')[$row[$column->get('name')]] ?? null;
+            $value = $column->get('enum')[Arr::get($row, $column->get('name'))]
+                ?? null;
+
+            Arr::set($row, $column->get('name'), $value);
         }
 
         return $row;
