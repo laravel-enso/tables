@@ -37,6 +37,11 @@ class Template extends EnsoException
         return new static(__('"searchModes" attribute must be an associative array'));
     }
 
+    public static function invalidSortDirection()
+    {
+        return new static(__('"defaultSortDirection" attribute must be either "asc" or "desc'));
+    }
+
     public static function invalidDebounce()
     {
         return new static(__('"debounce" attribute must be an integer'));
