@@ -46,7 +46,10 @@ class EnsoExcel extends Excel
 
     protected function finalize(): void
     {
-        $args = [$this->export, $this->savedName, $this->filename, $this->export->created_by];
+        $args = [
+            $this->export, $this->savedName, $this->filename,
+            $this->export->getAttribute('created_by'),
+        ];
 
         $file = File::attach(...$args);
 
