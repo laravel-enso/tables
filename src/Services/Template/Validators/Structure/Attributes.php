@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\Services\Template\Validators\Structure;
 
+use Illuminate\Support\Str;
 use LaravelEnso\Filters\Enums\ComparisonOperator;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Template as Exception;
@@ -17,6 +18,7 @@ class Attributes
         $this->lengthMenu()
             ->appends()
             ->searchMode()
+            ->defaultSortDirection()
             ->debounce()
             ->method()
             ->selectable()
@@ -54,6 +56,20 @@ class Attributes
             && ! $this->template->get('searchModes') instanceof Obj
         ) {
             throw Exception::invalidSearchModes();
+        }
+
+        return $this;
+    }
+
+    private function defaultSortDirection()
+    {
+        $allowed = ['asc', 'desc'];
+
+        if (
+            $this->template->has('defaultSortDirection')
+            && ! in_array(Str::lower($this->template->get('defaultSortDirection')), $allowed)
+        ) {
+            throw Exception::invalidSortDirection();
         }
 
         return $this;

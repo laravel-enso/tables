@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Services\Data\Sorts;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use LaravelEnso\Tables\Services\Data\Config;
 
 class Sort
@@ -20,7 +21,13 @@ class Sort
         if ($sort->applies()) {
             $sort->handle();
         } elseif (! $this->query->getQuery()->orders) {
-            $this->query->orderBy($this->config->template()->get('defaultSort'));
+            $column = $this->config->template()->get('defaultSort');
+
+            $direction = $this->config->template()->has('defaultSortDirection')
+                ? Str::lower($this->config->template()->get('defaultSortDirection'))
+                : 'asc';
+
+            $this->query->orderBy($column, $direction);
         }
     }
 }
