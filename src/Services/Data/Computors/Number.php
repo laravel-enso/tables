@@ -43,11 +43,11 @@ class Number implements ComputesArrayColumns
         self::$formatter->setAttribute(Formatter::FRACTION_DIGITS, $number->get('precision', 0));
 
         if ($number->has('decimal')) {
-            self::$formatter->setAttribute(Formatter::DECIMAL_SEPARATOR_SYMBOL, $number->get('decimal'));
+            self::$formatter->setSymbol(Formatter::DECIMAL_SEPARATOR_SYMBOL, $number->get('decimal'));
         }
 
         if ($number->has('thousand')) {
-            self::$formatter->setAttribute(Formatter::GROUPING_SEPARATOR_SYMBOL, $number->get('thousand'));
+            self::$formatter->setSymbol(Formatter::GROUPING_SEPARATOR_SYMBOL, $number->get('thousand'));
         }
 
         return self::$formatter->format($value);
