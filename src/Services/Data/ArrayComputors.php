@@ -43,10 +43,6 @@ class ArrayComputors extends Computors
 
     protected static function applicable(Config $config): Collection
     {
-        \Log::info(parent::applicable($config)->toArray());
-
-        \Log::info(! self::$serverSide);
-
         return parent::applicable($config)
             ->when(! self::$serverSide, fn ($computors) => $computors
                 ->reject(fn ($computor) => in_array($computor, ['enum', 'translatable'])));
