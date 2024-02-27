@@ -19,6 +19,8 @@ class ColumnTest extends TestCase
     {
         parent::setUp();
 
+        // $this->withoutExceptionHandling();
+
         $this->template = new Obj(['columns' => [$this->mockedColumn()]]);
     }
 

@@ -63,14 +63,27 @@ class Columns
 
     private function enum($column): self
     {
-        if ($column->has('enum')) {
-            $enum = App::make($column->get('enum'));
-            $enum::localisation(false);
-            $column->set('enum', $enum::all());
-            $enum::localisation(true);
+        if (! $column->has('enum')) {
+            return $this;
+        }
+
+        if (enum_exists($column->get('enum'))) {
+            $column->set('enum', Collection::wrap($column->get('enum')::cases())
+                ->mapWithKeys(fn ($value) => [$value->value => $value->name]))
+                ->toArray();
+        } else {
+            $this->setLegacyEnum($column);
         }
 
         return $this;
+    }
+
+    private function setLegacyEnum($column): void
+    {
+        $enum = App::make($column->get('enum'));
+        $enum::localisation(false);
+        $column->set('enum', $enum::all());
+        $enum::localisation(true);
     }
 
     private function number($column): self
