@@ -119,7 +119,7 @@ class Column
 
         return (! class_exists($this->column->get('enum'))
             || ! enum_exists($this->column->get('enum')))
-            && ! $valid($this->column->get('enum'));
+            || ! $valid($this->column->get('enum'));
     }
 
     private function invalidString(string $attribute): bool
