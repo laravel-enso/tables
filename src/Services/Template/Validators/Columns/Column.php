@@ -117,8 +117,11 @@ class Column
             ? in_array(Select::class, array_keys((new ReflectionEnum($enum))->getTraits()))
             : (new ReflectionClass($enum))->isSubclassOf(Enum::class);
 
+        \Log::info((! class_exists($this->column->get('enum'))
+            || ! enum_exists($this->column->get('enum'))));
+
         return (! class_exists($this->column->get('enum'))
-            || ! enum_exists($this->column->get('enum')))
+            && ! enum_exists($this->column->get('enum')))
             || ! $valid($this->column->get('enum'));
     }
 
