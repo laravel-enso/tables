@@ -51,20 +51,20 @@ class Meta
         $this->build();
 
         return [
-            'count' => $this->count,
-            'formattedCount' => number_format($this->count),
-            'filtered' => $this->filtered,
+            'count'             => $this->count,
+            'formattedCount'    => number_format($this->count),
+            'filtered'          => $this->filtered,
             'formattedFiltered' => number_format($this->filtered),
-            'total' => $this->total,
-            'fullRecordInfo' => $this->fullRecordInfo,
-            'filters' => $this->filters,
-            'pagination' => $this->pagination()->toArray(),
+            'total'             => $this->total,
+            'fullRecordInfo'    => $this->fullRecordInfo,
+            'filters'           => $this->filters,
+            'pagination'        => $this->pagination()->toArray(),
         ];
     }
 
     public function count($filtered = false): int
     {
-        if ($this->table instanceof CustomCount && ! $filtered) {
+        if ($this->table instanceof CustomCount && !$filtered) {
             return $this->table->count();
         }
 
@@ -102,7 +102,7 @@ class Meta
     {
         $this->fullRecordInfo = $this->config->meta()->get('forceInfo')
             || $this->count <= $this->config->meta()->get('fullInfoRecordLimit')
-            || (! $this->filters && ! $this->config->meta()->get('total'));
+            || (!$this->filters && !$this->config->meta()->get('total'));
 
         return $this;
     }
@@ -135,7 +135,7 @@ class Meta
 
     private function cachedCount(): int
     {
-        if (! $this->shouldCache()) {
+        if (!$this->shouldCache()) {
             return $this->count();
         }
 
@@ -143,7 +143,7 @@ class Meta
             ? $this->cacheKey($this->table->countCacheKey())
             : $this->cacheKey();
 
-        if (! $this->cache($this->cacheKey())->has($cacheKey)) {
+        if (!$this->cache($this->cacheKey())->has($cacheKey)) {
             $this->cache($this->cacheKey())
                 ->put($cacheKey, $this->count(), Carbon::now()->addHour());
         }
@@ -180,13 +180,13 @@ class Meta
             $compatible = $instance->hasMethod('resetTableCache')
                 && $instance->hasMethod('tableCacheKey');
 
-            if (! $compatible) {
+            if (!$compatible) {
                 throw Exception::missingTrait($model::class);
             }
         }
 
         return $shouldCache
             && (Cache::getStore() instanceof TaggableStore
-                || ! $this->table instanceof CustomCountCacheKey);
+                || !$this->table instanceof CustomCountCacheKey);
     }
 }

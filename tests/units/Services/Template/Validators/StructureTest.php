@@ -61,15 +61,15 @@ class StructureTest extends TestCase
     private function mockedTemplate()
     {
         return new Obj([
-            'lengthMenu' => new Obj([]),
-            'debounce' => 10,
-            'method' => 'POST',
-            'selectable' => true,
+            'lengthMenu'         => new Obj([]),
+            'debounce'           => 10,
+            'method'             => 'POST',
+            'selectable'         => true,
             'comparisonOperator' => 'LIKE',
-            'name' => 'name',
-            'columns' => [],
-            'buttons' => [],
-            'routePrefix' => 'prefix',
+            'name'               => 'name',
+            'columns'            => [],
+            'buttons'            => [],
+            'routePrefix'        => 'prefix',
         ]);
     }
 }

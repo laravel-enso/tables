@@ -36,7 +36,7 @@ class Number implements ComputesArrayColumns
 
     public static function format($value, Obj $number)
     {
-        if (! isset(self::$formatter)) {
+        if (!isset(self::$formatter)) {
             self::$formatter = new Formatter(App::getLocale(), Formatter::DECIMAL);
         }
 

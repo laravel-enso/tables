@@ -35,7 +35,7 @@ class Data
         if ($this->data->isNotEmpty()) {
             $this->data = (new Computor($this->config, $this->data))->handle();
 
-            if (! $this->fetchMode) {
+            if (!$this->fetchMode) {
                 $this->actions();
                 $this->style();
             }

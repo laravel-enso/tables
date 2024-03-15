@@ -8,7 +8,7 @@ class RequestArgument
 {
     public static function parse($arg)
     {
-        return ! is_array($arg)
+        return !is_array($arg)
             ? self::decode($arg)
             : Collection::wrap($arg)->map(fn ($arg) => self::decode($arg))->toArray();
     }

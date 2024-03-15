@@ -17,11 +17,11 @@ class ArrayComputors extends Computors
     private static bool $serverSide = false;
 
     protected static array $computors = [
-        'cents' => Cents::class,
-        'enum' => Enum::class,
-        'date' => Date::class,
-        'datetime' => DateTime::class,
-        'number' => Number::class,
+        'cents'        => Cents::class,
+        'enum'         => Enum::class,
+        'date'         => Date::class,
+        'datetime'     => DateTime::class,
+        'number'       => Number::class,
         'translatable' => Translator::class,
     ];
 
@@ -34,7 +34,7 @@ class ArrayComputors extends Computors
     {
         $computor = new static::$computors[$computor]();
 
-        if (! $computor instanceof ComputesArrayColumns) {
+        if (!$computor instanceof ComputesArrayColumns) {
             throw ArrayComputor::missingInterface();
         }
 
@@ -44,7 +44,7 @@ class ArrayComputors extends Computors
     protected static function applicable(Config $config): Collection
     {
         return parent::applicable($config)
-            ->when(! self::$serverSide, fn ($computors) => $computors
+            ->when(!self::$serverSide, fn ($computors) => $computors
                 ->reject(fn ($computor) => in_array($computor, ['enum', 'translatable'])));
     }
 }

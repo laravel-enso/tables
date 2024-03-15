@@ -47,8 +47,8 @@ class AppServiceProvider extends ServiceProvider
     {
         return new Collection([
             'Tables/Actions/CustomAction' => 'php',
-            'Tables/Builders/ModelTable' => 'php',
-            'Tables/Templates/template' => 'json',
+            'Tables/Builders/ModelTable'  => 'php',
+            'Tables/Templates/template'   => 'json',
         ]);
     }
 }

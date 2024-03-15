@@ -85,7 +85,7 @@ class Config
 
     public function isEnso(): bool
     {
-        return ! empty(ConfigFacade::get('enso.config'));
+        return !empty(ConfigFacade::get('enso.config'));
     }
 
     public function name(): string

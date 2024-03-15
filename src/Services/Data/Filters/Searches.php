@@ -70,7 +70,7 @@ class Searches extends BaseFilter
 
     private function isValid($value): bool
     {
-        return ! Collection::wrap([null, ''])->containsStrict($value)
-            && (! $value instanceof Collection || $value->isNotEmpty());
+        return !Collection::wrap([null, ''])->containsStrict($value)
+            && (!$value instanceof Collection || $value->isNotEmpty());
     }
 }

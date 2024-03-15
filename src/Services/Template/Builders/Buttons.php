@@ -50,9 +50,9 @@ class Buttons
 
     private function shouldDisplay(Obj $button, string $type)
     {
-        return ! $button->has('action')
-            && ! $button->has('route')
-            && ! $button->has('routeSuffix')
+        return !$button->has('action')
+            && !$button->has('route')
+            && !$button->has('routeSuffix')
             || $this->actionComputingSuccedes($button, $type);
     }
 
@@ -110,7 +110,7 @@ class Buttons
 
     private function needAuthorization()
     {
-        return ! empty(Config::get('enso.config'))
+        return !empty(Config::get('enso.config'))
             && $this->template->get('auth') !== false;
     }
 

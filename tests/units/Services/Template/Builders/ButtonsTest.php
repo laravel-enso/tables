@@ -22,7 +22,7 @@ class ButtonsTest extends TestCase
         $this->meta = new Obj([]);
 
         $this->template = new Obj([
-            'auth' => false,
+            'auth'    => false,
             'buttons' => [],
         ]);
     }
@@ -49,8 +49,8 @@ class ButtonsTest extends TestCase
         $this->actingAs($user);
 
         $this->template->get('buttons')->push(new Obj([
-            'action' => '',
-            'type' => 'row',
+            'action'    => '',
+            'type'      => 'row',
             'fullRoute' => 'test',
         ]));
 
@@ -75,8 +75,8 @@ class ButtonsTest extends TestCase
         Route::getRoutes()->refreshNameLookups();
 
         $this->template->get('buttons')->push(new Obj([
-            'action' => 'ajax',
-            'type' => 'row',
+            'action'    => 'ajax',
+            'type'      => 'row',
             'fullRoute' => 'test',
         ]));
 

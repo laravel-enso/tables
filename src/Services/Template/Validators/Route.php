@@ -18,7 +18,7 @@ class Route
 
     public function validate()
     {
-        if (! Facade::has($this->readRoute)) {
+        if (!Facade::has($this->readRoute)) {
             throw Exception::notFound($this->readRoute);
         }
     }

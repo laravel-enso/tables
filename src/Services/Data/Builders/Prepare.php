@@ -24,7 +24,7 @@ class Prepare
 
     private function strip(): self
     {
-        if (! $this->config->filled('strip')) {
+        if (!$this->config->filled('strip')) {
             return $this;
         }
 

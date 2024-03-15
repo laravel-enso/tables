@@ -34,11 +34,11 @@ class Pagination
         $this->handle();
 
         return [
-            'page' => $this->page,
-            'pages' => $this->pages,
-            'atStart' => $this->atStart,
-            'atEnd' => $this->atEnd,
-            'atMiddle' => $this->atMiddle,
+            'page'        => $this->page,
+            'pages'       => $this->pages,
+            'atStart'     => $this->atStart,
+            'atEnd'       => $this->atEnd,
+            'atMiddle'    => $this->atMiddle,
             'middlePages' => $this->middlePages,
         ];
     }
@@ -79,13 +79,13 @@ class Pagination
     private function atMiddle(): void
     {
         if ($this->fullInfo) {
-            $this->atMiddle = ! $this->atStart && ! $this->atEnd;
+            $this->atMiddle = !$this->atStart && !$this->atEnd;
         }
     }
 
     private function middlePages(): void
     {
-        if (! $this->fullInfo) {
+        if (!$this->fullInfo) {
             return;
         }
 

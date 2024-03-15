@@ -25,7 +25,7 @@ class Filters
     private function format(): self
     {
         $invalid = $this->filters
-            ->filter(fn ($filter) => ! is_string($filter) && ! $filter instanceof Obj);
+            ->filter(fn ($filter) => !is_string($filter) && !$filter instanceof Obj);
 
         if ($invalid->isNotEmpty()) {
             throw Exception::invalidFormat();

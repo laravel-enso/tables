@@ -22,7 +22,7 @@ class ButtonTest extends TestCase
 
         $this->template = new Obj([
             'routePrefix' => 'mockedPrefix',
-            'buttons' => [$this->mockedButton()],
+            'buttons'     => [$this->mockedButton()],
         ]);
     }
 
@@ -183,7 +183,7 @@ class ButtonTest extends TestCase
 
     private function conditionalActionTable(): Table
     {
-        return new class extends TestTable implements ConditionalActions {
+        return new class() extends TestTable implements ConditionalActions {
             public function render(array $row, string $action): bool
             {
                 return false;

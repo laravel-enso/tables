@@ -14,7 +14,7 @@ class ColumnTest extends TestCase
     private $meta;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 

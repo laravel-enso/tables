@@ -10,7 +10,7 @@ use LaravelEnso\Tables\Services\Data\Computors\Resource;
 class ModelComputors extends Computors
 {
     protected static array $computors = [
-        'method' => Method::class,
+        'method'   => Method::class,
         'resource' => Resource::class,
     ];
 
@@ -18,7 +18,7 @@ class ModelComputors extends Computors
     {
         $computor = new self::$computors[$computor]();
 
-        if (! $computor instanceof ComputesModelColumns) {
+        if (!$computor instanceof ComputesModelColumns) {
             throw ModelComputor::missingInterface();
         }
 

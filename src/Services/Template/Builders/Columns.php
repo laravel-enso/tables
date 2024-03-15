@@ -63,7 +63,7 @@ class Columns
 
     private function enum($column): self
     {
-        if (! $column->has('enum')) {
+        if (!$column->has('enum')) {
             return $this;
         }
 

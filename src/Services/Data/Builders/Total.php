@@ -58,7 +58,7 @@ class Total
 
     private function rawTotal($column): string
     {
-        if (! $this->table instanceof RawTotal) {
+        if (!$this->table instanceof RawTotal) {
             throw Exception::missingInterface();
         }
 

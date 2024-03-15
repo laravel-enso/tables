@@ -47,7 +47,7 @@ class Filter
 
     private function complementary(): void
     {
-        if ($this->filter->get('type') === 'select' && ! $this->filter->has('route')) {
+        if ($this->filter->get('type') === 'select' && !$this->filter->has('route')) {
             throw Exception::missingRoute();
         }
     }
@@ -56,7 +56,7 @@ class Filter
     {
         $route = $this->filter->get('route');
 
-        if ($route !== null && ! Route::has($route)) {
+        if ($route !== null && !Route::has($route)) {
             throw Exception::routeNotFound($route);
         }
     }

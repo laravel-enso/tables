@@ -60,12 +60,12 @@ class Filters extends BaseFilter
     private function filter($filter): TableFilter
     {
         $instance = App::make($filter, [
-            'table' => $this->table,
+            'table'  => $this->table,
             'config' => $this->config,
-            'query' => $this->query,
+            'query'  => $this->query,
         ]);
 
-        if (! $instance instanceof TableFilter) {
+        if (!$instance instanceof TableFilter) {
             throw Exception::missingContract($filter);
         }
 

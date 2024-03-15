@@ -30,7 +30,7 @@ class Buttons
     private function format(): void
     {
         $invalid = $this->template->get('buttons')
-            ->filter(fn ($button) => ! is_string($button) && ! $button instanceof Obj);
+            ->filter(fn ($button) => !is_string($button) && !$button instanceof Obj);
 
         if ($invalid->isNotEmpty()) {
             throw Exception::invalidFormat();

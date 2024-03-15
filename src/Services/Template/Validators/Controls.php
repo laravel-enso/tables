@@ -36,8 +36,8 @@ class Controls
 
     private function invalidFormat()
     {
-        return ! $this->controls instanceof Obj || $this->controls
-            ->filter(fn ($control) => ! is_string($control))
+        return !$this->controls instanceof Obj || $this->controls
+            ->filter(fn ($control) => !is_string($control))
             ->isNotEmpty();
     }
 

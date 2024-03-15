@@ -37,13 +37,13 @@ class Columns
 
     private function invalidFormat()
     {
-        return ! $this->columns instanceof Obj
+        return !$this->columns instanceof Obj
             || $this->columns->isEmpty();
     }
 
     private function invalidChild()
     {
         return $this->columns
-            ->some(fn ($column) => ! $column instanceof Obj);
+            ->some(fn ($column) => !$column instanceof Obj);
     }
 }

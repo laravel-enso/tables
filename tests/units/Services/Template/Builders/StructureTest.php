@@ -12,16 +12,16 @@ class StructureTest extends TestCase
     private $meta;
     private $template;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->createRoute();
 
         $this->template = new Obj([
-            'routePrefix' => 'prefix',
+            'routePrefix'     => 'prefix',
             'dataRouteSuffix' => 'suffix',
-            'model' => 'test',
+            'model'           => 'test',
         ]);
 
         $this->meta = new Obj([]);

@@ -38,7 +38,7 @@ class Fetcher
 
     public function next(): void
     {
-        if (! $this->ready) {
+        if (!$this->ready) {
             $this->optimalChunk();
         }
 

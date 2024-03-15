@@ -33,7 +33,7 @@ class Prepare
     protected function export(): Export
     {
         return Export::factory()->create([
-            'name' => $this->config->name(),
+            'name'   => $this->config->name(),
             'status' => Status::Waiting,
         ]);
     }

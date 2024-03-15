@@ -17,7 +17,7 @@ class TableCacheTest extends TestCase
     private $faker;
     private string $key;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 

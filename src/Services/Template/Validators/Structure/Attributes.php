@@ -29,7 +29,7 @@ class Attributes
     {
         if (
             $this->template->has('lengthMenu')
-            && ! $this->template->get('lengthMenu') instanceof Obj
+            && !$this->template->get('lengthMenu') instanceof Obj
         ) {
             throw Exception::invalidLengthMenu();
         }
@@ -41,7 +41,7 @@ class Attributes
     {
         if (
             $this->template->has('appends')
-            && ! $this->template->get('appends') instanceof Obj
+            && !$this->template->get('appends') instanceof Obj
         ) {
             throw Exception::invalidAppends();
         }
@@ -53,7 +53,7 @@ class Attributes
     {
         if (
             $this->template->has('searchModes')
-            && ! $this->template->get('searchModes') instanceof Obj
+            && !$this->template->get('searchModes') instanceof Obj
         ) {
             throw Exception::invalidSearchModes();
         }
@@ -67,7 +67,7 @@ class Attributes
 
         if (
             $this->template->has('defaultSortDirection')
-            && ! in_array(Str::lower($this->template->get('defaultSortDirection')), $allowed)
+            && !in_array(Str::lower($this->template->get('defaultSortDirection')), $allowed)
         ) {
             throw Exception::invalidSortDirection();
         }
@@ -79,7 +79,7 @@ class Attributes
     {
         if (
             $this->template->has('debounce')
-            && ! is_int($this->template->get('debounce'))
+            && !is_int($this->template->get('debounce'))
         ) {
             throw Exception::invalidDebounce();
         }
@@ -90,7 +90,7 @@ class Attributes
     private function method()
     {
         $invalid = $this->template->has('method')
-            && ! in_array($this->template->get('method'), ['GET', 'POST']);
+            && !in_array($this->template->get('method'), ['GET', 'POST']);
 
         if ($invalid) {
             throw Exception::invalidMethod();
@@ -103,7 +103,7 @@ class Attributes
     {
         if (
             $this->template->has('selectable')
-            && ! is_bool($this->template->get('selectable'))
+            && !is_bool($this->template->get('selectable'))
         ) {
             throw Exception::invalidSelectable();
         }

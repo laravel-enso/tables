@@ -10,7 +10,7 @@ trait Datatable
     /** @test */
     public function can_view_index()
     {
-        if (! isset($this->permissionGroup)) {
+        if (!isset($this->permissionGroup)) {
             throw new Exception('"permissionGroup" property is missing from your test');
         }
 
@@ -23,7 +23,7 @@ trait Datatable
 
         $params = [
             'columns' => [],
-            'meta' => '{"start":0,"length":10,"sort":false,"search": "","forceInfo":false,"searchMode":"full"}',
+            'meta'    => '{"start":0,"length":10,"sort":false,"search": "","forceInfo":false,"searchMode":"full"}',
         ];
 
         $this->get(route($this->permissionGroup.'.tableData', $params, $absolute))

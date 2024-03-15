@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Config;
 
 class ExportDone extends Notification implements ShouldQueue
 {
-    use Dispatchable, Queueable;
+    use Dispatchable;
+    use Queueable;
 
     public function __construct(
         protected string $path,
@@ -41,9 +42,9 @@ class ExportDone extends Notification implements ShouldQueue
         return (new MailMessage())
             ->subject("[ {$appName} ] {$this->title()}")
             ->markdown('laravel-enso/tables::emails.export', [
-                'name' => $notifiable->name,
+                'name'     => $notifiable->name,
                 'filename' => __($this->filename),
-                'entries' => $this->entries,
+                'entries'  => $this->entries,
             ])->attach($this->path);
     }
 

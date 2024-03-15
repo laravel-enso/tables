@@ -29,9 +29,9 @@ return [
 
     'cache' => [
         'template' => 'production',
-        'count' => true,
-        'prefix' => 'enso:tables',
-        'tag' => 'enso:tables',
+        'count'    => true,
+        'prefix'   => 'enso:tables',
+        'tag'      => 'enso:tables',
     ],
 
     /*
@@ -63,7 +63,7 @@ return [
      */
 
     'labels' => [
-        'crtNo' => '#',
+        'crtNo'   => '#',
         'actions' => 'Actions',
     ],
 
@@ -93,66 +93,66 @@ return [
     'buttons' => [
         'global' => [
             'create' => [
-                'icon' => 'plus',
-                'class' => null,
+                'icon'        => 'plus',
+                'class'       => null,
                 'routeSuffix' => 'create',
-                'event' => 'create',
-                'action' => 'router',
-                'label' => 'Create',
+                'event'       => 'create',
+                'action'      => 'router',
+                'label'       => 'Create',
             ],
             'excel' => [
-                'icon' => 'file-excel',
-                'class' => null,
+                'icon'        => 'file-excel',
+                'class'       => null,
                 'routeSuffix' => 'exportExcel',
-                'event' => 'export-excel',
-                'action' => 'export',
-                'label' => 'Excel',
+                'event'       => 'export-excel',
+                'action'      => 'export',
+                'label'       => 'Excel',
             ],
             'action' => [
-                'icon' => 'check',
-                'class' => null,
-                'routeSuffix' => 'action',
-                'event' => 'custom-action',
-                'postEvent' => 'custom-action-done',
-                'action' => 'ajax',
-                'method' => 'PATCH',
-                'label' => 'Action',
-                'message' => 'Custom Action. Are you sure?',
+                'icon'         => 'check',
+                'class'        => null,
+                'routeSuffix'  => 'action',
+                'event'        => 'custom-action',
+                'postEvent'    => 'custom-action-done',
+                'action'       => 'ajax',
+                'method'       => 'PATCH',
+                'label'        => 'Action',
+                'message'      => 'Custom Action. Are you sure?',
                 'confirmation' => true,
             ],
         ],
         'row' => [
             'show' => [
-                'icon' => 'eye',
-                'class' => 'is-row-button',
+                'icon'        => 'eye',
+                'class'       => 'is-row-button',
                 'routeSuffix' => 'show',
-                'event' => 'show',
-                'action' => 'router',
+                'event'       => 'show',
+                'action'      => 'router',
             ],
             'edit' => [
-                'icon' => 'pencil-alt',
-                'class' => 'is-row-button',
+                'icon'        => 'pencil-alt',
+                'class'       => 'is-row-button',
                 'routeSuffix' => 'edit',
-                'event' => 'edit',
-                'action' => 'router',
+                'event'       => 'edit',
+                'action'      => 'router',
             ],
             'destroy' => [
-                'icon' => 'trash-alt',
-                'class' => 'is-row-button',
-                'routeSuffix' => 'destroy',
-                'event' => 'destroy',
-                'action' => 'ajax',
-                'method' => 'DELETE',
-                'message' => 'The selected record is about to be deleted. Are you sure?',
+                'icon'         => 'trash-alt',
+                'class'        => 'is-row-button',
+                'routeSuffix'  => 'destroy',
+                'event'        => 'destroy',
+                'action'       => 'ajax',
+                'method'       => 'DELETE',
+                'message'      => 'The selected record is about to be deleted. Are you sure?',
                 'confirmation' => true,
-                'postEvent' => 'destroyed',
+                'postEvent'    => 'destroyed',
             ],
             'download' => [
-                'icon' => 'cloud-download-alt',
-                'class' => 'is-row-button',
+                'icon'        => 'cloud-download-alt',
+                'class'       => 'is-row-button',
                 'routeSuffix' => 'download',
-                'event' => 'download',
-                'action' => 'href',
+                'event'       => 'download',
+                'action'      => 'href',
             ],
         ],
     ],
@@ -168,13 +168,13 @@ return [
     'style' => [
         'default' => ['hover', 'center'],
         'mapping' => [
-            'left' => 'has-text-left',
-            'center' => 'has-text-centered',
-            'right' => 'has-text-right',
-            'compact' => 'is-narrow',
-            'striped' => 'is-striped',
+            'left'     => 'has-text-left',
+            'center'   => 'has-text-centered',
+            'right'    => 'has-text-right',
+            'compact'  => 'is-narrow',
+            'striped'  => 'is-striped',
             'bordered' => 'is-bordered',
-            'hover' => 'is-hoverable',
+            'hover'    => 'is-hoverable',
         ],
         'highlight' => 'has-background-info',
     ],
@@ -200,9 +200,9 @@ return [
      */
 
     'export' => [
-        'folder' => 'exports',
-        'timeout' => 60 * 60,
-        'sheetLimit' => 1000000,
+        'folder'        => 'exports',
+        'timeout'       => 60 * 60,
+        'sheetLimit'    => 1000000,
         'notifications' => ['mail', 'broadcast', 'database'],
     ],
 
@@ -214,7 +214,7 @@ return [
      */
 
     'queues' => [
-        'exports' => 'heavy',
+        'exports'       => 'heavy',
         'notifications' => 'notifications',
     ],
 
@@ -226,7 +226,7 @@ return [
     | marked as date to the desired format.
      */
 
-    'dateFormat' => 'd-m-Y',
+    'dateFormat'     => 'd-m-Y',
     'dateTimeFormat' => 'd-m-Y H:i:s',
 
     /*
