@@ -39,6 +39,8 @@ class Data
                 $this->actions();
                 $this->style();
             }
+
+            $this->data = (new Prepare($this->config, $this->data))->handle();
         }
 
         return $this->data;
