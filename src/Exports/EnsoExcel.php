@@ -5,7 +5,7 @@ namespace LaravelEnso\Tables\Exports;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config as ConfigFacade;
-use LaravelEnso\DataExport\Enums\Status;
+use LaravelEnso\DataExport\Enums\Statuses;
 use LaravelEnso\DataExport\Models\Export;
 use LaravelEnso\DataExport\Notifications\ExportDone;
 use LaravelEnso\Files\Models\File;
@@ -27,8 +27,8 @@ class EnsoExcel extends Excel
         App::setLocale($this->user->preferences()->global->lang);
 
         $this->export->update([
-            'status' => Status::Processing,
-            'total'  => $this->count,
+            'status' => Statuses::Processing,
+            'total' => $this->count,
         ]);
 
         parent::process();
@@ -53,7 +53,7 @@ class EnsoExcel extends Excel
 
         $file = File::attach(...$args);
 
-        $this->export->fill(['status' => Status::Finalized])
+        $this->export->fill(['status' => Statuses::Finalized])
             ->file()->associate($file)
             ->save();
 
@@ -64,7 +64,7 @@ class EnsoExcel extends Excel
 
     protected function notifyError(): void
     {
-        $this->export->update(['status' => Status::Failed]);
+        $this->export->update(['status' => Statuses::Failed]);
 
         parent::notifyError();
     }
