@@ -29,6 +29,13 @@ class CustomSort
                 fn ($query) => $query
                     ->orderBy($column->get('data'), $column->get('meta')->get('sort'))
             ));
+
+        $template = $this->config->template();
+
+        $this->query->orderBy(
+            "{$template->get('table')}.{$template->get('dtRowId')}",
+            $template->get('defaultSortDirection')
+        );
     }
 
     private function rawSort($column): string
