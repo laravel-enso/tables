@@ -83,11 +83,11 @@ class Excel
         $this->writer->addRow($this->header());
 
         $template = $this->config->template();
-        $defaultSort = "{$template->get('table')}.{$template->get('dtRowId')}";
+        $sort = "{$template->get('table')}.{$template->get('dtRowId')}";
 
         $ends = [
-            DB::raw("min({$defaultSort}) as start"),
-            DB::raw("max({$defaultSort}) as end"),
+            DB::raw("min({$sort}) as start"),
+            DB::raw("max({$sort}) as end"),
         ];
 
         ['start' => $start, 'end' => $end] = $this->query->clone()
@@ -96,8 +96,8 @@ class Excel
 
         while ($start <= $end) {
             $chunk = $this->query->clone()
-                ->where($defaultSort, '>=', $start)
-                ->where($defaultSort, '<', $start += $this->optimalChunk)
+                ->where($sort, '>=', $start)
+                ->where($sort, '<', $start += $this->optimalChunk)
                 ->get();
 
             if ($chunk->isNotEmpty()) {
