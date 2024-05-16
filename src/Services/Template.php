@@ -57,8 +57,8 @@ class Template
     public function toArray()
     {
         return [
-            'template'   => $this->template,
-            'meta'       => $this->meta,
+            'template' => $this->template,
+            'meta' => $this->meta,
             'apiVersion' => Config::get('enso.tables.apiVersion'),
         ];
     }
@@ -94,7 +94,7 @@ class Template
         $template = $this->readJson($this->table->templatePath());
         $model = $this->table->query()->getModel();
 
-        if (!$template->has('model')) {
+        if (! $template->has('model')) {
             $this->setModel($template, $model);
         }
 
