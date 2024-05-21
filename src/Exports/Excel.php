@@ -83,7 +83,10 @@ class Excel
         $this->writer->addRow($this->header());
 
         $template = $this->config->template();
-        $sort = "{$template->get('table')}.{$template->get('dtRowId')}";
+
+        $sort = ConfigFacade::get('enso.tables.dtRowId') === $template->get('dtRowId')
+            ? "{$template->get('table')}.{$template->get('dtRowId')}"
+            : $template->get('dtRowId');
 
         $ends = [
             DB::raw("min({$sort}) as start"),

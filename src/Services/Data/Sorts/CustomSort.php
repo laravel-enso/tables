@@ -3,6 +3,7 @@
 namespace LaravelEnso\Tables\Services\Data\Sorts;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Config as ConfigFacade;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Config;
 
@@ -32,10 +33,11 @@ class CustomSort
 
         $template = $this->config->template();
 
-        $this->query->orderBy(
-            "{$template->get('table')}.{$template->get('dtRowId')}",
-            $template->get('defaultSortDirection')
-        );
+        $sort = ConfigFacade::get('enso.tables.dtRowId') === $template->get('dtRowId')
+            ? "{$template->get('table')}.{$template->get('dtRowId')}"
+            : $template->get('dtRowId');
+
+        $this->query->orderBy($sort, $template->get('defaultSortDirection'));
     }
 
     private function rawSort($column): string
