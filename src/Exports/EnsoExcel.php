@@ -28,7 +28,7 @@ class EnsoExcel extends Excel
 
         $this->export->update([
             'status' => Statuses::Processing,
-            'total' => $this->count,
+            'total'  => $this->count,
         ]);
 
         parent::process();

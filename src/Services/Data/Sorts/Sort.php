@@ -19,7 +19,7 @@ class Sort
 
         if ($sort->applies()) {
             $sort->handle();
-        } elseif (! $this->query->getQuery()->orders) {
+        } elseif (!$this->query->getQuery()->orders) {
             $column = $this->config->template()->get('defaultSort');
             $direction = $this->config->template()->get('defaultSortDirection');
 

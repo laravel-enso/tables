@@ -62,7 +62,7 @@ class Structure
     private function defaultFromConfig()
     {
         Collection::wrap(self::DefaultFromConfig)
-            ->filter(fn ($attribute) => ! $this->template->has($attribute))
+            ->filter(fn ($attribute) => !$this->template->has($attribute))
             ->each(fn ($attribute) => $this->template->set(
                 $attribute,
                 Config::get("enso.tables.{$attribute}")
@@ -74,7 +74,7 @@ class Structure
     private function falseIfMissing()
     {
         Collection::wrap(self::FalseIfMissing)
-            ->filter(fn ($attribute) => ! $this->template->has($attribute))
+            ->filter(fn ($attribute) => !$this->template->has($attribute))
             ->each(fn ($attribute) => $this->template->set($attribute, false));
 
         return $this;
@@ -82,7 +82,7 @@ class Structure
 
     private function name()
     {
-        if (! $this->template->has('name')) {
+        if (!$this->template->has('name')) {
             $this->template->set('name', Str::plural($this->template->get('model')));
         }
 
@@ -123,7 +123,7 @@ class Structure
 
     private function defaultSort(): void
     {
-        if (! $this->template->has('defaultSort')) {
+        if (!$this->template->has('defaultSort')) {
             $defaultSort = $this->customDtRowId
                 ? $this->template->get('dtRowId')
                 : "{$this->template->get('table')}.{$this->template->get('dtRowId')}";
@@ -131,7 +131,7 @@ class Structure
             $this->template->set('defaultSort', $defaultSort);
         }
 
-        if (! $this->template->has('defaultSortDirection')) {
+        if (!$this->template->has('defaultSortDirection')) {
             $this->template->set('defaultSortDirection', 'asc');
         }
     }
