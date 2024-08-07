@@ -21,7 +21,7 @@
     "require": {
         "php": "^8.0",
         "box/spout": "^3.0",
-        "laravel/framework": "^10.0",
+        "laravel/framework": "^10.0|^11.0",
         "laravel-enso/enums": "^2.0",
         "laravel-enso/filters": "^2.0",
         "laravel-enso/helpers": "^3.0"
@@ -41,7 +41,7 @@
             "providers": [
                 "LaravelEnso\\Tables\\AppServiceProvider"
             ],
-            "aliases": {}
+            "aliases": []
         }
     }
 }
