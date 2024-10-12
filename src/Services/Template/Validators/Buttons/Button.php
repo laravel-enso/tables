@@ -46,7 +46,7 @@ class Button
 
     private function type(): void
     {
-        $invalid = ! in_array($this->button->get('type'), Attributes::Types);
+        $invalid = !in_array($this->button->get('type'), Attributes::Types);
 
         if ($invalid) {
             throw Exception::invalidType();
@@ -55,11 +55,11 @@ class Button
 
     private function action(): void
     {
-        if (! $this->button->has('action')) {
+        if (!$this->button->has('action')) {
             return;
         }
 
-        $invalid = ! in_array($this->button->get('action'), Attributes::Actions);
+        $invalid = !in_array($this->button->get('action'), Attributes::Actions);
 
         if ($invalid) {
             throw Exception::invalidAction();
@@ -81,7 +81,7 @@ class Button
             throw Exception::missingRoute();
         }
 
-        if (! Route::has($route) && $this->button->get('action') !== 'router') {
+        if (!Route::has($route) && $this->button->get('action') !== 'router') {
             throw Exception::routeNotFound($route);
         }
 
@@ -91,7 +91,7 @@ class Button
     private function method(): void
     {
         if ($this->button->has('method')) {
-            $invalid = ! in_array($this->button->get('method'), Attributes::Methods);
+            $invalid = !in_array($this->button->get('method'), Attributes::Methods);
 
             if ($invalid) {
                 throw Exception::invalidMethod($this->button->get('method'));
@@ -107,7 +107,7 @@ class Button
     {
         $missing = $this->table instanceof ConditionalActions
             && $this->button->get('type') === 'row'
-            && ! $this->button->has('name');
+            && !$this->button->has('name');
 
         if ($missing) {
             throw Exception::missingName();
@@ -116,7 +116,7 @@ class Button
 
     private function selection(): void
     {
-        if (! $this->button->get('selection')) {
+        if (!$this->button->get('selection')) {
             return;
         }
 
@@ -124,7 +124,7 @@ class Button
             throw Exception::rowSelection();
         }
 
-        if (! $this->template->get('selectable')) {
+        if (!$this->template->get('selectable')) {
             throw Exception::noSelectable();
         }
     }
