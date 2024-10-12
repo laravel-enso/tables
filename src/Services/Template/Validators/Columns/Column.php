@@ -112,40 +112,40 @@ class Column
     private function missingClass(string $attribute): bool
     {
         return $this->column->has($attribute)
-            && ! class_exists($this->column->get($attribute));
+            && !class_exists($this->column->get($attribute));
     }
 
     public function enumNotFound(): bool
     {
-        return ! class_exists($this->column->get('enum'))
-            && ! enum_exists($this->column->get('enum'));
+        return !class_exists($this->column->get('enum'))
+            && !enum_exists($this->column->get('enum'));
     }
 
     public function invalidEnum(): bool
     {
         return enum_exists($this->column->get('enum'))
-            ? ! (new ReflectionEnum($this->column->get('enum')))
+            ? !(new ReflectionEnum($this->column->get('enum')))
                 ->implementsInterface(Contract::class)
-            : ! (new ReflectionClass($$this->column->get('enum')))
+            : !(new ReflectionClass($$this->column->get('enum')))
                 ->isSubclassOf(Enum::class);
     }
 
     private function invalidString(string $attribute): bool
     {
         return $this->column->has($attribute)
-            && ! is_string($this->column->get($attribute));
+            && !is_string($this->column->get($attribute));
     }
 
     private function invalidObject(string $attribute): bool //TODO can be aggregated with invalidAttributes
     {
         return $this->column->has($attribute)
-            && ! is_object($this->column->get($attribute));
+            && !is_object($this->column->get($attribute));
     }
 
     private function invalidAttribute(string $attribute, array $allowed): bool
     {
         return $this->column->has($attribute)
-            && ! in_array($this->column->get($attribute), $allowed);
+            && !in_array($this->column->get($attribute), $allowed);
     }
 
     private function invalidAttributes(string $attribute, array $allowed): bool
