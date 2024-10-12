@@ -41,7 +41,7 @@ class Column extends EnsoException
     public static function invalidEnum(string $enum)
     {
         return new static(__(
-            'Provided enum: ":enum" must use the "Select" trait, or must be a subclass of "Enum" class',
+            'Provided enum: ":enum" must implement the "Select" interface, or must be a subclass of "Enum" class',
             ['enum' => $enum]
         ));
     }
