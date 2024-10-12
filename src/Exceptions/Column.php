@@ -38,6 +38,14 @@ class Column extends EnsoException
         ));
     }
 
+    public static function invalidEnum(string $enum)
+    {
+        return new static(__(
+            'Provided enum: ":enum" must use the "Select" trait, or must be a subclass of "Enum" class',
+            ['enum' => $enum]
+        ));
+    }
+
     public static function resourceNotFound(string $resource)
     {
         return new static(__(
