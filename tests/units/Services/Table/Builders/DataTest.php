@@ -21,11 +21,9 @@ class DataTest extends TestCase
 
         $this->assertCount(TestModel::count(), $response);
 
-        $this->assertTrue(
-            $response->first()
-                ->diff($this->testModel->toArray())
-                ->isEmpty()
-        );
+        $isSame = $response->first()->diff($this->testModel->toArray())->isEmpty();
+
+        $this->assertTrue($isSame);
     }
 
     /** @test */
@@ -83,10 +81,10 @@ class DataTest extends TestCase
         $this->config->meta()->set('resource', true);
 
         $this->config->columns()->push(new Obj([
-            'name'     => 'price',
-            'data'     => 'price',
+            'name' => 'price',
+            'data' => 'price',
             'resource' => BuilderTestResource::class,
-            'meta'     => [],
+            'meta' => [],
         ]));
 
         $response = $this->requestResponse();
@@ -105,9 +103,9 @@ class DataTest extends TestCase
         $this->config->meta()->set('date', true);
 
         $this->config->columns()->push(new Obj([
-            'name'       => 'created_at',
+            'name' => 'created_at',
             'dateFormat' => 'Y-m-d',
-            'meta'       => ['date' => true],
+            'meta' => ['date' => true],
         ]));
 
         $response = $this->requestResponse();
@@ -125,9 +123,9 @@ class DataTest extends TestCase
         $this->config->meta()->set('datetime', true);
 
         $this->config->columns()->push(new Obj([
-            'name'       => 'created_at',
+            'name' => 'created_at',
             'dateFormat' => $format,
-            'meta'       => ['datetime' => true],
+            'meta' => ['datetime' => true],
         ]));
 
         $response = $this->requestResponse();
