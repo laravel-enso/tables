@@ -59,7 +59,7 @@ trait SetUp
     protected function createTestModel($name = null)
     {
         return TestModel::create([
-            'name' => $name ?? $this->faker->name,
+            'name'  => $name ?? $this->faker->name,
             'price' => $this->faker->numberBetween(1000, 10000),
         ]);
     }
