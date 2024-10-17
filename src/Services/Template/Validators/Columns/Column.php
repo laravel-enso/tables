@@ -126,7 +126,7 @@ class Column
         return enum_exists($this->column->get('enum'))
             ? !(new ReflectionEnum($this->column->get('enum')))
                 ->implementsInterface(Contract::class)
-            : !(new ReflectionClass($$this->column->get('enum')))
+            : !(new ReflectionClass($this->column->get('enum')))
                 ->isSubclassOf(Enum::class);
     }
 
