@@ -12,8 +12,6 @@ class TestModel extends Model
 
     protected $fillable = ['name', 'price', 'is_active'];
 
-    protected $casts = ['is_active' => 'boolean'];
-
     public function getCustomAttribute()
     {
         return ['relation' => 'name'];
@@ -34,5 +32,12 @@ class TestModel extends Model
             $table->integer('color')->nullable();
             $table->timestamps();
         });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
     }
 }
