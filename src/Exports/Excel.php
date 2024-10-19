@@ -189,7 +189,7 @@ class Excel
 
         $this->updateProgress($chunk->count());
 
-        return ! $this->cancelled;
+        return !$this->cancelled;
     }
 
     private function needsNewSheet(): bool
@@ -213,7 +213,7 @@ class Excel
 
         $this->writer->addRow($this->row($value));
 
-        return ! $this->cancelled;
+        return !$this->cancelled;
     }
 
     private function header(): Row
@@ -237,7 +237,7 @@ class Excel
         $meta = $column->get('meta');
 
         return $meta->get('visible')
-            && ! $meta->get('notExportable');
+            && !$meta->get('notExportable');
     }
 
     private function row(Collection $row): Row
@@ -263,7 +263,7 @@ class Excel
     {
         $folder = ConfigFacade::get('enso.tables.export.folder');
 
-        if (! Storage::has($folder)) {
+        if (!Storage::has($folder)) {
             Storage::makeDirectory($folder);
         }
 
