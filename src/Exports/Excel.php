@@ -2,10 +2,6 @@
 
 namespace LaravelEnso\Tables\Exports;
 
-use Box\Spout\Common\Entity\Row;
-use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
-use Box\Spout\Writer\XLSX\Writer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
@@ -26,6 +22,8 @@ use LaravelEnso\Tables\Services\Data\Builders\Computor;
 use LaravelEnso\Tables\Services\Data\Builders\Meta;
 use LaravelEnso\Tables\Services\Data\Config;
 use LaravelEnso\Tables\Services\Data\Filters;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Writer\XLSX\Writer;
 use Throwable;
 
 class Excel
@@ -172,14 +170,9 @@ class Excel
 
     private function initWriter(): self
     {
-        $defaultStyle = (new StyleBuilder())
-            ->setShouldWrapText(false)
-            ->build();
+        $this->writer = new Writer();
 
-        $this->writer = WriterEntityFactory::createXLSXWriter();
-
-        $this->writer->setDefaultRowStyle($defaultStyle)
-            ->openToFile($this->path);
+        $this->writer->openToFile($this->path);
 
         return $this;
     }
@@ -196,7 +189,7 @@ class Excel
 
         $this->updateProgress($chunk->count());
 
-        return !$this->cancelled;
+        return ! $this->cancelled;
     }
 
     private function needsNewSheet(): bool
@@ -220,7 +213,7 @@ class Excel
 
         $this->writer->addRow($this->row($value));
 
-        return !$this->cancelled;
+        return ! $this->cancelled;
     }
 
     private function header(): Row
@@ -244,12 +237,12 @@ class Excel
         $meta = $column->get('meta');
 
         return $meta->get('visible')
-            && !$meta->get('notExportable');
+            && ! $meta->get('notExportable');
     }
 
     private function row(Collection $row): Row
     {
-        return WriterEntityFactory::createRowFromArray($row->toArray());
+        return Row::fromValues($row->toArray());
     }
 
     private function value(Obj $column, array $row)
@@ -270,7 +263,7 @@ class Excel
     {
         $folder = ConfigFacade::get('enso.tables.export.folder');
 
-        if (!Storage::has($folder)) {
+        if (! Storage::has($folder)) {
             Storage::makeDirectory($folder);
         }
 
