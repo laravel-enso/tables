@@ -37,6 +37,7 @@ class TestTable implements Table
         $path = Cache::get($key, self::$path);
 
         $template = new Collection(json_decode(File::get($path), true));
+
         $template->forget('templateCache');
 
         if ($type !== null) {
