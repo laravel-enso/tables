@@ -4,7 +4,9 @@ namespace LaravelEnso\Tables\Tests\units\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\ParallelTesting;
 use LaravelEnso\Tables\Contracts\Table;
 
 class TestTable implements Table
@@ -23,18 +25,24 @@ class TestTable implements Table
 
     public function templatePath(): string
     {
-        return self::$path;
+        $key = 'table_'.ParallelTesting::token().'_template';
+
+        return Cache::get($key, self::$path);
     }
 
     public static function cache($type)
     {
-        $template = new Collection(json_decode(File::get(self::$path), true));
+        $key = 'table_'.ParallelTesting::token().'_template';
+
+        $path = Cache::get($key, self::$path);
+
+        $template = new Collection(json_decode(File::get($path), true));
         $template->forget('templateCache');
 
         if ($type !== null) {
             $template['templateCache'] = $type;
         }
 
-        File::put(self::$path, $template->toJson(JSON_PRETTY_PRINT));
+        File::put($path, $template->toJson(JSON_PRETTY_PRINT));
     }
 }
