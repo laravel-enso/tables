@@ -3,6 +3,10 @@
 namespace LaravelEnso\Tables\Tests\units\Services;
 
 use Faker\Factory;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Config;
@@ -21,6 +25,10 @@ trait SetUp
     protected function setUp(): void
     {
         parent::setUp();
+
+        if (ParallelTesting::token()) {
+            $this->setUpParralelTesting();
+        }
 
         $this->faker = Factory::create();
 
@@ -59,8 +67,36 @@ trait SetUp
     protected function createTestModel($name = null)
     {
         return TestModel::create([
-            'name'  => $name ?? $this->faker->name,
+            'name' => $name ?? $this->faker->name,
             'price' => $this->faker->numberBetween(1000, 10000),
         ]);
+    }
+
+    protected function tearDown(): void
+    {
+        $token = ParallelTesting::token();
+
+        if ($token) {
+            File::delete(Cache::get("table_{$token}_template"));
+
+            Cache::forget("table_{$token}_template");
+        }
+
+        parent::tearDown();
+    }
+
+    private function setUpParralelTesting()
+    {
+        $token = ParallelTesting::token();
+
+        $base = base_path('vendor/laravel-enso/tables/tests/units/Services/templates');
+
+        $path = "{$base}/template_{$token}.json";
+
+        $template = new Collection(json_decode(File::get("{$base}/template.json"), true));
+
+        File::put($path, $template->toJson(JSON_PRETTY_PRINT));
+
+        Cache::put("table_{$token}_template", $path);
     }
 }
