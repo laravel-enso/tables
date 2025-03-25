@@ -4,8 +4,10 @@ namespace LaravelEnso\Tables\Services\Template\Builders;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use LaravelEnso\Enums\Contracts\Mappable;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Column as Attributes;
+use ReflectionEnum;
 
 class Columns
 {
@@ -69,8 +71,10 @@ class Columns
 
         if (enum_exists($column->get('enum'))) {
             $column->set('enum', Collection::wrap($column->get('enum')::cases())
-                ->mapWithKeys(fn ($value) => [$value->value => $value->name]))
-                ->toArray();
+                ->mapWithKeys(fn ($value) => [$value->value => (new ReflectionEnum($column->get('enum')))
+                    ->implementsInterface(Mappable::class)
+                    ? $value->map()
+                    : $value->name,]))->toArray();
         } else {
             $this->setLegacyEnum($column);
         }
