@@ -74,7 +74,7 @@ class Columns
                 ->mapWithKeys(fn ($value) => [$value->value => (new ReflectionEnum($column->get('enum')))
                     ->implementsInterface(Mappable::class)
                     ? $value->map()
-                    : $value->name,]))->toArray();
+                    : $value->name, ]))->toArray();
         } else {
             $this->setLegacyEnum($column);
         }
