@@ -3,7 +3,7 @@
 namespace LaravelEnso\Tables\Services\Template\Validators\Structure;
 
 use Illuminate\Support\Str;
-use LaravelEnso\Filters\Enums\ComparisonOperators;
+use LaravelEnso\Filters\Enums\ComparisonOperator;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Template as Exception;
 
@@ -114,8 +114,8 @@ class Attributes
     private function comparisonOperator()
     {
         $invalid = $this->template->has('comparisonOperator')
-            && $this->template->get('comparisonOperator') !== ComparisonOperators::Like
-            && $this->template->get('comparisonOperator') !== ComparisonOperators::ILike;
+            && $this->template->get('comparisonOperator') !== ComparisonOperator::Like->value
+            && $this->template->get('comparisonOperator') !== ComparisonOperator::ILike->value;
 
         if ($invalid) {
             throw Exception::invalidComparisonOperator();
