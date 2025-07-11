@@ -3,6 +3,8 @@
 namespace LaravelEnso\Tables\Services\Data\Computors;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Contracts\ComputesModelColumns;
 
@@ -21,9 +23,17 @@ class Method implements ComputesModelColumns
     public static function handle(Model $row)
     {
         foreach (self::$columns as $column) {
-            $row->{$column->get('name')} = $row->{$column->get('name')}();
+            $method = self::segments($column->get('name'))->last();
+            $row->{$column->get('name')} = self::segments($column->get('name'))
+                ->slice(0, -1)->reduce(fn ($value, $segment) => $value->{$segment}, $row)
+                ->{$method}();
         }
 
         return $row;
+    }
+
+    private static function segments(string $attribute): Collection
+    {
+        return Str::of($attribute)->explode('.');
     }
 }
