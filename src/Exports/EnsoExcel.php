@@ -24,11 +24,11 @@ class EnsoExcel extends Excel
 
     protected function process(): void
     {
-        App::setLocale($this->user->preferences()->global->lang);
+        App::setLocale($this->user->preferences->lang());
 
         $this->export->update([
             'status' => Statuses::Processing,
-            'total'  => $this->count,
+            'total' => $this->count,
         ]);
 
         parent::process();
