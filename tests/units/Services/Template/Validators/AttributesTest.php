@@ -2,7 +2,7 @@
 
 namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 
-use LaravelEnso\Filters\Enums\ComparisonOperators;
+use LaravelEnso\Filters\Enums\ComparisonOperator;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Template as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Structure\Attributes;
@@ -71,7 +71,7 @@ class AttributesTest extends TestCase
     /** @test */
     public function cannot_validate_with_invalid_comparison_operator()
     {
-        $this->template->set('comparisonOperator', ComparisonOperators::Equal);
+        $this->template->set('comparisonOperator', ComparisonOperator::Equal->value);
 
         $this->expectException(Exception::class);
 
