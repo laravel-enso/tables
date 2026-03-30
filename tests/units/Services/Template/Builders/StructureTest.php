@@ -6,6 +6,7 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Template\Builders\Structure;
 use Route;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class StructureTest extends TestCase
 {
@@ -27,7 +28,7 @@ class StructureTest extends TestCase
         $this->meta = new Obj([]);
     }
 
-    /** @test */
+    #[Test]
     public function can_build_with_route()
     {
         $this->build();
@@ -35,7 +36,7 @@ class StructureTest extends TestCase
         $this->assertEquals('/test', $this->template->get('readPath'));
     }
 
-    /** @test */
+    #[Test]
     public function can_build_with_length_menu()
     {
         $options = [12, 24];

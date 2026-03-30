@@ -6,12 +6,13 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Filters\Filter;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class FilterTest extends TestCase
 {
     use SetUp;
 
-    /** @test */
+    #[Test]
     public function can_use_filters()
     {
         $filters = new Obj(['name' => $this->testModel->name]);
@@ -34,7 +35,7 @@ class FilterTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_use_invalid_filters()
     {
         $filters = new Obj(['name' => null]);

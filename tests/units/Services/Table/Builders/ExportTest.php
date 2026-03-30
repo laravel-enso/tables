@@ -7,12 +7,13 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Fetcher;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ExportTest extends TestCase
 {
     use SetUp;
 
-    /** @test */
+    #[Test]
     public function can_get_export_data_with_translatable()
     {
         App::make('translator')->addJsonPath(__DIR__.'/lang');

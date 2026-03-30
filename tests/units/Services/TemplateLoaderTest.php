@@ -8,6 +8,7 @@ use LaravelEnso\Tables\Services\Template;
 use LaravelEnso\Tables\Services\TemplateLoader;
 use LaravelEnso\Tables\Tests\units\Services\TestTable;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class TemplateLoaderTest extends TestCase
 {
@@ -27,13 +28,13 @@ class TemplateLoaderTest extends TestCase
         Config::set('enso.tables.cache.template', 'never');
     }
 
-    /** @test */
+    #[Test]
     public function can_get_template()
     {
         $this->assertTemplate((new TemplateLoader($this->table))->handle());
     }
 
-    /** @test */
+    #[Test]
     public function can_cache_template()
     {
         TestTable::cache('always');
@@ -47,7 +48,7 @@ class TemplateLoaderTest extends TestCase
         $this->assertTemplate($template);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_cache_template_with_never_cache_config()
     {
         Config::set('enso.tables.cache.template', 'never');
@@ -58,7 +59,7 @@ class TemplateLoaderTest extends TestCase
         $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
     }
 
-    /** @test */
+    #[Test]
     public function cannot_cache_template_with_never_template_cache()
     {
         Config::set('enso.tables.cache.template', 'always');
@@ -69,7 +70,7 @@ class TemplateLoaderTest extends TestCase
         $this->assertNull(Cache::tags(['tag'])->get($this->cacheKey()));
     }
 
-    /** @test */
+    #[Test]
     public function can_cache_with_environment()
     {
         Config::set('enso.tables.cache.template', app()->environment());

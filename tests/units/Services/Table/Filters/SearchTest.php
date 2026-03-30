@@ -8,12 +8,13 @@ use LaravelEnso\Tables\Services\Data\Filters\Search;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SearchTest extends TestCase
 {
     use SetUp;
 
-    /** @test */
+    #[Test]
     public function can_get_data_without_condition()
     {
         $response = $this->requestResponse();
@@ -26,7 +27,7 @@ class SearchTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_use_search()
     {
         $this->config->meta()->set('search', $this->testModel->name);
@@ -47,7 +48,7 @@ class SearchTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    /** @test */
+    #[Test]
     public function can_use_starts_with_search()
     {
         $first = Collection::wrap(explode(' ', $this->testModel->name))->first();
@@ -65,7 +66,7 @@ class SearchTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_use_ends_with_search()
     {
         $this->config->meta()
@@ -82,7 +83,7 @@ class SearchTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_use_multi_argument_search()
     {
         $this->config->columns()->push(new Obj([

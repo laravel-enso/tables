@@ -8,6 +8,7 @@ use LaravelEnso\Tables\Attributes\Column as Attributes;
 use LaravelEnso\Tables\Exceptions\Meta as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Columns\Columns;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class MetaTest extends TestCase
 {
@@ -21,7 +22,7 @@ class MetaTest extends TestCase
         $this->template = new Obj(['columns' => [$this->mockedColumn()]]);
     }
 
-    /** @test */
+    #[Test]
     public function can_validate_meta()
     {
         $this->template->get('columns')->first()->set('meta', new Obj(['sortable']));
@@ -31,7 +32,7 @@ class MetaTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_meta_with_invalid_attributes()
     {
         $this->template->get('columns')->first()->set('meta', new Obj(['invalid_attribute']));

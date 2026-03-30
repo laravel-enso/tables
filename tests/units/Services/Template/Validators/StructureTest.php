@@ -6,6 +6,7 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Template as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Structure\Structure;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class StructureTest extends TestCase
 {
@@ -19,7 +20,7 @@ class StructureTest extends TestCase
         $this->template = new Obj($this->mockedTemplate());
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_without_mandatory_attribute()
     {
         $this->template->forget('routePrefix');
@@ -31,7 +32,7 @@ class StructureTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_attribute()
     {
         $this->template->set('invalid_attributes', 'invalid');
@@ -43,7 +44,7 @@ class StructureTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function can_validate()
     {
         $this->validate();

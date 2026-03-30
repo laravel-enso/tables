@@ -6,12 +6,13 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Filters\Interval;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class IntervalTest extends TestCase
 {
     use SetUp;
 
-    /** @test */
+    #[Test]
     public function can_use_interval()
     {
         $intervals = new Obj(['id' => [
@@ -39,7 +40,7 @@ class IntervalTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    /** @test */
+    #[Test]
     public function can_use_date_interval()
     {
         $intervals = new Obj(['created_at' => [
@@ -67,7 +68,7 @@ class IntervalTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    /** @test */
+    #[Test]
     public function can_use_half_interval()
     {
         $intervals = new Obj([
@@ -89,7 +90,7 @@ class IntervalTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function cannot_use_invalid_intervals()
     {
         $intervals = new Obj([

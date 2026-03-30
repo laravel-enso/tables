@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use LaravelEnso\Tables\Traits\TableCache;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class TableCacheTest extends TestCase
 {
@@ -33,7 +34,7 @@ class TableCacheTest extends TestCase
         $this->cache()->put($this->key, 1, now()->addHour());
     }
 
-    /** @test */
+    #[Test]
     public function should_forgot_cache_when_model_is_deleted()
     {
         $this->testModel->delete();
@@ -41,7 +42,7 @@ class TableCacheTest extends TestCase
         $this->assertFalse(Cache::has($this->key));
     }
 
-    /** @test */
+    #[Test]
     public function should_forgot_cache_when_model_is_created()
     {
         $this->createTestModel();
