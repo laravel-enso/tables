@@ -5,7 +5,6 @@ namespace LaravelEnso\Tables\Services\Data;
 use Closure;
 use Illuminate\Support\Arr;
 use LaravelEnso\Helpers\Services\Obj;
-use LaravelEnso\Tables\Services\Data\RequestArgument as Argument;
 
 class FilterAggregator
 {
@@ -20,11 +19,11 @@ class FilterAggregator
 
     public function __construct($internalFilters, $filters, $intervals, $params)
     {
-        $this->internalFilters = new Obj(Argument::parse($internalFilters));
+        $this->internalFilters = new Obj($internalFilters);
         $this->searches = $this->filterInternal('string');
-        $this->filters = new Obj(Argument::parse($filters));
-        $this->intervals = new Obj(Argument::parse($intervals));
-        $this->params = new Obj(Argument::parse($params));
+        $this->filters = new Obj($filters);
+        $this->intervals = new Obj($intervals);
+        $this->params = new Obj($params);
     }
 
     public function searches(): Obj
@@ -102,6 +101,6 @@ class FilterAggregator
 
     private function excludeArrays(): Closure
     {
-        return fn ($filter) => !$filter->get('value') instanceof Obj;
+        return fn ($filter) => ! $filter->get('value') instanceof Obj;
     }
 }
