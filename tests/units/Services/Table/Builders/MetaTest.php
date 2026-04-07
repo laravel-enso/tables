@@ -9,8 +9,8 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Builders\Meta;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class MetaTest extends TestCase
 {

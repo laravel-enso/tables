@@ -4,9 +4,9 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Builders;
 
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Template\Builders\Structure;
+use PHPUnit\Framework\Attributes\Test;
 use Route;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class StructureTest extends TestCase
 {

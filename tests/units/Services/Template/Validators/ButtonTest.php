@@ -8,9 +8,9 @@ use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Button as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Buttons\Buttons;
 use LaravelEnso\Tables\Tests\units\Services\TestTable;
+use PHPUnit\Framework\Attributes\Test;
 use Route;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ButtonTest extends TestCase
 {

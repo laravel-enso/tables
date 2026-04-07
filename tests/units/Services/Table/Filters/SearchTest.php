@@ -7,8 +7,8 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Filters\Search;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class SearchTest extends TestCase
 {

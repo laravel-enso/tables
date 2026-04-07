@@ -7,8 +7,8 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Structure as Attributes;
 use LaravelEnso\Tables\Exceptions\Route as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Route;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class RouteTest extends TestCase
 {

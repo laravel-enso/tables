@@ -101,6 +101,6 @@ class FilterAggregator
 
     private function excludeArrays(): Closure
     {
-        return fn ($filter) => ! $filter->get('value') instanceof Obj;
+        return fn ($filter) => !$filter->get('value') instanceof Obj;
     }
 }

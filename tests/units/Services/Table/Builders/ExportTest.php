@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\App;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Fetcher;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ExportTest extends TestCase
 {

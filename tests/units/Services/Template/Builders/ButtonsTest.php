@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Template\Builders\Buttons;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Route;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class ButtonsTest extends TestCase
 {
