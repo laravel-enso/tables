@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Template\Builders\Buttons;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Route;
 use Tests\TestCase;
 
@@ -27,7 +28,7 @@ class ButtonsTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function can_build_with_type()
     {
         $this->template->get('buttons')->push(new Obj(['type' => 'row']));
@@ -41,7 +42,7 @@ class ButtonsTest extends TestCase
         $this->assertTrue($this->template->get('actions'));
     }
 
-    /** @test */
+    #[Test]
     public function cannot_build_when_user_cannot_access_to_route()
     {
         $user = Mockery::mock(Config::get('auth.providers.users.model'))->makePartial();
@@ -67,7 +68,7 @@ class ButtonsTest extends TestCase
         $this->assertEmpty($this->template->get('buttons')->get('row'));
     }
 
-    /** @test */
+    #[Test]
     public function can_build_with_route()
     {
         Route::any('test')->name('test');
@@ -91,7 +92,7 @@ class ButtonsTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_build_with_predefined_buttons()
     {
         $this->template->set('buttons', new Collection(['create', 'show']));

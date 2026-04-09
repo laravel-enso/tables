@@ -4,10 +4,11 @@ namespace LaravelEnso\Tables\Traits\Tests;
 
 use Exception;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 
 trait Datatable
 {
-    /** @test */
+    #[Test]
     public function can_view_index()
     {
         if (!isset($this->permissionGroup)) {

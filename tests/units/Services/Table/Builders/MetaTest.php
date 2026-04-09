@@ -9,13 +9,14 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Builders\Meta;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MetaTest extends TestCase
 {
     use SetUp;
 
-    /** @test */
+    #[Test]
     public function can_get_data()
     {
         $response = $this->requestResponse();
@@ -23,7 +24,7 @@ class MetaTest extends TestCase
         $this->assertEquals(TestModel::count(), $response->get('count'));
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_data_cache_count()
     {
         $this->config->put('countCache', false);
@@ -33,7 +34,7 @@ class MetaTest extends TestCase
         $this->assertFalse(Cache::has('enso:tables:testModels'));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_cache_when_table_cache_trait_used()
     {
         $key = 'enso:tables:test_models';
@@ -45,7 +46,7 @@ class MetaTest extends TestCase
         $this->assertEquals(1, $this->cache($key)->get($key));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_limit()
     {
         $this->config->meta()->put('length', 10);
@@ -56,7 +57,7 @@ class MetaTest extends TestCase
         $this->assertEquals(1, $response->get('count'));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_total()
     {
         $this->createTestModel();
@@ -77,7 +78,7 @@ class MetaTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_use_full_info_record_limit()
     {
         $limit = 1;

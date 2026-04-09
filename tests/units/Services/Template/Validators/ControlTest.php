@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Control as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Controls;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ControlTest extends TestCase
@@ -20,7 +21,7 @@ class ControlTest extends TestCase
         $this->template = new Obj(['controls' => []]);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_button_type()
     {
         $this->template->get('controls')->push('invalid_action');
@@ -32,7 +33,7 @@ class ControlTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function can_validate()
     {
         $this->createRoute();

@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Column;
 use LaravelEnso\Tables\Services\Template\Builders\Columns;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ColumnTest extends TestCase
@@ -22,7 +23,7 @@ class ColumnTest extends TestCase
         $this->template = new Obj(['columns' => [[]]]);
     }
 
-    /** @test */
+    #[Test]
     public function can_build_basic()
     {
         $this->build();
@@ -30,7 +31,7 @@ class ColumnTest extends TestCase
         $this->assertTrue($this->template->get('columns')->first()->has('meta'));
     }
 
-    /** @test */
+    #[Test]
     public function can_build_with_meta_attributes()
     {
         Collection::wrap(Column::Meta)

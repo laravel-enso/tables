@@ -8,6 +8,7 @@ use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Button as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Buttons\Buttons;
 use LaravelEnso\Tables\Tests\units\Services\TestTable;
+use PHPUnit\Framework\Attributes\Test;
 use Route;
 use Tests\TestCase;
 
@@ -26,7 +27,7 @@ class ButtonTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function cant_validateout_mandatory_attributes()
     {
         $this->template->get('buttons')->first()->forget('type');
@@ -38,7 +39,7 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cant_validate_invalid_attribute()
     {
         $this->template->get('buttons')->first()->set('invalid_attribute', 'invalid');
@@ -50,7 +51,7 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cant_validate_invalid_type()
     {
         $this->template->get('buttons')->first()->set('type', 'unknown');
@@ -62,7 +63,7 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cant_validate_invalid_action()
     {
         $this->template->get('buttons')->first()
@@ -75,7 +76,7 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cant_validate_action_with_missing_method()
     {
         $button = $this->template->get('buttons')->first();
@@ -90,7 +91,7 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cant_validate_invalid_route()
     {
         $button = $this->template->get('buttons')->first();
@@ -106,7 +107,7 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cant_validate_invalid_method()
     {
         $button = $this->template->get('buttons')->first();
@@ -122,7 +123,7 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cant_validate_when_name_missing_for_conditional_actions()
     {
         $this->template->get('buttons')[0]->set('type', 'row');
@@ -135,7 +136,7 @@ class ButtonTest extends TestCase
             ->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cant_validate_invalid_button_type()
     {
         $this->template->set('buttons', new Obj(['UNKNOWN_TYPE']));
@@ -147,7 +148,7 @@ class ButtonTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function can_validate()
     {
         $button = $this->template->get('buttons')->first();

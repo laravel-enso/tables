@@ -8,6 +8,7 @@ use LaravelEnso\Tables\Attributes\Column as Attributes;
 use LaravelEnso\Tables\Exceptions\Column as ColumnException;
 use LaravelEnso\Tables\Exceptions\Meta as MetaException;
 use LaravelEnso\Tables\Services\Template\Validators\Columns\Columns;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ColumnTest extends TestCase
@@ -24,7 +25,7 @@ class ColumnTest extends TestCase
         $this->template = new Obj(['columns' => [$this->mockedColumn()]]);
     }
 
-    /** @test */
+    #[Test]
     public function can_validate()
     {
         $this->validate();
@@ -32,7 +33,7 @@ class ColumnTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_missing_mandatory_attribute()
     {
         $this->template->get('columns')->first()->forget('label');
@@ -44,7 +45,7 @@ class ColumnTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_attribute()
     {
         $this->template->get('columns')->first()->set('invalid_attribute', 'invalid');
@@ -56,7 +57,7 @@ class ColumnTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_enum()
     {
         $this->template->get('columns')->first()->set('enum', 'MissingEnum');
@@ -68,7 +69,7 @@ class ColumnTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_resource()
     {
         $this->template->get('columns')->first()->set('resource', 'MissingResource');
@@ -80,7 +81,7 @@ class ColumnTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function can_validate_meta()
     {
         $this->template->get('columns')->first()->set('meta', new Obj(['sortable']));
@@ -90,7 +91,7 @@ class ColumnTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_meta_with_invalid_attributes()
     {
         $this->template->get('columns')->first()->set('meta', new Obj(['invalid_attribute']));

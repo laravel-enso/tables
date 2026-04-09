@@ -6,6 +6,7 @@ use LaravelEnso\Filters\Enums\ComparisonOperators;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Template as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Structure\Attributes;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AttributesTest extends TestCase
@@ -20,7 +21,7 @@ class AttributesTest extends TestCase
         $this->template = new Obj($this->mockedTemplate());
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_length_menu_format()
     {
         $this->template->set('lengthMenu', 'string');
@@ -32,7 +33,7 @@ class AttributesTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_non_numeric_debounce()
     {
         $this->template->set('debounce', 'string');
@@ -44,7 +45,7 @@ class AttributesTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_method()
     {
         $this->template->set('method', 'patch');
@@ -56,7 +57,7 @@ class AttributesTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_non_boolean_selectable()
     {
         $this->template->set('selectable', 'string');
@@ -68,7 +69,7 @@ class AttributesTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_comparison_operator()
     {
         $this->template->set('comparisonOperator', ComparisonOperators::Equal);
@@ -80,7 +81,7 @@ class AttributesTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function can_validate()
     {
         $this->validate();

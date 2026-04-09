@@ -7,6 +7,7 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Structure as Attributes;
 use LaravelEnso\Tables\Exceptions\Route as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Route;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RouteTest extends TestCase
@@ -21,7 +22,7 @@ class RouteTest extends TestCase
         $this->template = new Obj(Collection::wrap(Attributes::Mandatory)->flip());
     }
 
-    /** @test */
+    #[Test]
     public function cannot_validate_with_invalid_route()
     {
         $this->template->set('routePrefix', 'routePrefix');
@@ -34,7 +35,7 @@ class RouteTest extends TestCase
         $this->validate();
     }
 
-    /** @test */
+    #[Test]
     public function can_validate()
     {
         \Route::any('route')->name('route.test');

@@ -8,13 +8,14 @@ use LaravelEnso\Tables\Services\Data\Builders\Data;
 use LaravelEnso\Tables\Tests\units\Services\BuilderTestResource;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DataTest extends TestCase
 {
     use SetUp;
 
-    /** @test */
+    #[Test]
     public function can_get_data()
     {
         $response = $this->requestResponse();
@@ -26,7 +27,7 @@ class DataTest extends TestCase
         $this->assertTrue($isSame);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_appends()
     {
         $this->config->get('appends')->push('custom');
@@ -41,7 +42,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_method()
     {
         $this->config->meta()->set('method', true);
@@ -60,7 +61,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_flatten()
     {
         $this->config->get('appends')->push('custom');
@@ -75,7 +76,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_resource()
     {
         $this->config->meta()->set('resource', true);
@@ -97,7 +98,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_date()
     {
         $this->config->meta()->set('date', true);
@@ -116,7 +117,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_datetime()
     {
         $format = Config::get('enso.tables.dateTimeFormat');
@@ -136,7 +137,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_cents()
     {
         $this->config->meta()->set('cents', true);
@@ -155,7 +156,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_sort()
     {
         $this->createTestModel();
@@ -178,7 +179,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_default_sort()
     {
         $this->createTestModel('Z');
@@ -203,7 +204,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_sort_null_last()
     {
         $secondModel = $this->createTestModel();
@@ -228,7 +229,7 @@ class DataTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_data_with_limit()
     {
         $this->config->meta()->set('length', 0);
@@ -238,7 +239,7 @@ class DataTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    /** @test */
+    #[Test]
     public function can_use_full_info_record_limit()
     {
         $limit = 1;
