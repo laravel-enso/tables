@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Column;
 use LaravelEnso\Tables\Services\Template\Builders\Columns;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ColumnTest extends TestCase
 {

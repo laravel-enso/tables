@@ -3,7 +3,6 @@
 namespace LaravelEnso\Tables\Services\Data;
 
 use LaravelEnso\Helpers\Services\Obj;
-use LaravelEnso\Tables\Services\Data\RequestArgument as Argument;
 
 class Request
 {
@@ -16,8 +15,8 @@ class Request
 
     public function __construct($columns, $meta, FilterAggregator $aggregator)
     {
-        $this->columns = new Obj(Argument::parse($columns));
-        $this->meta = new Obj(Argument::parse($meta));
+        $this->columns = new Obj($columns);
+        $this->meta = new Obj($meta);
         $this->searches = $aggregator->searches();
         $this->filters = $aggregator->filters();
         $this->intervals = $aggregator->intervals();

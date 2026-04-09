@@ -7,8 +7,8 @@ use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Attributes\Column as Attributes;
 use LaravelEnso\Tables\Exceptions\Meta as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Columns\Columns;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class MetaTest extends TestCase
 {

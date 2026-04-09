@@ -6,8 +6,8 @@ use LaravelEnso\Filters\Enums\ComparisonOperators;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Template as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Structure\Attributes;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class AttributesTest extends TestCase
 {

@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 use LaravelEnso\Tables\Services\Template;
 use LaravelEnso\Tables\Services\TemplateLoader;
 use LaravelEnso\Tables\Tests\units\Services\TestTable;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class TemplateLoaderTest extends TestCase
 {

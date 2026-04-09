@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Control as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Controls;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ControlTest extends TestCase
 {

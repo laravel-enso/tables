@@ -130,7 +130,7 @@ return [
                 'action'      => 'router',
             ],
             'edit' => [
-                'icon'        => 'pencil-alt',
+                'icon'        => 'pen',
                 'class'       => 'is-row-button',
                 'routeSuffix' => 'edit',
                 'event'       => 'edit',
