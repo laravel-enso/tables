@@ -21,7 +21,7 @@
     "require": {
         "php": "^8.0",
         "openspout/openspout": "^4.0",
-        "laravel-enso/enums": "^2.0",
+        "laravel-enso/enums": "^3.0",
         "laravel-enso/filters": "^3.0",
         "laravel-enso/helpers": "^4.0"
     },
