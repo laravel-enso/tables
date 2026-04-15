@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\Services\Data;
 
+use JsonException;
 use LaravelEnso\Helpers\Services\Obj;
 
 class Request
@@ -15,8 +16,8 @@ class Request
 
     public function __construct($columns, $meta, FilterAggregator $aggregator)
     {
-        $this->columns = new Obj($columns);
-        $this->meta = new Obj($meta);
+        $this->columns = new Obj($this->sanitize($columns));
+        $this->meta = new Obj($this->sanitize($meta));
         $this->searches = $aggregator->searches();
         $this->filters = $aggregator->filters();
         $this->intervals = $aggregator->intervals();
@@ -57,5 +58,17 @@ class Request
     {
         return $this->columns
             ->first(fn ($column) => $column->get('name') === $name);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    private function sanitize(mixed $value): mixed
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
     }
 }
