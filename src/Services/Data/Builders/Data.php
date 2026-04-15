@@ -67,8 +67,11 @@ class Data
 
     private function limit(): self
     {
-        $this->query->skip($this->config->meta()->get('start'))
-            ->take($this->config->meta()->get('length'));
+        if ($this->config->meta()->get('start') > 0) {
+            $this->query->skip($this->config->meta()->get('start'));
+        }
+
+        $this->query->take($this->config->meta()->get('length'));
 
         return $this;
     }
