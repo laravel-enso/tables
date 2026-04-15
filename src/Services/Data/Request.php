@@ -2,7 +2,6 @@
 
 namespace LaravelEnso\Tables\Services\Data;
 
-use JsonException;
 use LaravelEnso\Helpers\Services\Obj;
 
 class Request
@@ -60,12 +59,9 @@ class Request
             ->first(fn ($column) => $column->get('name') === $name);
     }
 
-    /**
-     * @throws JsonException
-     */
     private function sanitize(mixed $value): mixed
     {
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             return $value;
         }
 
