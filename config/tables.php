@@ -166,7 +166,7 @@ return [
      */
 
     'style' => [
-        'default' => ['hover', 'center'],
+        'default' => ['compact', 'hover', 'center'],
         'mapping' => [
             'left'     => 'has-text-left',
             'center'   => 'has-text-centered',
