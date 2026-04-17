@@ -94,7 +94,7 @@ return [
         'global' => [
             'create' => [
                 'icon'        => 'plus',
-                'class'       => null,
+                'class'       => 'is-dark',
                 'routeSuffix' => 'create',
                 'event'       => 'create',
                 'action'      => 'router',
