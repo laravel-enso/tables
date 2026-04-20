@@ -278,6 +278,16 @@ php artisan test --compact vendor/laravel-enso/tables/tests/units/Services/Templ
 php artisan test --compact vendor/laravel-enso/tables/tests/units/Traits/TableCacheTest.php
 ```
 
+## API
+
+The package exposes three backend endpoints through the controller traits documented in the usage flow:
+
+- `Init` returns the validated template payload and frontend bootstrap metadata
+- `Data` resolves the request pipeline and returns rows, totals, pagination, and table meta
+- `Excel` starts queued spreadsheet exports and emits the export-start event
+
+At code level, the stable backend contract is `LaravelEnso\Tables\Contracts\Table`. Custom table builders should implement `query()` and `templatePath()`, while downstream modules should treat helper classes such as processors, calculators, computors, and normalizers as internal implementation details unless they are extended deliberately.
+
 ## Depends On
 
 Required Enso packages:
