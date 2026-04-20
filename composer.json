@@ -1,6 +1,6 @@
 {
     "name": "laravel-enso/tables",
-    "description": "Data Table library with server-side processing and a VueJS component",
+    "description": "Server-side data tables and export backend for Laravel Enso",
     "keywords": [
         "laravel-enso",
         "datatable",
