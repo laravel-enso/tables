@@ -82,6 +82,42 @@ class AttributesTest extends TestCase
     }
 
     #[Test]
+    public function cannot_validate_with_invalid_search_modes_format()
+    {
+        $this->template->set('searchModes', 'string');
+
+        $this->expectException(Exception::class);
+
+        $this->expectExceptionMessage(Exception::invalidSearchModes()->getMessage());
+
+        $this->validate();
+    }
+
+    #[Test]
+    public function cannot_validate_with_invalid_default_sort_direction()
+    {
+        $this->template->set('defaultSortDirection', 'sideways');
+
+        $this->expectException(Exception::class);
+
+        $this->expectExceptionMessage(Exception::invalidSortDirection()->getMessage());
+
+        $this->validate();
+    }
+
+    #[Test]
+    public function cannot_validate_with_invalid_appends_format()
+    {
+        $this->template->set('appends', 'string');
+
+        $this->expectException(Exception::class);
+
+        $this->expectExceptionMessage(Exception::invalidAppends()->getMessage());
+
+        $this->validate();
+    }
+
+    #[Test]
     public function can_validate()
     {
         $this->validate();
