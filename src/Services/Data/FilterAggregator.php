@@ -19,11 +19,11 @@ class FilterAggregator
 
     public function __construct($internalFilters, $filters, $intervals, $params)
     {
-        $this->internalFilters = new Obj($internalFilters);
+        $this->internalFilters = new Obj($this->sanitize($internalFilters));
         $this->searches = $this->filterInternal('string');
-        $this->filters = new Obj($filters);
-        $this->intervals = new Obj($intervals);
-        $this->params = new Obj($params);
+        $this->filters = new Obj($this->sanitize($filters));
+        $this->intervals = new Obj($this->sanitize($intervals));
+        $this->params = new Obj($this->sanitize($params));
     }
 
     public function searches(): Obj
@@ -75,6 +75,15 @@ class FilterAggregator
             ->each(fn ($filter) => $this->set($filters, $filter));
 
         return $this;
+    }
+
+    private function sanitize(mixed $value): mixed
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
     }
 
     private function set(Obj $filters, Obj $filter)
