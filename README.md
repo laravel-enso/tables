@@ -50,6 +50,7 @@ php artisan enso:tables:clear
 - Column computors for enums, numbers, dates, datetimes, translations, resources, model methods, and cents.
 - Aggregated totals, averages, and custom/raw totals at table level.
 - Queue-based spreadsheet exports with chunked fetching, multi-sheet splitting, and mail/database/broadcast notifications.
+- Uses `laravel-enso/mails` for export completion mail layout and preview registration.
 - Template caching and optional row-count caching for large datasets.
 - Extension points for dynamic templates and batch row actions.
 - PHPUnit helpers for datatable endpoint testing.
@@ -295,6 +296,7 @@ Required Enso packages:
 - [`laravel-enso/enums`](https://docs.laravel-enso.com/backend/enums.html) [↗](https://github.com/laravel-enso/enums)
 - [`laravel-enso/filters`](https://docs.laravel-enso.com/backend/filters.html) [↗](https://github.com/laravel-enso/filters)
 - [`laravel-enso/helpers`](https://docs.laravel-enso.com/backend/helpers.html) [↗](https://github.com/laravel-enso/helpers)
+- [`laravel-enso/mails`](https://github.com/laravel-enso/mails) [↗](https://github.com/laravel-enso/mails)
 
 Companion frontend package:
 
