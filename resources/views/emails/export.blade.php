@@ -7,7 +7,10 @@
 
 {{ __('You will find the export attached to this email.') }}
 
-@component('mail::file', ['meta' => __(':entries entries', ['entries' => $entries])])
+@component('mail::file', [
+    'meta' => __(':entries entries', ['entries' => $entries]),
+    'url' => $url ?? null,
+])
 {{ $filename }}
 @endcomponent
 

@@ -18,6 +18,7 @@ class MailServiceProvider extends ServiceProvider
                 'name' => 'Jane',
                 'filename' => 'users-export.xlsx',
                 'entries' => 1284,
+                'url' => 'https://example.com/files/users-export.xlsx',
             ],
             section: PreviewDefinition::Core,
         ));
