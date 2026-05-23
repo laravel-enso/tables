@@ -43,7 +43,7 @@ class ExportDone extends Notification implements ShouldQueue
             ->subject("[ {$appName} ] {$this->title()}")
             ->markdown('laravel-enso/tables::emails.export', [
                 'name'     => $notifiable->name,
-                'filename' => __($this->filename),
+                'filename' => $this->filename,
                 'entries'  => $this->entries,
             ])->attach($this->path);
     }
