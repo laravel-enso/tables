@@ -257,6 +257,26 @@ During export the package:
 - stores the file under `storage/app/{export.folder}`
 - notifies the user with `ExportStarted`, `ExportDone`, or `ExportError`
 
+Large tables can cap the export query chunk by implementing
+`LaravelEnso\Tables\Contracts\CustomExportChunk`:
+
+```php
+use LaravelEnso\Tables\Contracts\CustomExportChunk;
+use LaravelEnso\Tables\Contracts\Table;
+
+class Products implements Table, CustomExportChunk
+{
+    public function exportChunk(): int
+    {
+        return 1000;
+    }
+}
+```
+
+The export service uses the lower value between the automatically computed chunk
+and the custom chunk, so table builders can reduce memory pressure without
+increasing the default chunk size for smaller exports.
+
 ### Caching and extension points
 
 - `TemplateLoader` caches cacheable template fragments by template path, plus `cachePrefix()` when the table implements `DynamicTemplate`

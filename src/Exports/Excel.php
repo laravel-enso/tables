@@ -14,6 +14,7 @@ use LaravelEnso\Helpers\Services\Decimals;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Helpers\Services\OptimalChunk;
 use LaravelEnso\Tables\Contracts\AuthenticatesOnExport;
+use LaravelEnso\Tables\Contracts\CustomExportChunk;
 use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Notifications\ExportDone;
 use LaravelEnso\Tables\Notifications\ExportError;
@@ -163,7 +164,9 @@ class Excel
 
     private function optimalChunk(): self
     {
-        $this->optimalChunk = OptimalChunk::get($this->count);
+        $this->optimalChunk = $this->table instanceof CustomExportChunk
+            ? min(OptimalChunk::get($this->count), $this->table->exportChunk())
+            : OptimalChunk::get($this->count);
 
         return $this;
     }
