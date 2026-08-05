@@ -35,7 +35,10 @@ class Excel
     protected Writer $writer;
     protected Collection $columns;
     protected int $count;
+    protected int $min;
+    protected int $max;
     protected int $optimalChunk;
+    protected int $chunkLimit;
     protected int $sheetCount;
     protected int $entryCount;
     protected string $filename;
@@ -88,19 +91,29 @@ class Excel
             : $template->get('dtRowId');
 
         $ends = [
-            DB::raw("min({$sort}) as start"),
-            DB::raw("max({$sort}) as end"),
+            DB::raw("min({$sort}) as min"),
+            DB::raw("max({$sort}) as max"),
         ];
 
-        ['start' => $start, 'end' => $end] = $this->query->clone()
+        ['min' => $this->min, 'max' => $this->max] = $this->query->clone()
             ->select(...$ends)
             ->first();
 
-        while ($start <= $end) {
-            $chunk = $this->query->clone()
-                ->where($sort, '>=', $start)
-                ->where($sort, '<', $start += $this->optimalChunk)
-                ->get();
+        while ($this->min <= $this->max) {
+            $chunkSize = $this->optimalChunk;
+            $max = min($this->min + $chunkSize, $this->max + 1);
+            $query = $this->range($sort, $this->min, $max);
+
+            $shouldAdjustChunk = $this->chunkLimit !== $this->optimalChunk
+                && $query->count() > $this->chunkLimit;
+
+            if ($shouldAdjustChunk) {
+                $max = min($this->min + $this->chunkLimit, $this->max + 1);
+                $query = $this->range($sort, $this->min, $max);
+            }
+
+            $this->min = $max;
+            $chunk = $query->get();
 
             if ($chunk->isNotEmpty()) {
                 $this->processChunk($chunk);
@@ -164,11 +177,19 @@ class Excel
 
     private function optimalChunk(): self
     {
-        $this->optimalChunk = $this->table instanceof CustomExportChunk
-            ? min(OptimalChunk::get($this->count), $this->table->exportChunk())
-            : OptimalChunk::get($this->count);
+        $this->optimalChunk = OptimalChunk::get($this->count);
+        $this->chunkLimit = $this->table instanceof CustomExportChunk
+            ? $this->table->exportChunk()
+            : $this->optimalChunk;
 
         return $this;
+    }
+
+    private function range(string $sort, int $start, int $end): Builder
+    {
+        return $this->query->clone()
+            ->where($sort, '>=', $start)
+            ->where($sort, '<', $end);
     }
 
     private function initWriter(): self

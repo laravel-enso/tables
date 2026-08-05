@@ -55,6 +55,13 @@ php artisan enso:tables:clear
 - Extension points for dynamic templates and batch row actions.
 - PHPUnit helpers for datatable endpoint testing.
 
+### Export chunking
+
+Table exports use `OptimalChunk` to select efficient ID-range windows. A table
+that loads unusually heavy relations may implement `CustomExportChunk` and
+return a smaller `exportChunk()` value. The override is applied only to dense
+ranges, while sparse ranges keep the normal optimal window.
+
 ## Usage
 
 ### 1. Implement a table builder
