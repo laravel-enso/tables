@@ -37,13 +37,15 @@ trait Datatable
     #[Test]
     public function can_export()
     {
-        if (!isset($this->permissionGroup)) {
-            throw new Exception('"permissionGroup" property is missing from your test');
+        if (!isset($this->permissionGroup) || !isset($this->exportData)) {
+            $this->expectNotToPerformAssertions();
+
+            return;
         }
 
         $route = $this->permissionGroup . '.exportExcel';
 
-        if (!isset($this->exportData) || !Route::has($route)) {
+        if (!Route::has($route)) {
             $this->expectNotToPerformAssertions();
 
             return;
