@@ -2,6 +2,7 @@
 
 namespace LaravelEnso\Tables\Exports;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
@@ -305,8 +306,9 @@ class Excel
     private function filename(): string
     {
         $suffix = __('table_export');
+        $timestamp = Carbon::now()->format('Y_m_d_H_i_s');
         $extension = self::Extension;
 
-        return "{$this->config->name()}_{$suffix}.{$extension}";
+        return "{$this->config->name()}_{$suffix}_{$timestamp}.{$extension}";
     }
 }
