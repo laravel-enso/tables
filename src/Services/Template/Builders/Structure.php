@@ -16,7 +16,7 @@ class Structure
     ];
 
     private const FalseIfMissing = [
-        'selectable', 'preview',
+        'selectable', 'preview', 'disableImplicitSorting',
     ];
 
     private const DefaultFalse = [

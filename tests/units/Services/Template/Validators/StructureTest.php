@@ -5,6 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Template\Validators;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Template as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Structure\Structure;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -45,11 +46,19 @@ class StructureTest extends TestCase
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function can_validate()
     {
         $this->validate();
+    }
 
-        $this->assertTrue(true);
+    #[Test]
+    #[DoesNotPerformAssertions]
+    public function can_validate_disable_implicit_sorting(): void
+    {
+        $this->template->set('disableImplicitSorting', true);
+
+        $this->validate();
     }
 
     private function validate()

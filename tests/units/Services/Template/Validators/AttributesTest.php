@@ -6,6 +6,7 @@ use LaravelEnso\Filters\Enums\ComparisonOperators;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Template as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Structure\Attributes;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -118,11 +119,31 @@ class AttributesTest extends TestCase
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function can_validate()
     {
         $this->validate();
+    }
 
-        $this->assertTrue(true);
+    #[Test]
+    public function cannot_validate_with_non_boolean_disable_implicit_sorting(): void
+    {
+        $this->template->set('disableImplicitSorting', 'true');
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(Exception::invalidDisableImplicitSorting()->getMessage());
+
+        $this->validate();
+    }
+
+    #[Test]
+    #[DoesNotPerformAssertions]
+    public function can_validate_disable_implicit_sorting(): void
+    {
+        foreach ([true, false] as $value) {
+            $this->template->set('disableImplicitSorting', $value);
+            $this->validate();
+        }
     }
 
     private function validate()

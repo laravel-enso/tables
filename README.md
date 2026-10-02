@@ -183,7 +183,7 @@ Top-level attributes accepted by the validator include:
 - `lengthMenu`, `method`, `model`, `name`
 - `preview`, `responsive`, `searchMode`, `searchModes`
 - `selectable`, `strip`, `templateCache`
-- `defaultSort`, `defaultSortDirection`, `totalLabel`
+- `defaultSort`, `defaultSortDirection`, `disableImplicitSorting`, `totalLabel`
 
 Column attributes:
 
@@ -236,6 +236,28 @@ The data pipeline applies:
 - pagination limits
 - model and array computors
 - row actions and row style metadata
+
+### Optional implicit sorting
+
+Set the top-level boolean `disableImplicitSorting` to `true` in a table's JSON
+template to skip fallback sorting when displaying table rows:
+
+```json
+"disableImplicitSorting": true
+```
+
+The flag defaults to `false`. When enabled, the table does not add `defaultSort`
+(including the automatically generated row-ID sort) if no explicit column sort
+applies. Explicit column sorts keep their existing row-ID tie-breaker, and any
+ordering defined by the table builder's query is preserved.
+
+Without a guaranteed order, pagination may repeat or omit rows between pages,
+even when the underlying data has not changed. Enable this option only when
+retrieving any matching rows is acceptable.
+
+The option affects table display only. Internal fetch mode, spreadsheet exports,
+and count queries keep their existing behavior. Clear the template cache after
+changing the flag when template caching is enabled.
 
 ### Computors and formatting
 

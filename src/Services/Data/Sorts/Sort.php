@@ -13,13 +13,13 @@ class Sort
     ) {
     }
 
-    public function handle(): void
+    public function handle(bool $implicitSorting = true): void
     {
         $sort = new CustomSort($this->config, $this->query);
 
         if ($sort->applies()) {
             $sort->handle();
-        } elseif (!$this->query->getQuery()->orders) {
+        } elseif ($implicitSorting && !$this->query->getQuery()->orders) {
             $column = $this->config->template()->get('defaultSort');
             $direction = $this->config->template()->get('defaultSortDirection');
 

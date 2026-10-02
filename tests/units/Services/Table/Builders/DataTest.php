@@ -5,6 +5,7 @@ namespace LaravelEnso\Tables\Tests\units\Services\Table\Builders;
 use Illuminate\Support\Facades\Config;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Services\Data\Builders\Data;
+use LaravelEnso\Tables\Services\Data\Sorts\Sort;
 use LaravelEnso\Tables\Tests\units\Services\BuilderTestResource;
 use LaravelEnso\Tables\Tests\units\Services\SetUp;
 use LaravelEnso\Tables\Tests\units\Services\TestModel;
@@ -260,6 +261,64 @@ class DataTest extends TestCase
         $response = $this->requestResponse();
 
         $this->assertCount($limit, $response);
+    }
+
+    #[Test]
+    public function can_disable_implicit_sorting(): void
+    {
+        $this->config->template()->set('disableImplicitSorting', true);
+
+        $queries = $this->query->getConnection()->pretend(
+            fn () => $this->requestResponse()
+        );
+
+        $this->assertStringNotContainsString('order by', $queries[0]['query']);
+    }
+
+    #[Test]
+    public function fetch_mode_preserves_implicit_sorting(): void
+    {
+        $this->config->template()->set('disableImplicitSorting', true);
+
+        $queries = $this->query->getConnection()->pretend(
+            fn () => (new Data($this->table, $this->config, true))->handle()
+        );
+
+        $this->assertStringContainsString('order by', $queries[0]['query']);
+    }
+
+    #[Test]
+    public function disabling_implicit_sorting_preserves_query_ordering(): void
+    {
+        $this->query->orderBy('name', 'desc');
+        $orders = $this->query->getQuery()->orders;
+
+        (new Sort($this->config, $this->query))->handle(false);
+
+        $this->assertSame($orders, $this->query->getQuery()->orders);
+    }
+
+    #[Test]
+    public function disabling_implicit_sorting_preserves_explicit_sort_and_tie_breaker(): void
+    {
+        $this->config->meta()->set('sort', true);
+        $this->config->columns()->push(new Obj([
+            'name' => 'price',
+            'data' => 'price',
+            'meta' => ['sortable' => true, 'sort' => 'desc'],
+        ]));
+
+        (new Sort($this->config, $this->query))->handle(false);
+
+        $template = $this->config->template();
+
+        $this->assertSame([
+            ['column' => 'price', 'direction' => 'desc'],
+            [
+                'column' => "{$template->get('table')}.{$template->get('dtRowId')}",
+                'direction' => $template->get('defaultSortDirection'),
+            ],
+        ], $this->query->getQuery()->orders);
     }
 
     private function requestResponse()

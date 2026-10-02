@@ -8,6 +8,7 @@ use LaravelEnso\Tables\Attributes\Column as Attributes;
 use LaravelEnso\Tables\Exceptions\Column as ColumnException;
 use LaravelEnso\Tables\Exceptions\Meta as MetaException;
 use LaravelEnso\Tables\Services\Template\Validators\Columns\Columns;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -26,11 +27,10 @@ class ColumnTest extends TestCase
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function can_validate()
     {
         $this->validate();
-
-        $this->assertTrue(true);
     }
 
     #[Test]
@@ -82,13 +82,12 @@ class ColumnTest extends TestCase
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function can_validate_meta()
     {
         $this->template->get('columns')->first()->set('meta', new Obj(['sortable']));
 
         $this->validate();
-
-        $this->assertTrue(true);
     }
 
     #[Test]

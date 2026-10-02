@@ -60,7 +60,10 @@ class Data
 
     private function sort(): self
     {
-        (new Sort($this->config, $this->query))->handle();
+        $implicitSorting = $this->fetchMode
+            || !$this->config->template()->get('disableImplicitSorting');
+
+        (new Sort($this->config, $this->query))->handle($implicitSorting);
 
         return $this;
     }

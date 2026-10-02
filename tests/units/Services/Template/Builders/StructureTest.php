@@ -48,6 +48,24 @@ class StructureTest extends TestCase
         $this->assertEquals($options[0], $this->meta->get('length'));
     }
 
+    #[Test]
+    public function implicit_sorting_is_enabled_by_default(): void
+    {
+        $this->build();
+
+        $this->assertFalse($this->template->get('disableImplicitSorting'));
+    }
+
+    #[Test]
+    public function can_disable_implicit_sorting(): void
+    {
+        $this->template->set('disableImplicitSorting', true);
+
+        $this->build();
+
+        $this->assertTrue($this->template->get('disableImplicitSorting'));
+    }
+
     private function createRoute($name = 'prefix.suffix', $path = '/test'): \Illuminate\Routing\Route
     {
         $route = Route::any($path)->name($name);

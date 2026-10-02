@@ -42,6 +42,11 @@ class Template extends EnsoException
         return new static(__('"defaultSortDirection" attribute must be either "asc" or "desc'));
     }
 
+    public static function invalidDisableImplicitSorting(): self
+    {
+        return new static(__('"disableImplicitSorting" attribute must be a boolean'));
+    }
+
     public static function invalidDebounce()
     {
         return new static(__('"debounce" attribute must be an integer'));

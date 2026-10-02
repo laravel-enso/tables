@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use LaravelEnso\Helpers\Services\Obj;
 use LaravelEnso\Tables\Exceptions\Control as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Controls;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -34,6 +35,7 @@ class ControlTest extends TestCase
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function can_validate()
     {
         $this->createRoute();
@@ -41,8 +43,6 @@ class ControlTest extends TestCase
         $this->template->get('controls')->push('columns');
 
         $this->validate();
-
-        $this->assertTrue(true);
     }
 
     private function validate()

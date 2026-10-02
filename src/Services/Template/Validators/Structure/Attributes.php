@@ -19,6 +19,7 @@ class Attributes
             ->appends()
             ->searchMode()
             ->defaultSortDirection()
+            ->disableImplicitSorting()
             ->debounce()
             ->method()
             ->selectable()
@@ -70,6 +71,18 @@ class Attributes
             && !in_array(Str::lower($this->template->get('defaultSortDirection')), $allowed)
         ) {
             throw Exception::invalidSortDirection();
+        }
+
+        return $this;
+    }
+
+    private function disableImplicitSorting(): self
+    {
+        if (
+            $this->template->has('disableImplicitSorting')
+            && !is_bool($this->template->get('disableImplicitSorting'))
+        ) {
+            throw Exception::invalidDisableImplicitSorting();
         }
 
         return $this;

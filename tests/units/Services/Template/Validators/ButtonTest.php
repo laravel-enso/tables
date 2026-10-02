@@ -8,6 +8,7 @@ use LaravelEnso\Tables\Contracts\Table;
 use LaravelEnso\Tables\Exceptions\Button as Exception;
 use LaravelEnso\Tables\Services\Template\Validators\Buttons\Buttons;
 use LaravelEnso\Tables\Tests\units\Services\TestTable;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use Route;
 use Tests\TestCase;
@@ -149,6 +150,7 @@ class ButtonTest extends TestCase
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function can_validate()
     {
         $button = $this->template->get('buttons')->first();
@@ -158,8 +160,6 @@ class ButtonTest extends TestCase
         $button->set('method', 'GET');
 
         $this->validate();
-
-        $this->assertTrue(true);
     }
 
     private function mockedButton()
