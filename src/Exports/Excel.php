@@ -4,7 +4,9 @@ namespace LaravelEnso\Tables\Exports;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config as ConfigFacade;
@@ -272,8 +274,9 @@ class Excel
 
     private function value(Obj $column, array $row)
     {
-        return Collection::wrap(explode('.', $column->get('name')))
-            ->reduce(fn ($value, $segment) => $value[$segment] ?? '', $row);
+        $value = Arr::get($row, $column->get('name')) ?? '';
+
+        return is_array($value) ? Json::encode($value) : $value;
     }
 
     private function closeWriter(): void
